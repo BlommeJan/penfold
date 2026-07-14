@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F4F7FC"/>
+    </linearGradient>
+    <linearGradient id="penBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E6EDF8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Notebook drop shadow -->
+  <rect x="128" y="118" width="236" height="292" rx="22" fill="#000000" opacity="0.14"/>
+
+  <!-- Notebook body -->
+  <rect x="120" y="108" width="236" height="292" rx="22" fill="url(#page)"/>
+
+  <!-- Left cover / spine panel -->
+  <path
+    d="M120 130 C120 116 132 108 148 108 L176 108 L176 400 L148 400 C132 400 120 392 120 378 Z"
+    fill="#D9E4F5"/>
+
+  <!-- Binding strip -->
+  <rect x="168" y="108" width="16" height="292" fill="#2455C3" opacity="0.22"/>
+
+  <!-- Binding rings -->
+  <g fill="none" stroke="#2455C3" stroke-width="5" opacity="0.38">
+    <circle cx="176" cy="148" r="7"/>
+    <circle cx="176" cy="204" r="7"/>
+    <circle cx="176" cy="260" r="7"/>
+    <circle cx="176" cy="316" r="7"/>
+    <circle cx="176" cy="372" r="7"/>
+  </g>
+
+  <!-- Ruled lines -->
+  <g stroke="#2455C3" stroke-width="4" stroke-linecap="round" opacity="0.16">
+    <line x1="204" y1="156" x2="332" y2="156"/>
+    <line x1="204" y1="196" x2="332" y2="196"/>
+    <line x1="204" y1="236" x2="332" y2="236"/>
+    <line x1="204" y1="276" x2="332" y2="276"/>
+    <line x1="204" y1="316" x2="332" y2="316"/>
+    <line x1="204" y1="356" x2="332" y2="356"/>
+  </g>
+
+  <!-- Pen (angled across the page) -->
+  <g transform="translate(248 300) rotate(-38)">
+    <rect x="8" y="10" width="154" height="30" rx="15" fill="#000000" opacity="0.12"/>
+    <rect x="0" y="0" width="154" height="30" rx="15" fill="url(#penBody)"/>
+    <rect x="52" y="4" width="34" height="22" rx="11" fill="#2455C3" opacity="0.18"/>
+    <rect x="88" y="-6" width="10" height="38" rx="3" fill="#FFFFFF" opacity="0.92"/>
+    <path d="M142 6 L168 15 L168 15 L142 24 Z" fill="#FFFFFF"/>
+    <path d="M168 9 L196 15 L168 21 Z" fill="#FFFFFF"/>
+  </g>
+</svg>

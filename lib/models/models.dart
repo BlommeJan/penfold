@@ -1,0 +1,410 @@
+import 'dart:convert';
+import 'dart:math' as math;
+import 'dart:ui';
+
+enum ToolType { pen, highlighter, eraser, lasso, selection, shape, fill, text }
+
+enum BrushStyle { pen, fountainPen, pencil, marker, calligraphy }
+
+enum PageTemplate { blank, lined, grid, dotted, collegeRuled }
+
+/// Canonical page dimensions in 0.1 mm units.
+enum PageSize {
+  a4(2100, 2970),
+  a5(1480, 2100),
+  letter(2159, 2794);
+
+  const PageSize(this.width, this.height);
+  final int width;
+  final int height;
+
+  double get aspect => width / height;
+
+  String get label => switch (this) {
+        PageSize.a4 => 'A4',
+        PageSize.a5 => 'A5',
+        PageSize.letter => 'Letter',
+      };
+}
+
+class Folder {
+  final String id;
+  String name;
+  int sortOrder;
+  String? parentId;
+
+  Folder({
+    required this.id,
+    required this.name,
+    required this.sortOrder,
+    this.parentId,
+  });
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'name': name,
+        'sort_order': sortOrder,
+        'parent_id': parentId,
+      };
+
+  static Folder fromRow(Map<String, Object?> r) => Folder(
+        id: r['id'] as String,
+        name: r['name'] as String,
+        sortOrder: r['sort_order'] as int,
+        parentId: r['parent_id'] as String?,
+      );
+}
+
+class Notebook {
+  final String id;
+  String title;
+  int coverColor;
+  PageTemplate template;
+  PageSize pageSize;
+  String? folderId;
+  final int createdAt;
+  int updatedAt;
+
+  Notebook({
+    required this.id,
+    required this.title,
+    required this.coverColor,
+    required this.template,
+    this.pageSize = PageSize.a4,
+    this.folderId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'title': title,
+        'color': coverColor,
+        'template': template.index,
+        'page_size': pageSize.index,
+        'folder_id': folderId,
+        'created': createdAt,
+        'updated': updatedAt,
+      };
+
+  static Notebook fromRow(Map<String, Object?> r) => Notebook(
+        id: r['id'] as String,
+        title: r['title'] as String,
+        coverColor: r['color'] as int,
+        template: PageTemplate.values[r['template'] as int],
+        pageSize: PageSize.values[(r['page_size'] as int?) ?? 0],
+        folderId: r['folder_id'] as String?,
+        createdAt: r['created'] as int,
+        updatedAt: r['updated'] as int,
+      );
+}
+
+class NotePage {
+  final String id;
+  final String notebookId;
+  int index;
+  PageTemplate template;
+  PageSize pageSize;
+
+  /// If non-null, this page is a rendered PDF page: path to a PNG background.
+  final String? pdfImagePath;
+
+  /// Aspect ratio (width / height) of the page.
+  final double aspect;
+
+  NotePage({
+    required this.id,
+    required this.notebookId,
+    required this.index,
+    required this.template,
+    this.pageSize = PageSize.a4,
+    this.pdfImagePath,
+    double? aspect,
+  }) : aspect = aspect ?? pageSize.aspect;
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'notebook_id': notebookId,
+        'idx': index,
+        'template': template.index,
+        'page_size': pageSize.index,
+        'pdf_image': pdfImagePath,
+        'aspect': aspect,
+      };
+
+  static NotePage fromRow(Map<String, Object?> r) {
+    final ps = PageSize.values[(r['page_size'] as int?) ?? 0];
+    return NotePage(
+      id: r['id'] as String,
+      notebookId: r['notebook_id'] as String,
+      index: r['idx'] as int,
+      template: PageTemplate.values[r['template'] as int],
+      pageSize: ps,
+      pdfImagePath: r['pdf_image'] as String?,
+      aspect: (r['aspect'] as num?)?.toDouble() ?? ps.aspect,
+    );
+  }
+}
+
+class PageImage {
+  final String id;
+  final String pageId;
+  final String path;
+  double x, y, w, h;
+  final int z;
+
+  PageImage({
+    required this.id,
+    required this.pageId,
+    required this.path,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.z,
+  });
+
+  Rect get rect => Rect.fromLTWH(x, y, w, h);
+
+  set rect(Rect r) {
+    x = r.left;
+    y = r.top;
+    w = r.width;
+    h = r.height;
+  }
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'page_id': pageId,
+        'path': path,
+        'x': x,
+        'y': y,
+        'w': w,
+        'h': h,
+        'z': z,
+      };
+
+  static PageImage fromRow(Map<String, Object?> r) => PageImage(
+        id: r['id'] as String,
+        pageId: r['page_id'] as String,
+        path: r['path'] as String,
+        x: (r['x'] as num).toDouble(),
+        y: (r['y'] as num).toDouble(),
+        w: (r['w'] as num).toDouble(),
+        h: (r['h'] as num).toDouble(),
+        z: r['z'] as int,
+      );
+
+  PageImage copy() => PageImage(
+      id: id, pageId: pageId, path: path, x: x, y: y, w: w, h: h, z: z);
+}
+
+class FilledRegion {
+  final String id;
+  final String pageId;
+  final int color;
+  final String pathJson;
+  final int z;
+
+  FilledRegion({
+    required this.id,
+    required this.pageId,
+    required this.color,
+    required this.pathJson,
+    required this.z,
+  });
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'page_id': pageId,
+        'color': color,
+        'path_json': pathJson,
+        'z': z,
+      };
+
+  static FilledRegion fromRow(Map<String, Object?> r) => FilledRegion(
+        id: r['id'] as String,
+        pageId: r['page_id'] as String,
+        color: r['color'] as int,
+        pathJson: r['path_json'] as String,
+        z: r['z'] as int,
+      );
+
+  FilledRegion copy() => FilledRegion(
+        id: id,
+        pageId: pageId,
+        color: color,
+        pathJson: pathJson,
+        z: z,
+      );
+}
+
+class TextBlock {
+  final String id;
+  final String pageId;
+  double x, y, w, h;
+  String text;
+  double fontSize;
+  int color;
+  final int z;
+  bool isNote;
+
+  TextBlock({
+    required this.id,
+    required this.pageId,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.text,
+    required this.fontSize,
+    required this.color,
+    required this.z,
+    this.isNote = false,
+  });
+
+  Rect get rect => Rect.fromLTWH(x, y, w, h);
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'page_id': pageId,
+        'x': x,
+        'y': y,
+        'w': w,
+        'h': h,
+        'text': text,
+        'font_size': fontSize,
+        'color': color,
+        'z': z,
+        'is_note': isNote ? 1 : 0,
+      };
+
+  static TextBlock fromRow(Map<String, Object?> r) => TextBlock(
+        id: r['id'] as String,
+        pageId: r['page_id'] as String,
+        x: (r['x'] as num).toDouble(),
+        y: (r['y'] as num).toDouble(),
+        w: (r['w'] as num).toDouble(),
+        h: (r['h'] as num).toDouble(),
+        text: r['text'] as String,
+        fontSize: (r['font_size'] as num).toDouble(),
+        color: r['color'] as int,
+        z: r['z'] as int,
+        isNote: (r['is_note'] as int?) == 1,
+      );
+
+  TextBlock copy() => TextBlock(
+        id: id,
+        pageId: pageId,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        text: text,
+        fontSize: fontSize,
+        color: color,
+        z: z,
+        isNote: isNote,
+      );
+}
+
+class StrokePoint {
+  final double x;
+  final double y;
+  final double p; // pressure 0..1
+
+  const StrokePoint(this.x, this.y, this.p);
+
+  StrokePoint translated(Offset d) => StrokePoint(x + d.dx, y + d.dy, p);
+}
+
+class Stroke {
+  final String id;
+  final String pageId;
+  final ToolType tool;
+  final BrushStyle brushStyle;
+  final int color;
+  final double width;
+  List<StrokePoint> points;
+  final int z;
+
+  Stroke({
+    required this.id,
+    required this.pageId,
+    required this.tool,
+    this.brushStyle = BrushStyle.pen,
+    required this.color,
+    required this.width,
+    required this.points,
+    required this.z,
+  });
+
+  String encodePoints() =>
+      jsonEncode(points.map((e) => [e.x, e.y, e.p]).toList());
+
+  static List<StrokePoint> decodePoints(String s) {
+    final raw = jsonDecode(s) as List;
+    return raw
+        .map((e) => StrokePoint((e[0] as num).toDouble(),
+            (e[1] as num).toDouble(), (e[2] as num).toDouble()))
+        .toList();
+  }
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'page_id': pageId,
+        'tool': tool.index,
+        'brush_style': brushStyle.index,
+        'color': color,
+        'width': width,
+        'points': encodePoints(),
+        'z': z,
+      };
+
+  static Stroke fromRow(Map<String, Object?> r) => Stroke(
+        id: r['id'] as String,
+        pageId: r['page_id'] as String,
+        tool: ToolType.values[r['tool'] as int],
+        brushStyle: BrushStyle.values[(r['brush_style'] as int?) ?? 0],
+        color: r['color'] as int,
+        width: (r['width'] as num).toDouble(),
+        points: decodePoints(r['points'] as String),
+        z: r['z'] as int,
+      );
+
+  Rect get bounds {
+    if (points.isEmpty) return Rect.zero;
+    double minX = points.first.x, maxX = points.first.x;
+    double minY = points.first.y, maxY = points.first.y;
+    for (final pt in points) {
+      minX = math.min(minX, pt.x);
+      maxX = math.max(maxX, pt.x);
+      minY = math.min(minY, pt.y);
+      maxY = math.max(maxY, pt.y);
+    }
+    final pad = width;
+    return Rect.fromLTRB(minX - pad, minY - pad, maxX + pad, maxY + pad);
+  }
+
+  void translate(Offset d) {
+    points = points.map((pt) => pt.translated(d)).toList();
+  }
+
+  Stroke copy() => Stroke(
+        id: id,
+        pageId: pageId,
+        tool: tool,
+        brushStyle: brushStyle,
+        color: color,
+        width: width,
+        points: List.of(points),
+        z: z,
+      );
+}
+
+class SearchResult {
+  final Notebook notebook;
+  final String snippet;
+
+  SearchResult({required this.notebook, required this.snippet});
+}

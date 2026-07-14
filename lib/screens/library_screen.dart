@@ -1,0 +1,931 @@
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
+import '../db/app_database.dart';
+import '../models/models.dart';
+import '../services/pdf_import.dart';
+import 'notebook_screen.dart';
+
+const _uuid = Uuid();
+
+const _coverColors = [
+  0xFF2455C3,
+  0xFFB23B3B,
+  0xFF1E8449,
+  0xFF7D3C98,
+  0xFFB9770E,
+  0xFF2C3E50,
+];
+
+enum _LibraryView { all, uncategorized }
+
+class LibraryScreen extends StatefulWidget {
+  const LibraryScreen({super.key});
+
+  @override
+  State<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  final _db = AppDatabase.instance;
+  final _searchCtrl = TextEditingController();
+  List<Notebook> _notebooks = [];
+  List<Folder> _allFolders = [];
+  List<Folder> _childFolders = [];
+  List<SearchResult> _searchResults = [];
+  _LibraryView _view = _LibraryView.all;
+  String? _currentFolderId;
+  bool _loading = true;
+  bool _searching = false;
+  String? _loadError;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchCtrl.addListener(_onSearchChanged);
+    _refresh();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
+    final q = _searchCtrl.text.trim();
+    if (q.isEmpty) {
+      setState(() {
+        _searching = false;
+        _searchResults = [];
+      });
+      return;
+    }
+    _runSearch(q);
+  }
+
+  Future<void> _runSearch(String q) async {
+    try {
+      final results = await _db.searchNotebooks(q);
+      if (!mounted) return;
+      setState(() {
+        _searching = true;
+        _searchResults = results;
+        _loadError = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _loadError = e.toString());
+    }
+  }
+
+  Future<void> _refresh() async {
+    setState(() {
+      _loading = true;
+      _loadError = null;
+    });
+    try {
+      final allFolders = await _db.allFolders();
+      final childFolders = _currentFolderId == null
+          ? await _db.folders()
+          : await _db.folders(parentId: _currentFolderId);
+      final List<Notebook> items;
+      if (_currentFolderId == null) {
+        items = await _db.notebooks(
+          folderId: _view == _LibraryView.uncategorized ? '' : null,
+        );
+      } else {
+        items = await _db.notebooks(folderId: _currentFolderId);
+      }
+      if (!mounted) return;
+      setState(() {
+        _allFolders = allFolders;
+        _childFolders = childFolders;
+        _notebooks = items;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _loadError = e.toString();
+      });
+    }
+  }
+
+  Folder? _folderById(String id) {
+    for (final f in _allFolders) {
+      if (f.id == id) return f;
+    }
+    return null;
+  }
+
+  List<Folder> _breadcrumb() {
+    final path = <Folder>[];
+    var id = _currentFolderId;
+    while (id != null) {
+      final folder = _folderById(id);
+      if (folder == null) break;
+      path.insert(0, folder);
+      id = folder.parentId;
+    }
+    return path;
+  }
+
+  List<Folder> _topLevelFolders() =>
+      _allFolders.where((f) => f.parentId == null).toList();
+
+  void _openFolder(String folderId) {
+    setState(() {
+      _currentFolderId = folderId;
+      _view = _LibraryView.all;
+    });
+    _refresh();
+  }
+
+  void _goToRoot() {
+    setState(() {
+      _currentFolderId = null;
+    });
+    _refresh();
+  }
+
+  void _goToFolder(String? folderId) {
+    setState(() => _currentFolderId = folderId);
+    _refresh();
+  }
+
+  Future<void> _open(Notebook n) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => NotebookScreen(notebook: n)),
+    );
+    _refresh();
+  }
+
+  Future<void> _createFolder({String? parentId}) async {
+    final ctrl = TextEditingController(text: 'New folder');
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(parentId == null ? 'New folder' : 'New subfolder'),
+        content: TextField(controller: ctrl, autofocus: true),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Create')),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final siblings = parentId == null
+        ? _topLevelFolders()
+        : _allFolders.where((f) => f.parentId == parentId).toList();
+    final f = Folder(
+      id: _uuid.v4(),
+      name: ctrl.text.trim().isEmpty ? 'New folder' : ctrl.text.trim(),
+      sortOrder: siblings.length,
+      parentId: parentId,
+    );
+    await _db.insertFolder(f);
+    _refresh();
+  }
+
+  Future<void> _folderMenu(Folder folder) async {
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.drive_file_rename_outline_rounded),
+              title: const Text('Rename'),
+              onTap: () => Navigator.pop(ctx, 'rename'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.create_new_folder_outlined),
+              title: const Text('New subfolder'),
+              onTap: () => Navigator.pop(ctx, 'subfolder'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline_rounded),
+              title: const Text('Delete'),
+              onTap: () => Navigator.pop(ctx, 'delete'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (action == 'rename') {
+      final ctrl = TextEditingController(text: folder.name);
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Rename folder'),
+          content: TextField(controller: ctrl, autofocus: true),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel')),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Rename')),
+          ],
+        ),
+      );
+      if (ok == true) {
+        await _db.renameFolder(folder.id, ctrl.text.trim());
+        _refresh();
+      }
+    } else if (action == 'subfolder') {
+      await _createFolder(parentId: folder.id);
+    } else if (action == 'delete') {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Delete "${folder.name}"?'),
+          content: const Text(
+              'Notebooks move to the parent folder. Subfolders are kept.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel')),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Delete')),
+          ],
+        ),
+      );
+      if (ok == true) {
+        if (_currentFolderId == folder.id) {
+          _goToFolder(folder.parentId);
+        }
+        await _db.deleteFolder(folder.id);
+        _refresh();
+      }
+    }
+  }
+
+  void _addFolderTiles(
+    List<Widget> tiles,
+    List<Folder> folders, {
+    required int depth,
+  }) {
+    for (final folder in folders) {
+      tiles.add(
+        ListTile(
+          leading: Icon(Icons.folder_outlined, color: Colors.grey.shade700),
+          title: Text('${'  ' * depth}${folder.name}'),
+          onTap: () => Navigator.pop(context, folder.id),
+        ),
+      );
+      final children =
+          _allFolders.where((f) => f.parentId == folder.id).toList();
+      if (children.isNotEmpty) {
+        _addFolderTiles(tiles, children, depth: depth + 1);
+      }
+    }
+  }
+
+  Future<void> _moveToFolder(Notebook n) async {
+    final tiles = <Widget>[
+      ListTile(
+        leading: const Icon(Icons.folder_off_outlined),
+        title: const Text('Uncategorized'),
+        onTap: () => Navigator.pop(context, ''),
+      ),
+    ];
+    _addFolderTiles(tiles, _topLevelFolders(), depth: 0);
+
+    final chosen = await showModalBottomSheet<String?>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: ListView(shrinkWrap: true, children: tiles),
+      ),
+    );
+    if (chosen == null) return;
+    await _db.moveNotebookToFolder(n.id, chosen.isEmpty ? null : chosen);
+    _refresh();
+  }
+
+  Future<void> _createNotebook() async {
+    final titleCtrl = TextEditingController(text: 'Untitled');
+    var template = PageTemplate.lined;
+    var pageSize = PageSize.a4;
+    var colorIx = 0;
+
+    final created = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialog) => AlertDialog(
+          title: const Text('New notebook'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: titleCtrl,
+                  autofocus: true,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+                const SizedBox(height: 20),
+                Text('Size', style: Theme.of(ctx).textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final s in PageSize.values)
+                      ChoiceChip(
+                        label: Text(s.label),
+                        selected: pageSize == s,
+                        onSelected: (_) => setDialog(() => pageSize = s),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text('Paper', style: Theme.of(ctx).textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final t in PageTemplate.values)
+                      ChoiceChip(
+                        label: Text(switch (t) {
+                          PageTemplate.blank => 'Blank',
+                          PageTemplate.lined => 'Lined',
+                          PageTemplate.grid => 'Grid',
+                          PageTemplate.dotted => 'Dotted',
+                          PageTemplate.collegeRuled => 'College',
+                        }),
+                        selected: template == t,
+                        onSelected: (_) => setDialog(() => template = t),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text('Cover', style: Theme.of(ctx).textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    for (var i = 0; i < _coverColors.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () => setDialog(() => colorIx = i),
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color(_coverColors[i]),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                width: 3,
+                                color: colorIx == i
+                                    ? Theme.of(ctx).colorScheme.primary
+                                    : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Create'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (created != true) return;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final n = Notebook(
+      id: _uuid.v4(),
+      title: titleCtrl.text.trim().isEmpty ? 'Untitled' : titleCtrl.text.trim(),
+      coverColor: _coverColors[colorIx],
+      template: template,
+      pageSize: pageSize,
+      folderId: _currentFolderId,
+      createdAt: now,
+      updatedAt: now,
+    );
+    await _db.insertNotebook(n);
+    final page = NotePage(
+      id: _uuid.v4(),
+      notebookId: n.id,
+      index: 0,
+      template: template,
+      pageSize: pageSize,
+    );
+    await _db.insertPage(page);
+    await _refresh();
+    if (mounted) _open(n);
+  }
+
+  Future<void> _importPdf() async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(const SnackBar(
+      content: Text('Importing PDF… pages render once, then stay offline.'),
+      duration: Duration(seconds: 2),
+    ));
+    try {
+      final notebook = await PdfImportService.pickAndImport();
+      await _refresh();
+      if (notebook != null && mounted) _open(notebook);
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
+    }
+  }
+
+  Future<void> _notebookMenu(Notebook n) async {
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.drive_file_rename_outline_rounded),
+              title: const Text('Rename'),
+              onTap: () => Navigator.pop(ctx, 'rename'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.folder_outlined),
+              title: const Text('Move to folder'),
+              onTap: () => Navigator.pop(ctx, 'folder'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline_rounded),
+              title: const Text('Delete'),
+              onTap: () => Navigator.pop(ctx, 'delete'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (action == 'folder') {
+      await _moveToFolder(n);
+    } else if (action == 'rename') {
+      final ctrl = TextEditingController(text: n.title);
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Rename notebook'),
+          content: TextField(controller: ctrl, autofocus: true),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel')),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Rename')),
+          ],
+        ),
+      );
+      if (ok == true) {
+        await _db.renameNotebook(n.id, ctrl.text.trim());
+        _refresh();
+      }
+    } else if (action == 'delete') {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Delete "${n.title}"?'),
+          content: const Text('All pages and ink are removed from this device.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel')),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Delete')),
+          ],
+        ),
+      );
+      if (ok == true) {
+        await _db.deleteNotebook(n.id);
+        _refresh();
+      }
+    }
+  }
+
+  Widget _filterChip({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        label: Text(label),
+        selected: selected,
+        showCheckmark: false,
+        labelStyle: TextStyle(
+          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+          color: selected ? const Color(0xFF2455C3) : const Color(0xFF4A4A4A),
+        ),
+        selectedColor: const Color(0xFF2455C3).withOpacity(0.12),
+        backgroundColor: Colors.white,
+        side: BorderSide(
+          color: selected ? const Color(0xFF2455C3) : const Color(0xFFE0E4EA),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        onSelected: (_) => onTap(),
+      ),
+    );
+  }
+
+  Widget _notebookCard(Notebook n) {
+    return GestureDetector(
+      onTap: () => _open(n),
+      onLongPress: () => _notebookMenu(n),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(n.coverColor),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                  topLeft: Radius.circular(3),
+                  bottomLeft: Radius.circular(3),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.12),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          width: 8, color: Colors.black.withOpacity(0.18)),
+                      const Spacer(),
+                    ],
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 14,
+                    right: 8,
+                    child: Text(
+                      n.title,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                        shadows: [
+                          Shadow(
+                            color: Color(0x66000000),
+                            offset: Offset(0, 1),
+                            blurRadius: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _folderCard(Folder folder) {
+    return GestureDetector(
+      onTap: () => _openFolder(folder.id),
+      onLongPress: () => _folderMenu(folder),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8ECF2),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: const Center(
+                child: Icon(Icons.folder_rounded,
+                    size: 56, color: Color(0xFF2455C3)),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            folder.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFE0E4EA)),
+      ),
+      child: TextField(
+        controller: _searchCtrl,
+        style: const TextStyle(fontSize: 15),
+        decoration: InputDecoration(
+          hintText: 'Search notebooks and typed text…',
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+          prefixIcon:
+              Icon(Icons.search_rounded, color: Colors.grey.shade600, size: 22),
+          suffixIcon: _searchCtrl.text.isNotEmpty
+              ? IconButton(
+                  icon: Icon(Icons.clear_rounded, color: Colors.grey.shade600),
+                  onPressed: () => _searchCtrl.clear(),
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+        ),
+      ),
+    );
+  }
+
+  Widget _headerRow() {
+    final folderChips = _currentFolderId == null
+        ? _topLevelFolders()
+        : _childFolders;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            if (_currentFolderId == null) ...[
+              _filterChip(
+                label: 'All',
+                selected: _view == _LibraryView.all,
+                onTap: () {
+                  setState(() => _view = _LibraryView.all);
+                  _refresh();
+                },
+              ),
+              _filterChip(
+                label: 'Uncategorized',
+                selected: _view == _LibraryView.uncategorized,
+                onTap: () {
+                  setState(() => _view = _LibraryView.uncategorized);
+                  _refresh();
+                },
+              ),
+            ] else
+              TextButton.icon(
+                onPressed: () {
+                  final parent = _folderById(_currentFolderId!)?.parentId;
+                  _goToFolder(parent);
+                },
+                icon: const Icon(Icons.arrow_back_rounded, size: 18),
+                label: const Text('Back'),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF2455C3),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+              ),
+            if (!_searching && folderChips.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              for (final f in folderChips)
+                _filterChip(
+                  label: f.name,
+                  selected: _currentFolderId == f.id,
+                  onTap: () => _openFolder(f.id),
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _breadcrumbBar() {
+    final crumbs = _breadcrumb();
+    if (crumbs.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 4,
+        children: [
+          InkWell(
+            onTap: _goToRoot,
+            borderRadius: BorderRadius.circular(4),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Text(
+                'Library',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: const Color(0xFF2455C3),
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
+          for (var i = 0; i < crumbs.length; i++) ...[
+            Icon(Icons.chevron_right_rounded,
+                size: 18, color: Colors.grey.shade500),
+            InkWell(
+              onTap: () => _goToFolder(crumbs[i].id),
+              borderRadius: BorderRadius.circular(4),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(
+                  crumbs[i].name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: i == crumbs.length - 1
+                            ? const Color(0xFF1A1A1A)
+                            : const Color(0xFF2455C3),
+                        fontWeight: i == crumbs.length - 1
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                      ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final displayNotebooks = _searching
+        ? _searchResults.map((r) => r.notebook).toList()
+        : _notebooks;
+    final showFolders = !_searching && _currentFolderId != null
+        ? _childFolders
+        : (!_searching && _currentFolderId == null && _view == _LibraryView.all
+            ? _topLevelFolders()
+            : <Folder>[]);
+    final itemCount = showFolders.length + displayNotebooks.length;
+    final emptyMessage = _searching
+        ? 'No matches'
+        : _currentFolderId != null
+            ? 'This folder is empty'
+            : _view == _LibraryView.uncategorized
+                ? 'No uncategorized notebooks'
+                : 'No notebooks yet';
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF6F7F9),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text('Penfold'),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            tooltip: 'New notebook',
+            icon: const Icon(Icons.note_add_outlined),
+            onPressed: _createNotebook,
+          ),
+          IconButton(
+            tooltip: _currentFolderId == null ? 'New folder' : 'New subfolder',
+            icon: const Icon(Icons.create_new_folder_outlined),
+            onPressed: () => _createFolder(parentId: _currentFolderId),
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: _searchField(),
+          ),
+          if (!_searching) ...[
+            _breadcrumbBar(),
+            _headerRow(),
+          ],
+          if (_loadError != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                'Could not load library: $_loadError',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : itemCount == 0
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _searching
+                                  ? Icons.search_off_rounded
+                                  : Icons.menu_book_rounded,
+                              size: 56,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(emptyMessage,
+                                style:
+                                    Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
+                      )
+                    : GridView.builder(
+                        padding: const EdgeInsets.all(24),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 180,
+                          mainAxisSpacing: 24,
+                          crossAxisSpacing: 24,
+                          childAspectRatio: 0.72,
+                        ),
+                        itemCount: itemCount,
+                        itemBuilder: (context, i) {
+                          if (i < showFolders.length) {
+                            return _folderCard(showFolders[i]);
+                          }
+                          final nbIndex = i - showFolders.length;
+                          if (_searching) {
+                            final r = _searchResults[nbIndex];
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(child: _notebookCard(r.notebook)),
+                                if (r.snippet.isNotEmpty)
+                                  Text(
+                                    r.snippet.replaceAll(RegExp('<[^>]*>'), ''),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                              ],
+                            );
+                          }
+                          return _notebookCard(displayNotebooks[nbIndex]);
+                        },
+                      ),
+          ),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'pdf',
+            tooltip: 'Import PDF',
+            onPressed: _importPdf,
+            child: const Icon(Icons.picture_as_pdf_outlined),
+          ),
+          const SizedBox(height: 12),
+          FloatingActionButton.extended(
+            heroTag: 'new',
+            onPressed: _createNotebook,
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('New notebook'),
+          ),
+        ],
+      ),
+    );
+  }
+}

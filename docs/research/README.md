@@ -12,7 +12,7 @@ Structured research for Penfold positioning. One file per app; scannable lists o
 |-----|------|--------|
 | [GoodNotes](GOODNOTES.md) | `GOODNOTES.md` | ✅ Complete |
 | Notability | `NOTABILITY.md` | 🔲 Pending |
-| Samsung Notes | `SAMSUNG_NOTES.md` | 🔲 Pending |
+| Samsung Notes | `SAMSUNG_NOTES.md` | ✅ Complete |
 | OneNote | `ONENOTE.md` | 🔲 Pending |
 | Noteshelf | `NOTESHELF.md` | 🔲 Pending |
 | Nebo | `NEBO.md` | 🔲 Pending |

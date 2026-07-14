@@ -109,6 +109,12 @@ class NotePage {
   /// If non-null, this page is a rendered PDF page: path to a PNG background.
   final String? pdfImagePath;
 
+  /// Lazy PDF: path to source PDF file on device.
+  final String? pdfSourcePath;
+
+  /// 1-based page index inside [pdfSourcePath].
+  final int? pdfPageIndex;
+
   /// Aspect ratio (width / height) of the page.
   final double aspect;
 
@@ -119,6 +125,8 @@ class NotePage {
     required this.template,
     this.pageSize = PageSize.a4,
     this.pdfImagePath,
+    this.pdfSourcePath,
+    this.pdfPageIndex,
     double? aspect,
   }) : aspect = aspect ?? pageSize.aspect;
 
@@ -129,6 +137,8 @@ class NotePage {
         'template': template.index,
         'page_size': pageSize.index,
         'pdf_image': pdfImagePath,
+        'pdf_source_path': pdfSourcePath,
+        'pdf_page_index': pdfPageIndex,
         'aspect': aspect,
       };
 
@@ -140,8 +150,10 @@ class NotePage {
       index: r['idx'] as int,
       template: PageTemplate.values[r['template'] as int],
       pageSize: ps,
-      pdfImagePath: r['pdf_image'] as String?,
-      aspect: (r['aspect'] as num?)?.toDouble() ?? ps.aspect,
+        pdfImagePath: r['pdf_image'] as String?,
+        pdfSourcePath: r['pdf_source_path'] as String?,
+        pdfPageIndex: r['pdf_page_index'] as int?,
+        aspect: (r['aspect'] as num?)?.toDouble() ?? ps.aspect,
     );
   }
 }

@@ -8,11 +8,11 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import 'pdf_page_cache.dart';
 
 const _uuid = Uuid();
 
-/// Imports a PDF fully offline: each page is rendered once to a PNG in app
-/// storage and becomes an annotatable page background. No upload, no account.
+/// Imports a PDF fully offline with lazy per-page rendering.
 class PdfImportService {
   /// Returns the created notebook, or null if the user cancelled.
   static Future<Notebook?> pickAndImport() async {
@@ -28,9 +28,10 @@ class PdfImportService {
 
   static Future<Notebook> importFromPath(String path) async {
     final doc = await PdfDocument.openFile(path);
+    final pageCount = doc.pagesCount;
     final docsDir = await getApplicationDocumentsDirectory();
-    final imgDir = Directory(p.join(docsDir.path, 'pdf_pages'));
-    if (!imgDir.existsSync()) imgDir.createSync(recursive: true);
+    final pdfDir = Directory(p.join(docsDir.path, 'pdf_sources'));
+    if (!pdfDir.existsSync()) pdfDir.createSync(recursive: true);
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final notebook = Notebook(
@@ -45,32 +46,33 @@ class PdfImportService {
     final db = AppDatabase.instance;
     await db.insertNotebook(notebook);
 
-    for (var i = 1; i <= doc.pagesCount; i++) {
-      final page = await doc.getPage(i);
-      // 2x render for crisp zooming without exploding memory.
-      final img = await page.render(
-        width: page.width * 2,
-        height: page.height * 2,
-        format: PdfPageImageFormat.png,
-      );
-      final aspect = page.width / page.height;
-      await page.close();
-      if (img == null) continue;
+    final storedPdf = File(p.join(pdfDir.path, '${notebook.id}.pdf'));
+    await File(path).copy(storedPdf.path);
 
-      final file = File(p.join(imgDir.path, '${notebook.id}_$i.png'));
-      await file.writeAsBytes(img.bytes);
-
+    double? firstAspect;
+    for (var i = 1; i <= pageCount; i++) {
+      if (i == 1) {
+        final page = await doc.getPage(i);
+        firstAspect = page.width / page.height;
+        await page.close();
+      }
       await db.insertPage(NotePage(
         id: _uuid.v4(),
         notebookId: notebook.id,
         index: i - 1,
         template: PageTemplate.blank,
         pageSize: PageSize.a4,
-        pdfImagePath: file.path,
-        aspect: aspect,
+        pdfSourcePath: storedPdf.path,
+        pdfPageIndex: i,
+        aspect: firstAspect ?? PageSize.a4.aspect,
       ));
     }
     await doc.close();
+
+    // Warm first page for immediate open.
+    if (pageCount > 0) {
+      PdfPageCache.instance.prefetch(storedPdf.path, 1);
+    }
     return notebook;
   }
 }

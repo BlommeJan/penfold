@@ -7,6 +7,7 @@ import '../canvas/drawing_canvas.dart';
 import '../canvas/page_coords.dart';
 import '../canvas/page_viewport.dart';
 import '../models/models.dart';
+import '../services/pdf_page_cache.dart';
 
 /// One page card in the scrollable notebook: gated viewport + drawing canvas.
 class PageEditor extends StatefulWidget {
@@ -37,8 +38,12 @@ class PageEditorState extends State<PageEditor> {
   final _canvasKey = GlobalKey<DrawingCanvasState>();
   final _viewportKey = GlobalKey<PageViewportState>();
   ui.Image? _pdfImage;
+  bool _pdfLoading = false;
 
-  PageSize get _pageSize => widget.page.pdfImagePath != null
+  bool get _hasPdfBackground =>
+      widget.page.pdfImagePath != null || widget.page.pdfSourcePath != null;
+
+  PageSize get _pageSize => _hasPdfBackground
       ? PageSize.values.firstWhere(
           (ps) => (ps.aspect - widget.page.aspect).abs() < 0.01,
           orElse: () => widget.page.pageSize,
@@ -65,18 +70,43 @@ class PageEditorState extends State<PageEditor> {
   }
 
   Future<void> _loadPdf() async {
-    final path = widget.page.pdfImagePath;
-    if (path == null) {
-      if (mounted) setState(() => _pdfImage = null);
+    final legacyPath = widget.page.pdfImagePath;
+    final lazySource = widget.page.pdfSourcePath;
+    final lazyIndex = widget.page.pdfPageIndex;
+
+    if (legacyPath == null && lazySource == null) {
+      if (mounted) setState(() {
+        _pdfImage = null;
+        _pdfLoading = false;
+      });
       return;
     }
+
+    if (mounted) setState(() => _pdfLoading = true);
+
     try {
-      final bytes = await File(path).readAsBytes();
-      final codec = await ui.instantiateImageCodec(bytes);
-      final frame = await codec.getNextFrame();
-      if (mounted) setState(() => _pdfImage = frame.image);
+      ui.Image? image;
+      if (legacyPath != null) {
+        final bytes = await File(legacyPath).readAsBytes();
+        final codec = await ui.instantiateImageCodec(bytes);
+        final frame = await codec.getNextFrame();
+        image = frame.image;
+      } else if (lazySource != null && lazyIndex != null) {
+        image = await PdfPageCache.instance.getPage(lazySource, lazyIndex);
+      }
+      if (mounted) {
+        setState(() {
+          _pdfImage = image;
+          _pdfLoading = false;
+        });
+      }
     } catch (_) {
-      if (mounted) setState(() => _pdfImage = null);
+      if (mounted) {
+        setState(() {
+          _pdfImage = null;
+          _pdfLoading = false;
+        });
+      }
     }
   }
 
@@ -104,15 +134,31 @@ class PageEditorState extends State<PageEditor> {
                 ),
               ],
             ),
-            child: DrawingCanvas(
-              key: _canvasKey,
-              page: widget.page,
-              toolState: widget.toolState,
-              displaySize: size,
-              pageSize: _pageSize,
-              pdfImage: _pdfImage,
-              onHistoryChanged: widget.onHistoryChanged,
-              onSelectionChanged: widget.onSelectionChanged,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                DrawingCanvas(
+                  key: _canvasKey,
+                  page: widget.page,
+                  toolState: widget.toolState,
+                  displaySize: size,
+                  pageSize: _pageSize,
+                  pdfImage: _pdfImage,
+                  onHistoryChanged: widget.onHistoryChanged,
+                  onSelectionChanged: widget.onSelectionChanged,
+                ),
+                if (_pdfLoading && _pdfImage == null && _hasPdfBackground)
+                  const ColoredBox(
+                    color: Color(0xFFF4F6F9),
+                    child: Center(
+                      child: SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

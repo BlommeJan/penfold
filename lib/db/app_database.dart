@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 4;
+  static const _schemaVersion = 5;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -70,6 +70,8 @@ class AppDatabase {
         template INTEGER NOT NULL,
         page_size INTEGER NOT NULL DEFAULT 0,
         pdf_image TEXT,
+        pdf_source_path TEXT,
+        pdf_page_index INTEGER,
         aspect REAL NOT NULL DEFAULT 0.7070707
       )''');
     await db.execute('''
@@ -179,6 +181,10 @@ class AppDatabase {
     if (oldV < 4) {
       await _createInkIndex(db);
       await _rebuildFts(db);
+    }
+    if (oldV < 5) {
+      await _addColumnIfMissing(db, 'pages', 'pdf_source_path', 'TEXT');
+      await _addColumnIfMissing(db, 'pages', 'pdf_page_index', 'INTEGER');
     }
   }
 

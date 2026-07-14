@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.11] — 2026
+
+### Added
+
+- **Lazy PDF import** — stores source PDF once (`pdf_sources/`) with per-page `pdf_source_path` + `pdf_page_index` (schema v5); pages render on demand
+- **`pdf_page_cache.dart`** — LRU in-memory cache (4 pages) with loading placeholder in page editor
+
 ## [0.2.8] — 2026
 
 ### Added

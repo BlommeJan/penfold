@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../canvas/painters.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/pdf_page_cache.dart';
 
 class _PagePreviewData {
   final List<Stroke> strokes;
@@ -66,6 +67,11 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
         } catch (_) {
           pdfImage = null;
         }
+      } else if (page.pdfSourcePath != null && page.pdfPageIndex != null) {
+        pdfImage = await PdfPageCache.instance.getPage(
+          page.pdfSourcePath!,
+          page.pdfPageIndex!,
+        );
       }
       _cache[page.id] = _PagePreviewData(
         strokes: strokes,

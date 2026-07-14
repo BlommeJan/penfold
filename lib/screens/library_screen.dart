@@ -10,11 +10,11 @@ const _uuid = Uuid();
 
 const _coverColors = [
   0xFF2455C3,
-  0xFFB23B3B,
-  0xFF1E8449,
-  0xFF7D3C98,
-  0xFFB9770E,
-  0xFF2C3E50,
+  0xFFD63B3B,
+  0xFF1E9E52,
+  0xFF8E44C8,
+  0xFFE08A12,
+  0xFF2E5A8C,
 ];
 
 enum _LibraryView { all, uncategorized }
@@ -533,6 +533,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     required bool selected,
     required VoidCallback onTap,
   }) {
+    final primary = Theme.of(context).colorScheme.primary;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: FilterChip(
@@ -541,20 +542,22 @@ class _LibraryScreenState extends State<LibraryScreen> {
         showCheckmark: false,
         labelStyle: TextStyle(
           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          color: selected ? const Color(0xFF2455C3) : const Color(0xFF4A4A4A),
+          color: selected ? primary : const Color(0xFF4A4A4A),
         ),
-        selectedColor: const Color(0xFF2455C3).withOpacity(0.12),
+        selectedColor: primary.withOpacity(0.16),
         backgroundColor: Colors.white,
         side: BorderSide(
-          color: selected ? const Color(0xFF2455C3) : const Color(0xFFE0E4EA),
+          color: selected ? primary : const Color(0xFFE0E4EA),
+          width: selected ? 1.5 : 1,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         onSelected: (_) => onTap(),
       ),
     );
   }
 
   Widget _notebookCard(Notebook n) {
+    final cover = Color(n.coverColor);
     return GestureDetector(
       onTap: () => _open(n),
       onLongPress: () => _notebookMenu(n),
@@ -565,7 +568,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(n.coverColor),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    cover,
+                    Color.lerp(cover, Colors.black, 0.12)!,
+                  ],
+                ),
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomRight: Radius.circular(10),
@@ -574,9 +584,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
-                    blurRadius: 10,
+                    color: cover.withOpacity(0.35),
+                    blurRadius: 12,
                     offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -585,7 +600,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   Row(
                     children: [
                       Container(
-                          width: 8, color: Colors.black.withOpacity(0.18)),
+                        width: 8,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.22),
+                              Colors.black.withOpacity(0.12),
+                            ],
+                          ),
+                        ),
+                      ),
                       const Spacer(),
                     ],
                   ),

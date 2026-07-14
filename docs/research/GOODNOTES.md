@@ -1,7 +1,7 @@
 # GoodNotes — Competitive Research
 
 > Sources: App Store reviews, Goodnotes feedback forums, Reddit/Hacker News/MPU Talk, Android Police, TechCrunch, support docs (2024–2026).  
-> Penfold baseline: **v0.2.6** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
+> Penfold baseline: **v0.2.7** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
 
 ---
 

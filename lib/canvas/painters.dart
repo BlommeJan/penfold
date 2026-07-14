@@ -171,7 +171,7 @@ class InkPainter extends CustomPainter {
         canvas.drawRect(
             b,
             Paint()
-              ..color = const Color(0x143478F6)
+              ..color = const Color(0x182455C3)
               ..style = PaintingStyle.fill);
       }
     }
@@ -189,7 +189,7 @@ class InkPainter extends CustomPainter {
 
     if (marqueeRect != null) {
       final paint = Paint()
-        ..color = const Color(0x663478F6)
+        ..color = const Color(0x662455C3)
         ..style = PaintingStyle.fill;
       canvas.drawRect(marqueeRect!, paint);
       _drawDashedRect(canvas, marqueeRect!);
@@ -218,7 +218,7 @@ class InkPainter extends CustomPainter {
             handle,
             9,
             Paint()
-              ..color = const Color(0xFF3478F6)
+              ..color = const Color(0xFF2455C3)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 2);
       }
@@ -232,7 +232,7 @@ class InkPainter extends CustomPainter {
       canvas.drawPath(
           p,
           Paint()
-            ..color = const Color(0xFF3478F6)
+            ..color = const Color(0xFF2455C3)
             ..style = PaintingStyle.stroke
             ..strokeWidth = 1.5);
     }
@@ -411,7 +411,7 @@ class InkPainter extends CustomPainter {
     }
     final rotatePt = center + Offset(0, -r.height / 2 - 28);
     final line = Paint()
-      ..color = const Color(0xFF3478F6)
+      ..color = const Color(0xFF2455C3)
       ..strokeWidth = 1.5;
     canvas.drawLine(center, rotatePt, line);
     _drawHandle(canvas, rotatePt, filled: true);
@@ -428,14 +428,14 @@ class InkPainter extends CustomPainter {
         pt,
         7,
         Paint()
-          ..color = const Color(0xFF3478F6)
+          ..color = const Color(0xFF2455C3)
           ..style = filled ? PaintingStyle.fill : PaintingStyle.stroke
           ..strokeWidth = 2);
   }
 
   void _drawDashedRect(Canvas canvas, Rect r) {
     final paint = Paint()
-      ..color = const Color(0xFF3478F6)
+      ..color = const Color(0xFF2455C3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
     const dash = 7.0, gap = 5.0;

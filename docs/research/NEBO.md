@@ -45,7 +45,7 @@
 ## Penfold Takeaway
 
 - **Nebo owns conversion; Penfold owns custody** — Nebo’s moat is MyScript’s Interactive Ink engine and real-time handwriting→text. Penfold’s moat is local-first, no-account, inspectable `penfold.db`. These are complementary positioning axes, not direct clones.
-- **OCR is on Penfold’s roadmap — study Nebo’s UX, not their cloud** — When Penfold adds handwriting search/OCR (v0.2.6 searches titles + typed text only), prioritize on-device indexing and optional export over real-time reflow; Nebo proves users want live preview and gesture correction, but Penfold users chose privacy over sync.
+- **OCR is on Penfold’s roadmap — study Nebo’s UX, not their cloud** — When Penfold adds handwriting search/OCR (v0.2.7 searches titles + typed text only), prioritize on-device indexing and optional export over real-time reflow; Nebo proves users want live preview and gesture correction, but Penfold users chose privacy over sync.
 - **Don’t chase Nebo’s document model** — Nebo is structured “blocks” (text vs sketch) optimized for conversion. Penfold’s GoodNotes-style infinite/scrolling pages fit freeform ink better; avoid forcing strokes to disappear when unrecognized.
 - **Exploit Nebo’s Android pain points** — Android users praise Nebo’s recognition but complain about sync, organization, and performance at scale. A stable, offline Android notebook with eventual local OCR fills a gap Nebo doesn’t serve well.
 - **Learn from sync/export failures** — Nebo’s worst reviews center on lost notes, conflicted copies, and poor bulk export. Penfold should keep export simple (PNG/PDF per page/notebook), avoid mandatory accounts, and never ship half-baked sync.

@@ -2,7 +2,7 @@
 
 Structured research for Penfold positioning. One file per app; scannable lists of strengths, weaknesses, complaints, and Penfold takeaways.
 
-**Penfold baseline:** v0.2.6 — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
+**Penfold baseline:** v0.2.7 — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
 
 ---
 

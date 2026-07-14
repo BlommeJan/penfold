@@ -1,7 +1,7 @@
 # OneNote — Competitive Research
 
 > Sources: PCMag, Zapier, Litmus, SmartRemoteGigs, MSW Tutor, Microsoft Support/Q&A, Paperlike, AFFiNE, Huion community, migration blogs (2024–2026).  
-> Penfold baseline: **v0.2.6** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
+> Penfold baseline: **v0.2.7** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
 
 ---
 

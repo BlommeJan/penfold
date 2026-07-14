@@ -30,6 +30,8 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 | **Rich ink tools** | Pen, pencil, highlighter, shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
 
+**v0.2.7** — GoodNotes-style toolbar (back left, tools center, actions right), richer brand theme (#2455C3), vibrant library covers, and colored selection handles.
+
 ---
 
 ## Features

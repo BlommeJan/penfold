@@ -1,7 +1,7 @@
 # Competitive Research Synthesis — Penfold
 
 > Aggregated from [GoodNotes](GOODNOTES.md), [Notability](NOTABILITY.md), [Samsung Notes](SAMSUNG_NOTES.md), [OneNote](ONENOTE.md), [Noteshelf](NOTESHELF.md), [Nebo](NEBO.md), and [Squid](SQUID.md).  
-> **Penfold baseline:** v0.2.6 — local-first Flutter notebook, Android/S Pen, SQLite, no cloud, no accounts, MIT.
+> **Penfold baseline:** v0.2.7 — local-first Flutter notebook, Android/S Pen, SQLite, no cloud, no accounts, MIT.
 
 ---
 
@@ -172,4 +172,4 @@ Ranked by impact for Penfold's Android/S Pen, local-first users. All items respe
 
 ---
 
-*Synthesis version: 2026-07-15 · Penfold v0.2.6*
+*Synthesis version: 2026-07-15 · Penfold v0.2.7*

@@ -279,7 +279,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     final viewport = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF0F4),
+      backgroundColor: const Color(0xFFE8ECF3),
       appBar: EditorToolbar(
         toolState: _toolState,
         canUndo: _canUndo,

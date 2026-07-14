@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.7] — 2026
+
+### Changed
+
+- **Toolbar** — GoodNotes-style layout: back (left), centered tool row with rounded selected states, undo/redo + page actions (right); brush picker in tinted pill when pen active; subtle group dividers
+- **Theme** — richer brand blue (#2455C3) on chips, FAB, toolbar accents, and selection handles
+- **Library** — more vibrant notebook cover gradients and filter chips
+
 ## [0.2.6] — 2026
 
 ### Fixed
@@ -84,6 +92,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.7]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.7
 [0.2.6]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.6
 [0.2.5]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.5
 [0.2.4]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.4

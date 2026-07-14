@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../canvas/drawing_canvas.dart';
 import '../models/models.dart';
 
+const _kToolbarIconSize = 22.0;
+const _kToolButtonRadius = 12.0;
+
 const _penColors = [
   Color(0xFF1A1A1A),
   Color(0xFF2455C3),
@@ -27,7 +30,7 @@ const _fillColors = [
   Color(0xFFFFA94D),
 ];
 
-/// Top editing toolbar: back (left), drawing tools (center), page actions (right).
+/// Top editing toolbar: back (left), drawing tools (center), actions (right).
 class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final ToolState toolState;
   final bool canUndo;
@@ -71,165 +74,181 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
       listenable: toolState,
       builder: (context, _) {
         final t = toolState;
+        final scheme = Theme.of(context).colorScheme;
         final penFamily = t.tool == ToolType.pen ||
             t.tool == ToolType.shape ||
             t.tool == ToolType.fill;
         return Material(
           color: Colors.white,
           elevation: 0.5,
+          shadowColor: scheme.primary.withOpacity(0.08),
           child: SafeArea(
             bottom: false,
             child: SizedBox(
               height: 56,
               child: Row(
                 children: [
+                  // Left: navigation only (GoodNotes pattern — no undo here).
                   const BackButton(),
+                  const _ToolbarDivider(),
+                  // Center: drawing tools, centered in remaining space.
                   Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            tooltip: 'Undo',
-                            icon: const Icon(Icons.undo_rounded),
-                            onPressed: canUndo ? onUndo : null,
-                          ),
-                          IconButton(
-                            tooltip: 'Redo',
-                            icon: const Icon(Icons.redo_rounded),
-                            onPressed: canRedo ? onRedo : null,
-                          ),
-                          const VerticalDivider(width: 12, indent: 12, endIndent: 12),
-                          _ToolButton(
-                            icon: Icons.edit_rounded,
-                            selected: penFamily && t.tool != ToolType.fill,
-                            tooltip: 'Pen',
-                            onTap: () => t.set((s) => s.tool = ToolType.pen),
-                            onTapWhenSelected: () =>
-                                _showPenOptions(context, t, highlighter: false),
-                            accent: penFamily && t.tool != ToolType.fill
-                                ? t.penColor
-                                : null,
-                          ),
-                          if (penFamily && t.tool != ToolType.fill)
-                            _BrushStyleRow(toolState: t),
-                          _ToolButton(
-                            icon: Icons.brush_rounded,
-                            selected: t.tool == ToolType.highlighter,
-                            tooltip: 'Highlighter',
-                            onTap: () =>
-                                t.set((s) => s.tool = ToolType.highlighter),
-                            onTapWhenSelected: () =>
-                                _showPenOptions(context, t, highlighter: true),
-                            accent: t.tool == ToolType.highlighter
-                                ? t.highlighterColor
-                                : null,
-                          ),
-                          _ToolButton(
-                            icon: Icons.cleaning_services_rounded,
-                            selected: t.tool == ToolType.eraser,
-                            tooltip: 'Eraser',
-                            onTap: () => t.set((s) => s.tool = ToolType.eraser),
-                            onTapWhenSelected: () =>
-                                _showEraserOptions(context, t),
-                          ),
-                          _ToolButton(
-                            icon: Icons.near_me_rounded,
-                            selected: t.tool == ToolType.selection,
-                            tooltip: 'Selection',
-                            onTap: () =>
-                                t.set((s) => s.tool = ToolType.selection),
-                          ),
-                          _ToolButton(
-                            icon: Icons.gesture_rounded,
-                            selected: t.tool == ToolType.lasso,
-                            tooltip: 'Lasso',
-                            onTap: () => t.set((s) => s.tool = ToolType.lasso),
-                          ),
-                          _ToolButton(
-                            icon: Icons.interests_rounded,
-                            selected: t.tool == ToolType.shape,
-                            tooltip: 'Shape',
-                            onTap: () => t.set((s) => s.tool = ToolType.shape),
-                            onTapWhenSelected: () =>
-                                _showPenOptions(context, t, highlighter: false),
-                          ),
-                          _ToolButton(
-                            icon: Icons.format_color_fill_rounded,
-                            selected: t.tool == ToolType.fill,
-                            tooltip: 'Fill',
-                            onTap: () => t.set((s) => s.tool = ToolType.fill),
-                            onTapWhenSelected: () => _showFillOptions(context, t),
-                            accent: t.tool == ToolType.fill ? t.fillColor : null,
-                          ),
-                          _ToolButton(
-                            icon: Icons.text_fields_rounded,
-                            selected: t.tool == ToolType.text,
-                            tooltip: 'Text',
-                            onTap: () => t.set((s) => s.tool = ToolType.text),
-                          ),
-                          _ToolButton(
-                            icon: Icons.image_outlined,
-                            selected: false,
-                            tooltip: 'Insert image',
-                            onTap: onAddImage,
-                          ),
-                          if (hasSelection) ...[
-                            const VerticalDivider(
-                                width: 12, indent: 12, endIndent: 12),
-                            IconButton(
-                              tooltip: 'Copy',
-                              icon: const Icon(Icons.copy_rounded),
-                              onPressed: onCopy,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _ToolButton(
+                              icon: Icons.edit_rounded,
+                              selected: penFamily && t.tool != ToolType.fill,
+                              tooltip: 'Pen',
+                              onTap: () => t.set((s) => s.tool = ToolType.pen),
+                              onTapWhenSelected: () =>
+                                  _showPenOptions(context, t, highlighter: false),
+                              accent: penFamily && t.tool != ToolType.fill
+                                  ? t.penColor
+                                  : null,
                             ),
-                            IconButton(
-                              tooltip: 'Delete',
-                              icon: const Icon(Icons.delete_outline_rounded),
-                              onPressed: onDeleteSelection,
+                            if (penFamily && t.tool != ToolType.fill)
+                              _BrushStyleRow(toolState: t),
+                            _ToolButton(
+                              icon: Icons.brush_rounded,
+                              selected: t.tool == ToolType.highlighter,
+                              tooltip: 'Highlighter',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.highlighter),
+                              onTapWhenSelected: () =>
+                                  _showPenOptions(context, t, highlighter: true),
+                              accent: t.tool == ToolType.highlighter
+                                  ? t.highlighterColor
+                                  : null,
                             ),
+                            _ToolButton(
+                              icon: Icons.cleaning_services_rounded,
+                              selected: t.tool == ToolType.eraser,
+                              tooltip: 'Eraser',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.eraser),
+                              onTapWhenSelected: () =>
+                                  _showEraserOptions(context, t),
+                            ),
+                            const _ToolbarDivider(),
+                            _ToolButton(
+                              icon: Icons.near_me_rounded,
+                              selected: t.tool == ToolType.selection,
+                              tooltip: 'Selection',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.selection),
+                            ),
+                            _ToolButton(
+                              icon: Icons.gesture_rounded,
+                              selected: t.tool == ToolType.lasso,
+                              tooltip: 'Lasso',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.lasso),
+                            ),
+                            _ToolButton(
+                              icon: Icons.interests_rounded,
+                              selected: t.tool == ToolType.shape,
+                              tooltip: 'Shape',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.shape),
+                              onTapWhenSelected: () =>
+                                  _showPenOptions(context, t, highlighter: false),
+                            ),
+                            _ToolButton(
+                              icon: Icons.format_color_fill_rounded,
+                              selected: t.tool == ToolType.fill,
+                              tooltip: 'Fill',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.fill),
+                              onTapWhenSelected: () =>
+                                  _showFillOptions(context, t),
+                              accent:
+                                  t.tool == ToolType.fill ? t.fillColor : null,
+                            ),
+                            _ToolButton(
+                              icon: Icons.text_fields_rounded,
+                              selected: t.tool == ToolType.text,
+                              tooltip: 'Text',
+                              onTap: () =>
+                                  t.set((s) => s.tool = ToolType.text),
+                            ),
+                            _ToolButton(
+                              icon: Icons.image_outlined,
+                              selected: false,
+                              tooltip: 'Insert image',
+                              onTap: onAddImage,
+                            ),
+                            if (hasSelection || canPaste) ...[
+                              const _ToolbarDivider(),
+                              if (hasSelection) ...[
+                                _ActionIconButton(
+                                  tooltip: 'Copy',
+                                  icon: Icons.copy_rounded,
+                                  onPressed: onCopy,
+                                ),
+                                _ActionIconButton(
+                                  tooltip: 'Delete',
+                                  icon: Icons.delete_outline_rounded,
+                                  onPressed: onDeleteSelection,
+                                ),
+                              ],
+                              if (canPaste)
+                                _ActionIconButton(
+                                  tooltip: 'Paste',
+                                  icon: Icons.content_paste_rounded,
+                                  onPressed: onPaste,
+                                ),
+                            ],
                           ],
-                          if (canPaste)
-                            IconButton(
-                              tooltip: 'Paste',
-                              icon: const Icon(Icons.content_paste_rounded),
-                              onPressed: onPaste,
-                            ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                  IconButton(
+                  const _ToolbarDivider(),
+                  // Right: history + page actions (undo lives here, not by back).
+                  _ActionIconButton(
+                    tooltip: 'Undo',
+                    icon: Icons.undo_rounded,
+                    onPressed: canUndo ? onUndo : null,
+                  ),
+                  _ActionIconButton(
+                    tooltip: 'Redo',
+                    icon: Icons.redo_rounded,
+                    onPressed: canRedo ? onRedo : null,
+                  ),
+                  const _ToolbarDivider(),
+                  _ActionIconButton(
                     tooltip: 'Add page',
-                    icon: const Icon(Icons.note_add_outlined),
+                    icon: Icons.note_add_outlined,
                     onPressed: onAddPage,
                   ),
-                  IconButton(
+                  _ActionIconButton(
                     tooltip: t.stylusOnly
                         ? 'Stylus-only (palm rejection)'
                         : 'Finger drawing',
-                    icon: Icon(
-                      t.stylusOnly
-                          ? Icons.do_not_touch_rounded
-                          : Icons.touch_app_rounded,
-                      color: t.stylusOnly
-                          ? Theme.of(context).colorScheme.primary
-                          : null,
-                    ),
+                    icon: t.stylusOnly
+                        ? Icons.do_not_touch_rounded
+                        : Icons.touch_app_rounded,
                     onPressed: () =>
                         t.set((s) => s.stylusOnly = !s.stylusOnly),
+                    active: t.stylusOnly,
                   ),
                   if (onPageOverview != null)
-                    IconButton(
+                    _ActionIconButton(
                       tooltip: 'Page overview',
-                      icon: const Icon(Icons.dashboard_rounded),
+                      icon: Icons.dashboard_rounded,
                       onPressed: onPageOverview,
                     ),
-                  IconButton(
+                  _ActionIconButton(
                     tooltip: 'Page settings',
-                    icon: const Icon(Icons.settings_rounded),
+                    icon: Icons.settings_rounded,
                     onPressed: onPageSettings,
                   ),
+                  const SizedBox(width: 4),
                 ],
               ),
             ),
@@ -424,6 +443,64 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+/// Subtle vertical separator between toolbar groups.
+class _ToolbarDivider extends StatelessWidget {
+  const _ToolbarDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Container(
+        width: 1,
+        height: 28,
+        color: const Color(0xFFE0E4EA),
+      ),
+    );
+  }
+}
+
+/// Right-side action icon with optional active tint.
+class _ActionIconButton extends StatelessWidget {
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final bool active;
+
+  const _ActionIconButton({
+    required this.tooltip,
+    required this.icon,
+    this.onPressed,
+    this.active = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final enabled = onPressed != null;
+    return Tooltip(
+      message: tooltip,
+      child: IconButton(
+        icon: Icon(icon, size: _kToolbarIconSize),
+        color: active
+            ? primary
+            : enabled
+                ? const Color(0xFF4A4A4A)
+                : const Color(0xFFB8BEC8),
+        style: active
+            ? IconButton.styleFrom(
+                backgroundColor: primary.withOpacity(0.10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_kToolButtonRadius),
+                ),
+              )
+            : null,
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
 String _brushLabel(BrushStyle b) => switch (b) {
       BrushStyle.pen => 'Pen',
       BrushStyle.fountainPen => 'Fountain',
@@ -452,8 +529,14 @@ class _BrushStyleRow extends StatelessWidget {
       listenable: toolState,
       builder: (context, _) {
         final primary = Theme.of(context).colorScheme.primary;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          decoration: BoxDecoration(
+            color: primary.withOpacity(0.06),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: primary.withOpacity(0.12)),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -464,7 +547,7 @@ class _BrushStyleRow extends StatelessWidget {
                     message: _brushLabel(b),
                     child: Material(
                       color: toolState.brushStyle == b
-                          ? primary.withOpacity(0.12)
+                          ? primary.withOpacity(0.16)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
                       child: InkWell(
@@ -477,7 +560,7 @@ class _BrushStyleRow extends StatelessWidget {
                             size: 18,
                             color: toolState.brushStyle == b
                                 ? primary
-                                : Colors.black45,
+                                : const Color(0xFF7A8494),
                           ),
                         ),
                       ),
@@ -515,26 +598,40 @@ class _ToolButton extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 3),
         child: Material(
-          color: selected ? primary.withOpacity(0.10) : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
+          color: selected ? primary.withOpacity(0.14) : Colors.transparent,
+          borderRadius: BorderRadius.circular(_kToolButtonRadius),
           child: InkWell(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(_kToolButtonRadius),
             onTap: selected ? (onTapWhenSelected ?? onTap) : onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(9),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: selected
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(_kToolButtonRadius),
+                      border: Border.all(
+                        color: primary.withOpacity(0.22),
+                        width: 1,
+                      ),
+                    )
+                  : null,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(icon,
-                      size: 22, color: selected ? primary : Colors.black54),
-                  const SizedBox(height: 2),
+                  Icon(
+                    icon,
+                    size: _kToolbarIconSize,
+                    color: selected ? primary : const Color(0xFF6B7280),
+                  ),
+                  const SizedBox(height: 3),
                   Container(
                     height: 3,
-                    width: 18,
+                    width: 20,
                     decoration: BoxDecoration(
-                      color: selected ? (accent ?? primary) : Colors.transparent,
+                      color:
+                          selected ? (accent ?? primary) : Colors.transparent,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

@@ -1,7 +1,7 @@
 # Squid — Competitive Research
 
 > Sources: Google Play reviews, Squid Help Center, UserVoice feedback forum, Samsung Members, Android Developers (ChromeOS story), NoteLyn/Huion roundups (2024–2026).  
-> Penfold baseline: **v0.2.6** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
+> Penfold baseline: **v0.2.7** — local-first Flutter notebook, Android/S Pen, SQLite, no cloud.
 
 **Product context:** Squid (formerly **Papyrus**) is a handwriting-first Android/ChromeOS app from Stylus Labs / Steadfast Innovation. It has been on the market 10+ years and is positioning a major refresh as **Squid10** (opt-in beta). Core focus: vector ink, stylus input, and PDF markup — not an all-in-one notes platform.
 

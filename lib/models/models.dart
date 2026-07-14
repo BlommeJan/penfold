@@ -115,6 +115,8 @@ class NotePage {
   /// 1-based page index inside [pdfSourcePath].
   final int? pdfPageIndex;
 
+  bool bookmarked;
+
   /// Aspect ratio (width / height) of the page.
   final double aspect;
 
@@ -127,6 +129,7 @@ class NotePage {
     this.pdfImagePath,
     this.pdfSourcePath,
     this.pdfPageIndex,
+    this.bookmarked = false,
     double? aspect,
   }) : aspect = aspect ?? pageSize.aspect;
 
@@ -139,6 +142,7 @@ class NotePage {
         'pdf_image': pdfImagePath,
         'pdf_source_path': pdfSourcePath,
         'pdf_page_index': pdfPageIndex,
+        'bookmarked': bookmarked ? 1 : 0,
         'aspect': aspect,
       };
 
@@ -153,6 +157,7 @@ class NotePage {
         pdfImagePath: r['pdf_image'] as String?,
         pdfSourcePath: r['pdf_source_path'] as String?,
         pdfPageIndex: r['pdf_page_index'] as int?,
+        bookmarked: (r['bookmarked'] as int?) == 1,
         aspect: (r['aspect'] as num?)?.toDouble() ?? ps.aspect,
     );
   }

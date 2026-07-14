@@ -136,5 +136,35 @@ void main() {
         isFalse,
       );
     });
+
+    test('two-finger pinch always allows zoom on paper', () {
+      expect(
+        shouldAllowPinchZoom(
+          touchPointerCount: 2,
+          kind: PointerDeviceKind.touch,
+        ),
+        isTrue,
+      );
+      expect(
+        shouldAllowPanZoom(
+          kind: PointerDeviceKind.touch,
+          localPos: const Offset(200, 280),
+          paperSize: paper,
+          stylusOnly: false,
+          touchPointerCount: 2,
+        ),
+        isTrue,
+      );
+      expect(
+        shouldAllowPanZoom(
+          kind: PointerDeviceKind.touch,
+          localPos: const Offset(200, 280),
+          paperSize: paper,
+          stylusOnly: true,
+          touchPointerCount: 2,
+        ),
+        isTrue,
+      );
+    });
   });
 }

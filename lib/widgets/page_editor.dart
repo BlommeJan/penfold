@@ -18,6 +18,7 @@ class PageEditor extends StatefulWidget {
   final void Function(DrawingCanvasState state)? onCanvasReady;
   final void Function(bool canUndo, bool canRedo)? onHistoryChanged;
   final void Function(bool hasSelection)? onSelectionChanged;
+  final ValueChanged<bool>? onTransformGestureActive;
 
   const PageEditor({
     super.key,
@@ -28,6 +29,7 @@ class PageEditor extends StatefulWidget {
     this.onCanvasReady,
     this.onHistoryChanged,
     this.onSelectionChanged,
+    this.onTransformGestureActive,
   });
 
   @override
@@ -124,6 +126,7 @@ class PageEditorState extends State<PageEditor> {
           key: _viewportKey,
           toolState: widget.toolState,
           paperSize: size,
+          onTransformGestureActive: widget.onTransformGestureActive,
           child: DecoratedBox(
             decoration: BoxDecoration(
               boxShadow: [

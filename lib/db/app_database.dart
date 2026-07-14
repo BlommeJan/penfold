@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 5;
+  static const _schemaVersion = 6;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -72,6 +72,7 @@ class AppDatabase {
         pdf_image TEXT,
         pdf_source_path TEXT,
         pdf_page_index INTEGER,
+        bookmarked INTEGER NOT NULL DEFAULT 0,
         aspect REAL NOT NULL DEFAULT 0.7070707
       )''');
     await db.execute('''
@@ -185,6 +186,10 @@ class AppDatabase {
     if (oldV < 5) {
       await _addColumnIfMissing(db, 'pages', 'pdf_source_path', 'TEXT');
       await _addColumnIfMissing(db, 'pages', 'pdf_page_index', 'INTEGER');
+    }
+    if (oldV < 6) {
+      await _addColumnIfMissing(
+          db, 'pages', 'bookmarked', 'INTEGER NOT NULL DEFAULT 0');
     }
   }
 
@@ -549,6 +554,20 @@ class AppDatabase {
   Future<void> updatePageTemplate(String id, PageTemplate t) async {
     await (await db).update('pages', {'template': t.index},
         where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> setPageBookmarked(String id, bool bookmarked) async {
+    await (await db).update('pages', {'bookmarked': bookmarked ? 1 : 0},
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<int>> bookmarkedPageIndices(String notebookId) async {
+    final rows = await (await db).query('pages',
+        columns: ['idx'],
+        where: 'notebook_id = ? AND bookmarked = 1',
+        whereArgs: [notebookId],
+        orderBy: 'idx ASC');
+    return rows.map((r) => r['idx'] as int).toList();
   }
 
   // ---- Strokes ----

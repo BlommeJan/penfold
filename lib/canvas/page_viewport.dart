@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'drawing_canvas.dart';
 import 'pointer_routing.dart';
 
-/// Gated pan/zoom wrapper. Stylus never moves the canvas; finger behavior
-/// depends on [ToolState.stylusOnly] and whether the touch is on the paper.
+/// Gated pan/zoom wrapper. Stylus draws; fingers pan/zoom per [ToolState].
+///
+/// Two-finger pinch always zooms (paper, margin, stylus-only, stylus drawing).
 class PageViewport extends StatefulWidget {
   final ToolState toolState;
   final Size paperSize;
   final Widget child;
+  final ValueChanged<bool>? onTransformGestureActive;
 
   const PageViewport({
     super.key,
     required this.toolState,
     required this.paperSize,
     required this.child,
+    this.onTransformGestureActive,
   });
 
   @override
@@ -27,7 +30,7 @@ class PageViewportState extends State<PageViewport> {
   final Map<int, PointerDeviceKind> _activePointers = {};
   Offset? _lastFocal;
   double _gestureStartScale = 1;
-  bool _gesturePanning = false;
+  bool _gestureActive = false;
 
   @override
   void initState() {
@@ -50,22 +53,42 @@ class PageViewportState extends State<PageViewport> {
       k == PointerDeviceKind.stylus ||
       k == PointerDeviceKind.invertedStylus;
 
-  bool _pointerOnPaper(Offset local) {
-    final r = Offset.zero & widget.paperSize;
-    return r.contains(local);
+  int _touchPointerCount() =>
+      _activePointers.values.where((k) => !_isStylusKind(k)).length;
+
+  bool _hasStylusPointer() =>
+      _activePointers.values.any(_isStylusKind);
+
+  PointerDeviceKind _dominantTouchKind() {
+    for (final kind in _activePointers.values) {
+      if (!_isStylusKind(kind)) return kind;
+    }
+    return PointerDeviceKind.touch;
   }
 
-  bool _mayPanZoom(PointerDeviceKind kind, Offset local) {
+  bool _allowsGesture({required Offset focal, required int pointerCount}) {
+    final touches = _touchPointerCount();
+    final effectiveTouches = pointerCount > touches ? pointerCount : touches;
+    final kind = _dominantTouchKind();
+
+    if (shouldAllowPinchZoom(
+      touchPointerCount: effectiveTouches,
+      kind: kind,
+    )) {
+      return true;
+    }
+
+    // Single-finger pan: never while stylus is down (stylus is drawing).
+    if (_hasStylusPointer()) return false;
+
     return shouldAllowPanZoom(
       kind: kind,
-      localPos: local,
+      localPos: focal,
       paperSize: widget.paperSize,
       stylusOnly: widget.toolState.stylusOnly,
+      touchPointerCount: effectiveTouches,
     );
   }
-
-  bool _scaleInvolvesStylus() =>
-      _activePointers.values.any(_isStylusKind);
 
   void _onPointerDown(PointerDownEvent e) {
     _activePointers[e.pointer] = e.kind;
@@ -74,67 +97,78 @@ class PageViewportState extends State<PageViewport> {
   void _onPointerUp(PointerEvent e) {
     _activePointers.remove(e.pointer);
     if (_activePointers.isEmpty) {
-      _gesturePanning = false;
+      if (_gestureActive) {
+        widget.onTransformGestureActive?.call(false);
+      }
+      _gestureActive = false;
       _lastFocal = null;
     }
   }
 
-  void _onScaleStart(ScaleStartDetails d) {
-    if (_scaleInvolvesStylus()) return;
-    final kind = _dominantKind();
-    if (!_mayPanZoom(kind, d.localFocalPoint)) return;
-    _gesturePanning = true;
-    _lastFocal = d.localFocalPoint;
+  void _beginGesture(Offset focal) {
+    if (!_gestureActive) {
+      widget.onTransformGestureActive?.call(true);
+    }
+    _gestureActive = true;
+    _lastFocal = focal;
     _gestureStartScale = _transform.value.getMaxScaleOnAxis();
   }
 
+  void _onScaleStart(ScaleStartDetails d) {
+    if (!_allowsGesture(focal: d.localFocalPoint, pointerCount: d.pointerCount)) {
+      return;
+    }
+    _beginGesture(d.localFocalPoint);
+  }
+
   void _onScaleUpdate(ScaleUpdateDetails d) {
-    if (!_gesturePanning || _scaleInvolvesStylus()) return;
-    final kind = _dominantKind();
-    if (!_mayPanZoom(kind, d.localFocalPoint)) return;
+    if (!_gestureActive) {
+      if (!_allowsGesture(
+        focal: d.localFocalPoint,
+        pointerCount: d.pointerCount,
+      )) {
+        return;
+      }
+      _beginGesture(d.localFocalPoint);
+    }
+
+    if (!_gestureActive) return;
+    if (!_allowsGesture(
+      focal: d.localFocalPoint,
+      pointerCount: d.pointerCount,
+    )) {
+      return;
+    }
 
     final m = Matrix4.copy(_transform.value);
-    if (d.scale != 1.0) {
+
+    if (d.pointerCount >= 2 && (d.scale - 1.0).abs() > 0.001) {
       final newScale = (_gestureStartScale * d.scale).clamp(0.6, 10.0);
       final delta = newScale / m.getMaxScaleOnAxis();
       m.translate(d.localFocalPoint.dx, d.localFocalPoint.dy);
       m.scale(delta);
       m.translate(-d.localFocalPoint.dx, -d.localFocalPoint.dy);
     }
-    if (_lastFocal != null) {
+
+    if (d.pointerCount == 1 && _lastFocal != null) {
       final pan = d.localFocalPoint - _lastFocal!;
       m.translate(pan.dx, pan.dy);
     }
+
     _lastFocal = d.localFocalPoint;
     _transform.value = m;
   }
 
   void _onScaleEnd(ScaleEndDetails d) {
-    _gesturePanning = false;
+    if (_gestureActive) {
+      widget.onTransformGestureActive?.call(false);
+    }
+    _gestureActive = false;
     _lastFocal = null;
-  }
-
-  PointerDeviceKind _dominantKind() {
-    if (_activePointers.isEmpty) return PointerDeviceKind.touch;
-    return _activePointers.values.first;
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewer = InteractiveViewer(
-      transformationController: _transform,
-      panEnabled: false,
-      scaleEnabled: false,
-      minScale: 0.6,
-      maxScale: 10,
-      child: widget.child,
-    );
-
-    // Finger on paper draws; scale/pan here would only compete with ink.
-    if (!widget.toolState.stylusOnly) {
-      return viewer;
-    }
-
     return Listener(
       onPointerDown: _onPointerDown,
       onPointerUp: _onPointerUp,
@@ -144,7 +178,14 @@ class PageViewportState extends State<PageViewport> {
         onScaleStart: _onScaleStart,
         onScaleUpdate: _onScaleUpdate,
         onScaleEnd: _onScaleEnd,
-        child: viewer,
+        child: InteractiveViewer(
+          transformationController: _transform,
+          panEnabled: false,
+          scaleEnabled: false,
+          minScale: 0.6,
+          maxScale: 10,
+          child: widget.child,
+        ),
       ),
     );
   }

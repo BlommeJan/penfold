@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.12] — 2026
+
+### Fixed
+
+- **Pinch zoom** — finger pinch-to-zoom now works reliably in stylus-only and finger-drawing modes, on paper and margin; stylus + two-finger pinch can zoom simultaneously
+- **`PageViewport`** — scale gesture always active; no longer blocked when stylus is down if 2+ touch pointers; late pinch start on paper in finger mode
+- **`DrawGestureShield`** — rejects multi-touch so ancestor scale recognizer wins; brief defer before claiming single-finger scroll block
+- **`notebook_screen`** — disables vertical scroll while page pinch/pan gesture is active
+
 ## [0.2.11] — 2026
 
 ### Added

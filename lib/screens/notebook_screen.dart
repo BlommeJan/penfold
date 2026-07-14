@@ -37,6 +37,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   bool _canRedo = false;
   bool _hasSelection = false;
   int _visiblePageIndex = 0;
+  int _pinchLockCount = 0;
 
   DrawingCanvasState? _activeCanvas;
 
@@ -90,6 +91,16 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   void _setActiveCanvas(DrawingCanvasState? state) {
     _activeCanvas = state;
+  }
+
+  void _onPageTransformGesture(bool active) {
+    setState(() {
+      if (active) {
+        _pinchLockCount++;
+      } else {
+        _pinchLockCount = (_pinchLockCount - 1).clamp(0, 999);
+      }
+    });
   }
 
   Future<void> _scrollToPage(int index) async {
@@ -170,6 +181,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 onTap: () => Navigator.pop(ctx, t),
               ),
             const Divider(height: 1),
+            SwitchListTile(
+              secondary: const Icon(Icons.bookmark_outline_rounded),
+              title: const Text('Bookmark this page'),
+              value: _activePage.bookmarked,
+              onChanged: (v) => Navigator.pop(ctx, 'bookmark:$v'),
+            ),
+            const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text('Export',
@@ -197,6 +215,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
       ),
     );
     if (chosen == null || !mounted) return;
+
+    if (chosen is String && chosen.startsWith('bookmark:')) {
+      final v = chosen == 'bookmark:true';
+      await _db.setPageBookmarked(_activePage.id, v);
+      setState(() => _activePage.bookmarked = v);
+      return;
+    }
 
     if (chosen is PageTemplate) {
       if (_activePage.pdfImagePath != null) {
@@ -302,6 +327,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
               behavior: const PenfoldScrollBehavior(),
               child: CustomScrollView(
                 controller: _scrollController,
+                physics: _pinchLockCount > 0
+                    ? const NeverScrollableScrollPhysics()
+                    : const AlwaysScrollableScrollPhysics(),
                 slivers: [
                   for (var i = 0; i < _pages.length; i++)
                     SliverToBoxAdapter(
@@ -328,6 +356,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           onSelectionChanged: i == _visiblePageIndex
                               ? (sel) => setState(() => _hasSelection = sel)
                               : null,
+                          onTransformGestureActive: _onPageTransformGesture,
                         ),
                       ),
                     ),

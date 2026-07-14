@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/stroke_eraser.dart';
 import 'draw_gesture_shield.dart';
 import 'page_coords.dart';
 import 'pointer_routing.dart';
@@ -49,6 +50,7 @@ class ToolState extends ChangeNotifier {
   double penWidth = 3.0;
   double highlighterWidth = 18.0;
   double eraserRadius = 16.0;
+  EraserMode eraserMode = EraserMode.partial;
 
   /// Palm rejection: when true, only stylus input draws. Finger pans/zooms.
   bool stylusOnly = true;
@@ -98,6 +100,29 @@ class _RemoveStrokes extends _EditAction {
 
   @override
   Future<void> redo(_CanvasController c) => c.removeStrokes(strokes);
+}
+
+class _ErasePartial extends _EditAction {
+  final List<Stroke> removed;
+  final List<Stroke> added;
+
+  _ErasePartial(this.removed, this.added);
+
+  @override
+  Future<void> undo(_CanvasController c) async {
+    await c.removeStrokes(added);
+    for (final s in removed) {
+      await c.addStroke(s);
+    }
+  }
+
+  @override
+  Future<void> redo(_CanvasController c) async {
+    await c.removeStrokes(removed);
+    for (final s in added) {
+      await c.addStroke(s);
+    }
+  }
 }
 
 class _MoveStrokes extends _EditAction {
@@ -524,6 +549,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   List<Offset>? _fillPath;
 
   final List<Stroke> _erasedThisPass = [];
+  final Map<String, Stroke> _partialEraseOriginals = {};
+  final Map<String, String> _partialSegmentToRoot = {};
+  final Set<String> _partialEraseAddedIds = {};
 
   final Set<String> _selectedIds = {};
   final Set<String> _selectedFillIds = {};
@@ -966,6 +994,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         return;
       case ToolType.eraser:
         _erasedThisPass.clear();
+        _partialEraseOriginals.clear();
+        _partialSegmentToRoot.clear();
+        _partialEraseAddedIds.clear();
         _eraseAt(cPos);
       case ToolType.lasso:
         final selImg = _selectedImage();
@@ -1346,12 +1377,30 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       return;
     }
 
-    if (tool == ToolType.eraser && _erasedThisPass.isNotEmpty) {
-      _controller.commit(_RemoveStrokes(List.of(_erasedThisPass)));
-      _erasedThisPass.clear();
-      widget.onHistoryChanged
-          ?.call(_controller.canUndo, _controller.canRedo);
-      return;
+    if (tool == ToolType.eraser) {
+      if (_partialEraseOriginals.isNotEmpty) {
+        final added = _strokes
+            .where((s) => _partialEraseAddedIds.contains(s.id))
+            .map((s) => s.copy())
+            .toList();
+        _controller.commit(_ErasePartial(
+          _partialEraseOriginals.values.map((s) => s.copy()).toList(),
+          added,
+        ));
+        _partialEraseOriginals.clear();
+        _partialSegmentToRoot.clear();
+        _partialEraseAddedIds.clear();
+        widget.onHistoryChanged
+            ?.call(_controller.canUndo, _controller.canRedo);
+        return;
+      }
+      if (_erasedThisPass.isNotEmpty) {
+        _controller.commit(_RemoveStrokes(List.of(_erasedThisPass)));
+        _erasedThisPass.clear();
+        widget.onHistoryChanged
+            ?.call(_controller.canUndo, _controller.canRedo);
+        return;
+      }
     }
 
     if (tool == ToolType.lasso) {
@@ -1505,6 +1554,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   void _eraseAt(Offset canonicalPos) {
+    if (widget.toolState.eraserMode == EraserMode.partial) {
+      unawaited(_erasePartialAt(canonicalPos));
+      return;
+    }
     final r = _toCanonicalLen(widget.toolState.eraserRadius);
     final doomed = <Stroke>[];
     for (final s in _strokes) {
@@ -1516,6 +1569,48 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _erasedThisPass.add(s.copy());
     }
     _controller.removeStrokes(doomed);
+  }
+
+  Future<void> _erasePartialAt(Offset canonicalPos) async {
+    final r = _toCanonicalLen(widget.toolState.eraserRadius);
+    final candidates = List<Stroke>.from(_strokes);
+    var changed = false;
+    for (final s in candidates) {
+      if (!s.bounds.inflate(r).contains(canonicalPos)) continue;
+      if (!_strokeHit(s, canonicalPos, r)) continue;
+
+      final result = partialEraseStroke(s, canonicalPos, r);
+      if (result == null) continue;
+
+      final rootId = _partialSegmentToRoot[s.id] ?? s.id;
+      _partialEraseOriginals.putIfAbsent(rootId, () => s.copy());
+
+      await _controller.removeStrokes([s]);
+      _partialEraseAddedIds.remove(s.id);
+      _partialSegmentToRoot.remove(s.id);
+
+      final newSegs = <Stroke>[];
+      for (final seg in result.segments) {
+        final ns = Stroke(
+          id: _uuid.v4(),
+          pageId: seg.pageId,
+          tool: seg.tool,
+          brushStyle: seg.brushStyle,
+          color: seg.color,
+          width: seg.width,
+          points: List.of(seg.points),
+          z: seg.z,
+        );
+        newSegs.add(ns);
+        _partialEraseAddedIds.add(ns.id);
+        _partialSegmentToRoot[ns.id] = rootId;
+      }
+      for (final ns in newSegs) {
+        await _controller.addStroke(ns);
+      }
+      changed = true;
+    }
+    if (changed) _bump();
   }
 
   bool _strokeHit(Stroke s, Offset p, double radius) {

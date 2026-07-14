@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.9] — 2026
+
+### Added
+
+- **Partial eraser** — pixel/stroke-splitting eraser clips ink at the eraser circle instead of deleting whole strokes; toggle Pixel vs Stroke mode in eraser options sheet
+- **`stroke_eraser.dart`** — geometry service for polyline clipping with circle intersections; `_ErasePartial` undo action
+
 ## [0.2.7] — 2026
 
 ### Changed

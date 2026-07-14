@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../canvas/drawing_canvas.dart';
 import '../models/models.dart';
+import '../services/stroke_eraser.dart';
 
 const _kToolbarIconSize = 22.0;
 const _kToolButtonRadius = 12.0;
@@ -434,8 +435,36 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                 },
               ),
             ),
-            Text('Erases whole strokes it touches',
-                style: Theme.of(ctx).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Text('Eraser mode', style: Theme.of(ctx).textTheme.titleMedium),
+            StatefulBuilder(
+              builder: (ctx, setSheet) => SegmentedButton<EraserMode>(
+                segments: const [
+                  ButtonSegment(
+                    value: EraserMode.partial,
+                    label: Text('Pixel'),
+                    icon: Icon(Icons.grain, size: 18),
+                  ),
+                  ButtonSegment(
+                    value: EraserMode.wholeStroke,
+                    label: Text('Stroke'),
+                    icon: Icon(Icons.content_cut, size: 18),
+                  ),
+                ],
+                selected: {t.eraserMode},
+                onSelectionChanged: (sel) {
+                  setSheet(() {});
+                  t.set((s) => s.eraserMode = sel.first);
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              t.eraserMode == EraserMode.partial
+                  ? 'Erases only ink under the eraser circle'
+                  : 'Erases whole strokes it touches',
+              style: Theme.of(ctx).textTheme.bodySmall,
+            ),
           ],
         ),
       ),

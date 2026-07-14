@@ -12,6 +12,7 @@ import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/stroke_eraser.dart';
 import 'draw_gesture_shield.dart';
+import 'ink_coalesce.dart';
 import 'page_coords.dart';
 import 'pointer_routing.dart';
 import 'painters.dart';
@@ -544,6 +545,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   Rect? _imageRectAtGestureStart;
 
   Stroke? _current;
+  DateTime? _lastInkMoveTime;
+  Offset? _lastInkMoveCanon;
   int? _activePointer;
   List<Offset>? _lassoPath;
   List<Offset>? _fillPath;
@@ -979,6 +982,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           points: [StrokePoint(cPos.dx, cPos.dy, _pressure(e))],
           z: _controller.nextZ(),
         );
+        _lastInkMoveTime = DateTime.now();
+        _lastInkMoveCanon = cPos;
         _bump();
       case ToolType.fill:
         _fillPath = [pos];
@@ -1230,8 +1235,20 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
     if (_current != null) {
       final last = _current!.points.last;
-      final dist = Offset(cPos.dx - last.x, cPos.dy - last.y).distance;
-      if (dist < _toCanonicalLen(1.2)) return;
+      final now = DateTime.now();
+      final speed = _lastInkMoveCanon != null && _lastInkMoveTime != null
+          ? inkSpeedCanonicalPerSec(
+              _lastInkMoveCanon!, cPos, now.difference(_lastInkMoveTime!))
+          : 0.0;
+      if (!shouldAcceptInkPoint(
+        last: last,
+        newCanonical: cPos,
+        speedCanonicalPerSec: speed,
+      )) {
+        return;
+      }
+      _lastInkMoveTime = now;
+      _lastInkMoveCanon = cPos;
       _current!.points.add(StrokePoint(cPos.dx, cPos.dy, _pressure(e)));
       _bump();
       return;
@@ -1982,32 +1999,37 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            CustomPaint(
-              painter: PagePainter(
-                template: widget.page.template,
-                pageSize: _pageSize,
-                pdfImage: widget.pdfImage,
+            RepaintBoundary(
+              child: CustomPaint(
+                painter: PagePainter(
+                  template: widget.page.template,
+                  pageSize: _pageSize,
+                  pdfImage: widget.pdfImage,
+                ),
               ),
             ),
-            CustomPaint(
-              painter: InkPainter(
-                strokes: _strokes,
-                current: _current,
-                selectedIds: _selectedIds,
-                lassoPath: _lassoPath ?? _fillPath,
-                selectionBounds: _selectionBounds,
-                showTransformHandles:
-                    widget.toolState.tool == ToolType.selection && hasSelection,
-                selectionRotation: _selectionRotation,
-                marqueeRect: _marqueeRect,
-                images: _images,
-                decodedImages: _decodedImages,
-                selectedImageId: _selectedImageId,
-                fills: _fills,
-                textBlocks: _textBlocks,
-                pageSize: _pageSize,
-                displaySize: widget.displaySize,
-                revision: _revision,
+            RepaintBoundary(
+              child: CustomPaint(
+                painter: InkPainter(
+                  strokes: _strokes,
+                  current: _current,
+                  selectedIds: _selectedIds,
+                  lassoPath: _lassoPath ?? _fillPath,
+                  selectionBounds: _selectionBounds,
+                  showTransformHandles: widget.toolState.tool ==
+                          ToolType.selection &&
+                      hasSelection,
+                  selectionRotation: _selectionRotation,
+                  marqueeRect: _marqueeRect,
+                  images: _images,
+                  decodedImages: _decodedImages,
+                  selectedImageId: _selectedImageId,
+                  fills: _fills,
+                  textBlocks: _textBlocks,
+                  pageSize: _pageSize,
+                  displaySize: widget.displaySize,
+                  revision: _revision,
+                ),
               ),
             ),
             if (_textEditCtrl != null && _textEditPos != null)

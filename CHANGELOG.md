@@ -2,6 +2,18 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.10] — 2026
+
+### Added
+
+- **Ink coalescing** — adaptive min-distance sampling on pointer move reduces point count at high speed without visible gaps
+- **`ink_coalesce.dart`** — speed-aware gap logic + `test/ink_perf_test.dart` benchmark harness
+- **`docs/RELEASE_CHECKLIST.md`** — Tab S6 Lite + flagship ink latency targets
+
+### Changed
+
+- **RepaintBoundary** — isolates page background vs ink layer and per-page editor for smoother scroll
+
 ## [0.2.9] — 2026
 
 ### Added

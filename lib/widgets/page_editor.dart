@@ -89,29 +89,31 @@ class PageEditorState extends State<PageEditor> {
     });
 
     return Center(
-      child: PageViewport(
-        key: _viewportKey,
-        toolState: widget.toolState,
-        paperSize: size,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.10),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: DrawingCanvas(
-            key: _canvasKey,
-            page: widget.page,
-            toolState: widget.toolState,
-            displaySize: size,
-            pageSize: _pageSize,
-            pdfImage: _pdfImage,
-            onHistoryChanged: widget.onHistoryChanged,
-            onSelectionChanged: widget.onSelectionChanged,
+      child: RepaintBoundary(
+        child: PageViewport(
+          key: _viewportKey,
+          toolState: widget.toolState,
+          paperSize: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.10),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: DrawingCanvas(
+              key: _canvasKey,
+              page: widget.page,
+              toolState: widget.toolState,
+              displaySize: size,
+              pageSize: _pageSize,
+              pdfImage: _pdfImage,
+              onHistoryChanged: widget.onHistoryChanged,
+              onSelectionChanged: widget.onSelectionChanged,
+            ),
           ),
         ),
       ),

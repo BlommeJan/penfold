@@ -42,7 +42,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onCopy;
   final VoidCallback? onPaste;
   final VoidCallback onAddPage;
-  final VoidCallback onTemplate;
+  final VoidCallback onPageSettings;
   final VoidCallback onAddImage;
   final VoidCallback? onPageOverview;
 
@@ -61,7 +61,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     this.onCopy,
     this.onPaste,
     required this.onAddPage,
-    required this.onTemplate,
+    required this.onPageSettings,
     required this.onAddImage,
     this.onPageOverview,
   });
@@ -208,18 +208,18 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                     icon: const Icon(Icons.tune_rounded),
                     onSelected: (value) {
                       switch (value) {
-                        case 'template':
-                          onTemplate();
+                        case 'settings':
+                          onPageSettings();
                         default:
                           break;
                       }
                     },
                     itemBuilder: (ctx) => [
                       const PopupMenuItem(
-                        value: 'template',
+                        value: 'settings',
                         child: ListTile(
-                          leading: Icon(Icons.grid_4x4_rounded),
-                          title: Text('Page template'),
+                          leading: Icon(Icons.tune_rounded),
+                          title: Text('Page settings'),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),

@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.5] — 2026
+
+### Added
+
+- **Export** — page settings sheet: export current page as PNG or PDF; export full notebook as multi-page PDF
+- **Sharing** — exports open the Android share sheet (save, send, etc.) via `share_plus`
+
 ## [0.2.4] — 2026
 
 ### Added
@@ -71,6 +78,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.5]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.5
 [0.2.4]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.4
 [0.2.3]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.3
 [0.2.2]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.2

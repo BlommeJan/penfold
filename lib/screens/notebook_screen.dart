@@ -10,6 +10,7 @@ import '../canvas/drawing_canvas.dart';
 import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/page_export.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/toolbar.dart';
 import 'page_overview_screen.dart';
@@ -133,14 +134,20 @@ class _NotebookScreenState extends State<NotebookScreen> {
     setState(() {});
   }
 
-  Future<void> _pickTemplate() async {
-    final chosen = await showModalBottomSheet<PageTemplate>(
+  Future<void> _openPageSettings() async {
+    final chosen = await showModalBottomSheet<Object?>(
       context: context,
       showDragHandle: true,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text('Page template',
+                  style: Theme.of(ctx).textTheme.titleSmall),
+            ),
             for (final t in PageTemplate.values)
               ListTile(
                 leading: Icon(switch (t) {
@@ -162,21 +169,97 @@ class _NotebookScreenState extends State<NotebookScreen> {
                     : null,
                 onTap: () => Navigator.pop(ctx, t),
               ),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Text('Export',
+                  style: Theme.of(ctx).textTheme.titleSmall),
+            ),
+            ListTile(
+              leading: const Icon(Icons.image_outlined),
+              title: const Text('Export page as PNG'),
+              onTap: () => Navigator.pop(ctx, 'export_png'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf_outlined),
+              title: const Text('Export page as PDF'),
+              onTap: () => Navigator.pop(ctx, 'export_pdf'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book_outlined),
+              title: const Text('Export notebook as PDF'),
+              subtitle: Text('${_pages.length} pages'),
+              onTap: () => Navigator.pop(ctx, 'export_notebook_pdf'),
+            ),
             const SizedBox(height: 8),
           ],
         ),
       ),
     );
-    if (chosen == null) return;
-    if (_activePage.pdfImagePath != null) {
-      if (mounted) {
+    if (chosen == null || !mounted) return;
+
+    if (chosen is PageTemplate) {
+      if (_activePage.pdfImagePath != null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('PDF pages keep their document background')));
+        return;
       }
+      await _db.updatePageTemplate(_activePage.id, chosen);
+      setState(() => _activePage.template = chosen);
       return;
     }
-    await _db.updatePageTemplate(_activePage.id, chosen);
-    setState(() => _activePage.template = chosen);
+
+    switch (chosen) {
+      case 'export_png':
+        await _exportCurrentPage(ExportFormat.png);
+      case 'export_pdf':
+        await _exportCurrentPage(ExportFormat.pdf);
+      case 'export_notebook_pdf':
+        await _exportNotebookPdf();
+      default:
+        break;
+    }
+  }
+
+  Future<void> _exportCurrentPage(ExportFormat format) async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(const SnackBar(content: Text('Preparing export…')));
+    try {
+      await PageExportService.instance.exportPage(
+        page: _activePage,
+        notebookTitle: widget.notebook.title,
+        pageIndex: _visiblePageIndex,
+        format: format,
+      );
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(
+        content: Text(format == ExportFormat.png
+            ? 'Page exported as PNG'
+            : 'Page exported as PDF'),
+      ));
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+          SnackBar(content: Text('Export failed: $e')));
+    }
+  }
+
+  Future<void> _exportNotebookPdf() async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(const SnackBar(content: Text('Preparing export…')));
+    try {
+      await PageExportService.instance.exportNotebook(
+        pages: _pages,
+        notebookTitle: widget.notebook.title,
+      );
+      if (!mounted) return;
+      messenger.showSnackBar(
+          const SnackBar(content: Text('Notebook exported as PDF')));
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+          SnackBar(content: Text('Export failed: $e')));
+    }
   }
 
   void _openOverview() {
@@ -211,7 +294,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         onCopy: () => _activeCanvas?.copySelection(),
         onPaste: () => _activeCanvas?.pasteClipboard(),
         onAddPage: _addPage,
-        onTemplate: _pickTemplate,
+        onPageSettings: _openPageSettings,
         onAddImage: _addImage,
         onPageOverview: _openOverview,
       ),

@@ -41,6 +41,7 @@ class PageOverviewScreen extends StatefulWidget {
 class _PageOverviewScreenState extends State<PageOverviewScreen> {
   final _db = AppDatabase.instance;
   final Map<String, _PagePreviewData> _cache = {};
+  Map<String, PageOcrStatus> _ocrStatus = {};
   bool _loading = true;
 
   @override
@@ -73,6 +74,7 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
         pdfImage: pdfImage,
       );
     }
+    _ocrStatus = await _db.ocrStatusOfPages(widget.pages.map((p) => p.id));
     if (mounted) setState(() => _loading = false);
   }
 
@@ -102,6 +104,7 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
               itemBuilder: (context, i) {
                 final page = widget.pages[i];
                 final preview = _cache[page.id] ?? const _PagePreviewData();
+                final ocr = _ocrStatus[page.id] ?? const PageOcrStatus();
                 final ps = page.pdfImagePath != null
                     ? PageSize.values.firstWhere(
                         (s) => (s.aspect - page.aspect).abs() < 0.01,
@@ -130,16 +133,27 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(6),
-                            child: CustomPaint(
-                              painter: PageThumbnailPainter(
-                                template: page.template,
-                                pageSize: ps,
-                                strokes: preview.strokes,
-                                fills: preview.fills,
-                                textBlocks: preview.textBlocks,
-                                pdfImage: preview.pdfImage,
-                              ),
-                              child: const SizedBox.expand(),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                CustomPaint(
+                                  painter: PageThumbnailPainter(
+                                    template: page.template,
+                                    pageSize: ps,
+                                    strokes: preview.strokes,
+                                    fills: preview.fills,
+                                    textBlocks: preview.textBlocks,
+                                    pdfImage: preview.pdfImage,
+                                  ),
+                                  child: const SizedBox.expand(),
+                                ),
+                                if (ocr.hasInk)
+                                  Positioned(
+                                    right: 4,
+                                    top: 4,
+                                    child: _OcrBadge(status: ocr),
+                                  ),
+                              ],
                             ),
                           ),
                         ),
@@ -156,6 +170,44 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                 );
               },
             ),
+    );
+  }
+}
+
+class _OcrBadge extends StatelessWidget {
+  final PageOcrStatus status;
+
+  const _OcrBadge({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    late final IconData icon;
+    late final Color color;
+    late final String tip;
+    if (status.hasPending) {
+      icon = Icons.hourglass_top_rounded;
+      color = const Color(0xFFE67E22);
+      tip = 'OCR indexing…';
+    } else if (status.isComplete) {
+      icon = Icons.search_rounded;
+      color = const Color(0xFF1E8449);
+      tip = 'Handwriting searchable';
+    } else {
+      icon = Icons.text_fields_outlined;
+      color = const Color(0xFF7F8C8D);
+      tip = 'OCR partial';
+    }
+
+    return Tooltip(
+      message: tip,
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.92),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(icon, size: 14, color: color),
+      ),
     );
   }
 }

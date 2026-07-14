@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 3;
+  static const _schemaVersion = 4;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -123,6 +123,7 @@ class AppDatabase {
     await db.execute('CREATE INDEX idx_text_pg ON text_blocks(page_id, z)');
     await db.execute(
         'CREATE INDEX idx_folders_parent ON folders(parent_id, sort_order)');
+    await _createInkIndex(db);
     await _createFts(db);
   }
 
@@ -175,6 +176,34 @@ class AppDatabase {
       await db.execute(
           'CREATE INDEX IF NOT EXISTS idx_folders_parent ON folders(parent_id, sort_order)');
     }
+    if (oldV < 4) {
+      await _createInkIndex(db);
+      await _rebuildFts(db);
+    }
+  }
+
+  Future<void> _createInkIndex(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS ink_index(
+        id TEXT PRIMARY KEY,
+        page_id TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+        stroke_id TEXT REFERENCES strokes(id) ON DELETE CASCADE,
+        text TEXT NOT NULL DEFAULT '',
+        status INTEGER NOT NULL DEFAULT 0,
+        indexed_at INTEGER
+      )''');
+    await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_ink_page ON ink_index(page_id, status)');
+    await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_ink_stroke ON ink_index(stroke_id)');
+  }
+
+  Future<bool> _hasTable(Database db, String name) async {
+    final rows = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+      [name],
+    );
+    return rows.isNotEmpty;
   }
 
   Future<void> _addColumnIfMissing(
@@ -269,6 +298,15 @@ class AppDatabase {
       final texts = await db.query('text_blocks',
           where: 'page_id IN ($placeholders)', whereArgs: pageIds);
       body = texts.map((t) => t['text'] as String).join(' ');
+      if (await _hasTable(db, 'ink_index')) {
+        final ink = await db.query('ink_index',
+            where: 'page_id IN ($placeholders) AND status = ?',
+            whereArgs: [...pageIds, InkIndexStatus.indexed.dbValue]);
+        if (ink.isNotEmpty) {
+          final inkText = ink.map((r) => r['text'] as String).join(' ');
+          body = body.isEmpty ? inkText : '$body $inkText';
+        }
+      }
     }
     await db.insert('search_index', {
       'notebook_id': id,
@@ -648,6 +686,129 @@ class AppDatabase {
       if (page.isNotEmpty) {
         await refreshSearchIndex(page.first['notebook_id'] as String);
       }
+    }
+  }
+
+  // ---- Ink OCR index (v0.2.8) ----
+
+  Future<void> insertInkIndexPending({
+    required String id,
+    required String pageId,
+    required String strokeId,
+  }) async {
+    await (await db).insert('ink_index', {
+      'id': id,
+      'page_id': pageId,
+      'stroke_id': strokeId,
+      'text': '',
+      'status': InkIndexStatus.pending.dbValue,
+    });
+  }
+
+  Future<void> updateInkIndexResult({
+    required String id,
+    required String text,
+    required InkIndexStatus status,
+  }) async {
+    final database = await db;
+    final rows = await database.query('ink_index',
+        where: 'id = ?', whereArgs: [id], limit: 1);
+    if (rows.isEmpty) return;
+    await database.update(
+      'ink_index',
+      {
+        'text': text,
+        'status': status.dbValue,
+        'indexed_at': DateTime.now().millisecondsSinceEpoch,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    final pageId = rows.first['page_id'] as String;
+    final page = await database
+        .query('pages', where: 'id = ?', whereArgs: [pageId], limit: 1);
+    if (page.isNotEmpty) {
+      await refreshSearchIndex(page.first['notebook_id'] as String);
+    }
+  }
+
+  Future<PageOcrStatus> ocrStatusOfPage(String pageId) async {
+    final rows = await (await db).query('ink_index',
+        columns: ['status'], where: 'page_id = ?', whereArgs: [pageId]);
+    var indexed = 0, pending = 0, failed = 0;
+    for (final r in rows) {
+      switch (InkIndexStatus.fromDb(r['status'] as int)) {
+        case InkIndexStatus.pending:
+          pending++;
+        case InkIndexStatus.indexed:
+          indexed++;
+        case InkIndexStatus.failed:
+          failed++;
+      }
+    }
+    return PageOcrStatus(indexed: indexed, pending: pending, failed: failed);
+  }
+
+  Future<Map<String, PageOcrStatus>> ocrStatusOfPages(
+      Iterable<String> pageIds) async {
+    final ids = pageIds.toList();
+    if (ids.isEmpty) return {};
+    final placeholders = List.filled(ids.length, '?').join(',');
+    final rows = await (await db).query('ink_index',
+        columns: ['page_id', 'status'],
+        where: 'page_id IN ($placeholders)',
+        whereArgs: ids);
+    final map = <String, PageOcrStatus>{};
+    for (final id in ids) {
+      map[id] = const PageOcrStatus();
+    }
+    for (final r in rows) {
+      final pageId = r['page_id'] as String;
+      final cur = map[pageId] ?? const PageOcrStatus();
+      switch (InkIndexStatus.fromDb(r['status'] as int)) {
+        case InkIndexStatus.pending:
+          map[pageId] = PageOcrStatus(
+            indexed: cur.indexed,
+            pending: cur.pending + 1,
+            failed: cur.failed,
+          );
+        case InkIndexStatus.indexed:
+          map[pageId] = PageOcrStatus(
+            indexed: cur.indexed + 1,
+            pending: cur.pending,
+            failed: cur.failed,
+          );
+        case InkIndexStatus.failed:
+          map[pageId] = PageOcrStatus(
+            indexed: cur.indexed,
+            pending: cur.pending,
+            failed: cur.failed + 1,
+          );
+      }
+    }
+    return map;
+  }
+
+  /// Test hook: insert indexed ink text directly (bypasses ML Kit).
+  Future<void> insertInkIndexForTest({
+    required String id,
+    required String pageId,
+    required String strokeId,
+    required String text,
+  }) async {
+    final database = await db;
+    await database.insert('ink_index', {
+      'id': id,
+      'page_id': pageId,
+      'stroke_id': strokeId,
+      'text': text,
+      'status': InkIndexStatus.indexed.dbValue,
+      'indexed_at': DateTime.now().millisecondsSinceEpoch,
+    });
+    final page = await database
+        .query('pages', where: 'id = ?', whereArgs: [pageId], limit: 1);
+    if (page.isNotEmpty) {
+      await refreshSearchIndex(page.first['notebook_id'] as String);
     }
   }
 }

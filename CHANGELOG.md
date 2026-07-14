@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.8] — 2026
+
+### Added
+
+- **On-device handwriting OCR search** — ML Kit text recognition (no network); strokes queued on commit into `ink_index` table (schema v4); indexed ink merged into FTS notebook search
+- **`ink_ocr_service.dart`** — background OCR queue with stroke-to-PNG rendering
+- **Page overview OCR badges** — pending / indexed / partial indicators per thumbnail
+
 ## [0.2.10] — 2026
 
 ### Added

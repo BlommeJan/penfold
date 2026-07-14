@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/ink_ocr_service.dart';
 import '../services/stroke_eraser.dart';
 import 'draw_gesture_shield.dart';
 import 'ink_coalesce.dart';
@@ -1373,6 +1374,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
       await _controller.addStroke(stroke);
       _controller.commit(_AddStroke(stroke.copy()));
+      unawaited(InkOcrService.instance.enqueueStroke(stroke));
       _bump();
       return;
     }

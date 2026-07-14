@@ -408,3 +408,72 @@ class SearchResult {
 
   SearchResult({required this.notebook, required this.snippet});
 }
+
+/// OCR indexing status for ink strokes (v0.2.8+).
+enum InkIndexStatus {
+  pending,
+  indexed,
+  failed;
+
+  int get dbValue => index;
+
+  static InkIndexStatus fromDb(int v) {
+    if (v < 0 || v >= InkIndexStatus.values.length) {
+      return InkIndexStatus.failed;
+    }
+    return InkIndexStatus.values[v];
+  }
+}
+
+class InkIndexEntry {
+  final String id;
+  final String pageId;
+  final String? strokeId;
+  final String text;
+  final InkIndexStatus status;
+  final int? indexedAt;
+
+  InkIndexEntry({
+    required this.id,
+    required this.pageId,
+    this.strokeId,
+    required this.text,
+    required this.status,
+    this.indexedAt,
+  });
+
+  Map<String, Object?> toRow() => {
+        'id': id,
+        'page_id': pageId,
+        'stroke_id': strokeId,
+        'text': text,
+        'status': status.dbValue,
+        'indexed_at': indexedAt,
+      };
+
+  static InkIndexEntry fromRow(Map<String, Object?> r) => InkIndexEntry(
+        id: r['id'] as String,
+        pageId: r['page_id'] as String,
+        strokeId: r['stroke_id'] as String?,
+        text: r['text'] as String,
+        status: InkIndexStatus.fromDb(r['status'] as int),
+        indexedAt: r['indexed_at'] as int?,
+      );
+}
+
+/// Per-page OCR indexing summary for overview badges.
+class PageOcrStatus {
+  final int indexed;
+  final int pending;
+  final int failed;
+
+  const PageOcrStatus({
+    this.indexed = 0,
+    this.pending = 0,
+    this.failed = 0,
+  });
+
+  bool get hasInk => indexed + pending + failed > 0;
+  bool get isComplete => pending == 0 && failed == 0 && indexed > 0;
+  bool get hasPending => pending > 0;
+}

@@ -64,8 +64,8 @@ void main() {
     await tester.tap(find.text('Create'));
     await settle(tester);
 
-    // Notebook was created and opened; editor page indicator shows in toolbar.
-    expect(find.text('1/1'), findsOneWidget);
+    // Notebook was created and opened; settings gear is rightmost in toolbar.
+    expect(find.byTooltip('Page settings'), findsOneWidget);
 
     // It's also persisted.
     final saved =

@@ -34,8 +34,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final bool canRedo;
   final bool hasSelection;
   final bool canPaste;
-  final int pageIndex;
-  final int pageCount;
   final VoidCallback onUndo;
   final VoidCallback onRedo;
   final VoidCallback onDeleteSelection;
@@ -53,8 +51,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     required this.canRedo,
     required this.hasSelection,
     this.canPaste = false,
-    required this.pageIndex,
-    required this.pageCount,
     required this.onUndo,
     required this.onRedo,
     required this.onDeleteSelection,
@@ -203,28 +199,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ),
-                  PopupMenuButton<String>(
-                    tooltip: 'Page settings',
-                    icon: const Icon(Icons.tune_rounded),
-                    onSelected: (value) {
-                      switch (value) {
-                        case 'settings':
-                          onPageSettings();
-                        default:
-                          break;
-                      }
-                    },
-                    itemBuilder: (ctx) => [
-                      const PopupMenuItem(
-                        value: 'settings',
-                        child: ListTile(
-                          leading: Icon(Icons.tune_rounded),
-                          title: Text('Page settings'),
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                      ),
-                    ],
-                  ),
                   IconButton(
                     tooltip: 'Add page',
                     icon: const Icon(Icons.note_add_outlined),
@@ -251,16 +225,10 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       icon: const Icon(Icons.dashboard_rounded),
                       onPressed: onPageOverview,
                     ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8, left: 4),
-                    child: Center(
-                      child: Text(
-                        '${pageIndex + 1}/$pageCount',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ),
+                  IconButton(
+                    tooltip: 'Page settings',
+                    icon: const Icon(Icons.settings_rounded),
+                    onPressed: onPageSettings,
                   ),
                 ],
               ),

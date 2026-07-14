@@ -75,7 +75,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.5) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.6) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
 | [docs/BUILD.md](docs/BUILD.md) | Release APK build instructions |
@@ -86,7 +86,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 ## Roadmap
 
-Penfold is under active development. These items are **not** in v0.2.5:
+Penfold is under active development. These items are **not** in v0.2.6:
 
 - Handwriting OCR search (v0.2 searches titles + typed text only)
 - Pixel / stroke-splitting eraser (current eraser removes whole strokes)
@@ -106,5 +106,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.5</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.6</strong> — write freely, keep it local.
 </p>

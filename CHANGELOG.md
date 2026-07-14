@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.6] — 2026
+
+### Fixed
+
+- **Toolbar** — gear icon (rightmost) opens page settings sheet directly; removed intermediate popup menu and top-right page indicator (`3/12`)
+
 ## [0.2.5] — 2026
 
 ### Added
@@ -78,6 +84,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.6]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.6
 [0.2.5]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.5
 [0.2.4]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.4
 [0.2.3]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.3

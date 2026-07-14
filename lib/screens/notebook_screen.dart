@@ -286,8 +286,6 @@ class _NotebookScreenState extends State<NotebookScreen> {
         canRedo: _canRedo,
         hasSelection: _hasSelection,
         canPaste: _activeCanvas?.canPaste ?? false,
-        pageIndex: _visiblePageIndex,
-        pageCount: _pages.length,
         onUndo: () => _activeCanvas?.undo(),
         onRedo: () => _activeCanvas?.redo(),
         onDeleteSelection: () => _activeCanvas?.deleteSelection(),

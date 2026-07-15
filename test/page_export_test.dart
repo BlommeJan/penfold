@@ -86,4 +86,39 @@ void main() {
       image.dispose();
     }
   });
+
+  test('buildNotebookPdfBytes returns multi-page PDF incrementally', () async {
+    final db = AppDatabase.instance;
+    final notebook = Notebook(
+      id: _uuid.v4(),
+      title: 'Multi Export',
+      coverColor: 0xFF2455C3,
+      template: PageTemplate.blank,
+      createdAt: 0,
+      updatedAt: 0,
+    );
+    await db.insertNotebook(notebook);
+
+    final pages = <NotePage>[];
+    for (var i = 0; i < 3; i++) {
+      final page = NotePage(
+        id: _uuid.v4(),
+        notebookId: notebook.id,
+        index: i,
+        template: PageTemplate.blank,
+        pageSize: PageSize.a5,
+      );
+      await db.insertPage(page);
+      pages.add(page);
+    }
+
+    var lastProgress = (0, 0);
+    final bytes = await PageExportService.instance.buildNotebookPdfBytes(
+      pages: pages,
+      onProgress: (current, total) => lastProgress = (current, total),
+    );
+    expect(bytes.length, greaterThan(100));
+    expect(String.fromCharCodes(bytes.take(4)), '%PDF');
+    expect(lastProgress, (3, 3));
+  });
 }

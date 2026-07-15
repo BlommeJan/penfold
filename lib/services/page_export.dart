@@ -13,11 +13,14 @@ import '../canvas/page_coords.dart';
 import '../canvas/painters.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
+import 'pdf_page_cache.dart';
 
 /// Export resolution multiplier over canonical page coordinates.
 const exportPixelRatio = 2.0;
 
 enum ExportFormat { png, pdf }
+
+typedef ExportProgressCallback = void Function(int current, int total);
 
 class PageRenderData {
   final NotePage page;
@@ -27,6 +30,7 @@ class PageRenderData {
   final List<PageImage> images;
   final Map<String, ui.Image> decodedImages;
   final ui.Image? pdfImage;
+  final bool ownPdfImage;
 
   const PageRenderData({
     required this.page,
@@ -36,10 +40,13 @@ class PageRenderData {
     this.images = const [],
     this.decodedImages = const {},
     this.pdfImage,
+    this.ownPdfImage = false,
   });
 
   void dispose() {
-    pdfImage?.dispose();
+    if (ownPdfImage) {
+      pdfImage?.dispose();
+    }
     for (final img in decodedImages.values) {
       img.dispose();
     }
@@ -54,8 +61,11 @@ class PageExportService {
 
   final _db = AppDatabase.instance;
 
+  bool _hasPdfBackground(NotePage page) =>
+      page.pdfImagePath != null || page.pdfSourcePath != null;
+
   PageSize effectivePageSize(NotePage page) {
-    if (page.pdfImagePath != null) {
+    if (_hasPdfBackground(page)) {
       return PageSize.values.firstWhere(
         (ps) => (ps.aspect - page.aspect).abs() < 0.01,
         orElse: () => page.pageSize,
@@ -71,13 +81,24 @@ class PageExportService {
     final images = await _db.imagesOf(page.id);
 
     ui.Image? pdfImage;
-    final pdfPath = page.pdfImagePath;
-    if (pdfPath != null) {
+    var ownPdfImage = false;
+    final legacyPath = page.pdfImagePath;
+    final lazySource = page.pdfSourcePath;
+    final lazyIndex = page.pdfPageIndex;
+
+    if (legacyPath != null) {
       try {
-        final bytes = await File(pdfPath).readAsBytes();
+        final bytes = await File(legacyPath).readAsBytes();
         final codec = await ui.instantiateImageCodec(bytes);
         final frame = await codec.getNextFrame();
         pdfImage = frame.image;
+        ownPdfImage = true;
+      } catch (_) {
+        pdfImage = null;
+      }
+    } else if (lazySource != null && lazyIndex != null) {
+      try {
+        pdfImage = await PdfPageCache.instance.getPage(lazySource, lazyIndex);
       } catch (_) {
         pdfImage = null;
       }
@@ -99,6 +120,7 @@ class PageExportService {
       images: images,
       decodedImages: decodedImages,
       pdfImage: pdfImage,
+      ownPdfImage: ownPdfImage,
     );
   }
 
@@ -153,24 +175,63 @@ class PageExportService {
         marginAll: 0,
       );
 
+  Future<void> _addImagePageToDoc(
+    pw.Document doc,
+    ui.Image image,
+    PageSize pageSize,
+  ) async {
+    final png = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (png == null) {
+      throw StateError('Failed to encode page image as PNG');
+    }
+    doc.addPage(
+      pw.Page(
+        pageFormat: pdfFormatFor(pageSize),
+        build: (_) => pw.Image(
+          pw.MemoryImage(png.buffer.asUint8List()),
+          fit: pw.BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
   Future<Uint8List> buildPdfBytes(
     List<({ui.Image image, PageSize pageSize})> pages,
   ) async {
     final doc = pw.Document();
     for (final entry in pages) {
-      final png = await entry.image.toByteData(format: ui.ImageByteFormat.png);
-      if (png == null) continue;
-      doc.addPage(
-        pw.Page(
-          pageFormat: pdfFormatFor(entry.pageSize),
-          build: (_) => pw.Image(
-            pw.MemoryImage(png.buffer.asUint8List()),
-            fit: pw.BoxFit.fill,
-          ),
-        ),
-      );
+      await _addImagePageToDoc(doc, entry.image, entry.pageSize);
     }
     return doc.save();
+  }
+
+  /// Builds a multi-page PDF one page at a time to avoid holding all bitmaps in memory.
+  Future<Uint8List> buildNotebookPdfBytes({
+    required List<NotePage> pages,
+    ExportProgressCallback? onProgress,
+  }) async {
+    final doc = pw.Document();
+    final total = pages.length;
+    for (var i = 0; i < pages.length; i++) {
+      final page = pages[i];
+      PageRenderData? data;
+      ui.Image? image;
+      try {
+        data = await loadPageData(page);
+        image = await renderPage(data);
+        await _addImagePageToDoc(doc, image, effectivePageSize(page));
+      } finally {
+        image?.dispose();
+        data?.dispose();
+        await _yieldToEventLoop();
+      }
+      onProgress?.call(i + 1, total);
+    }
+    return doc.save();
+  }
+
+  Future<void> _yieldToEventLoop() async {
+    await Future<void>.delayed(Duration.zero);
   }
 
   String sanitizeFilename(String name) {
@@ -183,64 +244,58 @@ class PageExportService {
     required String notebookTitle,
     required int pageIndex,
     required ExportFormat format,
+    ExportProgressCallback? onProgress,
   }) async {
-    final data = await loadPageData(page);
+    onProgress?.call(0, 1);
+    PageRenderData? data;
+    ui.Image? image;
     try {
-      final image = await renderPage(data);
-      try {
-        final base = sanitizeFilename(notebookTitle);
-        final pageLabel = 'page${pageIndex + 1}';
-        if (format == ExportFormat.png) {
-          final bytes = await _imageToPng(image);
-          await _shareBytes(
-            bytes: bytes,
-            filename: '${base}_$pageLabel.png',
-            mimeType: 'image/png',
-          );
-        } else {
-          final pageSize = effectivePageSize(page);
-          final bytes = await buildPdfBytes([(image: image, pageSize: pageSize)]);
-          await _shareBytes(
-            bytes: bytes,
-            filename: '${base}_$pageLabel.pdf',
-            mimeType: 'application/pdf',
-          );
-        }
-      } finally {
-        image.dispose();
+      data = await loadPageData(page);
+      image = await renderPage(data);
+      onProgress?.call(1, 1);
+
+      final base = sanitizeFilename(notebookTitle);
+      final pageLabel = 'page${pageIndex + 1}';
+      if (format == ExportFormat.png) {
+        final bytes = await _imageToPng(image);
+        await _shareBytes(
+          bytes: bytes,
+          filename: '${base}_$pageLabel.png',
+          mimeType: 'image/png',
+        );
+      } else {
+        final pageSize = effectivePageSize(page);
+        final bytes = await buildPdfBytes([(image: image, pageSize: pageSize)]);
+        await _shareBytes(
+          bytes: bytes,
+          filename: '${base}_$pageLabel.pdf',
+          mimeType: 'application/pdf',
+        );
       }
     } finally {
-      data.dispose();
+      image?.dispose();
+      data?.dispose();
     }
   }
 
   Future<void> exportNotebook({
     required List<NotePage> pages,
     required String notebookTitle,
+    ExportProgressCallback? onProgress,
   }) async {
-    final rendered = <({ui.Image image, PageSize pageSize})>[];
-    try {
-      for (final page in pages) {
-        final data = await loadPageData(page);
-        try {
-          final image = await renderPage(data);
-          rendered.add((image: image, pageSize: effectivePageSize(page)));
-        } finally {
-          data.dispose();
-        }
-      }
-      final bytes = await buildPdfBytes(rendered);
-      final base = sanitizeFilename(notebookTitle);
-      await _shareBytes(
-        bytes: bytes,
-        filename: '${base}.pdf',
-        mimeType: 'application/pdf',
-      );
-    } finally {
-      for (final entry in rendered) {
-        entry.image.dispose();
-      }
+    if (pages.isEmpty) {
+      throw StateError('Notebook has no pages to export');
     }
+    final bytes = await buildNotebookPdfBytes(
+      pages: pages,
+      onProgress: onProgress,
+    );
+    final base = sanitizeFilename(notebookTitle);
+    await _shareBytes(
+      bytes: bytes,
+      filename: '${base}.pdf',
+      mimeType: 'application/pdf',
+    );
   }
 
   Future<Uint8List> _imageToPng(ui.Image image) async {
@@ -256,12 +311,21 @@ class PageExportService {
     required String filename,
     required String mimeType,
   }) async {
-    final dir = await getTemporaryDirectory();
-    final file = File(p.join(dir.path, filename));
-    await file.writeAsBytes(bytes, flush: true);
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: mimeType, name: filename)],
-      subject: filename,
-    );
+    try {
+      final dir = await getTemporaryDirectory();
+      final file = File(p.join(dir.path, filename));
+      await file.writeAsBytes(bytes, flush: true);
+      final result = await Share.shareXFiles(
+        [XFile(file.path, mimeType: mimeType, name: filename)],
+        subject: filename,
+      );
+      if (result.status == ShareResultStatus.unavailable) {
+        throw StateError('Share is not available on this device');
+      }
+    } on StateError {
+      rethrow;
+    } catch (e) {
+      throw StateError('Failed to share export: $e');
+    }
   }
 }

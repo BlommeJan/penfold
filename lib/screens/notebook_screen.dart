@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -246,15 +247,65 @@ class _NotebookScreenState extends State<NotebookScreen> {
     }
   }
 
+  Future<T?> _withExportProgress<T>({
+    required int totalPages,
+    required Future<T> Function(ExportProgressCallback onProgress) run,
+  }) async {
+    if (!mounted) return null;
+    final progress = ValueNotifier<(int current, int total)>((0, totalPages));
+
+    unawaited(
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => PopScope(
+          canPop: false,
+          child: ValueListenableBuilder<(int current, int total)>(
+            valueListenable: progress,
+            builder: (_, value, __) {
+              final label = value.$2 <= 1
+                  ? 'Preparing export…'
+                  : 'Exporting page ${value.$1} of ${value.$2}…';
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(label),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    try {
+      return await run((current, total) {
+        progress.value = (current, total);
+      });
+    } finally {
+      progress.dispose();
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
+  }
+
   Future<void> _exportCurrentPage(ExportFormat format) async {
     final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(const SnackBar(content: Text('Preparing export…')));
     try {
-      await PageExportService.instance.exportPage(
-        page: _activePage,
-        notebookTitle: widget.notebook.title,
-        pageIndex: _visiblePageIndex,
-        format: format,
+      await _withExportProgress(
+        totalPages: 1,
+        run: (onProgress) => PageExportService.instance.exportPage(
+          page: _activePage,
+          notebookTitle: widget.notebook.title,
+          pageIndex: _visiblePageIndex,
+          format: format,
+          onProgress: onProgress,
+        ),
       );
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(
@@ -271,11 +322,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   Future<void> _exportNotebookPdf() async {
     final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(const SnackBar(content: Text('Preparing export…')));
     try {
-      await PageExportService.instance.exportNotebook(
-        pages: _pages,
-        notebookTitle: widget.notebook.title,
+      await _withExportProgress(
+        totalPages: _pages.length,
+        run: (onProgress) => PageExportService.instance.exportNotebook(
+          pages: _pages,
+          notebookTitle: widget.notebook.title,
+          onProgress: onProgress,
+        ),
       );
       if (!mounted) return;
       messenger.showSnackBar(

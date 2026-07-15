@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.13] — 2026
+
+### Fixed
+
+- **Export crash** — full-page and full-notebook export no longer OOM-crash on large notebooks; PDF built page-by-page with memory cleanup between pages
+- **Export progress** — blocking progress dialog during export with per-page status for multi-page notebooks
+- **Lazy PDF export** — notebook export renders lazy-imported PDF backgrounds via `PdfPageCache` instead of missing backgrounds
+- **Export errors** — share failures surface as snackbar messages instead of silent crashes
+
 ## [0.2.12] — 2026
 
 ### Fixed
@@ -135,6 +144,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.13]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.13
 [0.2.7]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.7
 [0.2.6]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.6
 [0.2.5]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.5

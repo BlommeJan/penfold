@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../canvas/drawing_canvas.dart';
 import '../models/models.dart';
 import '../services/stroke_eraser.dart';
+import '../services/toolbar_order_service.dart';
 
 const _kToolbarIconSize = 22.0;
 const _kToolButtonRadius = 12.0;
@@ -80,13 +81,14 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: toolState,
+      listenable: Listenable.merge([toolState, ToolbarOrderService.instance]),
       builder: (context, _) {
         final t = toolState;
         final scheme = Theme.of(context).colorScheme;
         final penFamily = t.tool == ToolType.pen ||
             t.tool == ToolType.shape ||
             t.tool == ToolType.fill;
+        final centerTools = _buildCenterTools(context, t, penFamily);
         return Material(
           color: Colors.white,
           elevation: 0.5,
@@ -119,88 +121,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            _ToolButton(
-                              icon: Icons.edit_rounded,
-                              selected: penFamily && t.tool != ToolType.fill,
-                              tooltip: 'Pen',
-                              onTap: () => t.set((s) => s.tool = ToolType.pen),
-                              onTapWhenSelected: () =>
-                                  _showPenOptions(context, t, highlighter: false),
-                              accent: penFamily && t.tool != ToolType.fill
-                                  ? t.penColor
-                                  : null,
-                            ),
-                            if (penFamily && t.tool != ToolType.fill)
-                              _BrushStyleRow(toolState: t),
-                            _ToolButton(
-                              icon: Icons.brush_rounded,
-                              selected: t.tool == ToolType.highlighter,
-                              tooltip: 'Highlighter',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.highlighter),
-                              onTapWhenSelected: () =>
-                                  _showPenOptions(context, t, highlighter: true),
-                              accent: t.tool == ToolType.highlighter
-                                  ? t.highlighterColor
-                                  : null,
-                            ),
-                            _ToolButton(
-                              icon: Icons.cleaning_services_rounded,
-                              selected: t.tool == ToolType.eraser,
-                              tooltip: 'Eraser',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.eraser),
-                              onTapWhenSelected: () =>
-                                  _showEraserOptions(context, t),
-                            ),
-                            const _ToolbarDivider(),
-                            _ToolButton(
-                              icon: Icons.near_me_rounded,
-                              selected: t.tool == ToolType.selection,
-                              tooltip: 'Selection',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.selection),
-                            ),
-                            _ToolButton(
-                              icon: Icons.gesture_rounded,
-                              selected: t.tool == ToolType.lasso,
-                              tooltip: 'Lasso',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.lasso),
-                            ),
-                            _ToolButton(
-                              icon: Icons.interests_rounded,
-                              selected: t.tool == ToolType.shape,
-                              tooltip: 'Shape',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.shape),
-                              onTapWhenSelected: () =>
-                                  _showPenOptions(context, t, highlighter: false),
-                            ),
-                            _ToolButton(
-                              icon: Icons.format_color_fill_rounded,
-                              selected: t.tool == ToolType.fill,
-                              tooltip: 'Fill',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.fill),
-                              onTapWhenSelected: () =>
-                                  _showFillOptions(context, t),
-                              accent:
-                                  t.tool == ToolType.fill ? t.fillColor : null,
-                            ),
-                            _ToolButton(
-                              icon: Icons.text_fields_rounded,
-                              selected: t.tool == ToolType.text,
-                              tooltip: 'Text',
-                              onTap: () =>
-                                  t.set((s) => s.tool = ToolType.text),
-                            ),
-                            _ToolButton(
-                              icon: Icons.image_outlined,
-                              selected: false,
-                              tooltip: 'Insert image',
-                              onTap: onAddImage,
-                            ),
+                            ...centerTools,
                             if (hasSelection || canPaste) ...[
                               const _ToolbarDivider(),
                               if (hasSelection) ...[
@@ -275,6 +196,130 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
         );
       },
     );
+  }
+
+  List<Widget> _buildCenterTools(
+    BuildContext context,
+    ToolState t,
+    bool penFamily,
+  ) {
+    final order = ToolbarOrderService.instance.order;
+    final widgets = <Widget>[];
+
+    for (var i = 0; i < order.length; i++) {
+      final id = order[i];
+      final prevId = i > 0 ? order[i - 1] : null;
+      if (prevId == ToolbarToolId.eraser &&
+          id != ToolbarToolId.pen &&
+          id != ToolbarToolId.highlighter &&
+          id != ToolbarToolId.eraser) {
+        widgets.add(const _ToolbarDivider());
+      }
+
+      switch (id) {
+        case ToolbarToolId.pen:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.edit_rounded,
+              selected: penFamily && t.tool != ToolType.fill,
+              tooltip: 'Pen',
+              onTap: () => t.set((s) => s.tool = ToolType.pen),
+              onTapWhenSelected: () =>
+                  _showPenOptions(context, t, highlighter: false),
+              accent: penFamily && t.tool != ToolType.fill ? t.penColor : null,
+            ),
+          );
+          if (penFamily && t.tool != ToolType.fill) {
+            widgets.add(_BrushStyleRow(toolState: t));
+          }
+        case ToolbarToolId.highlighter:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.brush_rounded,
+              selected: t.tool == ToolType.highlighter,
+              tooltip: 'Highlighter',
+              onTap: () => t.set((s) => s.tool = ToolType.highlighter),
+              onTapWhenSelected: () =>
+                  _showPenOptions(context, t, highlighter: true),
+              accent:
+                  t.tool == ToolType.highlighter ? t.highlighterColor : null,
+            ),
+          );
+        case ToolbarToolId.eraser:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.cleaning_services_rounded,
+              selected: t.tool == ToolType.eraser,
+              tooltip: 'Eraser',
+              onTap: () => t.set((s) => s.tool = ToolType.eraser),
+              onTapWhenSelected: () => _showEraserOptions(context, t),
+            ),
+          );
+        case ToolbarToolId.selection:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.near_me_rounded,
+              selected: t.tool == ToolType.selection,
+              tooltip: 'Selection',
+              onTap: () => t.set((s) => s.tool = ToolType.selection),
+            ),
+          );
+        case ToolbarToolId.lasso:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.gesture_rounded,
+              selected: t.tool == ToolType.lasso,
+              tooltip: 'Lasso',
+              onTap: () => t.set((s) => s.tool = ToolType.lasso),
+            ),
+          );
+        case ToolbarToolId.shape:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.interests_rounded,
+              selected: t.tool == ToolType.shape,
+              tooltip: 'Shape',
+              onTap: () => t.set((s) => s.tool = ToolType.shape),
+              onTapWhenSelected: () =>
+                  _showPenOptions(context, t, highlighter: false),
+            ),
+          );
+        case ToolbarToolId.fill:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.format_color_fill_rounded,
+              selected: t.tool == ToolType.fill,
+              tooltip: 'Fill',
+              onTap: () => t.set((s) => s.tool = ToolType.fill),
+              onTapWhenSelected: () => _showFillOptions(context, t),
+              accent: t.tool == ToolType.fill ? t.fillColor : null,
+            ),
+          );
+        case ToolbarToolId.text:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.text_fields_rounded,
+              selected: t.tool == ToolType.text,
+              tooltip: 'Text',
+              onTap: () => t.set((s) => s.tool = ToolType.text),
+            ),
+          );
+        case ToolbarToolId.insertImage:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.image_outlined,
+              selected: false,
+              tooltip: 'Insert image',
+              onTap: onAddImage,
+            ),
+          );
+        default:
+          final neverId = id;
+          assert(false, 'Unknown toolbar tool id: $neverId');
+      }
+    }
+
+    return widgets;
   }
 
   void _showPenOptions(BuildContext context, ToolState t,

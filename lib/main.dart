@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'screens/library_screen.dart';
+import 'services/toolbar_order_service.dart';
 
 const _kPenfoldBlue = Color(0xFF2455C3);
 const _kPenfoldBlueLight = Color(0xFF3D6FD4);
 const _kPenfoldAccent = Color(0xFFE8A317);
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  ToolbarOrderService.instance.load();
   runApp(const PenfoldApp());
 }
 

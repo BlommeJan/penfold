@@ -10,7 +10,7 @@
 |---------|---------|--------|-------|--------|
 | 0.2.13 | Export crash fix (OOM, progress, lazy PDF, error snackbar) | **DONE** | 52/52 pass | `6f2bdad` |
 | 0.2.13.1 | Text rotation bug (selection tool) | **QUEUED** | — | — |
-| 0.2.14 | Full-database backup + restore | PENDING | — | — |
+| 0.2.14 | Full-database backup + restore | **DONE** | 54/54 pass | `d31e633` |
 | 0.2.15 | Page bookmarks + quick jump | PENDING | — | — |
 | 0.2.16 | Tags on notebooks | PENDING | — | — |
 | 0.2.17 | Vector PDF export (roadmap 0.2.12) | PENDING | — | — |

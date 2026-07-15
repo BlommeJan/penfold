@@ -160,6 +160,9 @@ class NotePage {
 
   bool bookmarked;
 
+  /// Local path to an attached audio file (under app documents `audio/`).
+  String? audioPath;
+
   /// Aspect ratio (width / height) of the page.
   double aspect;
 
@@ -174,6 +177,7 @@ class NotePage {
     this.pdfSourcePath,
     this.pdfPageIndex,
     this.bookmarked = false,
+    this.audioPath,
     double? aspect,
   }) : aspect = aspect ?? orientation.aspectOf(pageSize);
 
@@ -188,6 +192,7 @@ class NotePage {
         'pdf_source_path': pdfSourcePath,
         'pdf_page_index': pdfPageIndex,
         'bookmarked': bookmarked ? 1 : 0,
+        'audio_path': audioPath,
         'aspect': aspect,
       };
 
@@ -206,6 +211,7 @@ class NotePage {
       pdfSourcePath: r['pdf_source_path'] as String?,
       pdfPageIndex: r['pdf_page_index'] as int?,
       bookmarked: (r['bookmarked'] as int?) == 1,
+      audioPath: r['audio_path'] as String?,
       aspect: (r['aspect'] as num?)?.toDouble() ?? orient.aspectOf(ps),
     );
   }

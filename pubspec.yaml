@@ -1,7 +1,7 @@
 name: penfold
 description: Local-first handwriting notebook. No accounts, no cloud — everything in SQLite on-device.
 publish_to: 'none'
-version: 0.2.33
+version: 0.2.34
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -21,6 +21,7 @@ dependencies:
   uuid: ^4.4.0
   shared_preferences: ^2.3.3
   url_launcher: ^6.3.1
+  just_audio: ^0.9.42
 
 dev_dependencies:
   flutter_test:

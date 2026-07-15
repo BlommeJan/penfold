@@ -17,6 +17,7 @@ import '../services/session_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
+import '../widgets/page_audio_settings.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/toolbar.dart';
 import 'page_overview_screen.dart';
@@ -434,7 +435,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
               value: _activePage.bookmarked,
               onChanged: (v) => Navigator.pop(ctx, 'bookmark:$v'),
             ),
-            const Divider(height: 1),
+            PageAudioSettings(
+              pageId: _activePage.id,
+              audioPath: _activePage.audioPath,
+              onAudioChanged: (path) {
+                _activePage.audioPath = path;
+              },
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text('Export',

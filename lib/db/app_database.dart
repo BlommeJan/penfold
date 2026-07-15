@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 13;
+  static const _schemaVersion = 14;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -74,6 +74,7 @@ class AppDatabase {
         pdf_source_path TEXT,
         pdf_page_index INTEGER,
         bookmarked INTEGER NOT NULL DEFAULT 0,
+        audio_path TEXT,
         aspect REAL NOT NULL DEFAULT 0.7070707
       )''');
     await db.execute('''
@@ -225,6 +226,11 @@ class AppDatabase {
     }
     if (oldV < 13) {
       await _createPdfPageTextTable(db);
+    }
+    if (oldV < 14) {
+      if (await _hasTable(db, 'pages')) {
+        await _addColumnIfMissing(db, 'pages', 'audio_path', 'TEXT');
+      }
     }
   }
 
@@ -807,6 +813,11 @@ class AppDatabase {
 
   Future<void> setPageBookmarked(String id, bool bookmarked) async {
     await (await db).update('pages', {'bookmarked': bookmarked ? 1 : 0},
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updatePageAudioPath(String id, String? audioPath) async {
+    await (await db).update('pages', {'audio_path': audioPath},
         where: 'id = ?', whereArgs: [id]);
   }
 

@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.34] — 2026
+
+### Added
+
+- **Page-level audio attachment (MVP)** — attach a local audio file per page via file picker in page settings; play/pause preview with `just_audio`; files stored under `audio/` in app documents; schema v14: `pages.audio_path`
+
 ## [0.2.33] — 2026
 
 ### Added
@@ -261,6 +267,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.34]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.34
 [0.2.33]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.33
 [0.2.32]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.32
 [0.2.31]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.31

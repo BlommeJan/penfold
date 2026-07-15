@@ -9,6 +9,7 @@
 | Version | Feature | Status | Tests | Commit |
 |---------|---------|--------|-------|--------|
 | 0.2.13 | Export crash fix (OOM, progress, lazy PDF, error snackbar) | **DONE** | 52/52 pass | `6f2bdad` |
+| 0.2.13.1 | Text rotation bug (selection tool) | **QUEUED** | — | — |
 | 0.2.14 | Full-database backup + restore | PENDING | — | — |
 | 0.2.15 | Page bookmarks + quick jump | PENDING | — | — |
 | 0.2.16 | Tags on notebooks | PENDING | — | — |
@@ -39,13 +40,29 @@
 - APK: `APKs/Penfold-v0.2.13-arm64.apk` (local, gitignored)
 - Pushed to `main`
 
+## Bug backlog (queued post–Phase 0)
+
+### Text rotation bug — v0.2.13.1 (patch)
+
+**Symptom:** Selection-tool rotate handle resizes the text bounding box / handle box, but the **glyphs do not rotate** — only the container transforms.
+
+**Likely files:** `lib/canvas/drawing_canvas.dart`, `lib/canvas/painters.dart`, `lib/models/models.dart` (`TextBlock`)
+
+**Fix approach:**
+- Apply rotation to text rendering, not just bounding-rect dimensions
+- May need `rotation` field on `TextBlock` + SQLite schema migration
+- `InkPainter` should render text via canvas transform or rotated `TextPainter`
+
+**Priority:** After export fix (Phase 0), before or in parallel with roadmap — ship as patch version when fixed.
+
 ## Phase 1 — Next up
 
 Dependency order from roadmap (adjusted after export fix):
-1. **0.2.14** backup + restore (`backup_service.dart`)
-2. **0.2.15** bookmarks (schema field exists; UI missing)
-3. **0.2.16** tags
-4. **0.2.17** vector PDF export (deferred from original 0.2.12 slot)
+1. **0.2.13.1** text rotation bug (patch, see backlog above)
+2. **0.2.14** backup + restore (`backup_service.dart`)
+3. **0.2.15** bookmarks (schema field exists; quick-jump UI missing)
+4. **0.2.16** tags
+5. **0.2.17** vector PDF export (deferred from original 0.2.12 slot)
 
 ## Notes
 

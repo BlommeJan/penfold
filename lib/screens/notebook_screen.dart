@@ -362,6 +362,12 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   void _setActiveCanvas(DrawingCanvasState? state) {
     _activeCanvas = state;
+    if (!mounted || state == null) return;
+    setState(() {
+      _canUndo = state.canUndo;
+      _canRedo = state.canRedo;
+      _hasSelection = state.hasSelection;
+    });
   }
 
   Future<void> _convertSelectionToText() async {

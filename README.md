@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.39&color=blue" alt="Version 0.2.39" /></a>
+  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.40&color=blue" alt="Version 0.2.40" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter 3.x" /></a>
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
@@ -36,7 +36,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 ## Features
 
-**Drawing** — Pressure-sensitive pen (fountain, pencil, marker, calligraphy), highlighter, whole-stroke eraser, optional stroke smoothing (Chaikin, default on), S Pen barrel-button hold-to-erase, shape recognition, flood fill, typed text blocks, lasso select with copy/paste and rotate/scale handles, and 100-step undo/redo. Ink is stored in canonical page coordinates so strokes stay aligned when you rotate or zoom.
+**Drawing** — Pressure-sensitive pen (fountain, pencil, marker, calligraphy), highlighter, whole-stroke eraser, optional stroke smoothing (Chaikin, default on), S Pen barrel-button hold-to-erase, shape recognition, flood fill, typed text blocks, lasso select with copy/paste and rotate/scale handles, and 100-step undo/redo with per-page history preserved when switching pages. Ink is stored in canonical page coordinates so strokes stay aligned when you rotate or zoom.
 
 **Pages** — Vertical scroll through multi-page notebooks (optional page-turn mode snaps one page at a time), page overview grid with drag-reorder and multi-select batch delete, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, image insert, per-page audio attachment (local files, play/pause in page settings), page complexity warning at 2000 strokes with split-page tool in page settings, PDF import (lazy render with read-only hyperlinks), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
 
@@ -77,7 +77,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.39) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.40) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -108,5 +108,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.39</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.40</strong> — write freely, keep it local.
 </p>

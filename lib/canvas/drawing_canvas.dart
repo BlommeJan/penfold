@@ -299,6 +299,48 @@ class _PasteAction extends _EditAction {
   }
 }
 
+/// In-memory undo/redo stacks keyed by page id (survives page widget dispose).
+class _PageUndoSnapshot {
+  final List<_EditAction> undoStack;
+  final List<_EditAction> redoStack;
+
+  const _PageUndoSnapshot({
+    required this.undoStack,
+    required this.redoStack,
+  });
+}
+
+class _PageUndoStore {
+  _PageUndoStore._();
+  static final _PageUndoStore instance = _PageUndoStore._();
+
+  final Map<String, _PageUndoSnapshot> _byPageId = {};
+
+  void persist(
+    String pageId,
+    List<_EditAction> undo,
+    List<_EditAction> redo,
+  ) {
+    _byPageId[pageId] = _PageUndoSnapshot(
+      undoStack: List<_EditAction>.from(undo),
+      redoStack: List<_EditAction>.from(redo),
+    );
+  }
+
+  ({List<_EditAction> undo, List<_EditAction> redo})? load(String pageId) {
+    final snap = _byPageId[pageId];
+    if (snap == null) return null;
+    return (
+      undo: List<_EditAction>.from(snap.undoStack),
+      redo: List<_EditAction>.from(snap.redoStack),
+    );
+  }
+
+  void discard(String pageId) => _byPageId.remove(pageId);
+
+  void clearAll() => _byPageId.clear();
+}
+
 class _CanvasController {
   final NotePage page;
   final List<Stroke> strokes;
@@ -319,7 +361,22 @@ class _CanvasController {
     this.fills,
     this.textBlocks,
     this.onChanged,
-  ) : _zCounter = _maxZ(strokes, images, fills, textBlocks) + 1;
+  ) : _zCounter = _maxZ(strokes, images, fills, textBlocks) + 1 {
+    _restoreUndoFromStore();
+  }
+
+  void _restoreUndoFromStore() {
+    final restored = _PageUndoStore.instance.load(page.id);
+    if (restored == null) return;
+    _undoStack.addAll(restored.undo);
+    _redoStack.addAll(restored.redo);
+  }
+
+  void _syncUndoStore() {
+    _PageUndoStore.instance.persist(page.id, _undoStack, _redoStack);
+  }
+
+  void captureUndoToStore() => _syncUndoStore();
 
   static int _maxZ(
     List<Stroke> strokes,
@@ -534,6 +591,7 @@ class _CanvasController {
     _undoStack.add(a);
     if (_undoStack.length > 100) _undoStack.removeAt(0);
     _redoStack.clear();
+    _syncUndoStore();
   }
 
   Future<void> undo() async {
@@ -541,6 +599,7 @@ class _CanvasController {
     final a = _undoStack.removeLast();
     await a.undo(this);
     _redoStack.add(a);
+    _syncUndoStore();
   }
 
   Future<void> redo() async {
@@ -548,6 +607,7 @@ class _CanvasController {
     final a = _redoStack.removeLast();
     await a.redo(this);
     _undoStack.add(a);
+    _syncUndoStore();
   }
 }
 
@@ -699,6 +759,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   @override
   void dispose() {
+    _controller.captureUndoToStore();
     widget.toolState.removeListener(_onToolChanged);
     _textEditCtrl?.dispose();
     super.dispose();
@@ -743,6 +804,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _indexedStrokeIds
       ..clear()
       ..addAll(indexedIds);
+    if (_loaded) {
+      _controller.captureUndoToStore();
+    }
     _controller = _CanvasController(
         widget.page, _strokes, _images, _fills, _textBlocks, _bump);
     _loaded = true;
@@ -799,6 +863,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     widget.onHistoryChanged?.call(_controller.canUndo, _controller.canRedo);
   }
 
+  bool get canUndo => _controller.canUndo;
+  bool get canRedo => _controller.canRedo;
+
   Future<void> undo() async {
     await _controller.undo();
     _clearSelection();
@@ -808,6 +875,17 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     await _controller.redo();
     _clearSelection();
   }
+
+  /// Test hook: add a stroke and record it as undoable.
+  Future<void> addUndoableStrokeForTests(Stroke stroke) async {
+    await _controller.addStroke(stroke);
+    _controller.commit(_AddStroke(stroke));
+    _notifyStrokeCountChanged();
+    _bump();
+  }
+
+  /// Test hook: stroke count on the loaded canvas.
+  int get strokeCountForTests => _strokes.length;
 
   Future<void> deleteSelection() async {
     if (_selectedImageId != null) {
@@ -2352,6 +2430,15 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 void resetClipboardForTests() {
   _clipboard = const ClipboardSelection();
 }
+
+/// Test hook: reset per-page undo history between tests.
+void resetPageUndoStoreForTests() {
+  _PageUndoStore.instance.clearAll();
+}
+
+/// Test hook: whether a page has persisted undo history in memory.
+bool pageUndoStoreHasHistoryForTests(String pageId) =>
+    _PageUndoStore.instance.load(pageId) != null;
 
 /// Test hook: read clipboard state.
 ClipboardSelection get clipboardForTests => _clipboard;

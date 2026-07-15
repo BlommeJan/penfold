@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.40] — 2026
+
+### Added
+
+- **Undo persist on page switch** — per-page undo/redo stacks kept in memory in `drawing_canvas.dart`; switching pages and returning restores undo history for that page; toolbar undo/redo state syncs on page change
+
 ## [0.2.38] — 2026
 
 ### Added
@@ -297,6 +303,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.40]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.40
 [0.2.38]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.38
 [0.2.39]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.39
 [0.2.37]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.37

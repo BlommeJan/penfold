@@ -71,7 +71,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.30 | Page overview reorder + batch delete | 0.2.28 | **DONE** | 134/134 | `c2ec21f` |
 | 0.2.31 | PDF text search at import | 0.2.29 | **DONE** | 139/139 | `b3aa635` |
 | 0.2.32 | PDF hyperlinks read-only | 0.2.30 | **DONE** | 145/145 | `e2e6bf5` |
-| 0.2.33 | Page-turn scroll mode | 0.2.31 | **DONE** | TBD | TBD |
+| 0.2.33 | Page-turn scroll mode | 0.2.31 | **DONE** | 150/150 | `b03dc50` |
 | 0.2.34 | Page-level audio MVP | 0.2.32 | PENDING | — | — |
 | 0.2.35 | Gesture ink editing | 0.2.33 | PENDING | — | — |
 | 0.2.36 | Auto table of contents | 0.2.34 | PENDING | — | — |

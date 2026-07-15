@@ -22,7 +22,7 @@ class _PagePreviewData {
   });
 }
 
-/// Thumbnail grid of all pages; tap to jump back to a page in the notebook.
+/// Thumbnail grid of all pages; tap to jump, drag to reorder, multi-select delete.
 class PageOverviewScreen extends StatefulWidget {
   final Notebook notebook;
   final List<NotePage> pages;
@@ -43,16 +43,22 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
   final _db = AppDatabase.instance;
   final Map<String, _PagePreviewData> _cache = {};
   Map<String, PageOcrStatus> _ocrStatus = {};
+  late List<NotePage> _pages;
+  final Set<String> _selectedIds = {};
   bool _loading = true;
+  bool _selectMode = false;
+  bool _dirty = false;
+  int? _dragSourceIndex;
 
   @override
   void initState() {
     super.initState();
+    _pages = List<NotePage>.from(widget.pages);
     _preload();
   }
 
   Future<void> _preload() async {
-    for (final page in widget.pages) {
+    for (final page in _pages) {
       final strokes = await _db.strokesOf(page.id);
       final fills = await _db.fillsOf(page.id);
       final texts = await _db.textBlocksOf(page.id);
@@ -80,8 +86,110 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
         pdfImage: pdfImage,
       );
     }
-    _ocrStatus = await _db.ocrStatusOfPages(widget.pages.map((p) => p.id));
+    _ocrStatus = await _db.ocrStatusOfPages(_pages.map((p) => p.id));
     if (mounted) setState(() => _loading = false);
+  }
+
+  void _popWithResult() {
+    Navigator.pop(context, _dirty ? _pages : null);
+  }
+
+  void _enterSelectMode(String pageId) {
+    setState(() {
+      _selectMode = true;
+      _selectedIds.add(pageId);
+    });
+  }
+
+  void _exitSelectMode() {
+    setState(() {
+      _selectMode = false;
+      _selectedIds.clear();
+    });
+  }
+
+  void _toggleSelection(String pageId) {
+    setState(() {
+      if (_selectedIds.contains(pageId)) {
+        _selectedIds.remove(pageId);
+        if (_selectedIds.isEmpty) {
+          _selectMode = false;
+        }
+      } else {
+        _selectedIds.add(pageId);
+      }
+    });
+  }
+
+  Future<void> _persistOrder() async {
+    await _db.reorderPages(
+      widget.notebook.id,
+      _pages.map((p) => p.id).toList(),
+    );
+    for (var i = 0; i < _pages.length; i++) {
+      _pages[i].index = i;
+    }
+    _dirty = true;
+  }
+
+  void _movePage(int from, int to) {
+    if (from == to || from < 0 || to < 0 || from >= _pages.length || to >= _pages.length) {
+      return;
+    }
+    setState(() {
+      final page = _pages.removeAt(from);
+      _pages.insert(to, page);
+    });
+    _persistOrder();
+  }
+
+  Future<void> _confirmDelete() async {
+    if (_selectedIds.isEmpty) return;
+    if (_selectedIds.length >= _pages.length) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Keep at least one page')),
+      );
+      return;
+    }
+
+    final count = _selectedIds.length;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Delete $count page${count == 1 ? '' : 's'}?'),
+        content: const Text('This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+
+    final ids = _selectedIds.toList();
+    await _db.deletePagesBatch(widget.notebook.id, ids);
+    if (!mounted) return;
+
+    setState(() {
+      _pages.removeWhere((p) => ids.contains(p.id));
+      for (final id in ids) {
+        _cache.remove(id);
+        _ocrStatus.remove(id);
+      }
+      for (var i = 0; i < _pages.length; i++) {
+        _pages[i].index = i;
+      }
+      _selectedIds.clear();
+      _selectMode = false;
+      _dirty = true;
+    });
   }
 
   int _columnCount(double width) => (width / 108).floor().clamp(4, 8);
@@ -90,103 +198,326 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final columns = _columnCount(width);
+    final selectionCount = _selectedIds.length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFEDF0F4),
-      appBar: AppBar(
-        title: Text('${widget.notebook.title} — Pages'),
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columns,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 0.68,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) _popWithResult();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFEDF0F4),
+        appBar: AppBar(
+          leading: BackButton(onPressed: _popWithResult),
+          title: Text(_selectMode
+              ? '$selectionCount selected'
+              : '${widget.notebook.title} — Pages'),
+          actions: [
+            if (_selectMode) ...[
+              IconButton(
+                tooltip: 'Delete selected',
+                onPressed: selectionCount > 0 ? _confirmDelete : null,
+                icon: const Icon(Icons.delete_outline),
               ),
-              itemCount: widget.pages.length,
-              itemBuilder: (context, i) {
-                final page = widget.pages[i];
-                final preview = _cache[page.id] ?? const _PagePreviewData();
-                final ocr = _ocrStatus[page.id] ?? const PageOcrStatus();
-                final hasPdf = page.pdfImagePath != null ||
-                    page.pdfSourcePath != null;
-                final ps = hasPdf
-                    ? PageSize.values.firstWhere(
-                        (s) => (s.aspect - page.aspect).abs() < 0.01,
-                        orElse: () => page.pageSize,
-                      )
-                    : page.pageSize;
-                final orient =
-                    hasPdf ? PageOrientation.portrait : page.orientation;
-                return GestureDetector(
+              TextButton(
+                onPressed: _exitSelectMode,
+                child: const Text('Done'),
+              ),
+            ] else ...[
+              IconButton(
+                tooltip: 'Select pages',
+                onPressed: () => setState(() => _selectMode = true),
+                icon: const Icon(Icons.checklist_rounded),
+              ),
+            ],
+          ],
+        ),
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.68,
+                ),
+                itemCount: _pages.length,
+                itemBuilder: (context, i) => _PageTile(
+                  key: ValueKey(_pages[i].id),
+                  index: i,
+                  page: _pages[i],
+                  preview: _cache[_pages[i].id] ?? const _PagePreviewData(),
+                  ocr: _ocrStatus[_pages[i].id] ?? const PageOcrStatus(),
+                  selectMode: _selectMode,
+                  selected: _selectedIds.contains(_pages[i].id),
+                  isDragSource: _dragSourceIndex == i,
+                  isDropTarget: _dragSourceIndex != null && _dragSourceIndex != i,
                   onTap: () {
-                    widget.onPageSelected(i);
-                    Navigator.pop(context);
+                    if (_selectMode) {
+                      _toggleSelection(_pages[i].id);
+                    } else {
+                      widget.onPageSelected(i);
+                      _popWithResult();
+                    }
                   },
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
+                  onLongPress: () => _enterSelectMode(_pages[i].id),
+                  onToggleSelect: () => _toggleSelection(_pages[i].id),
+                  onDragStarted: () => setState(() => _dragSourceIndex = i),
+                  onDragEnded: () => setState(() => _dragSourceIndex = null),
+                  onAcceptDrag: (from) => _movePage(from, i),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _PageTile extends StatelessWidget {
+  final int index;
+  final NotePage page;
+  final _PagePreviewData preview;
+  final PageOcrStatus ocr;
+  final bool selectMode;
+  final bool selected;
+  final bool isDragSource;
+  final bool isDropTarget;
+  final VoidCallback onTap;
+  final VoidCallback onLongPress;
+  final VoidCallback onToggleSelect;
+  final VoidCallback onDragStarted;
+  final VoidCallback onDragEnded;
+  final void Function(int fromIndex) onAcceptDrag;
+
+  const _PageTile({
+    super.key,
+    required this.index,
+    required this.page,
+    required this.preview,
+    required this.ocr,
+    required this.selectMode,
+    required this.selected,
+    required this.isDragSource,
+    required this.isDropTarget,
+    required this.onTap,
+    required this.onLongPress,
+    required this.onToggleSelect,
+    required this.onDragStarted,
+    required this.onDragEnded,
+    required this.onAcceptDrag,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasPdf =
+        page.pdfImagePath != null || page.pdfSourcePath != null;
+    final ps = hasPdf
+        ? PageSize.values.firstWhere(
+            (s) => (s.aspect - page.aspect).abs() < 0.01,
+            orElse: () => page.pageSize,
+          )
+        : page.pageSize;
+    final orient = hasPdf ? PageOrientation.portrait : page.orientation;
+
+    final thumbnail = Opacity(
+      opacity: isDragSource ? 0.35 : 1,
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                border: selected
+                    ? Border.all(color: const Color(0xFF2455C3), width: 2)
+                    : isDropTarget
+                        ? Border.all(
+                            color: const Color(0xFF2455C3).withOpacity(0.45),
+                            width: 2,
+                          )
+                        : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CustomPaint(
+                      painter: PageThumbnailPainter(
+                        template: page.template,
+                        pageSize: ps,
+                        orientation: orient,
+                        strokes: preview.strokes,
+                        fills: preview.fills,
+                        textBlocks: preview.textBlocks,
+                        pdfImage: preview.pdfImage,
+                      ),
+                      child: const SizedBox.expand(),
+                    ),
+                    if (page.bookmarked)
+                      const Positioned(
+                        left: 4,
+                        bottom: 4,
+                        child: _BookmarkBadge(),
+                      ),
+                    if (ocr.hasInk)
+                      Positioned(
+                        right: 4,
+                        top: 4,
+                        child: _OcrBadge(status: ocr),
+                      ),
+                    if (selectMode)
+                      Positioned(
+                        left: 4,
+                        top: 4,
+                        child: _SelectCheckbox(
+                          selected: selected,
+                          onChanged: onToggleSelect,
+                        ),
+                      )
+                    else
+                      Positioned(
+                        right: 4,
+                        bottom: 4,
+                        child: Draggable<int>(
+                          data: index,
+                          feedback: Material(
+                            elevation: 6,
                             borderRadius: BorderRadius.circular(6),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
+                            child: SizedBox(
+                              width: 72,
+                              height: 96,
+                              child: _MiniThumbnail(
+                                page: page,
+                                preview: preview,
+                                pageSize: ps,
+                                orientation: orient,
                               ),
-                            ],
+                            ),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                CustomPaint(
-                                  painter: PageThumbnailPainter(
-                                    template: page.template,
-                                    pageSize: ps,
-                                    orientation: orient,
-                                    strokes: preview.strokes,
-                                    fills: preview.fills,
-                                    textBlocks: preview.textBlocks,
-                                    pdfImage: preview.pdfImage,
-                                  ),
-                                  child: const SizedBox.expand(),
-                                ),
-                                if (page.bookmarked)
-                                  const Positioned(
-                                    left: 4,
-                                    bottom: 4,
-                                    child: _BookmarkBadge(),
-                                  ),
-                                if (ocr.hasInk)
-                                  Positioned(
-                                    right: 4,
-                                    top: 4,
-                                    child: _OcrBadge(status: ocr),
-                                  ),
-                              ],
+                          childWhenDragging: const SizedBox(
+                            width: 28,
+                            height: 28,
+                          ),
+                          onDragStarted: onDragStarted,
+                          onDragEnd: (_) => onDragEnded(),
+                          child: Tooltip(
+                            message: 'Drag to reorder',
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.92),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(
+                                Icons.drag_handle_rounded,
+                                size: 16,
+                                color: Color(0xFF5D6D7E),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${i + 1}',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                  ],
+                ),
+              ),
             ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${index + 1}',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ],
+      ),
+    );
+
+    final tile = GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: thumbnail,
+    );
+
+    if (selectMode) return tile;
+
+    return DragTarget<int>(
+      onWillAcceptWithDetails: (details) => details.data != index,
+      onAcceptWithDetails: (details) => onAcceptDrag(details.data),
+      builder: (context, candidateData, rejectedData) => tile,
+    );
+  }
+}
+
+class _MiniThumbnail extends StatelessWidget {
+  final NotePage page;
+  final _PagePreviewData preview;
+  final PageSize pageSize;
+  final PageOrientation orientation;
+
+  const _MiniThumbnail({
+    required this.page,
+    required this.preview,
+    required this.pageSize,
+    required this.orientation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: CustomPaint(
+        painter: PageThumbnailPainter(
+          template: page.template,
+          pageSize: pageSize,
+          orientation: orientation,
+          strokes: preview.strokes,
+          fills: preview.fills,
+          textBlocks: preview.textBlocks,
+          pdfImage: preview.pdfImage,
+        ),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _SelectCheckbox extends StatelessWidget {
+  final bool selected;
+  final VoidCallback onChanged;
+
+  const _SelectCheckbox({
+    required this.selected,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onChanged,
+      child: Container(
+        width: 22,
+        height: 22,
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFF2455C3) : Colors.white.withOpacity(0.92),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: selected ? const Color(0xFF2455C3) : const Color(0xFF95A5A6),
+            width: 1.5,
+          ),
+        ),
+        child: selected
+            ? const Icon(Icons.check, size: 16, color: Colors.white)
+            : null,
+      ),
     );
   }
 }

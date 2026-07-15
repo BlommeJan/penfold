@@ -690,6 +690,59 @@ class AppDatabase {
     await (await db).delete('pages', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Reassign `pages.idx` to match [orderedPageIds] (v0.2.30).
+  Future<void> reorderPages(
+    String notebookId,
+    List<String> orderedPageIds,
+  ) async {
+    if (orderedPageIds.isEmpty) return;
+    final database = await db;
+    await database.transaction((txn) async {
+      for (var i = 0; i < orderedPageIds.length; i++) {
+        await txn.update(
+          'pages',
+          {'idx': i},
+          where: 'id = ? AND notebook_id = ?',
+          whereArgs: [orderedPageIds[i], notebookId],
+        );
+      }
+    });
+    await touchNotebook(notebookId);
+  }
+
+  /// Delete pages and compact remaining `idx` values in one transaction (v0.2.30).
+  Future<void> deletePagesBatch(
+    String notebookId,
+    List<String> pageIds,
+  ) async {
+    if (pageIds.isEmpty) return;
+    final database = await db;
+    await database.transaction((txn) async {
+      final placeholders = List.filled(pageIds.length, '?').join(',');
+      await txn.delete(
+        'pages',
+        where: 'id IN ($placeholders)',
+        whereArgs: pageIds,
+      );
+      final remaining = await txn.query(
+        'pages',
+        where: 'notebook_id = ?',
+        whereArgs: [notebookId],
+        orderBy: 'idx ASC',
+      );
+      for (var i = 0; i < remaining.length; i++) {
+        await txn.update(
+          'pages',
+          {'idx': i},
+          where: 'id = ?',
+          whereArgs: [remaining[i]['id']],
+        );
+      }
+    });
+    await refreshSearchIndex(notebookId);
+    await touchNotebook(notebookId);
+  }
+
   Future<void> updatePageTemplate(String id, PageTemplate t) async {
     await (await db).update('pages', {'template': t.index},
         where: 'id = ?', whereArgs: [id]);

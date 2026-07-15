@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.30] — 2026
+
+### Added
+
+- **Page overview reorder + batch delete** — drag-handle reorder in thumbnail grid; multi-select via long-press or checklist mode; confirmed batch delete; `pages.idx` updated in SQLite transactions
+
 ## [0.2.29] — 2026
 
 ### Added
@@ -237,6 +243,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.30]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.30
 [0.2.29]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.29
 [0.2.28]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.28
 [0.2.27]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.27

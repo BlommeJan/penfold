@@ -592,8 +592,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
     }
   }
 
-  void _openOverview() {
-    Navigator.of(context).push(
+  void _openOverview() async {
+    final updated = await Navigator.of(context).push<List<NotePage>>(
       MaterialPageRoute(
         builder: (_) => PageOverviewScreen(
           notebook: widget.notebook,
@@ -602,6 +602,37 @@ class _NotebookScreenState extends State<NotebookScreen> {
         ),
       ),
     );
+    if (updated == null || !mounted) return;
+    await _applyPagesUpdate(updated);
+  }
+
+  Future<void> _applyPagesUpdate(List<NotePage> pages) async {
+    final oldVisibleId = _pages[_visiblePageIndex].id;
+    final newIds = pages.map((p) => p.id).toSet();
+    for (final id in _pageKeys.keys.toList()) {
+      if (!newIds.contains(id)) {
+        _pageKeys.remove(id);
+      }
+    }
+    for (final page in pages) {
+      _pageKeys.putIfAbsent(page.id, GlobalKey<PageEditorState>.new);
+    }
+    final newIdx = pages.indexWhere((p) => p.id == oldVisibleId);
+    final nextVisible = newIdx >= 0
+        ? newIdx
+        : _visiblePageIndex.clamp(0, pages.length - 1);
+    setState(() {
+      _pages = pages;
+      _visiblePageIndex = nextVisible;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scrollController.hasClients) return;
+      final pageHeight = MediaQuery.of(context).size.height * 0.85;
+      _scrollController.jumpTo(nextVisible * pageHeight);
+      _setActiveCanvas(
+        _pageKeys[_pages[nextVisible].id]?.currentState?.canvasState,
+      );
+    });
   }
 
   @override

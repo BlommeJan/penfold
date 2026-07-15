@@ -12,6 +12,7 @@ import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/page_export.dart';
+import '../services/session_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
@@ -23,7 +24,17 @@ const _uuid = Uuid();
 
 class NotebookScreen extends StatefulWidget {
   final Notebook notebook;
-  const NotebookScreen({super.key, required this.notebook});
+  final int? initialPageIndex;
+  final double? initialScrollOffset;
+  final ToolType? initialTool;
+
+  const NotebookScreen({
+    super.key,
+    required this.notebook,
+    this.initialPageIndex,
+    this.initialScrollOffset,
+    this.initialTool,
+  });
 
   @override
   State<NotebookScreen> createState() => _NotebookScreenState();
@@ -42,6 +53,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   bool _hasSelection = false;
   int _visiblePageIndex = 0;
   int _pinchLockCount = 0;
+  Timer? _sessionSaveTimer;
 
   DrawingCanvasState? _activeCanvas;
 
@@ -49,6 +61,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _toolState.addListener(_scheduleSessionSave);
     _syncStrokeSmoothing();
     StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
     _syncSpenButton();
@@ -59,6 +72,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   @override
   void dispose() {
+    _sessionSaveTimer?.cancel();
+    unawaited(_persistSession());
+    _toolState.removeListener(_scheduleSessionSave);
     StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
     SpenButtonService.instance.removeListener(_onSpenButtonChanged);
     SpenButtonService.instance.stopListening();
@@ -103,6 +119,28 @@ class _NotebookScreenState extends State<NotebookScreen> {
       setState(() => _visiblePageIndex = idx);
       _setActiveCanvas(_pageKeys[_pages[idx].id]?.currentState?.canvasState);
     }
+    _scheduleSessionSave();
+  }
+
+  void _scheduleSessionSave() {
+    _sessionSaveTimer?.cancel();
+    _sessionSaveTimer = Timer(const Duration(milliseconds: 500), () {
+      unawaited(_persistSession());
+    });
+  }
+
+  Future<void> _persistSession() async {
+    if (_loading || _pages.isEmpty) return;
+    // Tests use overrideDirPath; skip async session writes during widget tests.
+    if (AppDatabase.overrideDirPath != null) return;
+    final offset =
+        _scrollController.hasClients ? _scrollController.offset : 0.0;
+    await SessionService.instance.save(
+      notebookId: widget.notebook.id,
+      pageIndex: _visiblePageIndex,
+      scrollOffset: offset,
+      tool: _toolState.tool,
+    );
   }
 
   Future<void> _load() async {
@@ -122,9 +160,25 @@ class _NotebookScreenState extends State<NotebookScreen> {
     for (final pg in _pages) {
       _pageKeys.putIfAbsent(pg.id, GlobalKey<PageEditorState>.new);
     }
+    if (widget.initialTool != null) {
+      _toolState.set((s) => s.tool = widget.initialTool!);
+    }
+    final initialIdx = widget.initialPageIndex;
+    if (initialIdx != null && initialIdx >= 0 && initialIdx < _pages.length) {
+      _visiblePageIndex = initialIdx;
+    }
     setState(() => _loading = false);
     _db.touchNotebook(widget.notebook.id);
     unawaited(ThumbnailCache.instance.ensureForNotebook(widget.notebook.id));
+    final scrollOffset = widget.initialScrollOffset;
+    if (scrollOffset != null && scrollOffset > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !_scrollController.hasClients) return;
+        _scrollController.jumpTo(
+          scrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+        );
+      });
+    }
   }
 
   NotePage get _activePage => _pages[_visiblePageIndex];

@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 11;
+  static const _schemaVersion = 12;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -132,6 +132,7 @@ class AppDatabase {
     await _createTagsTables(db);
     await _createInkIndex(db);
     await _createOcrTermsTable(db);
+    await _createSessionTable(db);
     await _createFts(db);
   }
 
@@ -218,6 +219,9 @@ class AppDatabase {
     if (oldV < 11) {
       await _createOcrTermsTable(db);
     }
+    if (oldV < 12) {
+      await _createSessionTable(db);
+    }
   }
 
   Future<void> _createTagsTables(Database db) async {
@@ -240,6 +244,18 @@ class AppDatabase {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS ocr_terms(
         term TEXT PRIMARY KEY
+      )''');
+  }
+
+  Future<void> _createSessionTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS session(
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        last_notebook_id TEXT,
+        last_page_idx INTEGER NOT NULL DEFAULT 0,
+        scroll_offset REAL NOT NULL DEFAULT 0,
+        tool INTEGER,
+        updated_at INTEGER NOT NULL
       )''');
   }
 
@@ -456,6 +472,64 @@ class AppDatabase {
   }
 
   // ---- Notebooks ----
+
+  Future<Notebook?> notebookById(String id) async {
+    final database = await db;
+    final rows =
+        await database.query('notebooks', where: 'id = ?', whereArgs: [id]);
+    if (rows.isEmpty) return null;
+    return Notebook.fromRow(rows.first);
+  }
+
+  // ---- Session ----
+
+  Future<void> saveSession({
+    required String notebookId,
+    required int pageIndex,
+    required double scrollOffset,
+    required ToolType tool,
+  }) async {
+    final database = await db;
+    await database.insert(
+      'session',
+      {
+        'id': 1,
+        'last_notebook_id': notebookId,
+        'last_page_idx': pageIndex,
+        'scroll_offset': scrollOffset,
+        'tool': tool.index,
+        'updated_at': DateTime.now().millisecondsSinceEpoch,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<PenfoldSession?> loadSession() async {
+    final database = await db;
+    final rows = await database.query('session', where: 'id = ?', whereArgs: [1]);
+    if (rows.isEmpty) return null;
+    final row = rows.first;
+    final notebookId = row['last_notebook_id'] as String?;
+    if (notebookId == null) return null;
+    final toolIndex = row['tool'] as int?;
+    ToolType? tool;
+    if (toolIndex != null &&
+        toolIndex >= 0 &&
+        toolIndex < ToolType.values.length) {
+      tool = ToolType.values[toolIndex];
+    }
+    return PenfoldSession(
+      notebookId: notebookId,
+      pageIndex: row['last_page_idx'] as int? ?? 0,
+      scrollOffset: (row['scroll_offset'] as num?)?.toDouble() ?? 0,
+      tool: tool,
+    );
+  }
+
+  Future<void> clearSession() async {
+    final database = await db;
+    await database.delete('session', where: 'id = ?', whereArgs: [1]);
+  }
 
   Future<List<Notebook>> notebooks({String? folderId}) async {
     final database = await db;

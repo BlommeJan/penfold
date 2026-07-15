@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.29] — 2026
+
+### Added
+
+- **Session persistence** — SQLite `session` table (schema v12); cold start resumes last notebook, page index, scroll offset, and active tool via `AppHome`
+
 ## [0.2.28] — 2026
 
 ### Added
@@ -231,6 +237,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.29]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.29
 [0.2.28]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.28
 [0.2.27]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.27
 [0.2.26]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.26

@@ -14,6 +14,21 @@ enum ToolType {
   tape,
 }
 
+/// Last editor session restored on cold start (v0.2.29).
+class PenfoldSession {
+  final String? notebookId;
+  final int pageIndex;
+  final double scrollOffset;
+  final ToolType? tool;
+
+  const PenfoldSession({
+    this.notebookId,
+    this.pageIndex = 0,
+    this.scrollOffset = 0,
+    this.tool,
+  });
+}
+
 enum BrushStyle { pen, fountainPen, pencil, marker, calligraphy }
 
 enum PageTemplate { blank, lined, grid, dotted, collegeRuled }

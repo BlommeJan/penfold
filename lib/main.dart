@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/library_screen.dart';
+import 'screens/app_home.dart';
 import 'services/spen_button_service.dart';
 import 'services/stroke_smoothing_service.dart';
 import 'services/toolbar_order_service.dart';
@@ -62,7 +62,7 @@ class PenfoldApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: const LibraryScreen(),
+      home: const AppHome(),
     );
   }
 }

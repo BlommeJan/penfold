@@ -25,8 +25,9 @@ void paintVectorInkOnPdf(
   PdfGraphics canvas,
   PdfPoint pdfSize,
   PageSize pageSize,
-  List<Stroke> strokes,
-) {
+  List<Stroke> strokes, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
   final penStrokes = <Stroke>[];
   final highlighterStrokes = <Stroke>[];
   final tapeStrokes = <Stroke>[];
@@ -49,7 +50,7 @@ void paintVectorInkOnPdf(
   }
 
   for (final s in penStrokes) {
-    _paintPdfPenStroke(canvas, s, pdfSize, pageSize);
+    _paintPdfPenStroke(canvas, s, pdfSize, pageSize, orientation: orientation);
   }
 
   if (highlighterStrokes.isNotEmpty) {
@@ -59,7 +60,8 @@ void paintVectorInkOnPdf(
       blendMode: PdfBlendMode.multiply,
     ));
     for (final s in highlighterStrokes) {
-      _paintPdfHighlighterStroke(canvas, s, pdfSize, pageSize);
+      _paintPdfHighlighterStroke(
+          canvas, s, pdfSize, pageSize, orientation: orientation);
     }
     canvas.restoreContext();
   }
@@ -70,7 +72,8 @@ void paintVectorInkOnPdf(
       canvas.setGraphicState(PdfGraphicState(
         strokeOpacity: s.hidden ? 0.18 : 0.62,
       ));
-      _paintPdfTapeStroke(canvas, s, pdfSize, pageSize);
+      _paintPdfTapeStroke(
+          canvas, s, pdfSize, pageSize, orientation: orientation);
       canvas.restoreContext();
     }
   }
@@ -80,21 +83,25 @@ Offset _canonicalToPdf(
   double x,
   double y,
   PdfPoint pdfSize,
-  PageSize pageSize,
-) {
+  PageSize pageSize, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
+  final dims = PageCoords.canonicalSize(pageSize, orientation: orientation);
   return Offset(
-    x * pdfSize.x / pageSize.width,
-    pdfSize.y - y * pdfSize.y / pageSize.height,
+    x * pdfSize.x / dims.width,
+    pdfSize.y - y * pdfSize.y / dims.height,
   );
 }
 
 double _canonicalLenToPdf(
   double canonicalLen,
   PdfPoint pdfSize,
-  PageSize pageSize,
-) {
-  final scaleX = pdfSize.x / pageSize.width;
-  final scaleY = pdfSize.y / pageSize.height;
+  PageSize pageSize, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
+  final dims = PageCoords.canonicalSize(pageSize, orientation: orientation);
+  final scaleX = pdfSize.x / dims.width;
+  final scaleY = pdfSize.y / dims.height;
   return canonicalLen * (scaleX + scaleY) / 2;
 }
 
@@ -107,8 +114,9 @@ void _paintPdfPenStroke(
   PdfGraphics canvas,
   Stroke s,
   PdfPoint pdfSize,
-  PageSize pageSize,
-) {
+  PageSize pageSize, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
   final pts = s.points;
   if (pts.isEmpty) return;
 
@@ -129,10 +137,12 @@ void _paintPdfPenStroke(
   canvas.setLineCap(isSquareCap ? PdfLineCap.square : PdfLineCap.round);
   canvas.setLineJoin(PdfLineJoin.round);
 
-  final displayWidth = _canonicalLenToPdf(s.width, pdfSize, pageSize);
+  final displayWidth =
+      _canonicalLenToPdf(s.width, pdfSize, pageSize, orientation: orientation);
 
   if (pts.length == 1) {
-    final c = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize);
+    final c = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize,
+        orientation: orientation);
     canvas.setFillColor(color);
     canvas.drawEllipse(c.dx, c.dy, displayWidth / 2, displayWidth / 2);
     canvas.fillPath();
@@ -141,12 +151,16 @@ void _paintPdfPenStroke(
   }
 
   if (s.brushStyle == BrushStyle.pencil) {
-    final dashScale = _canonicalLenToPdf(1, pdfSize, pageSize);
+    final dashScale =
+        _canonicalLenToPdf(1, pdfSize, pageSize, orientation: orientation);
     canvas.setLineDashPattern([3 * dashScale, 2 * dashScale]);
     canvas.setLineWidth(displayWidth * 0.8);
     for (var i = 1; i < pts.length; i++) {
-      final da = _canonicalToPdf(pts[i - 1].x, pts[i - 1].y, pdfSize, pageSize);
-      final db = _canonicalToPdf(pts[i].x, pts[i].y, pdfSize, pageSize);
+      final da = _canonicalToPdf(
+          pts[i - 1].x, pts[i - 1].y, pdfSize, pageSize,
+          orientation: orientation);
+      final db = _canonicalToPdf(pts[i].x, pts[i].y, pdfSize, pageSize,
+          orientation: orientation);
       canvas.moveTo(da.dx, da.dy);
       canvas.lineTo(db.dx, db.dy);
       canvas.strokePath();
@@ -158,8 +172,10 @@ void _paintPdfPenStroke(
   for (var i = 1; i < pts.length; i++) {
     final a = pts[i - 1];
     final b = pts[i];
-    final da = _canonicalToPdf(a.x, a.y, pdfSize, pageSize);
-    final db = _canonicalToPdf(b.x, b.y, pdfSize, pageSize);
+    final da =
+        _canonicalToPdf(a.x, a.y, pdfSize, pageSize, orientation: orientation);
+    final db =
+        _canonicalToPdf(b.x, b.y, pdfSize, pageSize, orientation: orientation);
     final pressure = ((a.p + b.p) / 2).clamp(0.15, 1.0);
     final velocity = Offset(b.x - a.x, b.y - a.y).distance;
     final velFactor = switch (s.brushStyle) {
@@ -207,39 +223,46 @@ void _paintPdfHighlighterStroke(
   PdfGraphics canvas,
   Stroke s,
   PdfPoint pdfSize,
-  PageSize pageSize,
-) {
+  PageSize pageSize, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
   final pts = s.points;
   if (pts.isEmpty) return;
 
   canvas.setStrokeColor(_strokePdfColor(s));
   canvas.setLineCap(PdfLineCap.square);
   canvas.setLineJoin(PdfLineJoin.round);
-  final displayWidth = _canonicalLenToPdf(s.width, pdfSize, pageSize);
+  final displayWidth =
+      _canonicalLenToPdf(s.width, pdfSize, pageSize, orientation: orientation);
   canvas.setLineWidth(displayWidth);
 
   if (pts.length == 1) {
-    final c = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize);
+    final c = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize,
+        orientation: orientation);
     canvas.setFillColor(_strokePdfColor(s));
     canvas.drawEllipse(c.dx, c.dy, displayWidth / 2, displayWidth / 2);
     canvas.fillPath();
     return;
   }
 
-  final start = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize);
+  final start = _canonicalToPdf(pts[0].x, pts[0].y, pdfSize, pageSize,
+      orientation: orientation);
   canvas.moveTo(start.dx, start.dy);
   var prevX = start.dx;
   var prevY = start.dy;
   for (var i = 1; i < pts.length; i++) {
-    final a = _canonicalToPdf(pts[i - 1].x, pts[i - 1].y, pdfSize, pageSize);
-    final b = _canonicalToPdf(pts[i].x, pts[i].y, pdfSize, pageSize);
+    final a = _canonicalToPdf(pts[i - 1].x, pts[i - 1].y, pdfSize, pageSize,
+        orientation: orientation);
+    final b = _canonicalToPdf(pts[i].x, pts[i].y, pdfSize, pageSize,
+        orientation: orientation);
     final mx = (a.dx + b.dx) / 2;
     final my = (a.dy + b.dy) / 2;
     _quadraticBezierOnPdf(canvas, a.dx, a.dy, mx, my, prevX, prevY);
     prevX = mx;
     prevY = my;
   }
-  final last = _canonicalToPdf(pts.last.x, pts.last.y, pdfSize, pageSize);
+  final last = _canonicalToPdf(pts.last.x, pts.last.y, pdfSize, pageSize,
+      orientation: orientation);
   canvas.lineTo(last.dx, last.dy);
   canvas.strokePath();
 }
@@ -248,9 +271,11 @@ void _paintPdfTapeStroke(
   PdfGraphics canvas,
   Stroke s,
   PdfPoint pdfSize,
-  PageSize pageSize,
-) {
-  _paintPdfHighlighterStroke(canvas, s, pdfSize, pageSize);
+  PageSize pageSize, {
+  PageOrientation orientation = PageOrientation.portrait,
+}) {
+  _paintPdfHighlighterStroke(canvas, s, pdfSize, pageSize,
+      orientation: orientation);
 }
 
 /// True when the PDF byte stream contains vector stroke path operators.
@@ -410,9 +435,16 @@ class PageExportService {
     }
   }
 
+  PageOrientation effectiveOrientation(NotePage page) {
+    if (_hasPdfBackground(page)) return PageOrientation.portrait;
+    return page.orientation;
+  }
+
   Future<ui.Image> renderPage(PageRenderData data) async {
     final pageSize = effectivePageSize(data.page);
-    final displaySize = PageCoords.canonicalSize(pageSize);
+    final orientation = effectiveOrientation(data.page);
+    final displaySize =
+        PageCoords.canonicalSize(pageSize, orientation: orientation);
     final width = (displaySize.width * exportPixelRatio).round();
     final height = (displaySize.height * exportPixelRatio).round();
 
@@ -426,6 +458,7 @@ class PageExportService {
     PagePainter(
       template: data.page.template,
       pageSize: pageSize,
+      orientation: orientation,
       pdfImage: data.pdfImage,
     ).paint(canvas, displaySize);
 
@@ -436,6 +469,7 @@ class PageExportService {
       images: data.images,
       decodedImages: data.decodedImages,
       pageSize: pageSize,
+      orientation: orientation,
       displaySize: displaySize,
       revision: 0,
     ).paint(canvas, displaySize);
@@ -447,7 +481,9 @@ class PageExportService {
   /// Renders background, fills, images, and text — ink strokes are vector in PDF.
   Future<ui.Image> renderPageRasterLayer(PageRenderData data) async {
     final pageSize = effectivePageSize(data.page);
-    final displaySize = PageCoords.canonicalSize(pageSize);
+    final orientation = effectiveOrientation(data.page);
+    final displaySize =
+        PageCoords.canonicalSize(pageSize, orientation: orientation);
     final width = (displaySize.width * exportPixelRatio).round();
     final height = (displaySize.height * exportPixelRatio).round();
 
@@ -461,6 +497,7 @@ class PageExportService {
     PagePainter(
       template: data.page.template,
       pageSize: pageSize,
+      orientation: orientation,
       pdfImage: data.pdfImage,
     ).paint(canvas, displaySize);
 
@@ -471,6 +508,7 @@ class PageExportService {
       images: data.images,
       decodedImages: data.decodedImages,
       pageSize: pageSize,
+      orientation: orientation,
       displaySize: displaySize,
       revision: 0,
     ).paint(canvas, displaySize);
@@ -479,11 +517,17 @@ class PageExportService {
     return picture.toImage(width, height);
   }
 
-  PdfPageFormat pdfFormatFor(PageSize pageSize) => PdfPageFormat(
-        pageSize.width / 10.0,
-        pageSize.height / 10.0,
-        marginAll: 0,
-      );
+  PdfPageFormat pdfFormatFor(
+    PageSize pageSize, {
+    PageOrientation orientation = PageOrientation.portrait,
+  }) {
+    final dims = PageCoords.canonicalSize(pageSize, orientation: orientation);
+    return PdfPageFormat(
+      dims.width / 10.0,
+      dims.height / 10.0,
+      marginAll: 0,
+    );
+  }
 
   Future<void> _addImagePageToDoc(
     pw.Document doc,
@@ -510,8 +554,9 @@ class PageExportService {
     pw.Document doc,
     PageRenderData data,
     PageSize pageSize,
+    PageOrientation orientation,
   ) async {
-    final format = pdfFormatFor(pageSize);
+    final format = pdfFormatFor(pageSize, orientation: orientation);
     ui.Image? rasterImage;
     try {
       rasterImage = await renderPageRasterLayer(data);
@@ -530,6 +575,7 @@ class PageExportService {
                 size,
                 pageSize,
                 data.strokes,
+                orientation: orientation,
               );
             },
             child: pw.Image(
@@ -566,7 +612,12 @@ class PageExportService {
       PageRenderData? data;
       try {
         data = await loadPageData(page);
-        await _addVectorPageToDoc(doc, data, effectivePageSize(page));
+        await _addVectorPageToDoc(
+          doc,
+          data,
+          effectivePageSize(page),
+          effectiveOrientation(page),
+        );
       } finally {
         data?.dispose();
         await _yieldToEventLoop();
@@ -612,7 +663,12 @@ class PageExportService {
       } else {
         final pageSize = effectivePageSize(page);
         final doc = pw.Document();
-        await _addVectorPageToDoc(doc, data, pageSize);
+        await _addVectorPageToDoc(
+          doc,
+          data,
+          pageSize,
+          effectiveOrientation(page),
+        );
         final bytes = await doc.save();
         await _shareBytes(
           bytes: bytes,

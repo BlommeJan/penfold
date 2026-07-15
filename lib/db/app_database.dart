@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 9;
+  static const _schemaVersion = 10;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -69,6 +69,7 @@ class AppDatabase {
         idx INTEGER NOT NULL,
         template INTEGER NOT NULL,
         page_size INTEGER NOT NULL DEFAULT 0,
+        orientation INTEGER NOT NULL DEFAULT 0,
         pdf_image TEXT,
         pdf_source_path TEXT,
         pdf_page_index INTEGER,
@@ -205,6 +206,12 @@ class AppDatabase {
       if (await _hasTable(db, 'strokes')) {
         await _addColumnIfMissing(
             db, 'strokes', 'hidden', 'INTEGER NOT NULL DEFAULT 0');
+      }
+    }
+    if (oldV < 10) {
+      if (await _hasTable(db, 'pages')) {
+        await _addColumnIfMissing(
+            db, 'pages', 'orientation', 'INTEGER NOT NULL DEFAULT 0');
       }
     }
   }
@@ -591,6 +598,19 @@ class AppDatabase {
   Future<void> updatePageSize(String id, PageSize size) async {
     await (await db).update('pages', {'page_size': size.index},
         where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updatePageOrientation(
+    String id,
+    PageOrientation orientation,
+    double aspect,
+  ) async {
+    await (await db).update(
+      'pages',
+      {'orientation': orientation.index, 'aspect': aspect},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<bool> pageHasInk(String pageId) async {

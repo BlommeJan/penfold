@@ -27,6 +27,18 @@ void main() {
       expect(size.height, lessThanOrEqualTo(600 - 48));
     });
 
+    test('landscape pageDisplaySize inverts aspect', () {
+      final size = PageCoords.pageDisplaySize(
+        const Size(800, 600),
+        PageSize.a4,
+        orientation: PageOrientation.landscape,
+      );
+      expect(
+        size.width / size.height,
+        closeTo(PageSize.a4.height / PageSize.a4.width, 0.01),
+      );
+    });
+
     test('PageSize aspect constants', () {
       expect(PageSize.a4.aspect, closeTo(210 / 297, 0.001));
       expect(PageSize.a5.aspect, closeTo(148 / 210, 0.001));

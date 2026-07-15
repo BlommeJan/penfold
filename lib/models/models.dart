@@ -18,6 +18,23 @@ enum BrushStyle { pen, fountainPen, pencil, marker, calligraphy }
 
 enum PageTemplate { blank, lined, grid, dotted, collegeRuled }
 
+/// Per-page orientation (v0.2.22). Portrait keeps canonical width × height;
+/// landscape swaps them for display and export.
+enum PageOrientation {
+  portrait,
+  landscape;
+
+  double aspectOf(PageSize pageSize) => switch (this) {
+        PageOrientation.portrait => pageSize.aspect,
+        PageOrientation.landscape => pageSize.height / pageSize.width,
+      };
+
+  String get label => switch (this) {
+        PageOrientation.portrait => 'Portrait',
+        PageOrientation.landscape => 'Landscape',
+      };
+}
+
 /// Canonical page dimensions in 0.1 mm units.
 enum PageSize {
   a4(2100, 2970),
@@ -115,6 +132,7 @@ class NotePage {
   int index;
   PageTemplate template;
   PageSize pageSize;
+  PageOrientation orientation;
 
   /// If non-null, this page is a rendered PDF page: path to a PNG background.
   final String? pdfImagePath;
@@ -128,7 +146,7 @@ class NotePage {
   bool bookmarked;
 
   /// Aspect ratio (width / height) of the page.
-  final double aspect;
+  double aspect;
 
   NotePage({
     required this.id,
@@ -136,12 +154,13 @@ class NotePage {
     required this.index,
     required this.template,
     this.pageSize = PageSize.a4,
+    this.orientation = PageOrientation.portrait,
     this.pdfImagePath,
     this.pdfSourcePath,
     this.pdfPageIndex,
     this.bookmarked = false,
     double? aspect,
-  }) : aspect = aspect ?? pageSize.aspect;
+  }) : aspect = aspect ?? orientation.aspectOf(pageSize);
 
   Map<String, Object?> toRow() => {
         'id': id,
@@ -149,6 +168,7 @@ class NotePage {
         'idx': index,
         'template': template.index,
         'page_size': pageSize.index,
+        'orientation': orientation.index,
         'pdf_image': pdfImagePath,
         'pdf_source_path': pdfSourcePath,
         'pdf_page_index': pdfPageIndex,
@@ -158,17 +178,20 @@ class NotePage {
 
   static NotePage fromRow(Map<String, Object?> r) {
     final ps = PageSize.values[(r['page_size'] as int?) ?? 0];
+    final orient =
+        PageOrientation.values[(r['orientation'] as int?) ?? 0];
     return NotePage(
       id: r['id'] as String,
       notebookId: r['notebook_id'] as String,
       index: r['idx'] as int,
       template: PageTemplate.values[r['template'] as int],
       pageSize: ps,
-        pdfImagePath: r['pdf_image'] as String?,
-        pdfSourcePath: r['pdf_source_path'] as String?,
-        pdfPageIndex: r['pdf_page_index'] as int?,
-        bookmarked: (r['bookmarked'] as int?) == 1,
-        aspect: (r['aspect'] as num?)?.toDouble() ?? ps.aspect,
+      orientation: orient,
+      pdfImagePath: r['pdf_image'] as String?,
+      pdfSourcePath: r['pdf_source_path'] as String?,
+      pdfPageIndex: r['pdf_page_index'] as int?,
+      bookmarked: (r['bookmarked'] as int?) == 1,
+      aspect: (r['aspect'] as num?)?.toDouble() ?? orient.aspectOf(ps),
     );
   }
 }

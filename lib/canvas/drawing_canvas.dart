@@ -619,21 +619,48 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   double _transformStartDist = 1;
   _SelectionSnapshot? _transformBefore;
 
-  PageSize get _pageSize => widget.page.pdfImagePath != null
-      ? PageSize.values.firstWhere(
-          (ps) => (ps.aspect - widget.page.aspect).abs() < 0.01,
-          orElse: () => widget.page.pageSize,
-        )
-      : widget.page.pageSize;
+  PageSize get _pageSize {
+    final hasPdf = widget.page.pdfImagePath != null ||
+        widget.page.pdfSourcePath != null;
+    if (hasPdf) {
+      return PageSize.values.firstWhere(
+        (ps) => (ps.aspect - widget.page.aspect).abs() < 0.01,
+        orElse: () => widget.page.pageSize,
+      );
+    }
+    return widget.page.pageSize;
+  }
 
-  Offset _toCanonical(Offset display) =>
-      PageCoords.displayToCanonical(display, widget.displaySize, _pageSize);
+  PageOrientation get _orientation {
+    final hasPdf = widget.page.pdfImagePath != null ||
+        widget.page.pdfSourcePath != null;
+    return hasPdf ? PageOrientation.portrait : widget.page.orientation;
+  }
 
-  double _toCanonicalLen(double display) => PageCoords.displayToCanonicalLength(
-      display, widget.displaySize, _pageSize);
+  Size get _canonicalSize =>
+      PageCoords.canonicalSize(_pageSize, orientation: _orientation);
 
-  Offset _toDisplay(Offset canonical) =>
-      PageCoords.canonicalToDisplay(canonical, widget.displaySize, _pageSize);
+  Offset _toCanonical(Offset display) => PageCoords.displayToCanonical(
+        display,
+        widget.displaySize,
+        _pageSize,
+        orientation: _orientation,
+      );
+
+  double _toCanonicalLen(double display) =>
+      PageCoords.displayToCanonicalLength(
+        display,
+        widget.displaySize,
+        _pageSize,
+        orientation: _orientation,
+      );
+
+  Offset _toDisplay(Offset canonical) => PageCoords.canonicalToDisplay(
+        canonical,
+        widget.displaySize,
+        _pageSize,
+        orientation: _orientation,
+      );
 
   @override
   void initState() {
@@ -723,14 +750,14 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     final decoded = await _decode(path);
     if (decoded == null) return;
     final aspect = decoded.width / decoded.height;
-    final w = _pageSize.width * 0.45;
+    final w = _canonicalSize.width * 0.45;
     final h = w / aspect;
     final img = PageImage(
       id: _uuid.v4(),
       pageId: widget.page.id,
       path: path,
-      x: (_pageSize.width - w) / 2,
-      y: (_pageSize.height - h) / 2,
+      x: (_canonicalSize.width - w) / 2,
+      y: (_canonicalSize.height - h) / 2,
       w: w,
       h: h,
       z: _controller.nextZ(),
@@ -1081,7 +1108,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         final selImg = _selectedImage();
         final displayRect = selImg != null
             ? PageCoords.canonicalRectToDisplay(
-                selImg.rect, widget.displaySize, _pageSize)
+                selImg.rect, widget.displaySize, _pageSize,
+                orientation: _orientation)
             : null;
         if (displayRect != null &&
             (displayRect.bottomRight - pos).distance < 22) {
@@ -1098,7 +1126,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         }
         if (_selectionBounds != null) {
           final displayBounds = PageCoords.canonicalRectToDisplay(
-              _selectionBounds!, widget.displaySize, _pageSize);
+              _selectionBounds!, widget.displaySize, _pageSize,
+              orientation: _orientation);
           if (displayBounds.inflate(12).contains(pos)) {
             _draggingSelection = true;
             _lastDragPos = pos;
@@ -1109,7 +1138,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         PageImage? hit;
         for (final img in _images.reversed) {
           final r = PageCoords.canonicalRectToDisplay(
-              img.rect, widget.displaySize, _pageSize);
+              img.rect, widget.displaySize, _pageSize,
+              orientation: _orientation);
           if (r.contains(pos)) {
             hit = img;
             break;
@@ -1136,7 +1166,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _activeHandle = handle;
       _transformBefore = _captureSelectionSnapshot();
       final displayBounds = PageCoords.canonicalRectToDisplay(
-          _selectionBounds!, widget.displaySize, _pageSize);
+          _selectionBounds!, widget.displaySize, _pageSize,
+          orientation: _orientation);
       final inflated = displayBounds.inflate(6);
       _transformPivot = _toCanonical(inflated.center);
       if (handle == _SelHandle.rotate) {
@@ -1176,7 +1207,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     PageImage? hitImg;
     for (final img in _images.reversed) {
       final r = PageCoords.canonicalRectToDisplay(
-          img.rect, widget.displaySize, _pageSize);
+          img.rect, widget.displaySize, _pageSize,
+          orientation: _orientation);
       if (r.contains(pos)) {
         hitImg = img;
         break;
@@ -1266,11 +1298,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _bump();
   }
 
-  double _defaultTextFontSize() => _pageSize.width * 0.024;
+  double _defaultTextFontSize() => _canonicalSize.width * 0.024;
 
   Size _measureTextBlock(String text, double fontSize) {
-    final displayFont =
-        PageCoords.canonicalToDisplayLength(fontSize, widget.displaySize, _pageSize);
+    final displayFont = PageCoords.canonicalToDisplayLength(
+        fontSize, widget.displaySize, _pageSize,
+        orientation: _orientation);
     final tp = TextPainter(
       text: TextSpan(
         text: text,
@@ -1340,7 +1373,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         final selImg = _selectedImage();
         if (_resizingImage && selImg != null && _lastDragPos != null) {
           final displayRect = PageCoords.canonicalRectToDisplay(
-              selImg.rect, widget.displaySize, _pageSize);
+              selImg.rect, widget.displaySize, _pageSize,
+              orientation: _orientation);
           final aspect = selImg.w / selImg.h;
           final newW = math.max(
               _toCanonicalLen(40),
@@ -1409,7 +1443,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
     if (_selectionBounds == null || _transformPivot == null) return;
     final displayBounds = PageCoords.canonicalRectToDisplay(
-        _selectionBounds!, widget.displaySize, _pageSize);
+        _selectionBounds!, widget.displaySize, _pageSize,
+        orientation: _orientation);
     final center = displayBounds.inflate(6).center;
 
     if (_activeHandle == _SelHandle.rotate) {
@@ -1822,7 +1857,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   Rect? _displaySelectionBounds() {
     if (_selectionBounds == null) return null;
     return PageCoords.canonicalRectToDisplay(
-            _selectionBounds!, widget.displaySize, _pageSize)
+            _selectionBounds!, widget.displaySize, _pageSize,
+            orientation: _orientation)
         .inflate(6);
   }
 
@@ -1924,7 +1960,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _selectedImageId = null;
     Rect? bounds;
     final canonicalRect = PageCoords.displayRectToCanonical(
-        normalized, widget.displaySize, _pageSize);
+        normalized, widget.displaySize, _pageSize,
+        orientation: _orientation);
     for (final s in _strokes) {
       if (canonicalRect.overlaps(s.bounds)) {
         _selectedIds.add(s.id);
@@ -2112,6 +2149,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                 painter: PagePainter(
                   template: widget.page.template,
                   pageSize: _pageSize,
+                  orientation: _orientation,
                   pdfImage: widget.pdfImage,
                 ),
               ),
@@ -2135,6 +2173,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                   fills: _fills,
                   textBlocks: _textBlocks,
                   pageSize: _pageSize,
+                  orientation: _orientation,
                   displaySize: widget.displaySize,
                   revision: _revision,
                 ),
@@ -2150,10 +2189,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                               .where((t) => t.id == _editingTextId)
                               .map((t) => t.w)
                               .firstOrNull ??
-                          _pageSize.width * 0.4)
-                      : _pageSize.width * 0.4,
+                          _canonicalSize.width * 0.4)
+                      : _canonicalSize.width * 0.4,
                   widget.displaySize,
                   _pageSize,
+                  orientation: _orientation,
                 ),
                 child: Material(
                   elevation: 2,
@@ -2171,6 +2211,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                               _defaultTextFontSize(),
                               widget.displaySize,
                               _pageSize,
+                              orientation: _orientation,
                             ),
                             height: 1.25,
                           ),

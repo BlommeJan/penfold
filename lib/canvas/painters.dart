@@ -12,11 +12,13 @@ import 'page_coords.dart';
 class PagePainter extends CustomPainter {
   final PageTemplate template;
   final PageSize pageSize;
+  final PageOrientation orientation;
   final ui.Image? pdfImage;
 
   PagePainter({
     required this.template,
     required this.pageSize,
+    this.orientation = PageOrientation.portrait,
     this.pdfImage,
   });
 
@@ -41,14 +43,14 @@ class PagePainter extends CustomPainter {
       ..strokeWidth = 1;
 
     // Template spacing in canonical 0.1 mm, converted to display pixels.
-    final lineSpacing =
-        PageCoords.canonicalToDisplayLength(70, size, pageSize); // 7 mm
-    final gridSpacing =
-        PageCoords.canonicalToDisplayLength(50, size, pageSize); // 5 mm
-    final marginLeft =
-        PageCoords.canonicalToDisplayLength(250, size, pageSize); // 25 mm
-    final marginSide =
-        PageCoords.canonicalToDisplayLength(100, size, pageSize); // 10 mm
+    final lineSpacing = PageCoords.canonicalToDisplayLength(
+        70, size, pageSize, orientation: orientation); // 7 mm
+    final gridSpacing = PageCoords.canonicalToDisplayLength(
+        50, size, pageSize, orientation: orientation); // 5 mm
+    final marginLeft = PageCoords.canonicalToDisplayLength(
+        250, size, pageSize, orientation: orientation); // 25 mm
+    final marginSide = PageCoords.canonicalToDisplayLength(
+        100, size, pageSize, orientation: orientation); // 10 mm
 
     switch (template) {
       case PageTemplate.blank:
@@ -89,6 +91,7 @@ class PagePainter extends CustomPainter {
   bool shouldRepaint(PagePainter old) =>
       old.template != template ||
       old.pageSize != pageSize ||
+      old.orientation != orientation ||
       old.pdfImage != pdfImage;
 }
 
@@ -105,6 +108,7 @@ class InkPainter extends CustomPainter {
   final List<FilledRegion> fills;
   final List<TextBlock> textBlocks;
   final PageSize pageSize;
+  final PageOrientation orientation;
   final Size displaySize;
 
   final bool showTransformHandles;
@@ -126,14 +130,19 @@ class InkPainter extends CustomPainter {
     this.selectionRotation = 0,
     this.marqueeRect,
     required this.pageSize,
+    this.orientation = PageOrientation.portrait,
     required this.displaySize,
     required int revision,
   }) : _revision = revision;
 
   final int _revision;
 
-  Offset _toDisplay(double x, double y) =>
-      PageCoords.canonicalToDisplay(Offset(x, y), displaySize, pageSize);
+  Offset _toDisplay(double x, double y) => PageCoords.canonicalToDisplay(
+        Offset(x, y),
+        displaySize,
+        pageSize,
+        orientation: orientation,
+      );
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -145,7 +154,7 @@ class InkPainter extends CustomPainter {
       final decoded = decodedImages[img.path];
       if (decoded == null) continue;
       final rect = PageCoords.canonicalRectToDisplay(
-          img.rect, displaySize, pageSize);
+          img.rect, displaySize, pageSize, orientation: orientation);
       paintImage(
         canvas: canvas,
         rect: rect,
@@ -178,7 +187,7 @@ class InkPainter extends CustomPainter {
     if (selectedIds.isNotEmpty) {
       for (final s in strokes.where((s) => selectedIds.contains(s.id))) {
         final b = PageCoords.canonicalRectToDisplay(
-            s.bounds, displaySize, pageSize);
+            s.bounds, displaySize, pageSize, orientation: orientation);
         canvas.drawRect(
             b,
             Paint()
@@ -189,7 +198,7 @@ class InkPainter extends CustomPainter {
 
     if (selectionBounds != null) {
       final b = PageCoords.canonicalRectToDisplay(
-          selectionBounds!, displaySize, pageSize);
+          selectionBounds!, displaySize, pageSize, orientation: orientation);
       final inflated = b.inflate(6);
       if (showTransformHandles) {
         _drawTransformHandles(canvas, inflated, selectionRotation);
@@ -216,7 +225,8 @@ class InkPainter extends CustomPainter {
       }
       if (img != null) {
         final rect =
-            PageCoords.canonicalRectToDisplay(img.rect, displaySize, pageSize);
+            PageCoords.canonicalRectToDisplay(
+                img.rect, displaySize, pageSize, orientation: orientation);
         _drawDashedRect(canvas, rect.inflate(3));
         final handle = rect.bottomRight;
         canvas.drawCircle(
@@ -271,8 +281,8 @@ class InkPainter extends CustomPainter {
   }
 
   void _drawTextBlock(Canvas canvas, TextBlock tb) {
-    final rect =
-        PageCoords.canonicalRectToDisplay(tb.rect, displaySize, pageSize);
+    final rect = PageCoords.canonicalRectToDisplay(
+        tb.rect, displaySize, pageSize, orientation: orientation);
     final center = rect.center;
 
     canvas.save();
@@ -287,8 +297,8 @@ class InkPainter extends CustomPainter {
           RRect.fromRectAndRadius(rect, const Radius.circular(4)),
           Paint()..color = const Color(0xFFFFF9E6));
     }
-    final fontSize =
-        PageCoords.canonicalToDisplayLength(tb.fontSize, displaySize, pageSize);
+    final fontSize = PageCoords.canonicalToDisplayLength(
+        tb.fontSize, displaySize, pageSize, orientation: orientation);
     final tp = TextPainter(
       text: TextSpan(
         text: tb.text,
@@ -319,8 +329,8 @@ class InkPainter extends CustomPainter {
     final pts = s.points;
     if (pts.isEmpty) return;
 
-    final displayWidth =
-        PageCoords.canonicalToDisplayLength(s.width, displaySize, pageSize);
+    final displayWidth = PageCoords.canonicalToDisplayLength(
+        s.width, displaySize, pageSize, orientation: orientation);
     paint.strokeWidth = displayWidth;
 
     if (pts.length == 1) {
@@ -391,8 +401,8 @@ class InkPainter extends CustomPainter {
     final pts = s.points;
     if (pts.isEmpty) return;
 
-    final displayWidth =
-        PageCoords.canonicalToDisplayLength(s.width, displaySize, pageSize);
+    final displayWidth = PageCoords.canonicalToDisplayLength(
+        s.width, displaySize, pageSize, orientation: orientation);
 
     if (pts.length == 1) {
       final c = _toDisplay(pts[0].x, pts[0].y);
@@ -548,6 +558,7 @@ class InkPainter extends CustomPainter {
 class PageThumbnailPainter extends CustomPainter {
   final PageTemplate template;
   final PageSize pageSize;
+  final PageOrientation orientation;
   final List<Stroke> strokes;
   final List<FilledRegion> fills;
   final List<TextBlock> textBlocks;
@@ -556,6 +567,7 @@ class PageThumbnailPainter extends CustomPainter {
   PageThumbnailPainter({
     required this.template,
     required this.pageSize,
+    this.orientation = PageOrientation.portrait,
     required this.strokes,
     this.fills = const [],
     this.textBlocks = const [],
@@ -568,7 +580,8 @@ class PageThumbnailPainter extends CustomPainter {
       Offset.zero & size,
       Paint()..color = const Color(0xFFF5F7FA),
     );
-    final pageAspect = pageSize.aspect;
+    final pageAspect =
+        PageCoords.effectiveAspect(pageSize, orientation: orientation);
     final targetAspect = size.width / size.height;
     Rect pageRect;
     if (pageAspect > targetAspect) {
@@ -581,13 +594,18 @@ class PageThumbnailPainter extends CustomPainter {
     canvas.save();
     canvas.clipRRect(
         RRect.fromRectAndRadius(pageRect, const Radius.circular(2)));
-    PagePainter(template: template, pageSize: pageSize, pdfImage: pdfImage)
-        .paint(canvas, pageRect.size);
+    PagePainter(
+      template: template,
+      pageSize: pageSize,
+      orientation: orientation,
+      pdfImage: pdfImage,
+    ).paint(canvas, pageRect.size);
     final ink = InkPainter(
       strokes: strokes,
       fills: fills,
       textBlocks: textBlocks,
       pageSize: pageSize,
+      orientation: orientation,
       displaySize: pageRect.size,
       revision: 0,
     );
@@ -607,6 +625,7 @@ class PageThumbnailPainter extends CustomPainter {
   bool shouldRepaint(PageThumbnailPainter old) =>
       old.template != template ||
       old.pageSize != pageSize ||
+      old.orientation != orientation ||
       old.strokes != strokes ||
       old.fills != fills ||
       old.textBlocks != textBlocks ||

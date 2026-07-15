@@ -52,8 +52,14 @@ class PageEditorState extends State<PageEditor> {
         )
       : widget.page.pageSize;
 
-  Size get displaySize =>
-      PageCoords.pageDisplaySize(widget.viewportSize, _pageSize);
+  PageOrientation get _orientation =>
+      _hasPdfBackground ? PageOrientation.portrait : widget.page.orientation;
+
+  Size get displaySize => PageCoords.pageDisplaySize(
+        widget.viewportSize,
+        _pageSize,
+        orientation: _orientation,
+      );
 
   DrawingCanvasState? get canvasState => _canvasKey.currentState;
 

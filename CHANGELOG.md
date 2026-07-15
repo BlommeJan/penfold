@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.22] — 2026
+
+### Added
+
+- **Mixed-orientation pages in one notebook** — per-page Portrait/Landscape toggle in page settings (not for PDF-imported pages); schema v10: `pages.orientation`; `PageCoords` swaps width/height for landscape rendering; aspect updated on orientation change
+
 ## [0.2.21] — 2026
 
 ### Added
@@ -194,6 +200,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.22]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.22
 [0.2.21]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.21
 [0.2.20]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.20
 [0.2.19]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.19

@@ -90,6 +90,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   NotePage get _activePage => _pages[_visiblePageIndex];
 
+  bool _isPdfPage(NotePage page) =>
+      page.pdfImagePath != null || page.pdfSourcePath != null;
+
   List<int> get _bookmarkedIndices => [
         for (var i = 0; i < _pages.length; i++)
           if (_pages[i].bookmarked) i,
@@ -217,8 +220,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 trailing: _activePage.pageSize == s
                     ? const Icon(Icons.check_rounded)
                     : null,
-                enabled: _activePage.pdfImagePath == null,
-                onTap: _activePage.pdfImagePath == null
+                enabled: !_isPdfPage(_activePage),
+                onTap: !_isPdfPage(_activePage)
                     ? () => Navigator.pop(ctx, s)
                     : null,
               ),
@@ -227,6 +230,36 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: Text(
                   'PDF pages keep their document dimensions',
+                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text('Orientation',
+                  style: Theme.of(ctx).textTheme.titleSmall),
+            ),
+            for (final o in PageOrientation.values)
+              ListTile(
+                leading: Icon(o == PageOrientation.portrait
+                    ? Icons.crop_portrait_rounded
+                    : Icons.crop_landscape_rounded),
+                title: Text(o.label),
+                trailing: _activePage.orientation == o
+                    ? const Icon(Icons.check_rounded)
+                    : null,
+                enabled: !_isPdfPage(_activePage),
+                onTap: !_isPdfPage(_activePage)
+                    ? () => Navigator.pop(ctx, o)
+                    : null,
+              ),
+            if (_isPdfPage(_activePage))
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  'PDF pages keep their document orientation',
                   style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
                         color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                       ),
@@ -287,7 +320,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     }
 
     if (chosen is PageSize) {
-      if (_activePage.pdfImagePath != null) {
+      if (_isPdfPage(_activePage)) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('PDF pages keep their document dimensions')));
         return;
@@ -318,6 +351,45 @@ class _NotebookScreenState extends State<NotebookScreen> {
       }
       await _db.updatePageSize(_activePage.id, chosen);
       setState(() => _activePage.pageSize = chosen);
+      return;
+    }
+
+    if (chosen is PageOrientation) {
+      if (_isPdfPage(_activePage)) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('PDF pages keep their document orientation')));
+        return;
+      }
+      if (chosen == _activePage.orientation) return;
+      if (await _db.pageHasInk(_activePage.id)) {
+        final ok = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Change orientation?'),
+            content: const Text(
+              'This page has ink. Changing orientation re-layouts the page; '
+              'your ink stays in the same canonical position.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Change orientation'),
+              ),
+            ],
+          ),
+        );
+        if (ok != true || !mounted) return;
+      }
+      final aspect = chosen.aspectOf(_activePage.pageSize);
+      await _db.updatePageOrientation(_activePage.id, chosen, aspect);
+      setState(() {
+        _activePage.orientation = chosen;
+        _activePage.aspect = aspect;
+      });
       return;
     }
 

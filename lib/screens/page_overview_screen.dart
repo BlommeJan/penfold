@@ -111,12 +111,16 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                 final page = widget.pages[i];
                 final preview = _cache[page.id] ?? const _PagePreviewData();
                 final ocr = _ocrStatus[page.id] ?? const PageOcrStatus();
-                final ps = page.pdfImagePath != null
+                final hasPdf = page.pdfImagePath != null ||
+                    page.pdfSourcePath != null;
+                final ps = hasPdf
                     ? PageSize.values.firstWhere(
                         (s) => (s.aspect - page.aspect).abs() < 0.01,
                         orElse: () => page.pageSize,
                       )
                     : page.pageSize;
+                final orient =
+                    hasPdf ? PageOrientation.portrait : page.orientation;
                 return GestureDetector(
                   onTap: () {
                     widget.onPageSelected(i);
@@ -146,6 +150,7 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                                   painter: PageThumbnailPainter(
                                     template: page.template,
                                     pageSize: ps,
+                                    orientation: orient,
                                     strokes: preview.strokes,
                                     fills: preview.fills,
                                     textBlocks: preview.textBlocks,

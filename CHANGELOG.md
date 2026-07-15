@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.18] — 2026
+
+### Added
+
+- **Vector PDF export** — pen and highlighter strokes emit as vector paths via the `pdf` package; highlighter uses multiply blend + opacity layer; fills, images, PDF backgrounds, and text blocks remain raster; page-by-page `buildNotebookPdfBytes` memory-safe flow preserved
+
 ## [0.2.17] — 2026
 
 ### Added
@@ -170,6 +176,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.18]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.18
 [0.2.17]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.17
 [0.2.16]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.16
 [0.2.15]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.15

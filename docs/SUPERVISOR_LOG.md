@@ -4,6 +4,11 @@
 **Resumed:** overnight autonomous run  
 **Ground rules:** local/offline, SQLite, MIT — zero cloud/accounts/payments
 
+## Supervisor notes
+
+- **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
+- **Current position:** v0.2.24 OCR dictionary committing; resume roadmap at **v0.2.25** (library thumbnails).
+
 ## Version renumbering note
 
 Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versions assigned sequentially from 0.2.13. Roadmap item → shipped version mapping in **Remaining queue** below.
@@ -21,9 +26,9 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.19 | Toolbar tool order customization | 0.2.16 | **DONE** | 73/73 | `189c142` |
 | 0.2.20 | Tape / hide-reveal | 0.2.17 | **DONE** | 77/77 | `5691658` |
 | 0.2.21 | Per-page template/size | 0.2.18 | **DONE** | 81/81 | `24404ea` |
-| 0.2.22 | Mixed-orientation pages | 0.2.19 | PENDING | — | — |
-| 0.2.23 | Audio + stroke timestamps | 0.2.20 | PENDING | — | — |
-| 0.2.24 | OCR custom dictionary | 0.2.21 | PENDING | — | — |
+| 0.2.22 | Mixed-orientation pages | 0.2.19 | **DONE** | 88/88 | `41ec460` |
+| 0.2.23 | Audio + stroke timestamps | 0.2.20 | DEFERRED | — | — |
+| 0.2.24 | OCR custom dictionary | 0.2.21 | **DONE** | 96/96 | committing |
 | 0.2.25 | Notebook library thumbnails | 0.2.23 | PENDING | — | — |
 | 0.2.26 | Lasso rotate handles | 0.2.24 | PENDING | — | — |
 | 0.2.27 | Stroke smoothing toggle | 0.2.25 | PENDING | — | — |

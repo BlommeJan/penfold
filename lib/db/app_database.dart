@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 10;
+  static const _schemaVersion = 11;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -131,6 +131,7 @@ class AppDatabase {
         'CREATE INDEX idx_folders_parent ON folders(parent_id, sort_order)');
     await _createTagsTables(db);
     await _createInkIndex(db);
+    await _createOcrTermsTable(db);
     await _createFts(db);
   }
 
@@ -214,6 +215,9 @@ class AppDatabase {
             db, 'pages', 'orientation', 'INTEGER NOT NULL DEFAULT 0');
       }
     }
+    if (oldV < 11) {
+      await _createOcrTermsTable(db);
+    }
   }
 
   Future<void> _createTagsTables(Database db) async {
@@ -230,6 +234,13 @@ class AppDatabase {
       )''');
     await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_notebook_tags_tag ON notebook_tags(tag_id)');
+  }
+
+  Future<void> _createOcrTermsTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS ocr_terms(
+        term TEXT PRIMARY KEY
+      )''');
   }
 
   Future<void> _createInkIndex(Database db) async {
@@ -358,11 +369,26 @@ class AppDatabase {
         }
       }
     }
+    if (await _hasTable(db, 'ocr_terms')) {
+      final terms = await db.query('ocr_terms', orderBy: 'term COLLATE NOCASE ASC');
+      if (terms.isNotEmpty) {
+        final glossary = terms.map((r) => r['term'] as String).join(' ');
+        body = body.isEmpty ? glossary : '$body $glossary';
+      }
+    }
     await db.insert('search_index', {
       'notebook_id': id,
       'title': title,
       'body': body,
     });
+  }
+
+  Future<void> refreshAllSearchIndexes() async {
+    final database = await db;
+    final notebooks = await database.query('notebooks');
+    for (final nb in notebooks) {
+      await refreshSearchIndex(nb['id'] as String);
+    }
   }
 
   Future<void> refreshSearchIndex(String notebookId) async {
@@ -834,6 +860,30 @@ class AppDatabase {
       ORDER BY n.updated DESC
     ''', [tagId]);
     return rows.map(Notebook.fromRow).toList();
+  }
+
+  // ---- OCR custom dictionary (v0.2.24) ----
+
+  Future<void> addOcrTerm(String term) async {
+    final normalized = term.trim();
+    if (normalized.isEmpty) return;
+    await (await db).insert(
+      'ocr_terms',
+      {'term': normalized},
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+    await refreshAllSearchIndexes();
+  }
+
+  Future<void> removeOcrTerm(String term) async {
+    await (await db).delete('ocr_terms', where: 'term = ?', whereArgs: [term]);
+    await refreshAllSearchIndexes();
+  }
+
+  Future<List<String>> allOcrTerms() async {
+    final rows = await (await db)
+        .query('ocr_terms', orderBy: 'term COLLATE NOCASE ASC');
+    return rows.map((r) => r['term'] as String).toList();
   }
 
   // ---- Ink OCR index (v0.2.8) ----

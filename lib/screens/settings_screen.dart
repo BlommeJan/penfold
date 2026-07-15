@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../db/app_database.dart';
 import '../services/backup_service.dart';
 import '../services/toolbar_order_service.dart';
 
@@ -14,11 +15,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _busy = false;
   List<String> _toolOrder = List<String>.from(ToolbarToolId.defaultOrder);
   bool _orderLoaded = false;
+  List<String> _ocrTerms = [];
+  bool _ocrTermsLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _loadToolOrder();
+    _loadOcrTerms();
   }
 
   Future<void> _loadToolOrder() async {
@@ -38,6 +42,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _resetToolOrder() async {
     await _saveToolOrder(ToolbarToolId.defaultOrder);
+  }
+
+  Future<void> _loadOcrTerms() async {
+    final terms = await AppDatabase.instance.allOcrTerms();
+    if (!mounted) return;
+    setState(() {
+      _ocrTerms = terms;
+      _ocrTermsLoaded = true;
+    });
+  }
+
+  Future<void> _addOcrTerm() async {
+    final controller = TextEditingController();
+    final term = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Add OCR term'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(
+            labelText: 'Term',
+            hintText: 'e.g. eigenvalue, mitochondria',
+          ),
+          textCapitalization: TextCapitalization.none,
+          onSubmitted: (value) => Navigator.pop(ctx, value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controller.text),
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (term == null) return;
+
+    final normalized = term.trim();
+    if (normalized.isEmpty) return;
+
+    await AppDatabase.instance.addOcrTerm(normalized);
+    await _loadOcrTerms();
+  }
+
+  Future<void> _removeOcrTerm(String term) async {
+    await AppDatabase.instance.removeOcrTerm(term);
+    await _loadOcrTerms();
   }
 
   Future<void> _export() async {
@@ -167,6 +223,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: TextButton(
                     onPressed: _resetToolOrder,
                     child: const Text('Reset toolbar order'),
+                  ),
+                ),
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    'OCR dictionary',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Domain terms for handwriting OCR. Close matches are corrected '
+                    'when ink is indexed, and terms boost notebook search.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                if (!_ocrTermsLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_ocrTerms.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      'No custom terms yet.',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  )
+                else
+                  ..._ocrTerms.map(
+                    (term) => ListTile(
+                      key: ValueKey(term),
+                      title: Text(term),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        tooltip: 'Remove term',
+                        onPressed: () => _removeOcrTerm(term),
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: _addOcrTerm,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add term'),
+                    ),
                   ),
                 ),
                 const Divider(height: 32),

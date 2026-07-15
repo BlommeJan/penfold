@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import 'ocr_dictionary.dart';
 
 const _uuid = Uuid();
 
@@ -51,9 +52,11 @@ class InkOcrService {
       try {
         final text = await _recognizeStroke(job.stroke);
         if (text != null && text.trim().isNotEmpty) {
+          final terms = await _db.allOcrTerms();
+          final corrected = applyOcrDictionary(text.trim(), terms);
           await _db.updateInkIndexResult(
             id: job.entryId,
-            text: text.trim(),
+            text: corrected,
             status: InkIndexStatus.indexed,
           );
         } else {

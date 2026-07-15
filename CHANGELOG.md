@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.24] — 2026
+
+### Added
+
+- **OCR custom dictionary** — schema v11: `ocr_terms(term)`; Settings UI to add/remove domain terms; fuzzy post-processing in `ink_ocr_service` (ML Kit has no Latin hints); glossary merged into notebook FTS body for search boost
+
 ## [0.2.22] — 2026
 
 ### Added
@@ -200,6 +206,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.24]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.24
 [0.2.22]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.22
 [0.2.21]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.21
 [0.2.20]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.20

@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.32] — 2026
+
+### Added
+
+- **PDF hyperlinks (read-only)** — parse URI link annotations from imported PDF pages on demand; overlay tap targets in `page_editor` (finger/mouse only, stylus passes through); open URLs via `url_launcher`
+
 ## [0.2.31] — 2026
 
 ### Added
@@ -249,6 +255,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.32]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.32
 [0.2.31]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.31
 [0.2.30]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.30
 [0.2.29]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.29

@@ -7,7 +7,9 @@ import '../canvas/drawing_canvas.dart';
 import '../canvas/page_coords.dart';
 import '../canvas/page_viewport.dart';
 import '../models/models.dart';
+import '../services/pdf_link_extractor.dart';
 import '../services/pdf_page_cache.dart';
+import 'pdf_link_overlay.dart';
 
 /// One page card in the scrollable notebook: gated viewport + drawing canvas.
 class PageEditor extends StatefulWidget {
@@ -41,6 +43,7 @@ class PageEditorState extends State<PageEditor> {
   final _viewportKey = GlobalKey<PageViewportState>();
   ui.Image? _pdfImage;
   bool _pdfLoading = false;
+  List<PdfPageLink> _pdfLinks = const [];
 
   bool get _hasPdfBackground =>
       widget.page.pdfImagePath != null || widget.page.pdfSourcePath != null;
@@ -85,6 +88,7 @@ class PageEditorState extends State<PageEditor> {
     if (legacyPath == null && lazySource == null) {
       if (mounted) setState(() {
         _pdfImage = null;
+        _pdfLinks = const [];
         _pdfLoading = false;
       });
       return;
@@ -94,6 +98,7 @@ class PageEditorState extends State<PageEditor> {
 
     try {
       ui.Image? image;
+      var links = const <PdfPageLink>[];
       if (legacyPath != null) {
         final bytes = await File(legacyPath).readAsBytes();
         final codec = await ui.instantiateImageCodec(bytes);
@@ -101,10 +106,12 @@ class PageEditorState extends State<PageEditor> {
         image = frame.image;
       } else if (lazySource != null && lazyIndex != null) {
         image = await PdfPageCache.instance.getPage(lazySource, lazyIndex);
+        links = PdfLinkExtractor.extractPageLinks(lazySource, lazyIndex);
       }
       if (mounted) {
         setState(() {
           _pdfImage = image;
+          _pdfLinks = links;
           _pdfLoading = false;
         });
       }
@@ -112,6 +119,7 @@ class PageEditorState extends State<PageEditor> {
       if (mounted) {
         setState(() {
           _pdfImage = null;
+          _pdfLinks = const [];
           _pdfLoading = false;
         });
       }
@@ -156,6 +164,8 @@ class PageEditorState extends State<PageEditor> {
                   onHistoryChanged: widget.onHistoryChanged,
                   onSelectionChanged: widget.onSelectionChanged,
                 ),
+                if (_pdfLinks.isNotEmpty)
+                  PdfLinkOverlay(links: _pdfLinks, displaySize: size),
                 if (_pdfLoading && _pdfImage == null && _hasPdfBackground)
                   const ColoredBox(
                     color: Color(0xFFF4F6F9),

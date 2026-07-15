@@ -7,7 +7,7 @@
 ## Supervisor notes
 
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
-- **Current position:** v0.2.31 PDF text search at import shipped; resume at **v0.2.32** (PDF hyperlinks read-only).
+- **Current position:** v0.2.32 PDF hyperlinks read-only shipped; resume at **v0.2.33** (page-turn scroll mode).
 
 ### v0.2.28 implementation spec (user requirements)
 
@@ -70,7 +70,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.29 | Session persistence | 0.2.27 | **DONE** | 130/130 | `f5b4757` |
 | 0.2.30 | Page overview reorder + batch delete | 0.2.28 | **DONE** | 134/134 | `c2ec21f` |
 | 0.2.31 | PDF text search at import | 0.2.29 | **DONE** | 139/139 | `b3aa635` |
-| 0.2.32 | PDF hyperlinks read-only | 0.2.30 | PENDING | — | — |
+| 0.2.32 | PDF hyperlinks read-only | 0.2.30 | **DONE** | 145/145 | TBD |
 | 0.2.33 | Page-turn scroll mode | 0.2.31 | PENDING | — | — |
 | 0.2.34 | Page-level audio MVP | 0.2.32 | PENDING | — | — |
 | 0.2.35 | Gesture ink editing | 0.2.33 | PENDING | — | — |

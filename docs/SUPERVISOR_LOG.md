@@ -8,6 +8,7 @@
 
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
 - **Current position:** v0.2.40 undo persist on page switch shipped — **final roadmap feature complete**.
+- **Run completed:** 2026-07-16 — resumed from v0.2.29 (`1361e6b`, 130 tests); shipped v0.2.30–0.2.40 (11 features); final main at `71ea66c`, **200/200 tests**, release APK built.
 
 ### v0.2.28 implementation spec (user requirements)
 
@@ -110,4 +111,14 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | Version | Path |
 |---------|------|
 | 0.2.13 | `APKs/Penfold-v0.2.13-arm64.apk` |
-| final | TBD at run end |
+| 0.2.40 (final) | `APKs/Penfold-v0.2.40.apk` (arm64, ~65 MB, local only — gitignored) |
+
+## Run summary (v0.2.30 → 0.2.40)
+
+| Metric | Value |
+|--------|-------|
+| Features shipped | 11 (one commit each, all pushed) |
+| Tests | 130 → 200 |
+| Feature commit | `eb50760` (v0.2.40) |
+| Zoom patch | **Not shipped** — deferred to opportunistic backlog |
+| Deferred roadmap | 0.2.23 audio+stroke timestamps; 0.2.39 markdown export; 0.2.40 math LaTeX |

@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 6;
+  static const _schemaVersion = 7;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -117,7 +117,8 @@ class AppDatabase {
         font_size REAL NOT NULL,
         color INTEGER NOT NULL,
         z INTEGER NOT NULL,
-        is_note INTEGER NOT NULL DEFAULT 0
+        is_note INTEGER NOT NULL DEFAULT 0,
+        rotation REAL NOT NULL DEFAULT 0
       )''');
     await db.execute('CREATE INDEX idx_pages_nb ON pages(notebook_id, idx)');
     await db.execute('CREATE INDEX idx_strokes_pg ON strokes(page_id, z)');
@@ -190,6 +191,10 @@ class AppDatabase {
     if (oldV < 6) {
       await _addColumnIfMissing(
           db, 'pages', 'bookmarked', 'INTEGER NOT NULL DEFAULT 0');
+    }
+    if (oldV < 7) {
+      await _addColumnIfMissing(
+          db, 'text_blocks', 'rotation', 'REAL NOT NULL DEFAULT 0');
     }
   }
 
@@ -673,6 +678,7 @@ class AppDatabase {
           'text': t.text,
           'font_size': t.fontSize,
           'color': t.color,
+          'rotation': t.rotation,
         },
         where: 'id = ?',
         whereArgs: [t.id]);

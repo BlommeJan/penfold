@@ -262,6 +262,15 @@ class InkPainter extends CustomPainter {
   void _drawTextBlock(Canvas canvas, TextBlock tb) {
     final rect =
         PageCoords.canonicalRectToDisplay(tb.rect, displaySize, pageSize);
+    final center = rect.center;
+
+    canvas.save();
+    if (tb.rotation != 0) {
+      canvas.translate(center.dx, center.dy);
+      canvas.rotate(tb.rotation);
+      canvas.translate(-center.dx, -center.dy);
+    }
+
     if (tb.isNote) {
       canvas.drawRRect(
           RRect.fromRectAndRadius(rect, const Radius.circular(4)),
@@ -282,6 +291,7 @@ class InkPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: rect.width);
     tp.paint(canvas, rect.topLeft);
+    canvas.restore();
   }
 
   void _drawStroke(Canvas canvas, Stroke s, {required bool dim}) {
@@ -398,8 +408,14 @@ class InkPainter extends CustomPainter {
   }
 
   void _drawTransformHandles(Canvas canvas, Rect r, double rotation) {
-    _drawDashedRect(canvas, r);
+    canvas.save();
     final center = r.center;
+    if (rotation != 0) {
+      canvas.translate(center.dx, center.dy);
+      canvas.rotate(rotation);
+      canvas.translate(-center.dx, -center.dy);
+    }
+    _drawDashedRect(canvas, r);
     final corners = [
       r.topLeft,
       r.topRight,
@@ -415,6 +431,7 @@ class InkPainter extends CustomPainter {
       ..strokeWidth = 1.5;
     canvas.drawLine(center, rotatePt, line);
     _drawHandle(canvas, rotatePt, filled: true);
+    canvas.restore();
   }
 
   void _drawHandle(Canvas canvas, Offset pt, {bool filled = false}) {

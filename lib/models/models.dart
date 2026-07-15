@@ -265,6 +265,7 @@ class TextBlock {
   int color;
   final int z;
   bool isNote;
+  double rotation;
 
   TextBlock({
     required this.id,
@@ -278,9 +279,59 @@ class TextBlock {
     required this.color,
     required this.z,
     this.isNote = false,
+    this.rotation = 0,
   });
 
   Rect get rect => Rect.fromLTWH(x, y, w, h);
+
+  /// Axis-aligned bounds after applying [rotation] around [rect] center.
+  Rect get axisAlignedBounds {
+    if (rotation == 0) return rect;
+    final corners = _rotatedCorners();
+    var minX = corners.first.dx, maxX = corners.first.dx;
+    var minY = corners.first.dy, maxY = corners.first.dy;
+    for (final c in corners.skip(1)) {
+      minX = math.min(minX, c.dx);
+      maxX = math.max(maxX, c.dx);
+      minY = math.min(minY, c.dy);
+      maxY = math.max(maxY, c.dy);
+    }
+    return Rect.fromLTRB(minX, minY, maxX, maxY);
+  }
+
+  bool containsCanonicalPoint(Offset p) {
+    if (rotation == 0) return rect.contains(p);
+    final center = rect.center;
+    final dx = p.dx - center.dx;
+    final dy = p.dy - center.dy;
+    final cos = math.cos(-rotation);
+    final sin = math.sin(-rotation);
+    final lx = dx * cos - dy * sin;
+    final ly = dx * sin + dy * cos;
+    return lx >= -w / 2 && lx <= w / 2 && ly >= -h / 2 && ly <= h / 2;
+  }
+
+  List<Offset> _rotatedCorners() {
+    final center = rect.center;
+    final cos = math.cos(rotation);
+    final sin = math.sin(rotation);
+    final corners = [
+      Offset(rect.left, rect.top),
+      Offset(rect.right, rect.top),
+      Offset(rect.right, rect.bottom),
+      Offset(rect.left, rect.bottom),
+    ];
+    return corners
+        .map((c) {
+          final dx = c.dx - center.dx;
+          final dy = c.dy - center.dy;
+          return Offset(
+            center.dx + dx * cos - dy * sin,
+            center.dy + dx * sin + dy * cos,
+          );
+        })
+        .toList(growable: false);
+  }
 
   Map<String, Object?> toRow() => {
         'id': id,
@@ -294,6 +345,7 @@ class TextBlock {
         'color': color,
         'z': z,
         'is_note': isNote ? 1 : 0,
+        'rotation': rotation,
       };
 
   static TextBlock fromRow(Map<String, Object?> r) => TextBlock(
@@ -308,6 +360,7 @@ class TextBlock {
         color: r['color'] as int,
         z: r['z'] as int,
         isNote: (r['is_note'] as int?) == 1,
+        rotation: (r['rotation'] as num?)?.toDouble() ?? 0,
       );
 
   TextBlock copy() => TextBlock(
@@ -322,6 +375,7 @@ class TextBlock {
         color: color,
         z: z,
         isNote: isNote,
+        rotation: rotation,
       );
 }
 

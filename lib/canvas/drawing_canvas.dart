@@ -152,6 +152,7 @@ class _SelectionSnapshot {
   final Map<String, List<StrokePoint>> strokes;
   final Map<String, Rect> texts;
   final Map<String, double> textFontSizes;
+  final Map<String, double> textRotations;
   final String? imageId;
   final Rect? imageRect;
   final double rotation;
@@ -160,6 +161,7 @@ class _SelectionSnapshot {
     this.strokes = const {},
     this.texts = const {},
     this.textFontSizes = const {},
+    this.textRotations = const {},
     this.imageId,
     this.imageRect,
     this.rotation = 0,
@@ -427,9 +429,11 @@ class _CanvasController {
     }
     final textMap = <String, Rect>{};
     final fontMap = <String, double>{};
+    final rotationMap = <String, double>{};
     for (final t in texts.where((t) => textIds.contains(t.id))) {
       textMap[t.id] = t.rect;
       fontMap[t.id] = t.fontSize;
+      rotationMap[t.id] = t.rotation;
     }
     Rect? imgRect;
     if (imageId != null) {
@@ -444,6 +448,7 @@ class _CanvasController {
       strokes: strokeMap,
       texts: textMap,
       textFontSizes: fontMap,
+      textRotations: rotationMap,
       imageId: imageId,
       imageRect: imgRect,
       rotation: rotation,
@@ -469,6 +474,8 @@ class _CanvasController {
         t.h = r.height;
         final fs = snap.textFontSizes[t.id];
         if (fs != null) t.fontSize = fs;
+        final rot = snap.textRotations[t.id];
+        if (rot != null) t.rotation = rot;
         await _db.updateTextBlock(t);
       }
     }
@@ -844,6 +851,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         color: t.color,
         z: _controller.nextZ(),
         isNote: t.isNote,
+        rotation: t.rotation,
       );
       newTexts.add(copy);
       await _controller.addTextBlock(copy);
@@ -899,7 +907,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       bounds = bounds == null ? s.bounds : bounds.expandToInclude(s.bounds);
     }
     for (final t in _textBlocks.where((t) => _selectedTextIds.contains(t.id))) {
-      bounds = bounds == null ? t.rect : bounds.expandToInclude(t.rect);
+      final textOnly = _selectedTextIds.length == 1 &&
+          _selectedIds.isEmpty &&
+          _selectedImageId == null;
+      final b = textOnly ? t.rect : t.axisAlignedBounds;
+      bounds = bounds == null ? b : bounds.expandToInclude(b);
     }
     if (_selectedImageId != null) {
       for (final img in _images) {
@@ -911,6 +923,16 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       }
     }
     _selectionBounds = bounds;
+    if (_selectedTextIds.length == 1 &&
+        _selectedIds.isEmpty &&
+        _selectedImageId == null) {
+      for (final t in _textBlocks) {
+        if (_selectedTextIds.contains(t.id)) {
+          _selectionRotation = t.rotation;
+          break;
+        }
+      }
+    }
   }
 
   bool _isStylus(PointerEvent e) =>
@@ -1729,6 +1751,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         t.h = r.height;
         final fs = snap.textFontSizes[t.id];
         if (fs != null) t.fontSize = fs;
+        final rot = snap.textRotations[t.id];
+        if (rot != null) t.rotation = rot;
       }
     }
     if (snap.imageId != null && snap.imageRect != null) {
@@ -1753,8 +1777,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     final r = _displaySelectionBounds();
     if (r == null) return _SelHandle.none;
     const hitR = 22.0;
+    final localPos = _selectionRotation == 0
+        ? pos
+        : _unrotateDisplayPoint(pos, r, _selectionRotation);
     final rotatePt = r.center + Offset(0, -r.height / 2 - 28);
-    if ((pos - rotatePt).distance < hitR) return _SelHandle.rotate;
+    if ((localPos - rotatePt).distance < hitR) return _SelHandle.rotate;
     final corners = <_SelHandle, Offset>{
       _SelHandle.nw: r.topLeft,
       _SelHandle.ne: r.topRight,
@@ -1762,10 +1789,22 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _SelHandle.se: r.bottomRight,
     };
     for (final entry in corners.entries) {
-      if ((pos - entry.value).distance < hitR) return entry.key;
+      if ((localPos - entry.value).distance < hitR) return entry.key;
     }
-    if (r.contains(pos)) return _SelHandle.body;
+    if (r.contains(localPos)) return _SelHandle.body;
     return _SelHandle.none;
+  }
+
+  Offset _unrotateDisplayPoint(Offset pos, Rect r, double rotation) {
+    final center = r.center;
+    final dx = pos.dx - center.dx;
+    final dy = pos.dy - center.dy;
+    final cos = math.cos(-rotation);
+    final sin = math.sin(-rotation);
+    return Offset(
+      center.dx + dx * cos - dy * sin,
+      center.dy + dx * sin + dy * cos,
+    );
   }
 
   Stroke? _hitStrokeAt(Offset displayPos) {
@@ -1780,7 +1819,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   TextBlock? _hitTextBlock(Offset displayPos) {
     final cPos = _toCanonical(displayPos);
     for (final t in _textBlocks.reversed) {
-      if (t.rect.contains(cPos)) return t;
+      if (t.containsCanonicalPoint(cPos)) return t;
     }
     return null;
   }
@@ -1797,6 +1836,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _clearSelection();
     _selectedTextIds.add(block.id);
     _selectionBounds = block.rect;
+    _selectionRotation = block.rotation;
     _notifySelection();
     _bump();
   }
@@ -1820,9 +1860,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       }
     }
     for (final t in _textBlocks) {
-      if (canonicalRect.overlaps(t.rect)) {
+      if (canonicalRect.overlaps(t.axisAlignedBounds)) {
         _selectedTextIds.add(t.id);
-        bounds = bounds == null ? t.rect : bounds.expandToInclude(t.rect);
+        bounds = bounds == null ? t.axisAlignedBounds : bounds.expandToInclude(t.axisAlignedBounds);
       }
     }
     for (final img in _images) {
@@ -1860,24 +1900,15 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           .toList();
     }
     for (final t in _textBlocks.where((t) => _selectedTextIds.contains(t.id))) {
-      final rotated = [
-        rotatePoint(Offset(t.x, t.y)),
-        rotatePoint(Offset(t.x + t.w, t.y)),
-        rotatePoint(Offset(t.x + t.w, t.y + t.h)),
-        rotatePoint(Offset(t.x, t.y + t.h)),
-      ];
-      var minX = rotated.first.dx, maxX = rotated.first.dx;
-      var minY = rotated.first.dy, maxY = rotated.first.dy;
-      for (final c in rotated.skip(1)) {
-        minX = math.min(minX, c.dx);
-        maxX = math.max(maxX, c.dx);
-        minY = math.min(minY, c.dy);
-        maxY = math.max(maxY, c.dy);
-      }
-      t.x = minX;
-      t.y = minY;
-      t.w = maxX - minX;
-      t.h = maxY - minY;
+      final baseRect = _transformBefore!.texts[t.id];
+      if (baseRect == null) continue;
+      final baseRot = _transformBefore!.textRotations[t.id] ?? 0;
+      final newCenter = rotatePoint(baseRect.center);
+      t.x = newCenter.dx - baseRect.width / 2;
+      t.y = newCenter.dy - baseRect.height / 2;
+      t.w = baseRect.width;
+      t.h = baseRect.height;
+      t.rotation = baseRot + delta;
     }
     final selImg = _selectedImage();
     if (selImg != null && _transformBefore!.imageRect != null) {
@@ -1980,6 +2011,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     for (final id in a.texts.keys) {
       if (a.texts[id] != b.texts[id]) return false;
       if (a.textFontSizes[id] != b.textFontSizes[id]) return false;
+      if ((a.textRotations[id] ?? 0) != (b.textRotations[id] ?? 0)) {
+        return false;
+      }
     }
     return true;
   }

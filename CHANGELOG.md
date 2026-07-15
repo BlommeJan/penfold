@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.15] — 2026
+
+### Fixed
+
+- **Text rotation** — selection-tool rotate handle now rotates typed text glyphs, not just the bounding box; rotation persists in SQLite (`text_blocks.rotation`, schema v7) and survives undo/redo
+
 ## [0.2.14] — 2026
 
 ### Added
@@ -152,6 +158,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.15]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.15
 [0.2.14]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.14
 [0.2.13]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.13
 [0.2.7]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.7

@@ -68,7 +68,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.27 | Stroke smoothing toggle | 0.2.25 | **DONE** | 117/117 | `cdabe8a` |
 | 0.2.28 | S Pen + toolbar eraser polish | 0.2.26 | **DONE** | 126/126 | `a48a190` |
 | 0.2.29 | Session persistence | 0.2.27 | **DONE** | 130/130 | `f5b4757` |
-| 0.2.30 | Page overview reorder + batch delete | 0.2.28 | **DONE** | 134/134 | TBD |
+| 0.2.30 | Page overview reorder + batch delete | 0.2.28 | **DONE** | 134/134 | `c2ec21f` |
 | 0.2.31 | PDF text search at import | 0.2.29 | PENDING | — | — |
 | 0.2.32 | PDF hyperlinks read-only | 0.2.30 | PENDING | — | — |
 | 0.2.33 | Page-turn scroll mode | 0.2.31 | PENDING | — | — |

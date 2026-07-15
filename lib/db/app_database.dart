@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 12;
+  static const _schemaVersion = 13;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -133,6 +133,7 @@ class AppDatabase {
     await _createInkIndex(db);
     await _createOcrTermsTable(db);
     await _createSessionTable(db);
+    await _createPdfPageTextTable(db);
     await _createFts(db);
   }
 
@@ -222,6 +223,9 @@ class AppDatabase {
     if (oldV < 12) {
       await _createSessionTable(db);
     }
+    if (oldV < 13) {
+      await _createPdfPageTextTable(db);
+    }
   }
 
   Future<void> _createTagsTables(Database db) async {
@@ -256,6 +260,14 @@ class AppDatabase {
         scroll_offset REAL NOT NULL DEFAULT 0,
         tool INTEGER,
         updated_at INTEGER NOT NULL
+      )''');
+  }
+
+  Future<void> _createPdfPageTextTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS pdf_page_text(
+        page_id TEXT PRIMARY KEY REFERENCES pages(id) ON DELETE CASCADE,
+        text TEXT NOT NULL
       )''');
   }
 
@@ -375,6 +387,15 @@ class AppDatabase {
       final texts = await db.query('text_blocks',
           where: 'page_id IN ($placeholders)', whereArgs: pageIds);
       body = texts.map((t) => t['text'] as String).join(' ');
+      if (await _hasTable(db, 'pdf_page_text')) {
+        final pdfTexts = await db.query('pdf_page_text',
+            where: 'page_id IN ($placeholders)', whereArgs: pageIds);
+        if (pdfTexts.isNotEmpty) {
+          final pdfBody =
+              pdfTexts.map((r) => r['text'] as String).join(' ');
+          body = body.isEmpty ? pdfBody : '$body $pdfBody';
+        }
+      }
       if (await _hasTable(db, 'ink_index')) {
         final ink = await db.query('ink_index',
             where: 'page_id IN ($placeholders) AND status = ?',
@@ -684,6 +705,17 @@ class AppDatabase {
 
   Future<void> insertPage(NotePage page) async {
     await (await db).insert('pages', page.toRow());
+  }
+
+  /// Embedded PDF text extracted at import (v0.2.31).
+  Future<void> insertPdfPageText(String pageId, String text) async {
+    if (text.trim().isEmpty) return;
+    final database = await db;
+    await database.insert(
+      'pdf_page_text',
+      {'page_id': pageId, 'text': text},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<void> deletePage(String id) async {

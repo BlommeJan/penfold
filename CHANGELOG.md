@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.31] — 2026
+
+### Added
+
+- **PDF embedded text search at import** — extract text per page from PDF content streams via the `pdf` package; store in `pdf_page_text` (schema v13); index into FTS immediately on import (before OCR)
+
 ## [0.2.30] — 2026
 
 ### Added
@@ -243,6 +249,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.31]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.31
 [0.2.30]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.30
 [0.2.29]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.29
 [0.2.28]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.28

@@ -74,7 +74,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.33 | Page-turn scroll mode | 0.2.31 | **DONE** | 150/150 | `b03dc50` |
 | 0.2.34 | Page-level audio MVP | 0.2.32 | **DONE** | 157/157 | `befc202` |
 | 0.2.35 | Gesture ink editing | 0.2.33 | **DONE** | 168/168 | `326087d` |
-| 0.2.36 | Auto table of contents | 0.2.34 | **DONE** | 177/177 | — |
+| 0.2.36 | Auto table of contents | 0.2.34 | **DONE** | 177/177 | `677f065` |
 | 0.2.37 | HWR convert selection | 0.2.35 | PENDING | — | — |
 | 0.2.38 | Page complexity warning | 0.2.36 | PENDING | — | — |
 | 0.2.39 | Your data settings screen | 0.2.37 | PENDING | — | — |

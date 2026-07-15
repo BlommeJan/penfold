@@ -40,7 +40,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 **Pages** — Vertical scroll through multi-page notebooks, page overview grid, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, image insert, PDF import (rendered once to local PNG), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
 
-**Library** — Colored notebook covers with titles, nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback), PDF import from the home screen, full-database backup/restore (zip export via share sheet), and customizable toolbar tool order in Settings.
+**Library** — Colored notebook covers with first-page thumbnails (cached locally), nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback), PDF import from the home screen, full-database backup/restore (zip export via share sheet), and customizable toolbar tool order in Settings.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for folder layout, design patterns, and SQLite schema details.
 
@@ -77,7 +77,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.24) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.25) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -109,5 +109,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.24</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.25</strong> — write freely, keep it local.
 </p>

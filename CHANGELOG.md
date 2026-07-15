@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.25] — 2026
+
+### Added
+
+- **Notebook library thumbnails** — first-page mini-render on library covers via reused `PageThumbnailPainter`; PNG cached in `thumbnails/{notebook_id}.png` on notebook open or lazy library load; included in full-database backup zip
+
 ## [0.2.24] — 2026
 
 ### Added
@@ -206,6 +212,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.25]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.25
 [0.2.24]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.24
 [0.2.22]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.22
 [0.2.21]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.21

@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/pdf_import.dart';
+import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
 import 'settings_screen.dart';
 
@@ -41,6 +45,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
   bool _loading = true;
   bool _searching = false;
   String? _loadError;
+  final Map<String, String> _thumbnailPaths = {};
+  int _prefetchGeneration = 0;
 
   @override
   void initState() {
@@ -51,6 +57,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   void dispose() {
+    _prefetchGeneration++;
     _searchCtrl.dispose();
     super.dispose();
   }
@@ -77,6 +84,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
         _searchResults = results;
         _loadError = null;
       });
+      final notebooks = results.map((r) => r.notebook).toList();
+      await _syncThumbnailPaths(notebooks);
+      _schedulePrefetch(notebooks);
     } catch (e) {
       if (!mounted) return;
       setState(() => _loadError = e.toString());
@@ -116,12 +126,54 @@ class _LibraryScreenState extends State<LibraryScreen> {
         _notebooks = filtered;
         _loading = false;
       });
+      await _syncThumbnailPaths(filtered);
+      _schedulePrefetch(filtered);
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _loading = false;
         _loadError = e.toString();
       });
+    }
+  }
+
+  Future<void> _syncThumbnailPaths(List<Notebook> notebooks) async {
+    final cache = ThumbnailCache.instance;
+    final paths = <String, String>{};
+    for (final n in notebooks) {
+      if (await cache.exists(n.id)) {
+        paths[n.id] = await cache.pathFor(n.id);
+      }
+    }
+    if (!mounted) return;
+    setState(() => _thumbnailPaths
+      ..clear()
+      ..addAll(paths));
+  }
+
+  void _schedulePrefetch(List<Notebook> notebooks) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_prefetchMissingThumbnails(notebooks));
+    });
+  }
+
+  Future<void> _prefetchMissingThumbnails(List<Notebook> notebooks) async {
+    final gen = _prefetchGeneration;
+    final cache = ThumbnailCache.instance;
+    for (final n in notebooks) {
+      if (!mounted || gen != _prefetchGeneration) return;
+      final route = ModalRoute.of(context);
+      if (route == null || !route.isCurrent) return;
+      if (_thumbnailPaths.containsKey(n.id)) continue;
+      try {
+        final file = await cache.ensureForNotebook(n.id);
+        if (file != null && mounted && gen == _prefetchGeneration) {
+          setState(() => _thumbnailPaths[n.id] = file.path);
+        }
+      } catch (_) {
+        // Library may be disposed or DB reset during background prefetch.
+      }
     }
   }
 
@@ -541,6 +593,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       );
       if (ok == true) {
         await _db.deleteNotebook(n.id);
+        await ThumbnailCache.instance.deleteForNotebook(n.id);
         _refresh();
       }
     }
@@ -681,6 +734,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget _notebookCard(Notebook n) {
     final cover = Color(n.coverColor);
+    final thumbPath = _thumbnailPaths[n.id];
     return GestureDetector(
       onTap: () => _open(n),
       onLongPress: () => _notebookMenu(n),
@@ -691,14 +745,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    cover,
-                    Color.lerp(cover, Colors.black, 0.12)!,
-                  ],
-                ),
+                color: thumbPath != null ? Colors.white : null,
+                gradient: thumbPath == null
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          cover,
+                          Color.lerp(cover, Colors.black, 0.12)!,
+                        ],
+                      )
+                    : null,
+                image: thumbPath != null
+                    ? DecorationImage(
+                        image: FileImage(File(thumbPath)),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomRight: Radius.circular(10),

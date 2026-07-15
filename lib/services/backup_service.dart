@@ -15,7 +15,7 @@ class BackupService {
   static final BackupService instance = BackupService._();
 
   static const dbFileName = 'penfold.db';
-  static const assetDirs = ['pdf_sources', 'images', 'pdf_pages'];
+  static const assetDirs = ['pdf_sources', 'images', 'pdf_pages', 'thumbnails'];
 
   Future<Directory> _docsDir() async {
     final override = AppDatabase.overrideDirPath;

@@ -12,6 +12,7 @@ import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/page_export.dart';
+import '../services/thumbnail_cache.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/toolbar.dart';
 import 'page_overview_screen.dart';
@@ -86,6 +87,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     }
     setState(() => _loading = false);
     _db.touchNotebook(widget.notebook.id);
+    unawaited(ThumbnailCache.instance.ensureForNotebook(widget.notebook.id));
   }
 
   NotePage get _activePage => _pages[_visiblePageIndex];

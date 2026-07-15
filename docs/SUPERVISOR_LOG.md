@@ -7,7 +7,28 @@
 ## Supervisor notes
 
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
-- **Current position:** v0.2.24 OCR dictionary committing; resume roadmap at **v0.2.25** (library thumbnails).
+- **Current position:** v0.2.25 thumbnails shipped; resume at **v0.2.26** (lasso rotate).
+
+## Opportunistic backlog (not blocking roadmap)
+
+### Landscape pinch-zoom patch — target: next free slot (e.g. v0.2.25.1 or between features)
+
+**User need:** Zoom MUST exist and work. Primary use case: tablet in **landscape** while notebook pages are **portrait A4** — user needs pinch zoom to see detail and navigate comfortably.
+
+**Requirements when implemented:**
+- Two-finger pinch zoom in AND out (~0.6×–10×)
+- Works in **stylus-only mode** (finger pinches, stylus draws)
+- Works in **finger drawing mode**
+- Page stays **centered**; ink sticks to paper on rotation/orientation change
+- Portrait pages in landscape viewport: page fits by default; user can zoom in for detail
+- Do **NOT** repeat v0.2.12 mistakes (broken alignment, left-shifted pages, broken scroll)
+
+**Implementation approach (minimal):**
+- Prefer fixes in `page_viewport.dart` + `draw_gesture_shield.dart` only
+- Manual test: landscape device, portrait A4 page, pinch zoom, rotate device, ink still on paper
+- Ship as dedicated patch: `fix: landscape pinch zoom (v0.2.X)` + flutter test + APK
+
+**Priority:** Opportunistic — implement when current sub-agent finishes or in a slot between features. Not first priority, but zoom must eventually work.
 
 ## Version renumbering note
 
@@ -29,7 +50,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.22 | Mixed-orientation pages | 0.2.19 | **DONE** | 88/88 | `41ec460` |
 | 0.2.23 | Audio + stroke timestamps | 0.2.20 | DEFERRED | — | — |
 | 0.2.24 | OCR custom dictionary | 0.2.21 | **DONE** | 96/96 | `5ef5c2f` |
-| 0.2.25 | Notebook library thumbnails | 0.2.23 | PENDING | — | — |
+| 0.2.25 | Notebook library thumbnails | 0.2.23 | **DONE** | 100/100 | committing |
 | 0.2.26 | Lasso rotate handles | 0.2.24 | PENDING | — | — |
 | 0.2.27 | Stroke smoothing toggle | 0.2.25 | PENDING | — | — |
 | 0.2.28 | S Pen button settings | 0.2.26 | PENDING | — | — |

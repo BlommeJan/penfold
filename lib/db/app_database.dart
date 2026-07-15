@@ -1099,6 +1099,19 @@ class AppDatabase {
     }
   }
 
+  Future<Set<String>> indexedStrokeIdsOfPage(String pageId) async {
+    final rows = await (await db).query(
+      'ink_index',
+      columns: ['stroke_id'],
+      where: 'page_id = ? AND status = ?',
+      whereArgs: [pageId, InkIndexStatus.indexed.dbValue],
+    );
+    return rows
+        .map((r) => r['stroke_id'] as String?)
+        .whereType<String>()
+        .toSet();
+  }
+
   Future<PageOcrStatus> ocrStatusOfPage(String pageId) async {
     final rows = await (await db).query('ink_index',
         columns: ['status'], where: 'page_id = ?', whereArgs: [pageId]);

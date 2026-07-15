@@ -7,7 +7,7 @@
 ## Supervisor notes
 
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
-- **Current position:** v0.2.34 page-level audio MVP shipped; resume at **v0.2.35** (gesture ink editing).
+- **Current position:** v0.2.35 gesture ink editing shipped; resume at **v0.2.36** (auto table of contents).
 
 ### v0.2.28 implementation spec (user requirements)
 
@@ -73,7 +73,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.32 | PDF hyperlinks read-only | 0.2.30 | **DONE** | 145/145 | `e2e6bf5` |
 | 0.2.33 | Page-turn scroll mode | 0.2.31 | **DONE** | 150/150 | `b03dc50` |
 | 0.2.34 | Page-level audio MVP | 0.2.32 | **DONE** | 157/157 | `befc202` |
-| 0.2.35 | Gesture ink editing | 0.2.33 | PENDING | — | — |
+| 0.2.35 | Gesture ink editing | 0.2.33 | **DONE** | TBD | TBD |
 | 0.2.36 | Auto table of contents | 0.2.34 | PENDING | — | — |
 | 0.2.37 | HWR convert selection | 0.2.35 | PENDING | — | — |
 | 0.2.38 | Page complexity warning | 0.2.36 | PENDING | — | — |

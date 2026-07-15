@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.35] — 2026
+
+### Added
+
+- **Gesture ink editing** — scratch zigzag over OCR-indexed strokes to delete them; simple recognizer in `drawing_canvas.dart`; only acts on `ink_index` entries with `status=indexed`; Settings toggle to enable/disable (default on)
+
 ## [0.2.34] — 2026
 
 ### Added
@@ -267,6 +273,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.35]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.35
 [0.2.34]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.34
 [0.2.33]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.33
 [0.2.32]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.32

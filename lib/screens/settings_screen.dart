@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
+import '../services/gesture_ink_service.dart';
 import '../services/page_turn_mode_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
@@ -22,6 +23,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _ocrTermsLoaded = false;
   bool _strokeSmoothing = true;
   bool _strokeSmoothingLoaded = false;
+  bool _gestureInkEditing = true;
+  bool _gestureInkEditingLoaded = false;
   bool _pageTurnMode = false;
   bool _pageTurnModeLoaded = false;
   SpenBarrelAction _spenAction = SpenBarrelAction.eraser;
@@ -33,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadToolOrder();
     _loadOcrTerms();
     _loadStrokeSmoothing();
+    _loadGestureInkEditing();
     _loadPageTurnMode();
     _loadSpenAction();
   }
@@ -69,6 +73,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await StrokeSmoothingService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _strokeSmoothing = value);
+  }
+
+  Future<void> _loadGestureInkEditing() async {
+    await GestureInkService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _gestureInkEditing = GestureInkService.instance.enabled;
+      _gestureInkEditingLoaded = true;
+    });
+  }
+
+  Future<void> _setGestureInkEditing(bool value) async {
+    await GestureInkService.instance.setEnabled(value);
+    if (!mounted) return;
+    setState(() => _gestureInkEditing = value);
   }
 
   Future<void> _loadPageTurnMode() async {
@@ -333,6 +352,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     value: _strokeSmoothing,
                     onChanged: _setStrokeSmoothing,
+                  ),
+                if (!_gestureInkEditingLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  SwitchListTile(
+                    secondary: const Icon(Icons.backspace_outlined),
+                    title: const Text('Gesture ink editing'),
+                    subtitle: const Text(
+                      'Scratch over OCR-indexed ink to erase it (default on)',
+                    ),
+                    value: _gestureInkEditing,
+                    onChanged: _setGestureInkEditing,
                   ),
                 const Divider(height: 32),
                 Padding(

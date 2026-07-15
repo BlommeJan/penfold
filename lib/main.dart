@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/app_home.dart';
+import 'services/gesture_ink_service.dart';
 import 'services/spen_button_service.dart';
 import 'services/stroke_smoothing_service.dart';
 import 'services/toolbar_order_service.dart';
@@ -13,6 +14,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ToolbarOrderService.instance.load();
   StrokeSmoothingService.instance.load();
+  GestureInkService.instance.load();
   SpenButtonService.instance.load();
   runApp(const PenfoldApp());
 }

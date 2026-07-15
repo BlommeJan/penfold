@@ -10,10 +10,12 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/gesture_ink_service.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
 import 'draw_gesture_shield.dart';
+import 'gesture_ink_recognizer.dart';
 import 'ink_coalesce.dart';
 import 'page_coords.dart';
 import 'pointer_routing.dart';
@@ -578,6 +580,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   final List<PageImage> _images = [];
   final List<FilledRegion> _fills = [];
   final List<TextBlock> _textBlocks = [];
+  final Set<String> _indexedStrokeIds = {};
   final Map<String, ui.Image> _decodedImages = {};
   late _CanvasController _controller;
   bool _loaded = false;
@@ -732,6 +735,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     for (final img in _images) {
       await _decode(img.path);
     }
+    final indexedIds =
+        await db.indexedStrokeIdsOfPage(widget.page.id);
+    _indexedStrokeIds
+      ..clear()
+      ..addAll(indexedIds);
     _controller = _CanvasController(
         widget.page, _strokes, _images, _fills, _textBlocks, _bump);
     _loaded = true;
@@ -1506,6 +1514,27 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       if (tool == ToolType.shape) {
         final snapped = ShapeRecognizer.recognize(stroke.points);
         if (snapped != null) stroke.points = snapped;
+      }
+
+      if (GestureInkService.instance.enabled &&
+          _indexedStrokeIds.isNotEmpty &&
+          (tool == ToolType.pen || tool == ToolType.highlighter)) {
+        final path =
+            stroke.points.map((p) => Offset(p.x, p.y)).toList(growable: false);
+        final target = findScratchDeleteTarget(
+          canonicalPath: path,
+          strokes: _strokes,
+          indexedStrokeIds: _indexedStrokeIds,
+        );
+        if (target != null) {
+          await _controller.removeStrokes([target]);
+          _controller.commit(_RemoveStrokes([target.copy()]));
+          _indexedStrokeIds.remove(target.id);
+          widget.onHistoryChanged
+              ?.call(_controller.canUndo, _controller.canRedo);
+          _bump();
+          return;
+        }
       }
 
       await _controller.addStroke(stroke);

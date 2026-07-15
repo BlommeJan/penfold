@@ -56,6 +56,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onPageSettings;
   final VoidCallback onAddImage;
   final VoidCallback? onPageOverview;
+  final VoidCallback? onContents;
   final bool canPrevBookmark;
   final bool canNextBookmark;
   final VoidCallback? onPrevBookmark;
@@ -77,6 +78,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     required this.onPageSettings,
     required this.onAddImage,
     this.onPageOverview,
+    this.onContents,
     this.canPrevBookmark = false,
     this.canNextBookmark = false,
     this.onPrevBookmark,
@@ -190,6 +192,12 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       tooltip: 'Page overview',
                       icon: Icons.dashboard_rounded,
                       onPressed: onPageOverview,
+                    ),
+                  if (onContents != null)
+                    _ActionIconButton(
+                      tooltip: 'Table of contents',
+                      icon: Icons.list_alt_rounded,
+                      onPressed: onContents,
                     ),
                   _ActionIconButton(
                     tooltip: 'Page settings',

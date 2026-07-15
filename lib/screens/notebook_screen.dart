@@ -17,6 +17,7 @@ import '../services/session_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
+import '../widgets/contents_sheet.dart';
 import '../widgets/page_audio_settings.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/toolbar.dart';
@@ -335,6 +336,15 @@ class _NotebookScreenState extends State<NotebookScreen> {
     setState(() {});
   }
 
+  Future<void> _openContents() async {
+    await ContentsSheet.show(
+      context,
+      notebookId: widget.notebook.id,
+      currentPageIndex: _visiblePageIndex,
+      onPageSelected: _scrollToPage,
+    );
+  }
+
   Future<void> _openPageSettings() async {
     final chosen = await showModalBottomSheet<Object?>(
       context: context,
@@ -429,6 +439,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 ),
               ),
             const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.list_alt_rounded),
+              title: const Text('Table of contents'),
+              subtitle: const Text('Jump to headings in this notebook'),
+              onTap: () => Navigator.pop(ctx, 'contents'),
+            ),
+            const Divider(height: 1),
             SwitchListTile(
               secondary: const Icon(Icons.bookmark_outline_rounded),
               title: const Text('Bookmark this page'),
@@ -469,6 +486,11 @@ class _NotebookScreenState extends State<NotebookScreen> {
       ),
     );
     if (chosen == null || !mounted) return;
+
+    if (chosen == 'contents') {
+      await _openContents();
+      return;
+    }
 
     if (chosen is String && chosen.startsWith('bookmark:')) {
       final v = chosen == 'bookmark:true';
@@ -792,6 +814,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         onPageSettings: _openPageSettings,
         onAddImage: _addImage,
         onPageOverview: _openOverview,
+        onContents: _openContents,
         canPrevBookmark: _canPrevBookmark,
         canNextBookmark: _canNextBookmark,
         onPrevBookmark: _jumpToPrevBookmark,

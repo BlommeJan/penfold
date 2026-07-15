@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.36] — 2026
+
+### Added
+
+- **Auto table of contents** — detect heading-like typed `TextBlock` text (short lines, large font, ALL CAPS) and OCR `ink_index` entries; notebook Contents sheet in toolbar and page settings; tap an entry to jump to that page
+
 ## [0.2.35] — 2026
 
 ### Added
@@ -273,6 +279,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.36]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.36
 [0.2.35]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.35
 [0.2.34]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.34
 [0.2.33]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.33

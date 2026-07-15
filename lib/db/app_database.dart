@@ -1099,6 +1099,25 @@ class AppDatabase {
     }
   }
 
+  /// Indexed OCR text lines for a page (v0.2.36 TOC).
+  Future<List<({String text, String? strokeId})>> indexedInkTextOfPage(
+      String pageId) async {
+    final rows = await (await db).query(
+      'ink_index',
+      columns: ['text', 'stroke_id'],
+      where: 'page_id = ? AND status = ?',
+      whereArgs: [pageId, InkIndexStatus.indexed.dbValue],
+    );
+    return rows
+        .map(
+          (r) => (
+            text: r['text'] as String,
+            strokeId: r['stroke_id'] as String?,
+          ),
+        )
+        .toList();
+  }
+
   Future<Set<String>> indexedStrokeIdsOfPage(String pageId) async {
     final rows = await (await db).query(
       'ink_index',

@@ -622,3 +622,26 @@ class PageOcrStatus {
   bool get isComplete => pending == 0 && failed == 0 && indexed > 0;
   bool get hasPending => pending > 0;
 }
+
+/// Source of a table-of-contents heading (v0.2.36).
+enum TocSource {
+  textBlock,
+  inkOcr,
+}
+
+/// Notebook table-of-contents entry (v0.2.36).
+class TocEntry {
+  final String title;
+  final String pageId;
+  final int pageIndex;
+  final double sortY;
+  final TocSource source;
+
+  const TocEntry({
+    required this.title,
+    required this.pageId,
+    required this.pageIndex,
+    required this.sortY,
+    required this.source,
+  });
+}

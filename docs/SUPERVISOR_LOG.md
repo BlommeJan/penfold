@@ -28,7 +28,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.21 | Per-page template/size | 0.2.18 | **DONE** | 81/81 | `24404ea` |
 | 0.2.22 | Mixed-orientation pages | 0.2.19 | **DONE** | 88/88 | `41ec460` |
 | 0.2.23 | Audio + stroke timestamps | 0.2.20 | DEFERRED | — | — |
-| 0.2.24 | OCR custom dictionary | 0.2.21 | **DONE** | 96/96 | committing |
+| 0.2.24 | OCR custom dictionary | 0.2.21 | **DONE** | 96/96 | `5ef5c2f` |
 | 0.2.25 | Notebook library thumbnails | 0.2.23 | PENDING | — | — |
 | 0.2.26 | Lasso rotate handles | 0.2.24 | PENDING | — | — |
 | 0.2.27 | Stroke smoothing toggle | 0.2.25 | PENDING | — | — |

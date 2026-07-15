@@ -153,6 +153,12 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                                   ),
                                   child: const SizedBox.expand(),
                                 ),
+                                if (page.bookmarked)
+                                  const Positioned(
+                                    left: 4,
+                                    bottom: 4,
+                                    child: _BookmarkBadge(),
+                                  ),
                                 if (ocr.hasInk)
                                   Positioned(
                                     right: 4,
@@ -176,6 +182,29 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
                 );
               },
             ),
+    );
+  }
+}
+
+class _BookmarkBadge extends StatelessWidget {
+  const _BookmarkBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: 'Bookmarked',
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.92),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Icon(
+          Icons.bookmark_rounded,
+          size: 14,
+          color: Color(0xFFE67E22),
+        ),
+      ),
     );
   }
 }

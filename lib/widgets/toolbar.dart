@@ -47,6 +47,10 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onPageSettings;
   final VoidCallback onAddImage;
   final VoidCallback? onPageOverview;
+  final bool canPrevBookmark;
+  final bool canNextBookmark;
+  final VoidCallback? onPrevBookmark;
+  final VoidCallback? onNextBookmark;
 
   const EditorToolbar({
     super.key,
@@ -64,6 +68,10 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     required this.onPageSettings,
     required this.onAddImage,
     this.onPageOverview,
+    this.canPrevBookmark = false,
+    this.canNextBookmark = false,
+    this.onPrevBookmark,
+    this.onNextBookmark,
   });
 
   @override
@@ -91,6 +99,16 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   // Left: navigation only (GoodNotes pattern — no undo here).
                   const BackButton(),
+                  _ActionIconButton(
+                    tooltip: 'Previous bookmark',
+                    icon: Icons.expand_less_rounded,
+                    onPressed: canPrevBookmark ? onPrevBookmark : null,
+                  ),
+                  _ActionIconButton(
+                    tooltip: 'Next bookmark',
+                    icon: Icons.expand_more_rounded,
+                    onPressed: canNextBookmark ? onNextBookmark : null,
+                  ),
                   const _ToolbarDivider(),
                   // Center: drawing tools, centered in remaining space.
                   Expanded(

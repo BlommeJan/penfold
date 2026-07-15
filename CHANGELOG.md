@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.16] — 2026
+
+### Added
+
+- **Page bookmarks + quick jump** — bookmark toggle in page settings (existing); prev/next bookmark buttons in editor toolbar; bookmark icon overlay on page overview thumbnails
+
 ## [0.2.15] — 2026
 
 ### Fixed
@@ -158,6 +164,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.16]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.16
 [0.2.15]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.15
 [0.2.14]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.14
 [0.2.13]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.13

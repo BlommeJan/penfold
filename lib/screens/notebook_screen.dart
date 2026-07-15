@@ -90,6 +90,29 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   NotePage get _activePage => _pages[_visiblePageIndex];
 
+  List<int> get _bookmarkedIndices => [
+        for (var i = 0; i < _pages.length; i++)
+          if (_pages[i].bookmarked) i,
+      ];
+
+  bool get _canPrevBookmark =>
+      _bookmarkedIndices.any((i) => i < _visiblePageIndex);
+
+  bool get _canNextBookmark =>
+      _bookmarkedIndices.any((i) => i > _visiblePageIndex);
+
+  Future<void> _jumpToPrevBookmark() async {
+    final prev = _bookmarkedIndices.where((i) => i < _visiblePageIndex);
+    if (prev.isEmpty) return;
+    await _scrollToPage(prev.last);
+  }
+
+  Future<void> _jumpToNextBookmark() async {
+    final next = _bookmarkedIndices.where((i) => i > _visiblePageIndex);
+    if (next.isEmpty) return;
+    await _scrollToPage(next.first);
+  }
+
   void _setActiveCanvas(DrawingCanvasState? state) {
     _activeCanvas = state;
   }
@@ -374,6 +397,10 @@ class _NotebookScreenState extends State<NotebookScreen> {
         onPageSettings: _openPageSettings,
         onAddImage: _addImage,
         onPageOverview: _openOverview,
+        canPrevBookmark: _canPrevBookmark,
+        canNextBookmark: _canNextBookmark,
+        onPrevBookmark: _jumpToPrevBookmark,
+        onNextBookmark: _jumpToNextBookmark,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())

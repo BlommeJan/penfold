@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
+import '../services/stroke_smoothing_service.dart';
 import '../services/toolbar_order_service.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -17,12 +18,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _orderLoaded = false;
   List<String> _ocrTerms = [];
   bool _ocrTermsLoaded = false;
+  bool _strokeSmoothing = true;
+  bool _strokeSmoothingLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _loadToolOrder();
     _loadOcrTerms();
+    _loadStrokeSmoothing();
   }
 
   Future<void> _loadToolOrder() async {
@@ -42,6 +46,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _resetToolOrder() async {
     await _saveToolOrder(ToolbarToolId.defaultOrder);
+  }
+
+  Future<void> _loadStrokeSmoothing() async {
+    await StrokeSmoothingService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _strokeSmoothing = StrokeSmoothingService.instance.enabled;
+      _strokeSmoothingLoaded = true;
+    });
+  }
+
+  Future<void> _setStrokeSmoothing(bool value) async {
+    await StrokeSmoothingService.instance.setEnabled(value);
+    if (!mounted) return;
+    setState(() => _strokeSmoothing = value);
   }
 
   Future<void> _loadOcrTerms() async {
@@ -225,6 +244,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: const Text('Reset toolbar order'),
                   ),
                 ),
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    'Drawing',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                if (!_strokeSmoothingLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  SwitchListTile(
+                    secondary: const Icon(Icons.draw_rounded),
+                    title: const Text('Stroke smoothing'),
+                    subtitle: const Text(
+                      'Smooth ink strokes with Chaikin corner-cutting (default on)',
+                    ),
+                    value: _strokeSmoothing,
+                    onChanged: _setStrokeSmoothing,
+                  ),
                 const Divider(height: 32),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/library_screen.dart';
+import 'services/stroke_smoothing_service.dart';
 import 'services/toolbar_order_service.dart';
 
 const _kPenfoldBlue = Color(0xFF2455C3);
@@ -10,6 +11,7 @@ const _kPenfoldAccent = Color(0xFFE8A317);
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ToolbarOrderService.instance.load();
+  StrokeSmoothingService.instance.load();
   runApp(const PenfoldApp());
 }
 

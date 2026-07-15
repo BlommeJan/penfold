@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/main.dart';
 import 'package:penfold/services/thumbnail_cache.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 /// Widget tests run in fake-async, but sqflite does real I/O on an isolate.
@@ -27,6 +28,7 @@ void main() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
     ThumbnailCache.autoGenerate = false;
+    SharedPreferences.setMockInitialValues({});
   });
 
   setUp(() async {

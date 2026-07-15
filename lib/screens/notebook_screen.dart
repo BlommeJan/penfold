@@ -12,6 +12,7 @@ import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/page_export.dart';
+import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/toolbar.dart';
@@ -47,14 +48,33 @@ class _NotebookScreenState extends State<NotebookScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _syncStrokeSmoothing();
+    StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
     _load();
   }
 
   @override
   void dispose() {
+    StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
     _toolState.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onStrokeSmoothingChanged() {
+    _toolState.set(
+      (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
+    );
+  }
+
+  Future<void> _syncStrokeSmoothing() async {
+    if (!StrokeSmoothingService.instance.isLoaded) {
+      await StrokeSmoothingService.instance.load();
+    }
+    if (!mounted) return;
+    _toolState.set(
+      (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
+    );
   }
 
   void _onScroll() {

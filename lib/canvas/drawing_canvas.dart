@@ -18,6 +18,7 @@ import 'page_coords.dart';
 import 'pointer_routing.dart';
 import 'painters.dart';
 import 'shape_recognizer.dart';
+import 'stroke_smoothing.dart';
 
 const _uuid = Uuid();
 const _pasteOffsetMm = 100.0; // 10 mm in canonical 0.1 mm units
@@ -58,6 +59,9 @@ class ToolState extends ChangeNotifier {
 
   /// Palm rejection: when true, only stylus input draws. Finger pans/zooms.
   bool stylusOnly = true;
+
+  /// Chaikin smoothing on ink before stroke commit (default on).
+  bool strokeSmoothing = true;
 
   void set(void Function(ToolState) fn) {
     fn(this);
@@ -1475,6 +1479,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (_current != null) {
       var stroke = _current!;
       _current = null;
+
+      stroke.points = maybeSmoothStrokePoints(
+        stroke.points,
+        enabled: widget.toolState.strokeSmoothing,
+      );
 
       if (tool == ToolType.shape) {
         final snapped = ShapeRecognizer.recognize(stroke.points);

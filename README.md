@@ -36,7 +36,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 ## Features
 
-**Drawing** — Pressure-sensitive pen (fountain, pencil, marker, calligraphy), highlighter, whole-stroke eraser, shape recognition, flood fill, typed text blocks, lasso select with copy/paste and rotate/scale handles, and 100-step undo/redo. Ink is stored in canonical page coordinates so strokes stay aligned when you rotate or zoom.
+**Drawing** — Pressure-sensitive pen (fountain, pencil, marker, calligraphy), highlighter, whole-stroke eraser, optional stroke smoothing (Chaikin, default on), shape recognition, flood fill, typed text blocks, lasso select with copy/paste and rotate/scale handles, and 100-step undo/redo. Ink is stored in canonical page coordinates so strokes stay aligned when you rotate or zoom.
 
 **Pages** — Vertical scroll through multi-page notebooks, page overview grid, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, image insert, PDF import (rendered once to local PNG), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
 
@@ -77,7 +77,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.26) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.27) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -108,5 +108,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.26</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.27</strong> — write freely, keep it local.
 </p>

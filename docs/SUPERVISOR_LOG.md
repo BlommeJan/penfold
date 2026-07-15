@@ -16,8 +16,8 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.14 | Full-database backup + restore | 0.2.13 | **DONE** | 54/54 | `d31e633` |
 | 0.2.15 | Text rotation bug fix | backlog | **DONE** | 59/59 | `3a9f668` |
 | 0.2.16 | Page bookmarks + quick jump | 0.2.14 | **DONE** | 62/62 | `fe74e69` |
-| 0.2.17 | Tags on notebooks | 0.2.15 | IN PROGRESS | — | — |
-| 0.2.18 | Vector PDF export | 0.2.12 | PENDING | — | — |
+| 0.2.17 | Tags on notebooks | 0.2.15 | **DONE** | 67/67 | `0ed4d9e` |
+| 0.2.18 | Vector PDF export | 0.2.12 | IN PROGRESS | — | — |
 | 0.2.19 | Toolbar tool order customization | 0.2.16 | PENDING | — | — |
 | 0.2.20 | Tape / hide-reveal | 0.2.17 | PENDING | — | — |
 | 0.2.21 | Per-page template/size | 0.2.18 | PENDING | — | — |

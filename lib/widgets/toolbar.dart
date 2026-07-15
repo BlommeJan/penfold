@@ -47,11 +47,13 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final bool canRedo;
   final bool hasSelection;
   final bool canPaste;
+  final bool canConvertSelectionToText;
   final VoidCallback onUndo;
   final VoidCallback onRedo;
   final VoidCallback onDeleteSelection;
   final VoidCallback? onCopy;
   final VoidCallback? onPaste;
+  final VoidCallback? onConvertToText;
   final VoidCallback onAddPage;
   final VoidCallback onPageSettings;
   final VoidCallback onAddImage;
@@ -69,11 +71,13 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     required this.canRedo,
     required this.hasSelection,
     this.canPaste = false,
+    this.canConvertSelectionToText = false,
     required this.onUndo,
     required this.onRedo,
     required this.onDeleteSelection,
     this.onCopy,
     this.onPaste,
+    this.onConvertToText,
     required this.onAddPage,
     required this.onPageSettings,
     required this.onAddImage,
@@ -135,6 +139,12 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                             if (hasSelection || canPaste) ...[
                               const _ToolbarDivider(),
                               if (hasSelection) ...[
+                                if (canConvertSelectionToText)
+                                  _ActionIconButton(
+                                    tooltip: 'Convert to text',
+                                    icon: Icons.text_fields_rounded,
+                                    onPressed: onConvertToText,
+                                  ),
                                 _ActionIconButton(
                                   tooltip: 'Copy',
                                   icon: Icons.copy_rounded,

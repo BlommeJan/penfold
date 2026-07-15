@@ -272,6 +272,23 @@ class _NotebookScreenState extends State<NotebookScreen> {
     _activeCanvas = state;
   }
 
+  Future<void> _convertSelectionToText() async {
+    final text = await _activeCanvas?.convertSelectionToText();
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    if (text != null && text.isNotEmpty) {
+      final preview =
+          text.length > 48 ? '${text.substring(0, 48)}…' : text;
+      messenger.showSnackBar(
+        SnackBar(content: Text('Converted to text: $preview')),
+      );
+    } else {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Could not recognize handwriting')),
+      );
+    }
+  }
+
   void _onPageTransformGesture(bool active) {
     setState(() {
       if (active) {
@@ -805,11 +822,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
         canRedo: _canRedo,
         hasSelection: _hasSelection,
         canPaste: _activeCanvas?.canPaste ?? false,
+        canConvertSelectionToText:
+            _activeCanvas?.canConvertSelectionToText ?? false,
         onUndo: () => _activeCanvas?.undo(),
         onRedo: () => _activeCanvas?.redo(),
         onDeleteSelection: () => _activeCanvas?.deleteSelection(),
         onCopy: () => _activeCanvas?.copySelection(),
         onPaste: () => _activeCanvas?.pasteClipboard(),
+        onConvertToText: _convertSelectionToText,
         onAddPage: _addPage,
         onPageSettings: _openPageSettings,
         onAddImage: _addImage,

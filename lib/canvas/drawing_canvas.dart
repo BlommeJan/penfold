@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/gesture_ink_service.dart';
+import '../services/hwr_convert.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
@@ -948,6 +949,46 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _selectedTextIds.isNotEmpty;
 
   bool get canPaste => !_clipboard.isEmpty;
+
+  bool get canConvertSelectionToText =>
+      canConvertInkSelection(_selectedIds, _strokes);
+
+  /// OCR selected ink and insert a [TextBlock]; original strokes are kept.
+  Future<String?> convertSelectionToText() async {
+    if (!canConvertSelectionToText) return null;
+
+    final selected = _strokes
+        .where((s) => _selectedIds.contains(s.id) && isConvertibleInkStroke(s))
+        .map((s) => s.copy())
+        .toList();
+    final bounds = inkBoundsForSelection(_selectedIds, _strokes);
+    if (bounds == null || selected.isEmpty) return null;
+
+    final text = await InkOcrService.instance.recognizeSelection(
+      selected,
+      bounds,
+    );
+    if (text == null || text.isEmpty) return null;
+
+    final fontSize = _defaultTextFontSize();
+    final measured = _measureTextBlock(text, fontSize);
+    final block = buildHwrTextBlock(
+      id: _uuid.v4(),
+      pageId: widget.page.id,
+      text: text,
+      bounds: bounds,
+      fontSize: fontSize,
+      color: widget.toolState.penColor.value,
+      z: _controller.nextZ(),
+      measuredSize: measured,
+    );
+
+    await _controller.addTextBlock(block);
+    _controller.commit(_AddTextBlock(block.copy()));
+    _clearSelection();
+    _bump();
+    return text;
+  }
 
   void _notifySelection() =>
       widget.onSelectionChanged?.call(hasSelection);

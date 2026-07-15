@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -10,6 +11,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import 'hwr_convert.dart';
 import 'ocr_dictionary.dart';
 
 const _uuid = Uuid();
@@ -26,6 +28,9 @@ class InkOcrService {
 
   /// When true (unit tests), skips ML Kit and marks strokes failed quietly.
   static bool disableMlKit = false;
+
+  /// When [disableMlKit] is true, selection OCR returns this (v0.2.37 tests).
+  static String? testSelectionRecognitionResult;
 
   Future<void> enqueueStroke(Stroke stroke) async {
     if (stroke.tool != ToolType.pen &&
@@ -77,13 +82,38 @@ class InkOcrService {
     _processing = false;
   }
 
+  /// OCR ink within [bounds] for lasso/selection convert-to-text (v0.2.37).
+  Future<String?> recognizeSelection(
+    List<Stroke> strokes,
+    Rect bounds,
+  ) async {
+    final ink = strokes.where(isConvertibleInkStroke).toList();
+    if (ink.isEmpty || bounds.width <= 0 || bounds.height <= 0) return null;
+
+    String? text;
+    if (disableMlKit || !_mlKitAvailable) {
+      text = testSelectionRecognitionResult;
+    } else {
+      final png = await _renderStrokesPng(ink, bounds);
+      if (png == null) return null;
+      text = await _recognizePng(png, tag: 'selection');
+    }
+
+    if (text == null || text.trim().isEmpty) return null;
+    final terms = await _db.allOcrTerms();
+    return applyOcrDictionary(text.trim(), terms);
+  }
+
   Future<String?> _recognizeStroke(Stroke stroke) async {
     if (disableMlKit || !_mlKitAvailable) return null;
-    final png = await _renderStrokePng(stroke);
+    final png = await _renderStrokesPng([stroke], stroke.bounds);
     if (png == null) return null;
+    return _recognizePng(png, tag: stroke.id);
+  }
 
+  Future<String?> _recognizePng(_PngImage png, {required String tag}) async {
     final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/penfold_ocr_${stroke.id}.png');
+    final file = File('${dir.path}/penfold_ocr_$tag.png');
     await file.writeAsBytes(png.bytes, flush: true);
 
     _recognizer ??= TextRecognizer(script: TextRecognitionScript.latin);
@@ -107,13 +137,16 @@ class InkOcrService {
     }
   }
 
-  Future<_PngImage?> _renderStrokePng(Stroke stroke) async {
-    final bounds = stroke.bounds.inflate(stroke.width * 2 + 20);
-    if (bounds.width <= 0 || bounds.height <= 0) return null;
+  Future<_PngImage?> _renderStrokesPng(List<Stroke> strokes, Rect bounds) async {
+    if (strokes.isEmpty) return null;
+    final maxWidth =
+        strokes.map((s) => s.width).fold(0.0, math.max);
+    final padded = bounds.inflate(maxWidth * 2 + 20);
+    if (padded.width <= 0 || padded.height <= 0) return null;
 
     const scale = 2.0;
-    final w = (bounds.width * scale).ceil().clamp(32, 640);
-    final h = (bounds.height * scale).ceil().clamp(32, 640);
+    final w = (padded.width * scale).ceil().clamp(32, 640);
+    final h = (padded.height * scale).ceil().clamp(32, 640);
 
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()));
@@ -122,25 +155,27 @@ class InkOcrService {
       Paint()..color = Colors.white,
     );
 
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..style = PaintingStyle.stroke
-      ..isAntiAlias = true
-      ..strokeWidth = (stroke.width * scale).clamp(2.0, 12.0);
+    for (final stroke in strokes) {
+      final paint = Paint()
+        ..color = Colors.black
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..style = PaintingStyle.stroke
+        ..isAntiAlias = true
+        ..strokeWidth = (stroke.width * scale).clamp(2.0, 12.0);
 
-    final pts = stroke.points;
-    for (var i = 1; i < pts.length; i++) {
-      final a = Offset(
-        (pts[i - 1].x - bounds.left) * scale,
-        (pts[i - 1].y - bounds.top) * scale,
-      );
-      final b = Offset(
-        (pts[i].x - bounds.left) * scale,
-        (pts[i].y - bounds.top) * scale,
-      );
-      canvas.drawLine(a, b, paint);
+      final pts = stroke.points;
+      for (var i = 1; i < pts.length; i++) {
+        final a = Offset(
+          (pts[i - 1].x - padded.left) * scale,
+          (pts[i - 1].y - padded.top) * scale,
+        );
+        final b = Offset(
+          (pts[i].x - padded.left) * scale,
+          (pts[i].y - padded.top) * scale,
+        );
+        canvas.drawLine(a, b, paint);
+      }
     }
 
     final picture = recorder.endRecording();

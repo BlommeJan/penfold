@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.37] — 2026
+
+### Added
+
+- **Handwriting-to-text conversion** — lasso or selection tool: "Convert to text" toolbar action on ink selection; OCR via on-device `ink_ocr_service`; inserts a `TextBlock` at selection bounds while keeping original ink
+
 ## [0.2.36] — 2026
 
 ### Added
@@ -279,6 +285,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.37]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.37
 [0.2.36]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.36
 [0.2.35]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.35
 [0.2.34]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.34

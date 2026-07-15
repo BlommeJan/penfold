@@ -12,6 +12,7 @@ import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/page_export.dart';
+import '../services/page_turn_mode_service.dart';
 import '../services/session_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
@@ -44,10 +45,12 @@ class _NotebookScreenState extends State<NotebookScreen> {
   final _db = AppDatabase.instance;
   final _toolState = ToolState();
   final _scrollController = ScrollController();
+  late final PageController _pageController;
   final Map<String, GlobalKey<PageEditorState>> _pageKeys = {};
 
   List<NotePage> _pages = [];
   bool _loading = true;
+  bool _pageTurnEnabled = false;
   bool _canUndo = false;
   bool _canRedo = false;
   bool _hasSelection = false;
@@ -60,10 +63,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     _scrollController.addListener(_onScroll);
     _toolState.addListener(_scheduleSessionSave);
     _syncStrokeSmoothing();
     StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
+    _syncPageTurnMode();
+    PageTurnModeService.instance.addListener(_onPageTurnModeChanged);
     _syncSpenButton();
     SpenButtonService.instance.addListener(_onSpenButtonChanged);
     unawaited(SpenButtonService.instance.startListening());
@@ -76,10 +82,12 @@ class _NotebookScreenState extends State<NotebookScreen> {
     unawaited(_persistSession());
     _toolState.removeListener(_scheduleSessionSave);
     StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
+    PageTurnModeService.instance.removeListener(_onPageTurnModeChanged);
     SpenButtonService.instance.removeListener(_onSpenButtonChanged);
     SpenButtonService.instance.stopListening();
     _toolState.dispose();
     _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -87,6 +95,25 @@ class _NotebookScreenState extends State<NotebookScreen> {
     _toolState.set(
       (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
     );
+  }
+
+  void _onPageTurnModeChanged() {
+    if (!mounted) return;
+    final enabled = PageTurnModeService.instance.enabled;
+    if (enabled == _pageTurnEnabled) return;
+    setState(() => _pageTurnEnabled = enabled);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _syncViewportToVisiblePage();
+    });
+  }
+
+  Future<void> _syncPageTurnMode() async {
+    if (!PageTurnModeService.instance.isLoaded) {
+      await PageTurnModeService.instance.load();
+    }
+    if (!mounted) return;
+    setState(() => _pageTurnEnabled = PageTurnModeService.instance.enabled);
   }
 
   Future<void> _syncStrokeSmoothing() async {
@@ -133,8 +160,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
     if (_loading || _pages.isEmpty) return;
     // Tests use overrideDirPath; skip async session writes during widget tests.
     if (AppDatabase.overrideDirPath != null) return;
-    final offset =
-        _scrollController.hasClients ? _scrollController.offset : 0.0;
+    final offset = _pageTurnEnabled
+        ? 0.0
+        : (_scrollController.hasClients ? _scrollController.offset : 0.0);
     await SessionService.instance.save(
       notebookId: widget.notebook.id,
       pageIndex: _visiblePageIndex,
@@ -170,15 +198,44 @@ class _NotebookScreenState extends State<NotebookScreen> {
     setState(() => _loading = false);
     _db.touchNotebook(widget.notebook.id);
     unawaited(ThumbnailCache.instance.ensureForNotebook(widget.notebook.id));
-    final scrollOffset = widget.initialScrollOffset;
-    if (scrollOffset != null && scrollOffset > 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted || !_scrollController.hasClients) return;
-        _scrollController.jumpTo(
-          scrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-        );
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _syncViewportToVisiblePage(
+        scrollOffset: widget.initialScrollOffset,
+      );
+    });
+  }
+
+  void _onVisiblePageChanged(int index) {
+    if (index == _visiblePageIndex) return;
+    setState(() => _visiblePageIndex = index);
+    _setActiveCanvas(_pageKeys[_pages[index].id]?.currentState?.canvasState);
+    _scheduleSessionSave();
+  }
+
+  void _syncViewportToVisiblePage({double? scrollOffset}) {
+    if (_pages.isEmpty) return;
+    final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
+    if (_pageTurnEnabled) {
+      if (_pageController.hasClients) {
+        final current = _pageController.page?.round() ?? _pageController.initialPage;
+        if (current != idx) {
+          _pageController.jumpToPage(idx);
+        }
+      }
+      _setActiveCanvas(_pageKeys[_pages[idx].id]?.currentState?.canvasState);
+      return;
     }
+    if (!_scrollController.hasClients) return;
+    final pageHeight = MediaQuery.of(context).size.height * 0.85;
+    if (scrollOffset != null && scrollOffset > 0) {
+      _scrollController.jumpTo(
+        scrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+      );
+    } else {
+      _scrollController.jumpTo(idx * pageHeight);
+    }
+    _setActiveCanvas(_pageKeys[_pages[idx].id]?.currentState?.canvasState);
   }
 
   NotePage get _activePage => _pages[_visiblePageIndex];
@@ -225,6 +282,18 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
   Future<void> _scrollToPage(int index) async {
     if (index < 0 || index >= _pages.length) return;
+    if (_pageTurnEnabled) {
+      if (_pageController.hasClients) {
+        await _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
+      }
+      setState(() => _visiblePageIndex = index);
+      _setActiveCanvas(_pageKeys[_pages[index].id]?.currentState?.canvasState);
+      return;
+    }
     final pageHeight = MediaQuery.of(context).size.height * 0.85;
     await _scrollController.animateTo(
       index * pageHeight,
@@ -626,13 +695,73 @@ class _NotebookScreenState extends State<NotebookScreen> {
       _visiblePageIndex = nextVisible;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_scrollController.hasClients) return;
-      final pageHeight = MediaQuery.of(context).size.height * 0.85;
-      _scrollController.jumpTo(nextVisible * pageHeight);
-      _setActiveCanvas(
-        _pageKeys[_pages[nextVisible].id]?.currentState?.canvasState,
-      );
+      if (!mounted) return;
+      _syncViewportToVisiblePage();
     });
+  }
+
+  Widget _pageEditorAt(int i, Size viewportSize) {
+    return PageEditor(
+      key: _pageKeys[_pages[i].id],
+      page: _pages[i],
+      notebook: widget.notebook,
+      toolState: _toolState,
+      viewportSize: viewportSize,
+      onCanvasReady: (state) {
+        if (i == _visiblePageIndex) {
+          _setActiveCanvas(state);
+        }
+      },
+      onHistoryChanged: i == _visiblePageIndex
+          ? (u, r) => setState(() {
+                _canUndo = u;
+                _canRedo = r;
+              })
+          : null,
+      onSelectionChanged: i == _visiblePageIndex
+          ? (sel) => setState(() => _hasSelection = sel)
+          : null,
+      onTransformGestureActive: _onPageTransformGesture,
+    );
+  }
+
+  Widget _buildScrollBody(Size viewport) {
+    final pageHeight = viewport.height * 0.85;
+    return ScrollConfiguration(
+      behavior: const PenfoldScrollBehavior(),
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: _pinchLockCount > 0
+            ? const NeverScrollableScrollPhysics()
+            : const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          for (var i = 0; i < _pages.length; i++)
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: pageHeight,
+                child: _pageEditorAt(
+                  i,
+                  Size(viewport.width, pageHeight),
+                ),
+              ),
+            ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPageTurnBody(Size viewport) {
+    return PageView.builder(
+      controller: _pageController,
+      scrollDirection: Axis.vertical,
+      physics: _pinchLockCount > 0
+          ? const NeverScrollableScrollPhysics()
+          : const PageScrollPhysics(),
+      onPageChanged: _onVisiblePageChanged,
+      itemCount: _pages.length,
+      itemBuilder: (context, i) => _pageEditorAt(i, viewport),
+    );
   }
 
   @override
@@ -663,47 +792,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : ScrollConfiguration(
-              behavior: const PenfoldScrollBehavior(),
-              child: CustomScrollView(
-                controller: _scrollController,
-                physics: _pinchLockCount > 0
-                    ? const NeverScrollableScrollPhysics()
-                    : const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  for (var i = 0; i < _pages.length; i++)
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: viewport.height * 0.85,
-                        child: PageEditor(
-                          key: _pageKeys[_pages[i].id],
-                          page: _pages[i],
-                          notebook: widget.notebook,
-                          toolState: _toolState,
-                          viewportSize: Size(
-                              viewport.width, viewport.height * 0.85),
-                          onCanvasReady: (state) {
-                            if (i == _visiblePageIndex) {
-                              _setActiveCanvas(state);
-                            }
-                          },
-                          onHistoryChanged: i == _visiblePageIndex
-                              ? (u, r) => setState(() {
-                                    _canUndo = u;
-                                    _canRedo = r;
-                                  })
-                              : null,
-                          onSelectionChanged: i == _visiblePageIndex
-                              ? (sel) => setState(() => _hasSelection = sel)
-                              : null,
-                          onTransformGestureActive: _onPageTransformGesture,
-                        ),
-                      ),
-                    ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
-                ],
-              ),
-            ),
+          : _pageTurnEnabled
+              ? _buildPageTurnBody(viewport)
+              : _buildScrollBody(viewport),
     );
   }
 }

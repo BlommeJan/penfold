@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
+import '../services/page_turn_mode_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/toolbar_order_service.dart';
@@ -21,6 +22,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _ocrTermsLoaded = false;
   bool _strokeSmoothing = true;
   bool _strokeSmoothingLoaded = false;
+  bool _pageTurnMode = false;
+  bool _pageTurnModeLoaded = false;
   SpenBarrelAction _spenAction = SpenBarrelAction.eraser;
   bool _spenLoaded = false;
 
@@ -30,6 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadToolOrder();
     _loadOcrTerms();
     _loadStrokeSmoothing();
+    _loadPageTurnMode();
     _loadSpenAction();
   }
 
@@ -65,6 +69,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await StrokeSmoothingService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _strokeSmoothing = value);
+  }
+
+  Future<void> _loadPageTurnMode() async {
+    await PageTurnModeService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _pageTurnMode = PageTurnModeService.instance.enabled;
+      _pageTurnModeLoaded = true;
+    });
+  }
+
+  Future<void> _setPageTurnMode(bool value) async {
+    await PageTurnModeService.instance.setEnabled(value);
+    if (!mounted) return;
+    setState(() => _pageTurnMode = value);
   }
 
   Future<void> _loadSpenAction() async {
@@ -263,6 +282,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: const Text('Reset toolbar order'),
                   ),
                 ),
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    'Notebook',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                if (!_pageTurnModeLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  SwitchListTile(
+                    secondary: const Icon(Icons.view_carousel_outlined),
+                    title: const Text('Page-turn mode'),
+                    subtitle: const Text(
+                      'Swipe one page at a time instead of continuous scroll (default off)',
+                    ),
+                    value: _pageTurnMode,
+                    onChanged: _setPageTurnMode,
+                  ),
                 const Divider(height: 32),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

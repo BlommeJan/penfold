@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.20] — 2026
+
+### Added
+
+- **Tape / hide-reveal study tool** — `ToolType.tape` with semi-transparent overlay strokes; tap tape to toggle reveal/hide; tape in center toolbar (after highlighter); schema v9: `strokes.hidden`; vector PDF export includes tape layer
+
 ## [0.2.19] — 2026
 
 ### Added
@@ -182,6 +188,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.20]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.20
 [0.2.19]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.19
 [0.2.18]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.18
 [0.2.17]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.17

@@ -28,6 +28,7 @@ void main() {
     expect(normalized.indexOf(ToolbarToolId.eraser), 0);
     expect(normalized.indexOf(ToolbarToolId.pen), 1);
     expect(normalized, contains(ToolbarToolId.highlighter));
+    expect(normalized, contains(ToolbarToolId.tape));
     expect(normalized.length, ToolbarToolId.defaultOrder.length);
   });
 
@@ -37,6 +38,7 @@ void main() {
       ToolbarToolId.pen,
       ToolbarToolId.eraser,
       ToolbarToolId.highlighter,
+      ToolbarToolId.tape,
       ToolbarToolId.selection,
       ToolbarToolId.shape,
       ToolbarToolId.fill,

@@ -27,7 +27,8 @@ class InkOcrService {
   static bool disableMlKit = false;
 
   Future<void> enqueueStroke(Stroke stroke) async {
-    if (stroke.tool != ToolType.pen && stroke.tool != ToolType.highlighter) {
+    if (stroke.tool != ToolType.pen &&
+        stroke.tool != ToolType.highlighter) {
       return;
     }
     if (stroke.points.length < 2) return;

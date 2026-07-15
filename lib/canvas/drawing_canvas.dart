@@ -48,9 +48,11 @@ class ToolState extends ChangeNotifier {
   BrushStyle brushStyle = BrushStyle.pen;
   Color penColor = const Color(0xFF1A1A1A);
   Color highlighterColor = const Color(0xFFFFE100);
+  Color tapeColor = const Color(0xFFE8E0D0);
   Color fillColor = const Color(0xFF2455C3);
   double penWidth = 3.0;
   double highlighterWidth = 18.0;
+  double tapeWidth = 24.0;
   double eraserRadius = 16.0;
   EraserMode eraserMode = EraserMode.partial;
 
@@ -64,12 +66,14 @@ class ToolState extends ChangeNotifier {
 
   Color get activeColor => switch (tool) {
         ToolType.highlighter => highlighterColor,
+        ToolType.tape => tapeColor,
         ToolType.fill => fillColor,
         _ => penColor,
       };
 
   double get activeWidth => switch (tool) {
         ToolType.highlighter => highlighterWidth,
+        ToolType.tape => tapeWidth,
         _ => penWidth,
       };
 }
@@ -88,6 +92,22 @@ class _AddStroke extends _EditAction {
   Future<void> undo(_CanvasController c) => c.removeStrokes([stroke]);
   @override
   Future<void> redo(_CanvasController c) => c.addStroke(stroke);
+}
+
+class _ToggleTapeHidden extends _EditAction {
+  final String strokeId;
+  final bool before;
+  final bool after;
+
+  _ToggleTapeHidden(this.strokeId, this.before, this.after);
+
+  @override
+  Future<void> undo(_CanvasController c) =>
+      c.setTapeHidden(strokeId, before);
+
+  @override
+  Future<void> redo(_CanvasController c) =>
+      c.setTapeHidden(strokeId, after);
 }
 
 class _RemoveStrokes extends _EditAction {
@@ -339,6 +359,17 @@ class _CanvasController {
     for (final s in strokes.where((s) => ids.contains(s.id))) {
       s.translate(delta);
       await _db.updateStrokePoints(s);
+    }
+    onChanged();
+  }
+
+  Future<void> setTapeHidden(String strokeId, bool hidden) async {
+    for (final s in strokes) {
+      if (s.id == strokeId) {
+        s.hidden = hidden;
+        await _db.updateStrokeHidden(s);
+        break;
+      }
     }
     onChanged();
   }
@@ -943,7 +974,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     final tool = widget.toolState.tool;
     final manipulatesWithFinger = tool == ToolType.selection ||
         tool == ToolType.lasso ||
-        tool == ToolType.text;
+        tool == ToolType.text ||
+        tool == ToolType.tape;
     if (manipulatesWithFinger &&
         e.kind == PointerDeviceKind.touch &&
         (Offset.zero & widget.displaySize).contains(e.localPosition)) {
@@ -1002,6 +1034,25 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           brushStyle: widget.toolState.brushStyle,
           color: widget.toolState.activeColor.value,
           width: _toCanonicalLen(widget.toolState.activeWidth),
+          points: [StrokePoint(cPos.dx, cPos.dy, _pressure(e))],
+          z: _controller.nextZ(),
+        );
+        _lastInkMoveTime = DateTime.now();
+        _lastInkMoveCanon = cPos;
+        _bump();
+      case ToolType.tape:
+        final hitTape = _hitTapeStrokeAt(pos);
+        if (hitTape != null) {
+          _activePointer = null;
+          unawaited(_toggleTapeHidden(hitTape));
+          return;
+        }
+        _current = Stroke(
+          id: _uuid.v4(),
+          pageId: widget.page.id,
+          tool: ToolType.tape,
+          color: widget.toolState.tapeColor.value,
+          width: _toCanonicalLen(widget.toolState.tapeWidth),
           points: [StrokePoint(cPos.dx, cPos.dy, _pressure(e))],
           z: _controller.nextZ(),
         );
@@ -1396,7 +1447,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
       await _controller.addStroke(stroke);
       _controller.commit(_AddStroke(stroke.copy()));
-      unawaited(InkOcrService.instance.enqueueStroke(stroke));
+      if (stroke.tool != ToolType.tape) {
+        unawaited(InkOcrService.instance.enqueueStroke(stroke));
+      }
       _bump();
       return;
     }
@@ -1814,6 +1867,25 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       if (_strokeHit(s, cPos, hitR)) return s;
     }
     return null;
+  }
+
+  Stroke? _hitTapeStrokeAt(Offset displayPos) {
+    final cPos = _toCanonical(displayPos);
+    final hitR = _toCanonicalLen(14);
+    for (final s in _strokes.reversed) {
+      if (s.tool != ToolType.tape) continue;
+      if (_strokeHit(s, cPos, hitR)) return s;
+    }
+    return null;
+  }
+
+  Future<void> _toggleTapeHidden(Stroke stroke) async {
+    final before = stroke.hidden;
+    final after = !before;
+    await _controller.setTapeHidden(stroke.id, after);
+    _controller.commit(_ToggleTapeHidden(stroke.id, before, after));
+    widget.onHistoryChanged?.call(_controller.canUndo, _controller.canRedo);
+    _bump();
   }
 
   TextBlock? _hitTextBlock(Offset displayPos) {

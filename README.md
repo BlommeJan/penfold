@@ -27,7 +27,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 | **Private by design** | All data in one inspectable `penfold.db` file on device |
 | **Stylus-first** | Palm rejection, pressure sensitivity, S Pen hover support |
 | **Organized library** | Nested folders, tags, full-text search, colored notebook covers |
-| **Rich ink tools** | Pen, pencil, highlighter, shapes, fill, text, lasso |
+| **Rich ink tools** | Pen, pencil, highlighter, tape (hide-reveal), shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
 
 **v0.2.7** — GoodNotes-style toolbar (back left, tools center, actions right), richer brand theme (#2455C3), vibrant library covers, and colored selection handles.
@@ -77,7 +77,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.19) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.20) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -109,5 +109,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.19</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.20</strong> — write freely, keep it local.
 </p>

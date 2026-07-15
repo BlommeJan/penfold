@@ -2,7 +2,17 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui';
 
-enum ToolType { pen, highlighter, eraser, lasso, selection, shape, fill, text }
+enum ToolType {
+  pen,
+  highlighter,
+  eraser,
+  lasso,
+  selection,
+  shape,
+  fill,
+  text,
+  tape,
+}
 
 enum BrushStyle { pen, fountainPen, pencil, marker, calligraphy }
 
@@ -398,6 +408,8 @@ class Stroke {
   final double width;
   List<StrokePoint> points;
   final int z;
+  /// When false (default), tape covers content; true = revealed (tap toggles).
+  bool hidden;
 
   Stroke({
     required this.id,
@@ -408,6 +420,7 @@ class Stroke {
     required this.width,
     required this.points,
     required this.z,
+    this.hidden = false,
   });
 
   String encodePoints() =>
@@ -430,6 +443,7 @@ class Stroke {
         'width': width,
         'points': encodePoints(),
         'z': z,
+        'hidden': hidden ? 1 : 0,
       };
 
   static Stroke fromRow(Map<String, Object?> r) => Stroke(
@@ -441,6 +455,7 @@ class Stroke {
         width: (r['width'] as num).toDouble(),
         points: decodePoints(r['points'] as String),
         z: r['z'] as int,
+        hidden: (r['hidden'] as int?) == 1,
       );
 
   Rect get bounds {
@@ -470,6 +485,7 @@ class Stroke {
         width: width,
         points: List.of(points),
         z: z,
+        hidden: hidden,
       );
 }
 

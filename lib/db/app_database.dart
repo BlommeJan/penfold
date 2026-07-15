@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 8;
+  static const _schemaVersion = 9;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -84,7 +84,8 @@ class AppDatabase {
         color INTEGER NOT NULL,
         width REAL NOT NULL,
         points TEXT NOT NULL,
-        z INTEGER NOT NULL
+        z INTEGER NOT NULL,
+        hidden INTEGER NOT NULL DEFAULT 0
       )''');
     await db.execute('''
       CREATE TABLE page_images(
@@ -199,6 +200,12 @@ class AppDatabase {
     }
     if (oldV < 8) {
       await _createTagsTables(db);
+    }
+    if (oldV < 9) {
+      if (await _hasTable(db, 'strokes')) {
+        await _addColumnIfMissing(
+            db, 'strokes', 'hidden', 'INTEGER NOT NULL DEFAULT 0');
+      }
     }
   }
 
@@ -610,6 +617,11 @@ class AppDatabase {
 
   Future<void> updateStrokePoints(Stroke s) async {
     await (await db).update('strokes', {'points': s.encodePoints()},
+        where: 'id = ?', whereArgs: [s.id]);
+  }
+
+  Future<void> updateStrokeHidden(Stroke s) async {
+    await (await db).update('strokes', {'hidden': s.hidden ? 1 : 0},
         where: 'id = ?', whereArgs: [s.id]);
   }
 

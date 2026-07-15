@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract final class ToolbarToolId {
   static const pen = 'pen';
   static const highlighter = 'highlighter';
+  static const tape = 'tape';
   static const eraser = 'eraser';
   static const selection = 'selection';
   static const lasso = 'lasso';
@@ -17,6 +18,7 @@ abstract final class ToolbarToolId {
   static const defaultOrder = [
     pen,
     highlighter,
+    tape,
     eraser,
     selection,
     lasso,
@@ -29,6 +31,7 @@ abstract final class ToolbarToolId {
   static const labels = {
     pen: 'Pen',
     highlighter: 'Highlighter',
+    tape: 'Tape',
     eraser: 'Eraser',
     selection: 'Selection',
     lasso: 'Lasso',
@@ -41,6 +44,7 @@ abstract final class ToolbarToolId {
   static const icons = {
     pen: Icons.edit_rounded,
     highlighter: Icons.brush_rounded,
+    tape: Icons.visibility_off_outlined,
     eraser: Icons.cleaning_services_rounded,
     selection: Icons.near_me_rounded,
     lasso: Icons.gesture_rounded,

@@ -29,12 +29,15 @@ void paintVectorInkOnPdf(
 ) {
   final penStrokes = <Stroke>[];
   final highlighterStrokes = <Stroke>[];
+  final tapeStrokes = <Stroke>[];
   for (final s in strokes) {
     switch (s.tool) {
       case ToolType.pen:
         penStrokes.add(s);
       case ToolType.highlighter:
         highlighterStrokes.add(s);
+      case ToolType.tape:
+        tapeStrokes.add(s);
       case ToolType.eraser:
       case ToolType.lasso:
       case ToolType.selection:
@@ -59,6 +62,17 @@ void paintVectorInkOnPdf(
       _paintPdfHighlighterStroke(canvas, s, pdfSize, pageSize);
     }
     canvas.restoreContext();
+  }
+
+  if (tapeStrokes.isNotEmpty) {
+    for (final s in tapeStrokes) {
+      canvas.saveContext();
+      canvas.setGraphicState(PdfGraphicState(
+        strokeOpacity: s.hidden ? 0.18 : 0.62,
+      ));
+      _paintPdfTapeStroke(canvas, s, pdfSize, pageSize);
+      canvas.restoreContext();
+    }
   }
 }
 
@@ -228,6 +242,15 @@ void _paintPdfHighlighterStroke(
   final last = _canonicalToPdf(pts.last.x, pts.last.y, pdfSize, pageSize);
   canvas.lineTo(last.dx, last.dy);
   canvas.strokePath();
+}
+
+void _paintPdfTapeStroke(
+  PdfGraphics canvas,
+  Stroke s,
+  PdfPoint pdfSize,
+  PageSize pageSize,
+) {
+  _paintPdfHighlighterStroke(canvas, s, pdfSize, pageSize);
 }
 
 /// True when the PDF byte stream contains vector stroke path operators.

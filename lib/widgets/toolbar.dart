@@ -24,6 +24,14 @@ const _highlighterColors = [
   Color(0xFFFFA94D),
 ];
 
+const _tapeColors = [
+  Color(0xFFE8E0D0),
+  Color(0xFFD4C4A8),
+  Color(0xFFC8D8E8),
+  Color(0xFFE8C8D0),
+  Color(0xFFD0E0C8),
+];
+
 const _fillColors = [
   Color(0xFF2455C3),
   Color(0xFFFFE100),
@@ -212,6 +220,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
       if (prevId == ToolbarToolId.eraser &&
           id != ToolbarToolId.pen &&
           id != ToolbarToolId.highlighter &&
+          id != ToolbarToolId.tape &&
           id != ToolbarToolId.eraser) {
         widgets.add(const _ToolbarDivider());
       }
@@ -243,6 +252,17 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   _showPenOptions(context, t, highlighter: true),
               accent:
                   t.tool == ToolType.highlighter ? t.highlighterColor : null,
+            ),
+          );
+        case ToolbarToolId.tape:
+          widgets.add(
+            _ToolButton(
+              icon: Icons.visibility_off_outlined,
+              selected: t.tool == ToolType.tape,
+              tooltip: 'Tape',
+              onTap: () => t.set((s) => s.tool = ToolType.tape),
+              onTapWhenSelected: () => _showTapeOptions(context, t),
+              accent: t.tool == ToolType.tape ? t.tapeColor : null,
             ),
           );
         case ToolbarToolId.eraser:
@@ -415,6 +435,74 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                             s.penWidth = v;
                           }
                         });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTapeOptions(BuildContext context, ToolState t) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Tape', style: Theme.of(ctx).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text('Draw to cover notes; tap tape to reveal or hide again',
+                style: Theme.of(ctx).textTheme.bodySmall),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                for (final c in _tapeColors)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 14),
+                    child: GestureDetector(
+                      onTap: () {
+                        t.set((s) => s.tapeColor = c);
+                        Navigator.pop(ctx);
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: c,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 3,
+                            color: t.tapeColor == c
+                                ? Theme.of(ctx).colorScheme.primary
+                                : Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            StatefulBuilder(
+              builder: (ctx, setSheet) => Row(
+                children: [
+                  const Icon(Icons.line_weight_rounded, size: 20),
+                  Expanded(
+                    child: Slider(
+                      value: t.tapeWidth,
+                      min: 12,
+                      max: 48,
+                      onChanged: (v) {
+                        setSheet(() {});
+                        t.set((s) => s.tapeWidth = v);
                       },
                     ),
                   ),

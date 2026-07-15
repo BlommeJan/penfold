@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.14] — 2026
+
+### Added
+
+- **Full-database backup** — export zip of `penfold.db`, `pdf_sources/`, `images/`, and legacy `pdf_pages/` via share sheet
+- **`backup_service.dart`** — local zip create/extract with pre-restore DB safety copy in `backups/`
+- **Backup & Restore settings** — library app bar → settings icon; confirm dialog before restore; restart prompt after restore
+
 ## [0.2.13] — 2026
 
 ### Fixed
@@ -144,6 +152,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.14]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.14
 [0.2.13]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.13
 [0.2.7]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.7
 [0.2.6]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.6

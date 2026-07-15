@@ -5,6 +5,7 @@ import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/pdf_import.dart';
 import 'notebook_screen.dart';
+import 'settings_screen.dart';
 
 const _uuid = Uuid();
 
@@ -842,6 +843,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
         title: const Text('Penfold'),
         centerTitle: false,
         actions: [
+          IconButton(
+            tooltip: 'Backup & Restore',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+          ),
           IconButton(
             tooltip: 'New notebook',
             icon: const Icon(Icons.note_add_outlined),

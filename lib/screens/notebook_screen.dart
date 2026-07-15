@@ -205,6 +205,34 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 onTap: () => Navigator.pop(ctx, t),
               ),
             const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text('Page size',
+                  style: Theme.of(ctx).textTheme.titleSmall),
+            ),
+            for (final s in PageSize.values)
+              ListTile(
+                leading: const Icon(Icons.aspect_ratio_rounded),
+                title: Text(s.label),
+                trailing: _activePage.pageSize == s
+                    ? const Icon(Icons.check_rounded)
+                    : null,
+                enabled: _activePage.pdfImagePath == null,
+                onTap: _activePage.pdfImagePath == null
+                    ? () => Navigator.pop(ctx, s)
+                    : null,
+              ),
+            if (_activePage.pdfImagePath != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  'PDF pages keep their document dimensions',
+                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
+            const Divider(height: 1),
             SwitchListTile(
               secondary: const Icon(Icons.bookmark_outline_rounded),
               title: const Text('Bookmark this page'),
@@ -255,6 +283,41 @@ class _NotebookScreenState extends State<NotebookScreen> {
       }
       await _db.updatePageTemplate(_activePage.id, chosen);
       setState(() => _activePage.template = chosen);
+      return;
+    }
+
+    if (chosen is PageSize) {
+      if (_activePage.pdfImagePath != null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('PDF pages keep their document dimensions')));
+        return;
+      }
+      if (chosen == _activePage.pageSize) return;
+      if (await _db.pageHasInk(_activePage.id)) {
+        final ok = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Change page size?'),
+            content: const Text(
+              'This page has ink. Changing the size will re-layout the page; '
+              'your ink stays in the same position on the page.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Change size'),
+              ),
+            ],
+          ),
+        );
+        if (ok != true || !mounted) return;
+      }
+      await _db.updatePageSize(_activePage.id, chosen);
+      setState(() => _activePage.pageSize = chosen);
       return;
     }
 

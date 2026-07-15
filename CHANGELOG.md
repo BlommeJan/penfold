@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.21] — 2026
+
+### Added
+
+- **Per-page template and page size change** — page settings sheet exposes A4/A5/Letter size picker alongside template; `updatePageSize` and `pageHasInk` DB helpers; confirm dialog when changing size on a page with ink; re-layout via existing `PageCoords` (canonical ink coords unchanged)
+
 ## [0.2.20] — 2026
 
 ### Added
@@ -188,6 +194,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.21]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.21
 [0.2.20]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.20
 [0.2.19]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.19
 [0.2.18]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.18

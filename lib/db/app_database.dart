@@ -588,6 +588,18 @@ class AppDatabase {
         where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<void> updatePageSize(String id, PageSize size) async {
+    await (await db).update('pages', {'page_size': size.index},
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<bool> pageHasInk(String pageId) async {
+    if ((await strokesOf(pageId)).isNotEmpty) return true;
+    if ((await textBlocksOf(pageId)).isNotEmpty) return true;
+    if ((await imagesOf(pageId)).isNotEmpty) return true;
+    return false;
+  }
+
   Future<void> setPageBookmarked(String id, bool bookmarked) async {
     await (await db).update('pages', {'bookmarked': bookmarked ? 1 : 0},
         where: 'id = ?', whereArgs: [id]);

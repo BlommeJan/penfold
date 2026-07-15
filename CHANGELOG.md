@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.26] — 2026
+
+### Added
+
+- **Lasso rotate handles** — lasso selection shows scale/rotate transform handles like the selection tool; finger input on handles works in stylus-only mode; move/rotate/scale commit via undo/redo transform snapshots
+
 ## [0.2.25] — 2026
 
 ### Added
@@ -212,6 +218,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.26]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.26
 [0.2.25]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.25
 [0.2.24]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.24
 [0.2.22]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.22

@@ -599,7 +599,6 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   final Set<String> _selectedFillIds = {};
   final Set<String> _selectedTextIds = {};
   Rect? _selectionBounds;
-  bool _draggingSelection = false;
   Offset _dragAccum = Offset.zero;
   Offset? _lastDragPos;
 
@@ -945,7 +944,6 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _selectedTextIds.clear();
     _selectionBounds = null;
     _selectionRotation = 0;
-    _draggingSelection = false;
     _dragAccum = Offset.zero;
     _selectedImageId = null;
     _draggingImage = false;
@@ -1124,14 +1122,29 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           _lastDragPos = pos;
           break;
         }
-        if (_selectionBounds != null) {
-          final displayBounds = PageCoords.canonicalRectToDisplay(
-              _selectionBounds!, widget.displaySize, _pageSize,
-              orientation: _orientation);
-          if (displayBounds.inflate(12).contains(pos)) {
-            _draggingSelection = true;
+        if (_selectionBounds != null && hasSelection) {
+          final handle = _hitSelectionHandle(pos);
+          if (handle != _SelHandle.none) {
+            _activeHandle = handle;
+            _transformBefore = _captureSelectionSnapshot();
+            final displayBounds = PageCoords.canonicalRectToDisplay(
+                _selectionBounds!, widget.displaySize, _pageSize,
+                orientation: _orientation);
+            final inflated = displayBounds.inflate(6);
+            _transformPivot = _toCanonical(inflated.center);
+            if (handle == _SelHandle.rotate) {
+              _transformStartAngle = math.atan2(
+                  pos.dy - inflated.center.dy, pos.dx - inflated.center.dx);
+            } else if (handle == _SelHandle.nw ||
+                handle == _SelHandle.ne ||
+                handle == _SelHandle.sw ||
+                handle == _SelHandle.se) {
+              _transformStartDist = (pos - inflated.center)
+                  .distance
+                  .clamp(1.0, double.infinity);
+            }
             _lastDragPos = pos;
-            _dragAccum = Offset.zero;
+            if (handle == _SelHandle.body) _dragAccum = Offset.zero;
             break;
           }
         }
@@ -1387,20 +1400,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           _lastDragPos = pos;
           selImg.rect = selImg.rect.shift(delta);
           _bump();
-        } else if (_draggingSelection && _lastDragPos != null) {
-          final delta = _toCanonical(pos - _lastDragPos!);
-          _lastDragPos = pos;
-          _dragAccum += delta;
-          for (final s in _strokes.where((s) => _selectedIds.contains(s.id))) {
-            s.translate(delta);
-          }
-          for (final t
-              in _textBlocks.where((t) => _selectedTextIds.contains(t.id))) {
-            t.x += delta.dx;
-            t.y += delta.dy;
-          }
-          _selectionBounds = _selectionBounds?.shift(delta);
-          _bump();
+        } else if (_activeHandle != _SelHandle.none) {
+          _handleSelectionMove(pos);
         } else if (_lassoPath != null) {
           _lassoPath!.add(pos);
           _bump();
@@ -1550,21 +1551,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _imageRectAtGestureStart = null;
         return;
       }
-      if (_draggingSelection) {
-        _draggingSelection = false;
-        if (_dragAccum.distance > 1) {
-          final ids = _selectedIds.toList();
-          for (final s in _strokes.where((s) => ids.contains(s.id))) {
-            await AppDatabase.instance.updateStrokePoints(s);
-          }
-          for (final t
-              in _textBlocks.where((t) => _selectedTextIds.contains(t.id))) {
-            await AppDatabase.instance.updateTextBlock(t);
-          }
-          _controller.commit(_MoveStrokes(ids, _dragAccum));
-          widget.onHistoryChanged
-              ?.call(_controller.canUndo, _controller.canRedo);
-        }
+      if (_activeHandle != _SelHandle.none) {
+        await _finishSelectionTransform();
+        _activeHandle = _SelHandle.none;
+        _transformBefore = null;
+        _lastDragPos = null;
         _dragAccum = Offset.zero;
       } else if (_lassoPath != null && _lassoPath!.length > 2) {
         _selectFromLasso(_lassoPath!);
@@ -2162,9 +2153,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                   selectedIds: _selectedIds,
                   lassoPath: _lassoPath ?? _fillPath,
                   selectionBounds: _selectionBounds,
-                  showTransformHandles: widget.toolState.tool ==
-                          ToolType.selection &&
-                      hasSelection,
+                  showTransformHandles: hasSelection &&
+                      (widget.toolState.tool == ToolType.selection ||
+                          widget.toolState.tool == ToolType.lasso),
                   selectionRotation: _selectionRotation,
                   marqueeRect: _marqueeRect,
                   images: _images,
@@ -2251,3 +2242,79 @@ void resetClipboardForTests() {
 
 /// Test hook: read clipboard state.
 ClipboardSelection get clipboardForTests => _clipboard;
+
+/// Test hook: selection handle kinds for hit-test geometry tests.
+enum SelectionHandleKind { none, body, nw, ne, sw, se, rotate }
+
+/// Test hook: map internal handle enum to test-visible kind.
+SelectionHandleKind selectionHandleKindForTests(_SelHandle handle) =>
+    switch (handle) {
+      _SelHandle.none => SelectionHandleKind.none,
+      _SelHandle.body => SelectionHandleKind.body,
+      _SelHandle.nw => SelectionHandleKind.nw,
+      _SelHandle.ne => SelectionHandleKind.ne,
+      _SelHandle.sw => SelectionHandleKind.sw,
+      _SelHandle.se => SelectionHandleKind.se,
+      _SelHandle.rotate => SelectionHandleKind.rotate,
+    };
+
+/// Test hook: hit-test transform handles in display space.
+SelectionHandleKind hitSelectionHandleForTests({
+  required Offset pos,
+  required Rect displayBounds,
+  double selectionRotation = 0,
+}) {
+  const hitR = 22.0;
+  final inflated = displayBounds.inflate(6);
+  final localPos = selectionRotation == 0
+      ? pos
+      : unrotateDisplayPointForTests(pos, inflated, selectionRotation);
+  final rotatePt = inflated.center + Offset(0, -inflated.height / 2 - 28);
+  if ((localPos - rotatePt).distance < hitR) {
+    return SelectionHandleKind.rotate;
+  }
+  final corners = <SelectionHandleKind, Offset>{
+    SelectionHandleKind.nw: inflated.topLeft,
+    SelectionHandleKind.ne: inflated.topRight,
+    SelectionHandleKind.sw: inflated.bottomLeft,
+    SelectionHandleKind.se: inflated.bottomRight,
+  };
+  for (final entry in corners.entries) {
+    if ((localPos - entry.value).distance < hitR) return entry.key;
+  }
+  if (inflated.contains(localPos)) return SelectionHandleKind.body;
+  return SelectionHandleKind.none;
+}
+
+/// Test hook: undo display-space rotation for handle hit testing.
+Offset unrotateDisplayPointForTests(Offset pos, Rect r, double rotation) {
+  final center = r.center;
+  final dx = pos.dx - center.dx;
+  final dy = pos.dy - center.dy;
+  final cos = math.cos(-rotation);
+  final sin = math.sin(-rotation);
+  return Offset(
+    center.dx + dx * cos - dy * sin,
+    center.dy + dx * sin + dy * cos,
+  );
+}
+
+/// Test hook: rotate a canonical point around a pivot by [delta] radians.
+Offset rotateCanonicalPointForTests(Offset p, Offset pivot, double delta) {
+  final dx = p.dx - pivot.dx;
+  final dy = p.dy - pivot.dy;
+  final cos = math.cos(delta);
+  final sin = math.sin(delta);
+  return Offset(
+    pivot.dx + dx * cos - dy * sin,
+    pivot.dy + dx * sin + dy * cos,
+  );
+}
+
+/// Test hook: whether lasso/selection tools show transform handles.
+bool showsTransformHandlesForTests({
+  required ToolType tool,
+  required bool hasSelection,
+}) =>
+    hasSelection &&
+    (tool == ToolType.selection || tool == ToolType.lasso);

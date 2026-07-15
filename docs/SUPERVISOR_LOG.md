@@ -7,7 +7,7 @@
 ## Supervisor notes
 
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
-- **Current position:** v0.2.38 page complexity warning shipped; resume at **v0.2.39** ("Your data" settings screen).
+- **Current position:** v0.2.39 Your data settings screen shipped; resume at **v0.2.40** (undo persist on page switch).
 
 ### v0.2.28 implementation spec (user requirements)
 
@@ -77,7 +77,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.36 | Auto table of contents | 0.2.34 | **DONE** | 177/177 | `677f065` |
 | 0.2.37 | HWR convert selection | 0.2.35 | **DONE** | 186/186 | `c582829` |
 | 0.2.38 | Page complexity warning | 0.2.36 | **DONE** | 192/192 | `a1cd203` |
-| 0.2.39 | Your data settings screen | 0.2.37 | PENDING | — | — |
+| 0.2.39 | Your data settings screen | 0.2.37 | **DONE** | 197/197 | TBD |
 | 0.2.40 | Undo persist on page switch | 0.2.38 | PENDING | — | — |
 
 ## Deferred / non-code (not in overnight queue)

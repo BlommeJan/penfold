@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
 import '../services/gesture_ink_service.dart';
+import '../services/your_data_service.dart';
 import '../services/page_turn_mode_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
@@ -29,6 +30,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _pageTurnModeLoaded = false;
   SpenBarrelAction _spenAction = SpenBarrelAction.eraser;
   bool _spenLoaded = false;
+  YourDataSnapshot? _yourData;
+  bool _yourDataLoaded = false;
 
   @override
   void initState() {
@@ -39,6 +42,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadGestureInkEditing();
     _loadPageTurnMode();
     _loadSpenAction();
+    _loadYourData();
+  }
+
+  Future<void> _loadYourData() async {
+    final snapshot = await YourDataService.instance.loadSnapshot();
+    if (!mounted) return;
+    setState(() {
+      _yourData = snapshot;
+      _yourDataLoaded = true;
+    });
   }
 
   Future<void> _loadToolOrder() async {
@@ -476,11 +489,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
+                    'Your data',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Penfold stores everything on this device in a single SQLite '
+                    'database and asset folders — no cloud sync. See '
+                    'docs/ARCHITECTURE.md for the full on-device file layout.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                if (!_yourDataLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else ...[
+                  ListTile(
+                    leading: const Icon(Icons.storage_outlined),
+                    title: const Text('Database'),
+                    subtitle: SelectableText(
+                      '${_yourData!.dbPath}\n'
+                      '${YourDataService.formatBytes(_yourData!.dbBytes)}',
+                    ),
+                  ),
+                  for (final name in YourDataService.trackedFolders)
+                    ListTile(
+                      leading: const Icon(Icons.folder_outlined),
+                      title: Text(name),
+                      trailing: Text(
+                        YourDataService.formatBytes(
+                          _yourData!.folderBytes[name] ?? 0,
+                        ),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                ],
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
                     'Backup & Restore',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
                         ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Export a zip of penfold.db and asset folders, or restore '
+                    'from a previous backup. Your current database is saved to '
+                    'backups/ before restore.',
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 ListTile(

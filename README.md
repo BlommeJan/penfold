@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.38&color=blue" alt="Version 0.2.38" /></a>
+  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.39&color=blue" alt="Version 0.2.39" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter 3.x" /></a>
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
@@ -40,7 +40,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 **Pages** — Vertical scroll through multi-page notebooks (optional page-turn mode snaps one page at a time), page overview grid with drag-reorder and multi-select batch delete, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, image insert, per-page audio attachment (local files, play/pause in page settings), page complexity warning at 2000 strokes with split-page tool in page settings, PDF import (lazy render with read-only hyperlinks), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
 
-**Library** — Colored notebook covers with first-page thumbnails (cached locally), nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback; PDF embedded text indexed at import), PDF import from the home screen, full-database backup/restore (zip export via share sheet), customizable toolbar tool order in Settings, and session persistence (cold start resumes last notebook).
+**Library** — Colored notebook covers with first-page thumbnails (cached locally), nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback; PDF embedded text indexed at import), PDF import from the home screen, full-database backup/restore (zip export via share sheet), Settings "Your data" screen (DB path, asset folder sizes, link to `docs/ARCHITECTURE.md`), customizable toolbar tool order in Settings, and session persistence (cold start resumes last notebook).
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for folder layout, design patterns, and SQLite schema details.
 
@@ -108,5 +108,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.38</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.39</strong> — write freely, keep it local.
 </p>

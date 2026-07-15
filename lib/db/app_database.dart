@@ -838,6 +838,106 @@ class AppDatabase {
     return rows.map(Stroke.fromRow).toList();
   }
 
+  Future<int> countStrokes(String pageId) async {
+    final rows = await (await db).rawQuery(
+      'SELECT COUNT(*) AS c FROM strokes WHERE page_id = ?',
+      [pageId],
+    );
+    return rows.first['c'] as int? ?? 0;
+  }
+
+  /// Insert a sibling page after [sourcePageId] and move the upper half of
+  /// strokes (by z) onto [newPageId] (v0.2.38).
+  Future<SplitPageResult> splitPage({
+    required String notebookId,
+    required String sourcePageId,
+    required String newPageId,
+  }) async {
+    final database = await db;
+    late NotePage sourcePage;
+    late NotePage newPage;
+    var movedCount = 0;
+
+    await database.transaction((txn) async {
+      final sourceRows = await txn.query(
+        'pages',
+        where: 'id = ?',
+        whereArgs: [sourcePageId],
+        limit: 1,
+      );
+      if (sourceRows.isEmpty) {
+        throw StateError('Page not found: $sourcePageId');
+      }
+      sourcePage = NotePage.fromRow(sourceRows.first);
+      final currentIdx = sourcePage.index;
+
+      await txn.rawUpdate(
+        'UPDATE pages SET idx = idx + 1 WHERE notebook_id = ? AND idx > ?',
+        [notebookId, currentIdx],
+      );
+
+      newPage = NotePage(
+        id: newPageId,
+        notebookId: notebookId,
+        index: currentIdx + 1,
+        template: sourcePage.template,
+        pageSize: sourcePage.pageSize,
+        orientation: sourcePage.orientation,
+        aspect: sourcePage.aspect,
+      );
+      await txn.insert('pages', newPage.toRow());
+
+      final strokeRows = await txn.query(
+        'strokes',
+        where: 'page_id = ?',
+        whereArgs: [sourcePageId],
+        orderBy: 'z ASC',
+      );
+      final half = strokeRows.length ~/ 2;
+      if (half == 0) {
+        throw StateError('Need at least 2 strokes to split a page');
+      }
+
+      final toMove = strokeRows.sublist(half);
+      movedCount = toMove.length;
+      final ids = toMove.map((r) => r['id'] as String).toList();
+
+      for (final id in ids) {
+        await txn.update(
+          'strokes',
+          {'page_id': newPageId},
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      }
+
+      if (ids.isNotEmpty && await _hasTableTxn(txn, 'ink_index')) {
+        final placeholders = List.filled(ids.length, '?').join(',');
+        await txn.rawUpdate(
+          'UPDATE ink_index SET page_id = ? WHERE stroke_id IN ($placeholders)',
+          [newPageId, ...ids],
+        );
+      }
+    });
+
+    await touchNotebook(notebookId);
+    final remaining = await countStrokes(sourcePageId);
+    return SplitPageResult(
+      sourcePage: sourcePage,
+      newPage: newPage,
+      movedStrokeCount: movedCount,
+      remainingStrokeCount: remaining,
+    );
+  }
+
+  Future<bool> _hasTableTxn(Transaction txn, String name) async {
+    final rows = await txn.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+      [name],
+    );
+    return rows.isNotEmpty;
+  }
+
   Future<void> insertStroke(Stroke s) async {
     await (await db).insert('strokes', s.toRow(),
         conflictAlgorithm: ConflictAlgorithm.replace);

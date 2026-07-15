@@ -645,3 +645,18 @@ class TocEntry {
     required this.source,
   });
 }
+
+/// Result of splitting a page in half (v0.2.38).
+class SplitPageResult {
+  final NotePage sourcePage;
+  final NotePage newPage;
+  final int movedStrokeCount;
+  final int remainingStrokeCount;
+
+  const SplitPageResult({
+    required this.sourcePage,
+    required this.newPage,
+    required this.movedStrokeCount,
+    required this.remainingStrokeCount,
+  });
+}

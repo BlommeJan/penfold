@@ -560,6 +560,7 @@ class DrawingCanvas extends StatefulWidget {
   final ui.Image? pdfImage;
   final void Function(bool canUndo, bool canRedo)? onHistoryChanged;
   final void Function(bool hasSelection)? onSelectionChanged;
+  final void Function(int strokeCount)? onStrokeCountChanged;
 
   const DrawingCanvas({
     super.key,
@@ -570,6 +571,7 @@ class DrawingCanvas extends StatefulWidget {
     this.pdfImage,
     this.onHistoryChanged,
     this.onSelectionChanged,
+    this.onStrokeCountChanged,
   });
 
   @override
@@ -747,6 +749,13 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _bump();
   }
 
+  /// Reload ink from SQLite after external edits (e.g. page split).
+  Future<void> reloadFromDatabase() => _load();
+
+  void _notifyStrokeCountChanged() {
+    widget.onStrokeCountChanged?.call(_strokes.length);
+  }
+
   Future<ui.Image?> _decode(String path) async {
     if (_decodedImages.containsKey(path)) return _decodedImages[path];
     try {
@@ -895,6 +904,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       );
       newStrokes.add(copy);
       await _controller.addStroke(copy);
+    }
+    if (newStrokes.isNotEmpty) {
+      _notifyStrokeCountChanged();
     }
     for (final i in _clipboard.images) {
       final copy = PageImage(
@@ -1583,6 +1595,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       if (stroke.tool != ToolType.tape) {
         unawaited(InkOcrService.instance.enqueueStroke(stroke));
       }
+      _notifyStrokeCountChanged();
       _bump();
       return;
     }
@@ -1827,7 +1840,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       }
       changed = true;
     }
-    if (changed) _bump();
+    if (changed) {
+      _notifyStrokeCountChanged();
+      _bump();
+    }
   }
 
   bool _strokeHit(Stroke s, Offset p, double radius) {

@@ -11,6 +11,7 @@ import '../canvas/drawing_canvas.dart';
 import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/page_complexity_service.dart';
 import '../services/page_export.dart';
 import '../services/page_turn_mode_service.dart';
 import '../services/session_service.dart';
@@ -59,6 +60,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   int _visiblePageIndex = 0;
   int _pinchLockCount = 0;
   Timer? _sessionSaveTimer;
+  final Set<String> _complexityWarnedOnOpen = {};
 
   DrawingCanvasState? _activeCanvas;
 
@@ -147,6 +149,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     if (idx != _visiblePageIndex) {
       setState(() => _visiblePageIndex = idx);
       _setActiveCanvas(_pageKeys[_pages[idx].id]?.currentState?.canvasState);
+      unawaited(_maybeWarnPageComplexity(_pages[idx].id, onOpen: true));
     }
     _scheduleSessionSave();
   }
@@ -205,7 +208,95 @@ class _NotebookScreenState extends State<NotebookScreen> {
       _syncViewportToVisiblePage(
         scrollOffset: widget.initialScrollOffset,
       );
+      unawaited(_maybeWarnPageComplexity(_pages[_visiblePageIndex].id, onOpen: true));
     });
+  }
+
+  Future<void> _maybeWarnPageComplexity(String pageId,
+      {required bool onOpen}) async {
+    final count = await PageComplexityService.instance.strokeCount(pageId);
+    if (!PageComplexityService.shouldWarn(count)) return;
+    if (onOpen && _complexityWarnedOnOpen.contains(pageId)) return;
+    if (onOpen) _complexityWarnedOnOpen.add(pageId);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(PageComplexityService.warningMessage(count))),
+    );
+  }
+
+  void _onActivePageStrokeCount(int count) {
+    if (!PageComplexityService.shouldWarn(count)) return;
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(PageComplexityService.warningMessage(count))),
+    );
+  }
+
+  Future<void> _splitActivePage() async {
+    final pageId = _activePage.id;
+    final count = await PageComplexityService.instance.strokeCount(pageId);
+    if (count < 2) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Need at least 2 strokes to split this page'),
+        ),
+      );
+      return;
+    }
+
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Split page?'),
+        content: Text(
+          'Create a new page with the same template and move about half '
+          'of the $count strokes onto it.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Split'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+
+    final newPageId = _uuid.v4();
+    try {
+      final result = await PageComplexityService.instance.splitPage(
+        notebookId: widget.notebook.id,
+        sourcePageId: pageId,
+        newPageId: newPageId,
+      );
+      if (!mounted) return;
+      await _pageKeys[pageId]?.currentState?.canvasState?.reloadFromDatabase();
+      final pages = await _db.pagesOf(widget.notebook.id);
+      await _applyPagesUpdate(pages);
+      final newIdx = pages.indexWhere((p) => p.id == newPageId);
+      if (newIdx >= 0) {
+        await _scrollToPage(newIdx);
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Page split: ${result.movedStrokeCount} strokes moved, '
+            '${result.remainingStrokeCount} remain',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Split failed: $e')),
+      );
+    }
   }
 
   void _onVisiblePageChanged(int index) {
@@ -213,6 +304,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     setState(() => _visiblePageIndex = index);
     _setActiveCanvas(_pageKeys[_pages[index].id]?.currentState?.canvasState);
     _scheduleSessionSave();
+    unawaited(_maybeWarnPageComplexity(_pages[index].id, onOpen: true));
   }
 
   void _syncViewportToVisiblePage({double? scrollOffset}) {
@@ -311,6 +403,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       }
       setState(() => _visiblePageIndex = index);
       _setActiveCanvas(_pageKeys[_pages[index].id]?.currentState?.canvasState);
+      unawaited(_maybeWarnPageComplexity(_pages[index].id, onOpen: true));
       return;
     }
     final pageHeight = MediaQuery.of(context).size.height * 0.85;
@@ -320,6 +413,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       curve: Curves.easeOut,
     );
     setState(() => _visiblePageIndex = index);
+    unawaited(_maybeWarnPageComplexity(_pages[index].id, onOpen: true));
   }
 
   Future<void> _addPage() async {
@@ -476,6 +570,16 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 _activePage.audioPath = path;
               },
             ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.call_split_rounded),
+              title: const Text('Split page'),
+              subtitle: const Text(
+                'Duplicate template and move half the ink to a new page',
+              ),
+              onTap: () => Navigator.pop(ctx, 'split_page'),
+            ),
+            const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text('Export',
@@ -506,6 +610,11 @@ class _NotebookScreenState extends State<NotebookScreen> {
 
     if (chosen == 'contents') {
       await _openContents();
+      return;
+    }
+
+    if (chosen == 'split_page') {
+      await _splitActivePage();
       return;
     }
 
@@ -766,6 +875,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
           : null,
       onSelectionChanged: i == _visiblePageIndex
           ? (sel) => setState(() => _hasSelection = sel)
+          : null,
+      onStrokeCountChanged: i == _visiblePageIndex
+          ? _onActivePageStrokeCount
           : null,
       onTransformGestureActive: _onPageTransformGesture,
     );

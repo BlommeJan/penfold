@@ -20,6 +20,7 @@ class PageEditor extends StatefulWidget {
   final void Function(DrawingCanvasState state)? onCanvasReady;
   final void Function(bool canUndo, bool canRedo)? onHistoryChanged;
   final void Function(bool hasSelection)? onSelectionChanged;
+  final void Function(int strokeCount)? onStrokeCountChanged;
   final ValueChanged<bool>? onTransformGestureActive;
 
   const PageEditor({
@@ -31,6 +32,7 @@ class PageEditor extends StatefulWidget {
     this.onCanvasReady,
     this.onHistoryChanged,
     this.onSelectionChanged,
+    this.onStrokeCountChanged,
     this.onTransformGestureActive,
   });
 
@@ -163,6 +165,7 @@ class PageEditorState extends State<PageEditor> {
                   pdfImage: _pdfImage,
                   onHistoryChanged: widget.onHistoryChanged,
                   onSelectionChanged: widget.onSelectionChanged,
+                  onStrokeCountChanged: widget.onStrokeCountChanged,
                 ),
                 if (_pdfLinks.isNotEmpty)
                   PdfLinkOverlay(links: _pdfLinks, displaySize: size),

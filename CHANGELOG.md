@@ -2,6 +2,18 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.38] — 2026
+
+### Added
+
+- **Page complexity warning + split page** — warn via snackbar when a page reaches 2000 strokes (on open or after adding ink); page settings "Split page" duplicates template and moves the upper half of strokes to a new page inserted after the current one
+
+## [0.2.39] — 2026
+
+### Added
+
+- **Your data settings screen** — Settings shows `penfold.db` path and on-disk size, plus folder sizes for `images`, `pdf_sources`, `audio`, and `thumbnails`; help text links to `docs/ARCHITECTURE.md`; backup/restore actions remain in the same screen
+
 ## [0.2.37] — 2026
 
 ### Added
@@ -285,6 +297,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.38]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.38
+[0.2.39]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.39
 [0.2.37]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.37
 [0.2.36]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.36
 [0.2.35]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.35

@@ -26,7 +26,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 |---|---|
 | **Private by design** | All data in one inspectable `penfold.db` file on device |
 | **Stylus-first** | Palm rejection, pressure sensitivity, S Pen hover support |
-| **Organized library** | Nested folders, full-text search, colored notebook covers |
+| **Organized library** | Nested folders, tags, full-text search, colored notebook covers |
 | **Rich ink tools** | Pen, pencil, highlighter, shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
 
@@ -40,7 +40,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 **Pages** — Vertical scroll through multi-page notebooks, page overview grid, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, image insert, PDF import (rendered once to local PNG), and export current page or full notebook as PNG/PDF.
 
-**Library** — Colored notebook covers with titles, nested folders, full-text search (FTS5 → FTS4 → LIKE fallback), PDF import from the home screen, and full-database backup/restore (zip export via share sheet).
+**Library** — Colored notebook covers with titles, nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback), PDF import from the home screen, and full-database backup/restore (zip export via share sheet).
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for folder layout, design patterns, and SQLite schema details.
 
@@ -77,7 +77,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.16) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.17) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -109,5 +109,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.16</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.17</strong> — write freely, keep it local.
 </p>

@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.17] — 2026
+
+### Added
+
+- **Tags on notebooks** — `tags` and `notebook_tags` tables (schema v8); tag chips in library filter row; edit tags from notebook long-press menu; DB helpers: `createTag`, `deleteTag`, `tagsOfNotebook`, `setNotebookTags`, `notebooksWithTag`
+
 ## [0.2.16] — 2026
 
 ### Added
@@ -164,6 +170,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.17]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.17
 [0.2.16]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.16
 [0.2.15]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.15
 [0.2.14]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.14

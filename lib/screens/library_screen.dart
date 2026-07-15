@@ -33,9 +33,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
   List<Notebook> _notebooks = [];
   List<Folder> _allFolders = [];
   List<Folder> _childFolders = [];
+  List<Tag> _allTags = [];
   List<SearchResult> _searchResults = [];
   _LibraryView _view = _LibraryView.all;
   String? _currentFolderId;
+  String? _selectedTagId;
   bool _loading = true;
   bool _searching = false;
   String? _loadError;
@@ -88,6 +90,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     });
     try {
       final allFolders = await _db.allFolders();
+      final allTags = await _db.allTags();
       final childFolders = _currentFolderId == null
           ? await _db.folders()
           : await _db.folders(parentId: _currentFolderId);
@@ -99,11 +102,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
       } else {
         items = await _db.notebooks(folderId: _currentFolderId);
       }
+      List<Notebook> filtered = items;
+      if (_selectedTagId != null) {
+        final tagged = await _db.notebooksWithTag(_selectedTagId!);
+        final taggedIds = tagged.map((n) => n.id).toSet();
+        filtered = items.where((n) => taggedIds.contains(n.id)).toList();
+      }
       if (!mounted) return;
       setState(() {
         _allFolders = allFolders;
+        _allTags = allTags;
         _childFolders = childFolders;
-        _notebooks = items;
+        _notebooks = filtered;
         _loading = false;
       });
     } catch (e) {
@@ -475,6 +485,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
               onTap: () => Navigator.pop(ctx, 'folder'),
             ),
             ListTile(
+              leading: const Icon(Icons.label_outline_rounded),
+              title: const Text('Edit tags'),
+              onTap: () => Navigator.pop(ctx, 'tags'),
+            ),
+            ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
               title: const Text('Delete'),
               onTap: () => Navigator.pop(ctx, 'delete'),
@@ -485,6 +500,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
     if (action == 'folder') {
       await _moveToFolder(n);
+    } else if (action == 'tags') {
+      await _editNotebookTags(n);
     } else if (action == 'rename') {
       final ctrl = TextEditingController(text: n.title);
       final ok = await showDialog<bool>(
@@ -526,6 +543,111 @@ class _LibraryScreenState extends State<LibraryScreen> {
         await _db.deleteNotebook(n.id);
         _refresh();
       }
+    }
+  }
+
+  Future<void> _editNotebookTags(Notebook n) async {
+    final allTags = await _db.allTags();
+    final current = await _db.tagsOfNotebook(n.id);
+    final selected = current.map((t) => t.id).toSet();
+    final newTagCtrl = TextEditingController();
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialog) => AlertDialog(
+          title: Text('Tags for "${n.title}"'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (allTags.isEmpty)
+                  Text(
+                    'No tags yet. Create one below.',
+                    style: Theme.of(ctx).textTheme.bodySmall,
+                  )
+                else
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final tag in allTags)
+                        FilterChip(
+                          label: Text(tag.name),
+                          selected: selected.contains(tag.id),
+                          onSelected: (on) {
+                            setDialog(() {
+                              if (on) {
+                                selected.add(tag.id);
+                              } else {
+                                selected.remove(tag.id);
+                              }
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: newTagCtrl,
+                        decoration: const InputDecoration(
+                          labelText: 'New tag',
+                          isDense: true,
+                        ),
+                        onSubmitted: (_) async {
+                          final name = newTagCtrl.text.trim();
+                          if (name.isEmpty) return;
+                          final tag = Tag(id: _uuid.v4(), name: name);
+                          await _db.createTag(tag);
+                          setDialog(() {
+                            allTags.add(tag);
+                            selected.add(tag.id);
+                            newTagCtrl.clear();
+                          });
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Add tag',
+                      icon: const Icon(Icons.add_rounded),
+                      onPressed: () async {
+                        final name = newTagCtrl.text.trim();
+                        if (name.isEmpty) return;
+                        final tag = Tag(id: _uuid.v4(), name: name);
+                        await _db.createTag(tag);
+                        setDialog(() {
+                          allTags.add(tag);
+                          selected.add(tag.id);
+                          newTagCtrl.clear();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (saved == true) {
+      await _db.setNotebookTags(n.id, selected.toList());
+      _refresh();
     }
   }
 
@@ -760,6 +882,21 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   onTap: () => _openFolder(f.id),
                 ),
             ],
+            if (!_searching && _allTags.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              for (final tag in _allTags)
+                _filterChip(
+                  label: tag.name,
+                  selected: _selectedTagId == tag.id,
+                  onTap: () {
+                    setState(() {
+                      _selectedTagId =
+                          _selectedTagId == tag.id ? null : tag.id;
+                    });
+                    _refresh();
+                  },
+                ),
+            ],
           ],
         ),
       ),
@@ -832,9 +969,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
         ? 'No matches'
         : _currentFolderId != null
             ? 'This folder is empty'
-            : _view == _LibraryView.uncategorized
-                ? 'No uncategorized notebooks'
-                : 'No notebooks yet';
+            : _selectedTagId != null
+                ? 'No notebooks with this tag'
+                : _view == _LibraryView.uncategorized
+                    ? 'No uncategorized notebooks'
+                    : 'No notebooks yet';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F9),

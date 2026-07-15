@@ -473,6 +473,20 @@ class Stroke {
       );
 }
 
+class Tag {
+  final String id;
+  String name;
+
+  Tag({required this.id, required this.name});
+
+  Map<String, Object?> toRow() => {'id': id, 'name': name};
+
+  static Tag fromRow(Map<String, Object?> r) => Tag(
+        id: r['id'] as String,
+        name: r['name'] as String,
+      );
+}
+
 class SearchResult {
   final Notebook notebook;
   final String snippet;

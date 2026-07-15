@@ -14,7 +14,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 7;
+  static const _schemaVersion = 8;
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -127,6 +127,7 @@ class AppDatabase {
     await db.execute('CREATE INDEX idx_text_pg ON text_blocks(page_id, z)');
     await db.execute(
         'CREATE INDEX idx_folders_parent ON folders(parent_id, sort_order)');
+    await _createTagsTables(db);
     await _createInkIndex(db);
     await _createFts(db);
   }
@@ -196,6 +197,25 @@ class AppDatabase {
       await _addColumnIfMissing(
           db, 'text_blocks', 'rotation', 'REAL NOT NULL DEFAULT 0');
     }
+    if (oldV < 8) {
+      await _createTagsTables(db);
+    }
+  }
+
+  Future<void> _createTagsTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS tags(
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL UNIQUE
+      )''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS notebook_tags(
+        notebook_id TEXT NOT NULL REFERENCES notebooks(id) ON DELETE CASCADE,
+        tag_id TEXT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+        PRIMARY KEY (notebook_id, tag_id)
+      )''');
+    await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_notebook_tags_tag ON notebook_tags(tag_id)');
   }
 
   Future<void> _createInkIndex(Database db) async {
@@ -718,6 +738,58 @@ class AppDatabase {
         await refreshSearchIndex(page.first['notebook_id'] as String);
       }
     }
+  }
+
+  // ---- Tags (v0.2.17) ----
+
+  Future<List<Tag>> allTags() async {
+    final rows =
+        await (await db).query('tags', orderBy: 'name COLLATE NOCASE ASC');
+    return rows.map(Tag.fromRow).toList();
+  }
+
+  Future<void> createTag(Tag tag) async {
+    await (await db).insert('tags', tag.toRow());
+  }
+
+  Future<void> deleteTag(String id) async {
+    await (await db).delete('tags', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<Tag>> tagsOfNotebook(String notebookId) async {
+    final rows = await (await db).rawQuery('''
+      SELECT t.*
+      FROM tags t
+      JOIN notebook_tags nt ON nt.tag_id = t.id
+      WHERE nt.notebook_id = ?
+      ORDER BY t.name COLLATE NOCASE ASC
+    ''', [notebookId]);
+    return rows.map(Tag.fromRow).toList();
+  }
+
+  Future<void> setNotebookTags(String notebookId, List<String> tagIds) async {
+    final database = await db;
+    await database.transaction((txn) async {
+      await txn.delete('notebook_tags',
+          where: 'notebook_id = ?', whereArgs: [notebookId]);
+      for (final tagId in tagIds) {
+        await txn.insert('notebook_tags', {
+          'notebook_id': notebookId,
+          'tag_id': tagId,
+        });
+      }
+    });
+  }
+
+  Future<List<Notebook>> notebooksWithTag(String tagId) async {
+    final rows = await (await db).rawQuery('''
+      SELECT n.*
+      FROM notebooks n
+      JOIN notebook_tags nt ON nt.notebook_id = n.id
+      WHERE nt.tag_id = ?
+      ORDER BY n.updated DESC
+    ''', [tagId]);
+    return rows.map(Notebook.fromRow).toList();
   }
 
   // ---- Ink OCR index (v0.2.8) ----

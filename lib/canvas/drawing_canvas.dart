@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/ink_ocr_service.dart';
+import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
 import 'draw_gesture_shield.dart';
 import 'ink_coalesce.dart';
@@ -591,6 +592,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   DateTime? _lastInkMoveTime;
   Offset? _lastInkMoveCanon;
   int? _activePointer;
+  ToolType? _gestureEffectiveTool;
   List<Offset>? _lassoPath;
   List<Offset>? _fillPath;
 
@@ -1026,7 +1028,19 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     return p.clamp(0.05, 1.0);
   }
 
+  void _syncSpenButton(PointerEvent e) {
+    SpenButtonService.instance.updateFromPointer(e.kind, e.buttons);
+  }
+
+  ToolType _effectiveTool(PointerEvent e) {
+    final override = SpenButtonService.instance.overrideTool;
+    if (override != null) return override;
+    if (e.kind == PointerDeviceKind.invertedStylus) return ToolType.eraser;
+    return widget.toolState.tool;
+  }
+
   void _onPointerHover(PointerHoverEvent e) {
+    _syncSpenButton(e);
     if (_isStylus(e)) {
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
@@ -1034,6 +1048,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   void _onPointerDown(PointerDownEvent e) {
+    _syncSpenButton(e);
     if (_isStylus(e)) {
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
@@ -1047,8 +1062,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     final cPos = _toCanonical(pos);
     _activePointer = e.pointer;
 
-    final effectiveTool =
-        e.kind == PointerDeviceKind.invertedStylus ? ToolType.eraser : tool;
+    final effectiveTool = _effectiveTool(e);
+    _gestureEffectiveTool = effectiveTool;
 
     switch (effectiveTool) {
       case ToolType.pen:
@@ -1351,11 +1366,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   void _onPointerMove(PointerMoveEvent e) {
+    _syncSpenButton(e);
     if (e.pointer != _activePointer) return;
     if (_isStylus(e)) _lastStylusSeen = DateTime.now();
     final pos = e.localPosition;
     final cPos = _toCanonical(pos);
-    final tool = widget.toolState.tool;
+    final tool = _gestureEffectiveTool ?? widget.toolState.tool;
 
     if (_current != null) {
       final last = _current!.points.last;
@@ -1467,6 +1483,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   Future<void> _onPointerUp(PointerEvent e) async {
+    _syncSpenButton(e);
     if (e.pointer != _activePointer) return;
     _activePointer = null;
     if (!_isStylus(e)) {
@@ -1474,7 +1491,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           const Duration(milliseconds: 300);
     }
 
-    final tool = widget.toolState.tool;
+    final tool = _gestureEffectiveTool ?? widget.toolState.tool;
+    _gestureEffectiveTool = null;
 
     if (_current != null) {
       var stroke = _current!;

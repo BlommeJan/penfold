@@ -12,6 +12,7 @@ import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/page_export.dart';
+import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
 import '../widgets/page_editor.dart';
@@ -50,12 +51,17 @@ class _NotebookScreenState extends State<NotebookScreen> {
     _scrollController.addListener(_onScroll);
     _syncStrokeSmoothing();
     StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
+    _syncSpenButton();
+    SpenButtonService.instance.addListener(_onSpenButtonChanged);
+    unawaited(SpenButtonService.instance.startListening());
     _load();
   }
 
   @override
   void dispose() {
     StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
+    SpenButtonService.instance.removeListener(_onSpenButtonChanged);
+    SpenButtonService.instance.stopListening();
     _toolState.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -75,6 +81,17 @@ class _NotebookScreenState extends State<NotebookScreen> {
     _toolState.set(
       (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
     );
+  }
+
+  void _onSpenButtonChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _syncSpenButton() async {
+    if (!SpenButtonService.instance.isLoaded) {
+      await SpenButtonService.instance.load();
+    }
   }
 
   void _onScroll() {

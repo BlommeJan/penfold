@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
+import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/toolbar_order_service.dart';
 
@@ -20,6 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _ocrTermsLoaded = false;
   bool _strokeSmoothing = true;
   bool _strokeSmoothingLoaded = false;
+  SpenBarrelAction _spenAction = SpenBarrelAction.eraser;
+  bool _spenLoaded = false;
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadToolOrder();
     _loadOcrTerms();
     _loadStrokeSmoothing();
+    _loadSpenAction();
   }
 
   Future<void> _loadToolOrder() async {
@@ -61,6 +65,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await StrokeSmoothingService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _strokeSmoothing = value);
+  }
+
+  Future<void> _loadSpenAction() async {
+    await SpenButtonService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _spenAction = SpenButtonService.instance.action;
+      _spenLoaded = true;
+    });
+  }
+
+  Future<void> _setSpenAction(SpenBarrelAction value) async {
+    await SpenButtonService.instance.setAction(value);
+    if (!mounted) return;
+    setState(() => _spenAction = value);
   }
 
   Future<void> _loadOcrTerms() async {
@@ -269,6 +288,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     value: _strokeSmoothing,
                     onChanged: _setStrokeSmoothing,
+                  ),
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    'S Pen',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Hold the S Pen side button to temporarily switch tools. '
+                    'Release to restore your previous tool. Works on Samsung '
+                    'devices with barrel-button support.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                if (!_spenLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: DropdownButtonFormField<SpenBarrelAction>(
+                      value: _spenAction,
+                      decoration: const InputDecoration(
+                        labelText: 'Barrel button action',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: [
+                        for (final action in SpenBarrelAction.values)
+                          DropdownMenuItem(
+                            value: action,
+                            child: Text(action.label),
+                          ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) _setSpenAction(value);
+                      },
+                    ),
                   ),
                 const Divider(height: 32),
                 Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/library_screen.dart';
+import 'services/spen_button_service.dart';
 import 'services/stroke_smoothing_service.dart';
 import 'services/toolbar_order_service.dart';
 
@@ -12,6 +13,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ToolbarOrderService.instance.load();
   StrokeSmoothingService.instance.load();
+  SpenButtonService.instance.load();
   runApp(const PenfoldApp());
 }
 

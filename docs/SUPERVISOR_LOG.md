@@ -52,7 +52,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.24 | OCR custom dictionary | 0.2.21 | **DONE** | 96/96 | `5ef5c2f` |
 | 0.2.25 | Notebook library thumbnails | 0.2.23 | **DONE** | 100/100 | `a59b57a` |
 | 0.2.26 | Lasso rotate handles | 0.2.24 | **DONE** | 107/107 | `5d49606` |
-| 0.2.27 | Stroke smoothing toggle | 0.2.25 | **DONE** | 117/117 | `773146f` |
+| 0.2.27 | Stroke smoothing toggle | 0.2.25 | **DONE** | 117/117 | `cdabe8a` |
 | 0.2.28 | S Pen button settings | 0.2.26 | PENDING | — | — |
 | 0.2.29 | Session persistence | 0.2.27 | PENDING | — | — |
 | 0.2.30 | Page overview reorder + batch delete | 0.2.28 | PENDING | — | — |

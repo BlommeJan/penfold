@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/main.dart';
+import 'package:penfold/models/models.dart';
+import 'package:penfold/services/session_service.dart';
 import 'package:penfold/services/thumbnail_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -76,5 +78,59 @@ void main() {
         await tester.runAsync(() => AppDatabase.instance.notebooks());
     expect(saved!.length, 1);
     expect(saved.single.title, 'Japanese Grammar');
+  });
+
+  testWidgets('cold start restores last notebook from session', (tester) async {
+    await tester.runAsync(() async {
+      final db = AppDatabase.instance;
+      final notebook = Notebook(
+        id: 'nb-cold-start',
+        title: 'Resume Me',
+        coverColor: 0xFF2455C3,
+        template: PageTemplate.lined,
+        createdAt: 1,
+        updatedAt: 1,
+      );
+      await db.insertNotebook(notebook);
+      for (var i = 0; i < 3; i++) {
+        await db.insertPage(NotePage(
+          id: 'pg-$i',
+          notebookId: notebook.id,
+          index: i,
+          template: PageTemplate.lined,
+        ));
+      }
+      await SessionService.instance.save(
+        notebookId: notebook.id,
+        pageIndex: 2,
+        scrollOffset: 0,
+        tool: ToolType.pen,
+      );
+    });
+
+    await tester.pumpWidget(const PenfoldApp());
+    await settle(tester);
+
+    expect(find.text('No notebooks yet'), findsNothing);
+    expect(find.byTooltip('Page settings'), findsOneWidget);
+  });
+
+  testWidgets('cold start clears stale session when notebook is missing',
+      (tester) async {
+    await tester.runAsync(() async {
+      await SessionService.instance.save(
+        notebookId: 'deleted-notebook',
+        pageIndex: 0,
+        scrollOffset: 0,
+        tool: ToolType.pen,
+      );
+    });
+
+    await tester.pumpWidget(const PenfoldApp());
+    await settle(tester);
+
+    expect(find.text('No notebooks yet'), findsOneWidget);
+    final session = await tester.runAsync(SessionService.instance.load);
+    expect(session, isNull);
   });
 }

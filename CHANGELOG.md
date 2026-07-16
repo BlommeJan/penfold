@@ -2,6 +2,29 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.55] — 2026
+
+### Added
+
+- **Page info chip** — top-right chip on the document canvas shows template, size, and orientation; tap (or toolbar gear) opens a scrollable page settings sheet
+- **Page settings popup** — new `page_settings_popup.dart`; export PNG/PDF, notebook PDF, bookmarks, audio, split page, and TOC never clip off-screen
+- **Library export workbook** — long-press a notebook → **Export workbook** shares all pages as vector PDF via the system sheet
+- **Export guard** — blocks export when any page exceeds 2000 strokes (clear snackbar; split heavy pages first)
+
+### Changed
+
+- **Export progress** — shared `withExportProgressDialog` helper in `page_export.dart` for document and library exports
+
+## [0.2.54] — 2026
+
+### Fixed
+
+- **Session restore** — flush notebook + page index to SQLite on app pause/background (crash recovery); cold start via `AppHome` verified with widget tests
+
+### Added
+
+- **Session tests** — `SessionService` roundtrip, simulated restart persistence, cold-start restore, and stale-session cleanup coverage
+
 ## [0.2.53] — 2026
 
 ### Changed
@@ -31,16 +54,6 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - **Handwriting OCR** — replaced printed-text ML Kit (`google_mlkit_text_recognition`) with on-device Digital Ink Recognition (`google_mlkit_digital_ink_recognition`); English (`en-US`) handwriting model downloads once on first use (local inference, no accounts)
 - **Convert to text** — lasso selection and background ink search indexing feed stroke points directly to the digital ink recognizer; progress dialog shown while the model downloads
-
-## [0.2.51] — 2026
-
-### Fixed
-
-- **Session restore** — flush notebook + page index to SQLite on app pause/background (crash recovery); cold start via `AppHome` verified with widget tests
-
-### Added
-
-- **Session tests** — `SessionService` roundtrip, simulated restart persistence, cold-start restore, and stale-session cleanup coverage
 
 ## [0.2.50] — 2026
 
@@ -414,6 +427,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.55]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.55
+[0.2.54]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.54
 [0.2.53]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.53
 [0.2.52]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.52
 [0.2.51]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.51

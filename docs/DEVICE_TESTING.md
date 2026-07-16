@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.40
+**Version:** 0.2.41
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.40.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.41.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -125,7 +125,7 @@ Install the release APK from `APKs/` (for example `Penfold-v0.2.40.apk`) on your
 
 ## Zoom & navigation
 
-> Pinch zoom is included in **v0.2.40** (not a separate v0.2.41 release).
+> Pinch zoom reliability fix shipped in **v0.2.41**.
 
 - [ ] Pinch to zoom in and out on a page (two fingers)
 - [ ] Pinch zoom works in stylus-only mode (finger pinches, stylus can still draw)
@@ -144,4 +144,4 @@ Install the release APK from `APKs/` (for example `Penfold-v0.2.40.apk`) on your
 
 ---
 
-*Last updated for Penfold v0.2.40*
+*Last updated for Penfold v0.2.41*

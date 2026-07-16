@@ -178,5 +178,44 @@ void main() {
         isTrue,
       );
     });
+
+    test('paper touch scroll lock only in finger drawing mode', () {
+      expect(
+        shouldLockScrollForPaperTouch(
+          stylusOnly: false,
+          kind: PointerDeviceKind.touch,
+          localPos: const Offset(200, 280),
+          paperSize: paper,
+        ),
+        isTrue,
+      );
+      expect(
+        shouldLockScrollForPaperTouch(
+          stylusOnly: false,
+          kind: PointerDeviceKind.touch,
+          localPos: const Offset(450, 280),
+          paperSize: paper,
+        ),
+        isFalse,
+      );
+      expect(
+        shouldLockScrollForPaperTouch(
+          stylusOnly: true,
+          kind: PointerDeviceKind.touch,
+          localPos: const Offset(200, 280),
+          paperSize: paper,
+        ),
+        isFalse,
+      );
+      expect(
+        shouldLockScrollForPaperTouch(
+          stylusOnly: false,
+          kind: PointerDeviceKind.stylus,
+          localPos: const Offset(200, 280),
+          paperSize: paper,
+        ),
+        isFalse,
+      );
+    });
   });
 }

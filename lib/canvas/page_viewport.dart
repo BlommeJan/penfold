@@ -178,12 +178,12 @@ class PageViewportState extends State<PageViewport> {
         onScaleStart: _onScaleStart,
         onScaleUpdate: _onScaleUpdate,
         onScaleEnd: _onScaleEnd,
-        child: InteractiveViewer(
-          transformationController: _transform,
-          panEnabled: false,
-          scaleEnabled: false,
-          minScale: 0.6,
-          maxScale: 10,
+        child: AnimatedBuilder(
+          animation: _transform,
+          builder: (context, child) => Transform(
+            transform: _transform.value,
+            child: child,
+          ),
           child: widget.child,
         ),
       ),

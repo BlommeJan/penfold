@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.41] — 2026
+
+### Fixed
+
+- **Pinch zoom** — two-finger pinch in/out (0.6×–10×) works reliably in stylus-only and finger-drawing modes, on paper and margin; stylus can draw while fingers pinch
+- **`DrawGestureShield` removed from draw path** — the 16 ms arena accept blocked `PageViewport` scale before the second finger landed; scroll is locked via paper-touch callback instead
+- **`PageViewport`** — applies zoom via `Transform` + `TransformationController` (no `InteractiveViewer` layout drift); late pinch start on paper still supported
+- **`pointer_routing`** — `shouldLockScrollForPaperTouch` for finger-on-paper scroll lock without blocking pinch
+
 ## [0.2.40] — 2026
 
 ### Added
@@ -303,6 +312,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.41]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.41
 [0.2.40]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.40
 [0.2.38]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.38
 [0.2.39]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.39

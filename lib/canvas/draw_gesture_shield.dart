@@ -1,11 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-/// Claims single-finger drags on the paper so ancestor [ScrollView]s cannot
-/// steal strokes in finger-drawing mode. Yields for 2+ fingers so ancestor
-/// pinch-to-zoom can win the gesture arena.
+/// Legacy scroll-block recognizer. Prefer [shouldLockScrollForPaperTouch] plus
+/// ancestor scroll lock — claiming the gesture arena blocks pinch-to-zoom when
+/// the 16 ms accept timer fires before the second finger lands.
+///
+/// When used, only accepts after single-finger movement past touch slop so
+/// two-finger pinch can win the arena.
 class DrawGestureShield extends StatelessWidget {
   final Widget child;
 
@@ -30,9 +31,10 @@ class DrawGestureShield extends StatelessWidget {
 class _DrawShieldRecognizer extends OneSequenceGestureRecognizer {
   static void noop(_DrawShieldRecognizer _) {}
 
+  static const double _acceptSlop = 18;
+
   final Set<int> _tracked = {};
-  Timer? _acceptTimer;
-  bool _accepted = false;
+  final Map<int, Offset> _downPositions = {};
   bool _resolved = false;
 
   @override
@@ -46,54 +48,46 @@ class _DrawShieldRecognizer extends OneSequenceGestureRecognizer {
 
     startTrackingPointer(event.pointer);
     _tracked.add(event.pointer);
+    _downPositions[event.pointer] = event.position;
 
     if (_tracked.length >= 2) {
-      _cancelAcceptTimer();
-      if (!_resolved) {
-        resolve(GestureDisposition.rejected);
-        _resolved = true;
-      }
-      return;
+      _rejectIfPending();
     }
-
-    _cancelAcceptTimer();
-    _acceptTimer = Timer(const Duration(milliseconds: 16), () {
-      if (_tracked.length == 1 && !_resolved) {
-        resolve(GestureDisposition.accepted);
-        _accepted = true;
-        _resolved = true;
-      } else if (_tracked.length >= 2 && !_resolved) {
-        resolve(GestureDisposition.rejected);
-        _resolved = true;
-      }
-    });
   }
 
   @override
   void handleEvent(PointerEvent event) {
     if (event is PointerDownEvent && _tracked.length >= 2) {
-      _cancelAcceptTimer();
-      if (!_resolved) {
-        resolve(GestureDisposition.rejected);
+      _rejectIfPending();
+      return;
+    }
+
+    if (!_resolved &&
+        _tracked.length == 1 &&
+        event is PointerMoveEvent &&
+        _downPositions.isNotEmpty) {
+      final origin = _downPositions.values.first;
+      if ((event.position - origin).distance >= _acceptSlop) {
+        resolve(GestureDisposition.accepted);
         _resolved = true;
       }
-      return;
     }
 
     if (event is PointerUpEvent || event is PointerCancelEvent) {
       _tracked.remove(event.pointer);
+      _downPositions.remove(event.pointer);
       stopTrackingPointer(event.pointer);
       if (_tracked.isEmpty) {
-        _cancelAcceptTimer();
-        _accepted = false;
         _resolved = false;
       }
     }
   }
 
-  void _cancelAcceptTimer() {
-    _acceptTimer?.cancel();
-    _acceptTimer = null;
+  void _rejectIfPending() {
+    if (!_resolved) {
+      resolve(GestureDisposition.rejected);
+      _resolved = true;
+    }
   }
 
   @override
@@ -101,15 +95,8 @@ class _DrawShieldRecognizer extends OneSequenceGestureRecognizer {
 
   @override
   void didStopTrackingLastPointer(int pointer) {
-    _cancelAcceptTimer();
     _tracked.clear();
-    _accepted = false;
+    _downPositions.clear();
     _resolved = false;
-  }
-
-  @override
-  void dispose() {
-    _cancelAcceptTimer();
-    super.dispose();
   }
 }

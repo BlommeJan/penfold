@@ -15,7 +15,6 @@ import '../services/hwr_convert.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
-import 'draw_gesture_shield.dart';
 import 'gesture_ink_recognizer.dart';
 import 'ink_coalesce.dart';
 import 'page_coords.dart';
@@ -621,6 +620,7 @@ class DrawingCanvas extends StatefulWidget {
   final void Function(bool canUndo, bool canRedo)? onHistoryChanged;
   final void Function(bool hasSelection)? onSelectionChanged;
   final void Function(int strokeCount)? onStrokeCountChanged;
+  final ValueChanged<bool>? onPaperFingerActive;
 
   const DrawingCanvas({
     super.key,
@@ -632,6 +632,7 @@ class DrawingCanvas extends StatefulWidget {
     this.onHistoryChanged,
     this.onSelectionChanged,
     this.onStrokeCountChanged,
+    this.onPaperFingerActive,
   });
 
   @override
@@ -658,6 +659,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   DateTime? _lastInkMoveTime;
   Offset? _lastInkMoveCanon;
   int? _activePointer;
+  final Set<int> _paperTouchPointers = {};
   ToolType? _gestureEffectiveTool;
   List<Offset>? _lassoPath;
   List<Offset>? _fillPath;
@@ -1186,7 +1188,30 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     }
   }
 
+  void _trackPaperFinger(PointerDownEvent e) {
+    if (!shouldLockScrollForPaperTouch(
+      stylusOnly: widget.toolState.stylusOnly,
+      kind: e.kind,
+      localPos: e.localPosition,
+      paperSize: widget.displaySize,
+    )) {
+      return;
+    }
+    _paperTouchPointers.add(e.pointer);
+    if (_paperTouchPointers.length == 1) {
+      widget.onPaperFingerActive?.call(true);
+    }
+  }
+
+  void _untrackPaperFinger(PointerEvent e) {
+    if (!_paperTouchPointers.remove(e.pointer)) return;
+    if (_paperTouchPointers.isEmpty) {
+      widget.onPaperFingerActive?.call(false);
+    }
+  }
+
   void _onPointerDown(PointerDownEvent e) {
+    _trackPaperFinger(e);
     _syncSpenButton(e);
     if (_isStylus(e)) {
       _lastStylusSeen = DateTime.now();
@@ -1622,6 +1647,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   Future<void> _onPointerUp(PointerEvent e) async {
+    _untrackPaperFinger(e);
     _syncSpenButton(e);
     if (e.pointer != _activePointer) return;
     _activePointer = null;
@@ -2421,8 +2447,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       ),
     );
 
-    if (widget.toolState.stylusOnly) return canvas;
-    return DrawGestureShield(child: canvas);
+    return canvas;
   }
 }
 

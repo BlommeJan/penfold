@@ -19,6 +19,19 @@ bool shouldRouteToDrawing({
   return (Offset.zero & paperSize).contains(localPos);
 }
 
+/// Finger on paper in finger-drawing mode should lock ancestor scroll so
+/// strokes are not stolen; pinch zoom uses a separate transform lock.
+bool shouldLockScrollForPaperTouch({
+  required bool stylusOnly,
+  required PointerDeviceKind kind,
+  required Offset localPos,
+  required Size paperSize,
+}) {
+  if (stylusOnly) return false;
+  if (kind != PointerDeviceKind.touch) return false;
+  return (Offset.zero & paperSize).contains(localPos);
+}
+
 /// Two-finger pinch always routes to zoom (never to drawing).
 bool shouldAllowPinchZoom({
   required int touchPointerCount,

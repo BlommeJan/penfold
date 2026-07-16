@@ -59,6 +59,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   bool _hasSelection = false;
   int _visiblePageIndex = 0;
   int _pinchLockCount = 0;
+  int _paperFingerLockCount = 0;
   Timer? _sessionSaveTimer;
   final Set<String> _complexityWarnedOnOpen = {};
 
@@ -396,6 +397,19 @@ class _NotebookScreenState extends State<NotebookScreen> {
       }
     });
   }
+
+  void _onPaperFingerActive(bool active) {
+    setState(() {
+      if (active) {
+        _paperFingerLockCount++;
+      } else {
+        _paperFingerLockCount = (_paperFingerLockCount - 1).clamp(0, 999);
+      }
+    });
+  }
+
+  bool get _scrollLocked =>
+      _pinchLockCount > 0 || _paperFingerLockCount > 0;
 
   Future<void> _scrollToPage(int index) async {
     if (index < 0 || index >= _pages.length) return;
@@ -886,6 +900,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
           ? _onActivePageStrokeCount
           : null,
       onTransformGestureActive: _onPageTransformGesture,
+      onPaperFingerActive: _onPaperFingerActive,
     );
   }
 
@@ -895,7 +910,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       behavior: const PenfoldScrollBehavior(),
       child: CustomScrollView(
         controller: _scrollController,
-        physics: _pinchLockCount > 0
+        physics: _scrollLocked
             ? const NeverScrollableScrollPhysics()
             : const AlwaysScrollableScrollPhysics(),
         slivers: [
@@ -919,7 +934,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
-      physics: _pinchLockCount > 0
+      physics: _scrollLocked
           ? const NeverScrollableScrollPhysics()
           : const PageScrollPhysics(),
       onPageChanged: _onVisiblePageChanged,

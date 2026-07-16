@@ -52,15 +52,27 @@ class PageEditorState extends State<PageEditor> {
   bool get _hasPdfBackground =>
       widget.page.pdfImagePath != null || widget.page.pdfSourcePath != null;
 
-  PageSize get _pageSize => _hasPdfBackground
-      ? PageSize.values.firstWhere(
-          (ps) => (ps.aspect - widget.page.aspect).abs() < 0.01,
-          orElse: () => widget.page.pageSize,
-        )
-      : widget.page.pageSize;
+  PageSize get _pageSize {
+    if (!_hasPdfBackground) return widget.page.pageSize;
+    final storedAspect =
+        widget.page.orientation.aspectOf(widget.page.pageSize);
+    if ((storedAspect - widget.page.aspect).abs() < 0.02) {
+      return widget.page.pageSize;
+    }
+    return layoutFromAspect(widget.page.aspect).pageSize;
+  }
 
-  PageOrientation get _orientation =>
-      _hasPdfBackground ? PageOrientation.portrait : widget.page.orientation;
+  PageOrientation get _orientation {
+    if (!_hasPdfBackground) return widget.page.orientation;
+    final storedAspect =
+        widget.page.orientation.aspectOf(_pageSize);
+    if ((storedAspect - widget.page.aspect).abs() < 0.02) {
+      return widget.page.orientation;
+    }
+    return widget.page.aspect > 1.0
+        ? PageOrientation.landscape
+        : PageOrientation.portrait;
+  }
 
   Size get displaySize => PageCoords.pageDisplaySize(
         widget.viewportSize,

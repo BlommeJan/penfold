@@ -724,19 +724,27 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   PageSize get _pageSize {
     final hasPdf = widget.page.pdfImagePath != null ||
         widget.page.pdfSourcePath != null;
-    if (hasPdf) {
-      return PageSize.values.firstWhere(
-        (ps) => (ps.aspect - widget.page.aspect).abs() < 0.01,
-        orElse: () => widget.page.pageSize,
-      );
+    if (!hasPdf) return widget.page.pageSize;
+    final storedAspect =
+        widget.page.orientation.aspectOf(widget.page.pageSize);
+    if ((storedAspect - widget.page.aspect).abs() < 0.02) {
+      return widget.page.pageSize;
     }
-    return widget.page.pageSize;
+    return layoutFromAspect(widget.page.aspect).pageSize;
   }
 
   PageOrientation get _orientation {
     final hasPdf = widget.page.pdfImagePath != null ||
         widget.page.pdfSourcePath != null;
-    return hasPdf ? PageOrientation.portrait : widget.page.orientation;
+    if (!hasPdf) return widget.page.orientation;
+    final storedAspect =
+        widget.page.orientation.aspectOf(_pageSize);
+    if ((storedAspect - widget.page.aspect).abs() < 0.02) {
+      return widget.page.orientation;
+    }
+    return widget.page.aspect > 1.0
+        ? PageOrientation.landscape
+        : PageOrientation.portrait;
   }
 
   Size get _canonicalSize =>

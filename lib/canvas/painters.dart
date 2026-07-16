@@ -32,7 +32,7 @@ class PagePainter extends CustomPainter {
         canvas: canvas,
         rect: Offset.zero & size,
         image: pdfImage!,
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
         filterQuality: FilterQuality.medium,
       );
       return;

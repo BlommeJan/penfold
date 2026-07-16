@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/models/models.dart';
@@ -121,6 +122,30 @@ void main() {
       final pages = await AppDatabase.instance.pagesOf(notebook.id);
       expect(pages.length, 1);
       expect(pages.single.pdfSourcePath, isNotNull);
+    });
+
+    test('import preserves landscape page orientation and aspect', () async {
+      final pdf = pw.Document();
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4.landscape,
+          build: (ctx) => pw.Text('LandscapeSlide'),
+        ),
+      );
+      final file = File(p.join(tmp.path, 'landscape.pdf'));
+      await file.writeAsBytes(await pdf.save());
+
+      final notebook = await PdfImportService.importFromPath(file.path);
+      final pages = await AppDatabase.instance.pagesOf(notebook.id);
+
+      expect(pages.length, 1);
+      final page = pages.single;
+      expect(page.orientation, PageOrientation.landscape);
+      expect(page.aspect, greaterThan(1.0));
+      expect(
+        page.orientation.aspectOf(page.pageSize),
+        closeTo(page.aspect, 0.02),
+      );
     });
   });
 }

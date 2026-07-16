@@ -69,6 +69,26 @@ enum PageSize {
       };
 }
 
+/// Closest [PageSize] and [PageOrientation] for a PDF MediaBox aspect (width/height).
+({PageSize pageSize, PageOrientation orientation}) layoutFromAspect(
+  double aspect,
+) {
+  PageSize bestSize = PageSize.a4;
+  PageOrientation bestOrient = PageOrientation.portrait;
+  var bestDiff = double.infinity;
+  for (final ps in PageSize.values) {
+    for (final orient in PageOrientation.values) {
+      final diff = (aspect - orient.aspectOf(ps)).abs();
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        bestSize = ps;
+        bestOrient = orient;
+      }
+    }
+  }
+  return (pageSize: bestSize, orientation: bestOrient);
+}
+
 class Folder {
   final String id;
   String name;

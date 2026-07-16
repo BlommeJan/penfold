@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.61
+**Version:** 0.2.62
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.61.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.62.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -15,7 +15,7 @@ If a notebook was deleted or the app misbehaved, your data may still be in SQLit
 **Database path (internal storage):**
 
 ```text
-/data/data/com.itsbryce.penfold/databases/penfold.db
+/data/data/com.itsbryce.penfold/app_flutter/penfold.db
 ```
 
 **App documents** (images, PDFs, thumbnails, auto-backups) live under the app’s private files directory — typically:
@@ -37,10 +37,15 @@ Auto-backup zips (when present) are in:
 3. Pull the database to your PC:
 
 ```bash
-adb exec-out run-as com.itsbryce.penfold cat databases/penfold.db > penfold-recovered.db
+adb exec-out run-as com.itsbryce.penfold cat app_flutter/penfold.db > penfold-recovered.db
 ```
 
-If `run-as` fails (release build without debuggable flag), use a full backup or root:
+If `run-as` fails with **package not debuggable** (release APK from `APKs/`), `adb` cannot read private app files directly. Options:
+
+- **In-app:** Settings ? **Recover from backup** / **Restore backup**, or Trash ? restore the notebook.
+- **Same signing key:** Install a **debug** build over the release app (`adb install -r`); data is usually kept and `run-as` may work. Do not uninstall first.
+- **Full backup (legacy):** On older Android versions, confirm backup on the device when prompted:
+
 
 ```bash
 adb backup -f penfold.ab com.itsbryce.penfold
@@ -177,6 +182,7 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] **Stroke smoothing** — toggle on/off
 - [ ] **Gesture ink editing** — toggle scratch-to-delete on/off
 - [ ] **Backup & Restore** — export zip, recover from auto-backup, restore from file
+- [ ] **About** — shows app name and version at the bottom of Settings
 
 ---
 
@@ -203,4 +209,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.2.61*
+*Last updated for Penfold v0.2.62*

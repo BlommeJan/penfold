@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/app_info_service.dart';
 import '../services/backup_service.dart';
 import '../services/page_complexity_service.dart';
 import '../services/page_export.dart';
@@ -54,12 +55,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
   int _prefetchGeneration = 0;
   int _trashedNotebookCount = 0;
   int _trashedFolderCount = 0;
+  bool _appInfoLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _searchCtrl.addListener(_onSearchChanged);
+    _loadAppInfo();
     _refresh();
+  }
+
+  Future<void> _loadAppInfo() async {
+    await AppInfoService.instance.load();
+    if (!mounted) return;
+    setState(() => _appInfoLoaded = true);
   }
 
   @override
@@ -1170,7 +1179,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
       backgroundColor: const Color(0xFFF6F7F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Penfold'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            const Text('Penfold'),
+            if (_appInfoLoaded) ...[
+              const SizedBox(width: 8),
+              Text(
+                AppInfoService.instance.versionLabel,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+          ],
+        ),
         centerTitle: false,
         actions: [
           IconButton(

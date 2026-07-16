@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/screens/settings_screen.dart';
+import 'package:penfold/services/app_info_service.dart';
 import 'package:penfold/services/gesture_ink_service.dart';
 import 'package:penfold/services/page_turn_mode_service.dart';
 import 'package:penfold/services/spen_button_service.dart';
@@ -34,6 +36,14 @@ void main() {
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
+    PackageInfo.setMockInitialValues(
+      appName: 'Penfold',
+      packageName: 'com.itsbryce.penfold',
+      version: '0.2.62',
+      buildNumber: '1',
+      buildSignature: '',
+    );
+    AppInfoService.instance.resetForTests();
     ToolbarOrderService.instance.resetForTests();
     StrokeSmoothingService.instance.resetForTests();
     GestureInkService.instance.resetForTests();
@@ -139,5 +149,14 @@ void main() {
     expect(find.text('Export backup'), findsOneWidget);
     await scrollTo(find.text('Restore backup'));
     expect(find.text('Restore backup'), findsOneWidget);
+
+    await scrollTo(find.text('About'));
+    expect(find.text('About'), findsOneWidget);
+    expect(find.text('Penfold'), findsWidgets);
+    expect(find.textContaining('Version v0.2.62'), findsOneWidget);
+    expect(
+      find.textContaining('Local-first handwriting notebook'),
+      findsOneWidget,
+    );
   });
 }

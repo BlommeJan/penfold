@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.62] — 2026
+
+### Added
+
+- **Settings → About** — app name and version at the bottom of Settings (via `package_info_plus`)
+- **Library title** — muted version label beside "Penfold" in the app bar
+
 ## [0.2.61] — 2026
 
 ### Fixed

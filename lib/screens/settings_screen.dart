@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
+import '../services/app_info_service.dart';
 import '../services/backup_service.dart';
 import '../services/finger_drawing_service.dart';
 import '../services/gesture_ink_service.dart';
@@ -40,10 +41,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _yourDataLoaded = false;
   AutoBackupInfo? _latestAutoBackup;
   bool _autoBackupLoaded = false;
+  bool _appInfoLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    _loadAppInfo();
     _loadToolOrder();
     _loadOcrTerms();
     _loadStrokeSmoothing();
@@ -54,6 +57,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadSpenAction();
     _loadYourData();
     _loadAutoBackup();
+  }
+
+  Future<void> _loadAppInfo() async {
+    await AppInfoService.instance.load();
+    if (!mounted) return;
+    setState(() => _appInfoLoaded = true);
   }
 
   Future<void> _loadAutoBackup() async {
@@ -724,6 +733,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   onTap: _restore,
                 ),
+                const Divider(height: 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    'About',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                if (!_appInfoLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  ListTile(
+                    leading: const Icon(Icons.info_outline_rounded),
+                    title: Text(AppInfoService.instance.appName),
+                    subtitle: Text(
+                      'Version ${AppInfoService.instance.versionLabel}\n'
+                      'Local-first handwriting notebook — no accounts, no cloud.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    isThreeLine: true,
+                  ),
+                const SizedBox(height: 24),
               ],
             ),
     );

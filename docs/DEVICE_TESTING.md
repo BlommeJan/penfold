@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.64
+**Version:** 0.2.65
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.64.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.65.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -188,15 +188,18 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ## Zoom & navigation
 
-> Pinch zoom reliability fix shipped in **v0.2.41**.
+> Document-level zoom UX improvements in **v0.2.65** (pinch-out to 0.25×, two-finger pan, double-tap reset, bounds clamping).
 
-- [ ] Pinch to zoom in and out on a page (two fingers)
+- [ ] Pinch to zoom in and out on a page (two fingers); zoom-out should feel natural down to ~0.25×
+- [ ] Double-tap resets zoom to 1× (full page fitted in viewport)
 - [ ] Pinch zoom works in stylus-only mode (finger pinches, stylus can still draw)
 - [ ] Pinch zoom works in finger drawing mode
-- [ ] Pan around while zoomed in
+- [ ] Two-finger pan while zoomed in reaches all parts of the page (not only margin drags)
+- [ ] Pan around while zoomed in; content cannot be lost off-screen indefinitely
 - [ ] Ink stays aligned on the paper after zooming
 - [ ] **Landscape device + portrait A4 page:** page is centered; pinch zoom for detail; rotate device — ink still on paper
-- [ ] Vertical scroll between pages still feels smooth while zoomed
+- [ ] Vertical scroll between pages works at ~1×; when zoomed in, scroll locks and pan navigates
+- [ ] Opening a notebook starts at 1× (no stale zoom from prior session)
 - [ ] Settings → **Zoom navigation** off disables pinch/pan; on restores zoom
 - [ ] Page-turn and continuous scroll use same page card size; rotate device resets zoom
 
@@ -209,4 +212,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.2.64*
+*Last updated for Penfold v0.2.65*

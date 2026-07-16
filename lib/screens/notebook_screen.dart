@@ -255,6 +255,17 @@ class _NotebookScreenState extends State<NotebookScreen>
     _resetScrollAndPointerState();
   }
 
+  /// Untransformed bounds of the scroll/page-turn body for pan clamping.
+  Rect _documentContentBounds(Size viewport) {
+    final slotViewport = _pageSlotViewport(viewport);
+    if (_pageTurnEnabled || _pages.isEmpty) {
+      return Offset.zero & slotViewport;
+    }
+    const bottomPadding = 24.0;
+    final height = _pages.length * slotViewport.height + bottomPadding;
+    return Rect.fromLTWH(0, 0, slotViewport.width, height);
+  }
+
   Rect _paperRectInSlot(NotePage page, Size slotViewport) {
     final displaySize = PageCoords.pageDisplaySize(
       slotViewport,
@@ -291,10 +302,12 @@ class _NotebookScreenState extends State<NotebookScreen>
     return _paperRectInSlot(_pages[pageIndex], slotViewport).contains(slotLocal);
   }
 
-  Widget _wrapDocumentViewport(Widget child) {
+  Widget _wrapDocumentViewport(Widget child, Size viewport) {
     return DocumentViewport(
       key: _documentViewportKey,
       toolState: _toolState,
+      viewportSize: viewport,
+      contentBounds: _documentContentBounds(viewport),
       zoomEnabled: _zoomNavigationEnabled,
       isFocalOnPaper: _isFocalOnPaper,
       onTransformGestureActive: _onPageTransformGesture,
@@ -388,6 +401,7 @@ class _NotebookScreenState extends State<NotebookScreen>
     unawaited(ThumbnailCache.instance.ensureForNotebook(widget.notebook.id));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      _resetDocumentTransform();
       _syncViewportToVisiblePage(
         scrollOffset: widget.initialScrollOffset,
       );
@@ -1001,6 +1015,7 @@ class _NotebookScreenState extends State<NotebookScreen>
           ],
         ),
       ),
+      viewport,
     );
   }
 
@@ -1017,6 +1032,7 @@ class _NotebookScreenState extends State<NotebookScreen>
         itemCount: _pages.length,
         itemBuilder: (context, i) => _pageEditorAt(i, slotViewport),
       ),
+      viewport,
     );
   }
 

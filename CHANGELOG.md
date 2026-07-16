@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.65] — 2026
+
+### Fixed
+
+- **Document zoom UX** — pinch zoom-out down to 0.25×; two-finger pan while pinching; translation clamping so zoomed content stays reachable; double-tap resets to 1×; near-1× snap restores page scroll; transform resets on notebook open
+
 ## [0.2.64] — 2026
 
 ### Changed

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'document_transform.dart';
 import 'drawing_canvas.dart';
 import 'pointer_routing.dart';
 
@@ -11,6 +12,8 @@ import 'pointer_routing.dart';
 class DocumentViewport extends StatefulWidget {
   final ToolState toolState;
   final Widget child;
+  final Size viewportSize;
+  final Rect contentBounds;
   final bool zoomEnabled;
   final bool Function(Offset viewportFocal) isFocalOnPaper;
   final ValueChanged<bool>? onTransformGestureActive;
@@ -19,6 +22,8 @@ class DocumentViewport extends StatefulWidget {
     super.key,
     required this.toolState,
     required this.child,
+    required this.viewportSize,
+    required this.contentBounds,
     required this.isFocalOnPaper,
     this.zoomEnabled = true,
     this.onTransformGestureActive,
@@ -32,12 +37,14 @@ class DocumentViewportState extends State<DocumentViewport> {
   final TransformationController _transform = TransformationController();
   final Map<int, PointerDeviceKind> _activePointers = {};
   Offset? _lastFocal;
+  Offset? _gestureStartFocal;
   double _gestureStartScale = 1;
-  Matrix4 _gestureStartMatrix = Matrix4.identity();
   bool _gestureActive = false;
   bool _pinchScrollLockHeld = false;
 
   Matrix4 get transform => _transform.value;
+
+  double get _currentScale => documentScale(_transform.value);
 
   @override
   void initState() {
@@ -56,6 +63,11 @@ class DocumentViewportState extends State<DocumentViewport> {
       }
       _gestureActive = false;
       _lastFocal = null;
+      _gestureStartFocal = null;
+    } else if (widget.zoomEnabled &&
+        (oldWidget.viewportSize != widget.viewportSize ||
+            oldWidget.contentBounds != widget.contentBounds)) {
+      _applyClampedTransform(_transform.value);
     }
   }
 
@@ -78,6 +90,15 @@ class DocumentViewportState extends State<DocumentViewport> {
     _releasePinchScrollLock();
     _gestureActive = false;
     _lastFocal = null;
+    _gestureStartFocal = null;
+  }
+
+  void _applyClampedTransform(Matrix4 matrix) {
+    _transform.value = clampDocumentTransform(
+      matrix: matrix,
+      viewportSize: widget.viewportSize,
+      contentBounds: widget.contentBounds,
+    );
   }
 
   bool _isStylusKind(PointerDeviceKind k) =>
@@ -119,6 +140,15 @@ class DocumentViewportState extends State<DocumentViewport> {
           kind == PointerDeviceKind.mouse;
     }
     if (kind == PointerDeviceKind.mouse) return true;
+
+    // At ~1× vertical scroll owns navigation; single-finger pan only on margins.
+    if (_currentScale <= kDocumentZoomedPanThreshold) {
+      return !widget.isFocalOnPaper(focal);
+    }
+
+    // Zoomed in: two-finger pan works everywhere; single-finger stays margin-only
+    // so finger-drawing on paper is preserved.
+    if (pointerCount >= 2) return true;
     return !widget.isFocalOnPaper(focal);
   }
 
@@ -143,6 +173,7 @@ class DocumentViewportState extends State<DocumentViewport> {
       _releasePinchScrollLock();
       _gestureActive = false;
       _lastFocal = null;
+      _gestureStartFocal = null;
     } else if (_touchPointerCount() < 2) {
       _releasePinchScrollLock();
     }
@@ -166,8 +197,8 @@ class DocumentViewportState extends State<DocumentViewport> {
     }
     _gestureActive = true;
     _lastFocal = focal;
-    _gestureStartMatrix = Matrix4.copy(_transform.value);
-    _gestureStartScale = _transform.value.getMaxScaleOnAxis();
+    _gestureStartFocal = focal;
+    _gestureStartScale = _currentScale;
   }
 
   void _onScaleStart(ScaleStartDetails d) {
@@ -200,34 +231,53 @@ class DocumentViewportState extends State<DocumentViewport> {
 
     if (d.pointerCount >= 2) {
       _holdPinchScrollLock();
-      if ((d.scale - 1.0).abs() > 0.001) {
-        final newScale = (_gestureStartScale * d.scale).clamp(0.5, 8.0);
-        final m = Matrix4.copy(_gestureStartMatrix);
-        m.translate(focal.dx, focal.dy);
-        m.scale(newScale / _gestureStartScale);
-        m.translate(-focal.dx, -focal.dy);
-        _transform.value = m;
+      var m = Matrix4.copy(_transform.value);
+
+      if (_lastFocal != null) {
+        m = documentPan(m, focal - _lastFocal!);
       }
+
+      final oldScale = documentScale(m);
+      final newScale =
+          (_gestureStartScale * d.scale).clamp(kDocumentMinScale, kDocumentMaxScale);
+      if ((newScale - oldScale).abs() > 0.0001) {
+        m = documentScaleAroundFocal(
+          matrix: m,
+          focal: focal,
+          scaleFactor: newScale / oldScale,
+        );
+      }
+
+      _applyClampedTransform(m);
     } else if (_lastFocal != null) {
-      final pan = focal - _lastFocal!;
-      final m = Matrix4.copy(_transform.value);
-      m.translate(pan.dx, pan.dy);
-      _transform.value = m;
+      _applyClampedTransform(
+        documentPan(_transform.value, focal - _lastFocal!),
+      );
     }
 
     _lastFocal = focal;
   }
 
   void _onScaleEnd(ScaleEndDetails d) {
+    // Snap to 1× when the pinch landed near identity so scroll resumes cleanly.
+    if (_currentScale >= 0.98 && _currentScale <= kDocumentSnapScaleMax) {
+      resetTransform();
+    } else {
+      _applyClampedTransform(_transform.value);
+    }
+
     if (_gestureActive && !_pinchScrollLockHeld) {
       widget.onTransformGestureActive?.call(false);
     }
     _gestureActive = false;
     _lastFocal = null;
+    _gestureStartFocal = null;
     if (_touchPointerCount() < 2) {
       _releasePinchScrollLock();
     }
   }
+
+  void _onDoubleTap() => resetTransform();
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +294,7 @@ class DocumentViewportState extends State<DocumentViewport> {
         onScaleStart: _onScaleStart,
         onScaleUpdate: _onScaleUpdate,
         onScaleEnd: _onScaleEnd,
+        onDoubleTap: _onDoubleTap,
         child: AnimatedBuilder(
           animation: _transform,
           builder: (context, child) => Transform(

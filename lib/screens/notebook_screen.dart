@@ -7,8 +7,11 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../canvas/document_viewport.dart';
 import '../canvas/drawing_canvas.dart';
+import '../canvas/page_coords.dart';
 import '../canvas/penfold_scroll_behavior.dart';
+import '../canvas/pointer_routing.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/finger_drawing_service.dart';
@@ -25,6 +28,7 @@ import '../widgets/contents_sheet.dart';
 import '../widgets/page_editor.dart';
 import '../widgets/page_settings_popup.dart';
 import '../widgets/toolbar.dart';
+import 'library_screen.dart';
 import 'page_overview_screen.dart';
 
 const _uuid = Uuid();
@@ -54,6 +58,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   final _scrollController = ScrollController();
   late final PageController _pageController;
   final Map<String, GlobalKey<PageEditorState>> _pageKeys = {};
+  final _documentViewportKey = GlobalKey<DocumentViewportState>();
 
   List<NotePage> _pages = [];
   bool _loading = true;
@@ -99,7 +104,7 @@ class _NotebookScreenState extends State<NotebookScreen>
     final orientation = MediaQuery.orientationOf(context);
     if (_lastDeviceOrientation != null &&
         _lastDeviceOrientation != orientation) {
-      _resetAllPageTransforms();
+      _resetDocumentTransform();
     }
     _lastDeviceOrientation = orientation;
   }
@@ -116,6 +121,17 @@ class _NotebookScreenState extends State<NotebookScreen>
       case AppLifecycleState.inactive:
         break;
     }
+  }
+
+  void _popToLibrary() {
+    final navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+    navigator.pushReplacement(
+      MaterialPageRoute(builder: (_) => const LibraryScreen()),
+    );
   }
 
   @override
@@ -192,7 +208,7 @@ class _NotebookScreenState extends State<NotebookScreen>
     final enabled = PageTurnModeService.instance.enabled;
     if (enabled == _pageTurnEnabled) return;
     setState(() => _pageTurnEnabled = enabled);
-    _resetVisiblePageTransform();
+    _resetDocumentTransform();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _syncViewportToVisiblePage();
@@ -205,7 +221,7 @@ class _NotebookScreenState extends State<NotebookScreen>
     if (enabled == _zoomNavigationEnabled) return;
     setState(() => _zoomNavigationEnabled = enabled);
     if (!enabled) {
-      _resetVisiblePageTransform();
+      _resetDocumentTransform();
     }
   }
 
@@ -233,17 +249,57 @@ class _NotebookScreenState extends State<NotebookScreen>
   Size _pageSlotViewport(Size viewport) =>
       Size(viewport.width, _pageSlotHeight(viewport));
 
-  void _resetVisiblePageTransform() {
-    if (_pages.isEmpty) return;
-    final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
-    _pageKeys[_pages[idx].id]?.currentState?.resetViewportTransform();
+  void _resetDocumentTransform() {
+    _documentViewportKey.currentState?.resetTransform();
+    _documentViewportKey.currentState?.resetPointerTracking();
+    _resetScrollAndPointerState();
   }
 
-  void _resetAllPageTransforms() {
-    for (final key in _pageKeys.values) {
-      key.currentState?.resetViewportTransform();
+  Rect _paperRectInSlot(NotePage page, Size slotViewport) {
+    final displaySize = PageCoords.pageDisplaySize(
+      slotViewport,
+      page.pageSize,
+      orientation: page.orientation,
+    );
+    return Rect.fromCenter(
+      center: Offset(slotViewport.width / 2, slotViewport.height / 2),
+      width: displaySize.width,
+      height: displaySize.height,
+    );
+  }
+
+  bool _isFocalOnPaper(Offset viewportFocal) {
+    if (_pages.isEmpty) return false;
+    final viewport = MediaQuery.sizeOf(context);
+    final slotViewport = _pageSlotViewport(viewport);
+    final pageHeight = _pageSlotHeight(viewport);
+    final transform =
+        _documentViewportKey.currentState?.transform ?? Matrix4.identity();
+    final pre = paperPointFromTransform(viewportFocal, transform);
+
+    if (_pageTurnEnabled) {
+      final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
+      return _paperRectInSlot(_pages[idx], slotViewport).contains(pre);
     }
-    _resetScrollAndPointerState();
+
+    final scrollOffset =
+        _scrollController.hasClients ? _scrollController.offset : 0.0;
+    final contentY = pre.dy + scrollOffset;
+    final pageIndex = (contentY / pageHeight).floor();
+    if (pageIndex < 0 || pageIndex >= _pages.length) return false;
+    final slotLocal = Offset(pre.dx, contentY - pageIndex * pageHeight);
+    return _paperRectInSlot(_pages[pageIndex], slotViewport).contains(slotLocal);
+  }
+
+  Widget _wrapDocumentViewport(Widget child) {
+    return DocumentViewport(
+      key: _documentViewportKey,
+      toolState: _toolState,
+      zoomEnabled: _zoomNavigationEnabled,
+      isFocalOnPaper: _isFocalOnPaper,
+      onTransformGestureActive: _onPageTransformGesture,
+      child: child,
+    );
   }
 
   Future<void> _syncStrokeSmoothing() async {
@@ -731,7 +787,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       }
       await _db.updatePageSize(_activePage.id, chosen);
       setState(() => _activePage.pageSize = chosen);
-      _resetAllPageTransforms();
+      _resetDocumentTransform();
       return;
     }
 
@@ -771,7 +827,7 @@ class _NotebookScreenState extends State<NotebookScreen>
         _activePage.orientation = chosen;
         _activePage.aspect = aspect;
       });
-      _resetAllPageTransforms();
+      _resetDocumentTransform();
       return;
     }
 
@@ -899,7 +955,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       notebook: widget.notebook,
       toolState: _toolState,
       viewportSize: slotViewport,
-      zoomEnabled: _zoomNavigationEnabled,
+      zoomEnabled: false,
       onCanvasReady: (state) {
         if (i == _visiblePageIndex) {
           _setActiveCanvas(state);
@@ -925,38 +981,42 @@ class _NotebookScreenState extends State<NotebookScreen>
   Widget _buildScrollBody(Size viewport) {
     final slotViewport = _pageSlotViewport(viewport);
     final pageHeight = slotViewport.height;
-    return ScrollConfiguration(
-      behavior: const PenfoldScrollBehavior(),
-      child: CustomScrollView(
-        controller: _scrollController,
-        physics: _scrollLocked
-            ? const NeverScrollableScrollPhysics()
-            : const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          for (var i = 0; i < _pages.length; i++)
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: pageHeight,
-                child: _pageEditorAt(i, slotViewport),
+    return _wrapDocumentViewport(
+      ScrollConfiguration(
+        behavior: const PenfoldScrollBehavior(),
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: _scrollLocked
+              ? const NeverScrollableScrollPhysics()
+              : const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            for (var i = 0; i < _pages.length; i++)
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: pageHeight,
+                  child: _pageEditorAt(i, slotViewport),
+                ),
               ),
-            ),
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
-        ],
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildPageTurnBody(Size viewport) {
     final slotViewport = _pageSlotViewport(viewport);
-    return PageView.builder(
-      controller: _pageController,
-      scrollDirection: Axis.vertical,
-      physics: _scrollLocked
-          ? const NeverScrollableScrollPhysics()
-          : const PageScrollPhysics(),
-      onPageChanged: _onVisiblePageChanged,
-      itemCount: _pages.length,
-      itemBuilder: (context, i) => _pageEditorAt(i, slotViewport),
+    return _wrapDocumentViewport(
+      PageView.builder(
+        controller: _pageController,
+        scrollDirection: Axis.vertical,
+        physics: _scrollLocked
+            ? const NeverScrollableScrollPhysics()
+            : const PageScrollPhysics(),
+        onPageChanged: _onVisiblePageChanged,
+        itemCount: _pages.length,
+        itemBuilder: (context, i) => _pageEditorAt(i, slotViewport),
+      ),
     );
   }
 
@@ -964,51 +1024,59 @@ class _NotebookScreenState extends State<NotebookScreen>
   Widget build(BuildContext context) {
     final viewport = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFE8ECF3),
-      appBar: EditorToolbar(
-        toolState: _toolState,
-        canUndo: _canUndo,
-        canRedo: _canRedo,
-        hasSelection: _hasSelection,
-        canPaste: _activeCanvas?.canPaste ?? false,
-        canConvertSelectionToText:
-            _activeCanvas?.canConvertSelectionToText ?? false,
-        onUndo: () => _activeCanvas?.undo(),
-        onRedo: () => _activeCanvas?.redo(),
-        onDeleteSelection: () => _activeCanvas?.deleteSelection(),
-        onCopy: () => _activeCanvas?.copySelection(),
-        onPaste: () => _activeCanvas?.pasteClipboard(),
-        onConvertToText: _convertSelectionToText,
-        onAddPage: _addPage,
-        onPageSettings: _openPageSettings,
-        onAddImage: _addImage,
-        onPageOverview: _openOverview,
-        onContents: _openContents,
-        canPrevBookmark: _canPrevBookmark,
-        canNextBookmark: _canNextBookmark,
-        onPrevBookmark: _jumpToPrevBookmark,
-        onNextBookmark: _jumpToNextBookmark,
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                _pageTurnEnabled
-                    ? _buildPageTurnBody(viewport)
-                    : _buildScrollBody(viewport),
-                if (!_loading && _pages.isNotEmpty)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: PageInfoChip(
-                      page: _activePage,
-                      isPdfPage: _isPdfPage(_activePage),
-                      onTap: _openPageSettings,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _popToLibrary();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFE8ECF3),
+        appBar: EditorToolbar(
+          toolState: _toolState,
+          canUndo: _canUndo,
+          canRedo: _canRedo,
+          hasSelection: _hasSelection,
+          canPaste: _activeCanvas?.canPaste ?? false,
+          canConvertSelectionToText:
+              _activeCanvas?.canConvertSelectionToText ?? false,
+          onUndo: () => _activeCanvas?.undo(),
+          onRedo: () => _activeCanvas?.redo(),
+          onDeleteSelection: () => _activeCanvas?.deleteSelection(),
+          onCopy: () => _activeCanvas?.copySelection(),
+          onPaste: () => _activeCanvas?.pasteClipboard(),
+          onConvertToText: _convertSelectionToText,
+          onAddPage: _addPage,
+          onPageSettings: _openPageSettings,
+          onAddImage: _addImage,
+          onPageOverview: _openOverview,
+          onContents: _openContents,
+          canPrevBookmark: _canPrevBookmark,
+          canNextBookmark: _canNextBookmark,
+          onPrevBookmark: _jumpToPrevBookmark,
+          onNextBookmark: _jumpToNextBookmark,
+          onBack: _popToLibrary,
+        ),
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : Stack(
+                children: [
+                  _pageTurnEnabled
+                      ? _buildPageTurnBody(viewport)
+                      : _buildScrollBody(viewport),
+                  if (!_loading && _pages.isNotEmpty)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: PageInfoChip(
+                        page: _activePage,
+                        isPdfPage: _isPdfPage(_activePage),
+                        onTap: _openPageSettings,
+                      ),
                     ),
-                  ),
-              ],
-            ),
+                ],
+              ),
+      ),
     );
   }
 }

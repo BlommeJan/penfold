@@ -6,9 +6,9 @@ import '../db/app_database.dart';
 import '../services/backup_service.dart';
 import '../services/session_service.dart';
 import 'library_screen.dart';
-import 'notebook_screen.dart';
 
-/// Resolves cold-start route: last notebook when session exists, else library.
+/// Cold start always opens the library. Session is kept for in-notebook restore
+/// but does not auto-navigate on launch.
 class AppHome extends StatefulWidget {
   const AppHome({super.key});
 
@@ -18,7 +18,6 @@ class AppHome extends StatefulWidget {
 
 class _AppHomeState extends State<AppHome> {
   bool _loading = true;
-  Widget _screen = const LibraryScreen();
 
   @override
   void initState() {
@@ -27,33 +26,21 @@ class _AppHomeState extends State<AppHome> {
       unawaited(BackupService.instance.createAutoBackupIfDue());
       unawaited(AppDatabase.instance.purgeTrash());
     }
-    _resolve();
+    _prepare();
   }
 
-  Future<void> _resolve() async {
+  Future<void> _prepare() async {
     final session = await SessionService.instance.load();
-    Widget screen = const LibraryScreen();
-
     final notebookId = session?.notebookId;
     if (notebookId != null) {
       final notebook = await AppDatabase.instance.notebookById(notebookId);
-      if (notebook != null) {
-        screen = NotebookScreen(
-          notebook: notebook,
-          initialPageIndex: session!.pageIndex,
-          initialScrollOffset: session.scrollOffset,
-          initialTool: session.tool,
-        );
-      } else {
+      if (notebook == null) {
         await SessionService.instance.clear();
       }
     }
 
     if (!mounted) return;
-    setState(() {
-      _screen = screen;
-      _loading = false;
-    });
+    setState(() => _loading = false);
   }
 
   @override
@@ -63,6 +50,6 @@ class _AppHomeState extends State<AppHome> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    return _screen;
+    return const LibraryScreen();
   }
 }

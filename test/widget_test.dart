@@ -49,7 +49,7 @@ void main() {
     PackageInfo.setMockInitialValues(
       appName: 'Penfold',
       packageName: 'com.itsbryce.penfold',
-      version: '0.2.62',
+      version: '0.2.64',
       buildNumber: '1',
       buildSignature: '',
     );
@@ -69,7 +69,7 @@ void main() {
     await settle(tester);
 
     expect(find.text('Penfold'), findsOneWidget);
-    expect(find.textContaining('v0.2.62'), findsOneWidget);
+    expect(find.textContaining('v0.2.64'), findsOneWidget);
     expect(find.text('No notebooks yet'), findsOneWidget);
     expect(find.text('New notebook'), findsOneWidget);
   });
@@ -106,10 +106,8 @@ void main() {
     expect(saved.single.title, 'Japanese Grammar');
   });
 
-  testWidgets('cold start restores last notebook from session', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(1400, 900));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
+  testWidgets('cold start shows library even when session exists',
+      (tester) async {
     await tester.runAsync(() async {
       final db = AppDatabase.instance;
       final notebook = Notebook(
@@ -132,17 +130,59 @@ void main() {
       await SessionService.instance.save(
         notebookId: notebook.id,
         pageIndex: 2,
-        scrollOffset: 0,
+        scrollOffset: 480,
         tool: ToolType.pen,
       );
     });
 
     await tester.pumpWidget(const PenfoldApp());
-    await settle(tester);
+    await settleUntil(tester, find.text('Resume Me'));
 
+    expect(find.text('Penfold'), findsOneWidget);
     expect(find.text('No notebooks yet'), findsNothing);
+    expect(find.byTooltip('Pen'), findsNothing);
+
+    final session = await tester.runAsync(SessionService.instance.load);
+    expect(session, isNotNull);
+    expect(session!.notebookId, 'nb-cold-start');
+    expect(session.pageIndex, 2);
+  });
+
+  testWidgets('back from notebook returns to library', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1400, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.runAsync(() async {
+      final db = AppDatabase.instance;
+      final notebook = Notebook(
+        id: 'nb-back',
+        title: 'Back Test',
+        coverColor: 0xFF2455C3,
+        template: PageTemplate.lined,
+        createdAt: 1,
+        updatedAt: 1,
+      );
+      await db.insertNotebook(notebook);
+      await db.insertPage(NotePage(
+        id: 'pg-0',
+        notebookId: notebook.id,
+        index: 0,
+        template: PageTemplate.lined,
+      ));
+    });
+
+    await tester.pumpWidget(const PenfoldApp());
+    await settleUntil(tester, find.text('Back Test'));
+
+    await tester.tap(find.text('Back Test'));
     await settleUntil(tester, find.byTooltip('Pen'));
     expect(find.byTooltip('Pen'), findsOneWidget);
+
+    await tester.pageBack();
+    await settle(tester);
+
+    expect(find.text('New notebook'), findsOneWidget);
+    expect(find.byTooltip('Pen'), findsNothing);
   });
 
   testWidgets('cold start clears stale session when notebook is missing',

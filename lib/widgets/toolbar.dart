@@ -84,6 +84,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final bool canNextBookmark;
   final VoidCallback? onPrevBookmark;
   final VoidCallback? onNextBookmark;
+  final VoidCallback? onBack;
 
   const EditorToolbar({
     super.key,
@@ -108,6 +109,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     this.canNextBookmark = false,
     this.onPrevBookmark,
     this.onNextBookmark,
+    this.onBack,
   });
 
   @override
@@ -135,7 +137,9 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   // Left: navigation only (GoodNotes pattern — no undo here).
-                  const BackButton(),
+                  onBack != null
+                      ? BackButton(onPressed: onBack)
+                      : const BackButton(),
                   _ActionIconButton(
                     tooltip: 'Previous bookmark',
                     icon: Icons.expand_less_rounded,

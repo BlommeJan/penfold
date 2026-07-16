@@ -7,10 +7,12 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 ### Changed
 
 - **Cold start** — always opens the library; session persistence remains for in-notebook restore but no longer auto-navigates to the last notebook on launch
+- **Document zoom** — pinch/pan applies to the whole notebook viewport (all pages together) instead of per-page zoom, so other pages stay visible and reachable while zoomed
 
 ### Fixed
 
 - **Notebook back** — toolbar and system back pop to the library instead of exiting the app when the notebook was the root route
+- **Finger drawing while zoomed** — pointer routing maps viewport coordinates through the document transform so touch ink works in finger-drawing mode when zoom navigation is on
 - **Finger drawing while zoomed** — pan/zoom routing maps viewport focal points into paper space so finger ink works at any zoom; two-finger pinch still zooms
 
 ## [0.2.63] — 2026

@@ -2,6 +2,28 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.45] — 2026
+
+### Changed
+
+- **Handwriting OCR** — replaced printed-text ML Kit (`google_mlkit_text_recognition`) with on-device Digital Ink Recognition (`google_mlkit_digital_ink_recognition`); English handwriting model downloads once on first use (local inference, no accounts)
+- **Convert to text** — lasso selection and background ink search indexing now feed stroke points directly to the digital ink recognizer; progress dialog shown while the model downloads
+
+## [0.2.44] — 2026
+
+### Fixed
+
+- **PDF squish** — `PagePainter` uses `BoxFit.contain` with centered letterboxing (matches thumbnail logic) instead of stretching PDF backgrounds
+- **Landscape PDF pages** — `PageEditor` and `DrawingCanvas` respect stored `PageOrientation`; legacy imports infer landscape when aspect > 1
+- **PDF import layout** — `PdfImportService` stores per-page `page_size`, `orientation`, and `aspect` from PDF MediaBox dimensions
+
+## [0.2.43] — 2026
+
+### Fixed
+
+- **S Pen barrel button** — `MainActivity.kt` handles primary and secondary stylus buttons; button-up is sent on hover move, hover exit, and cancel (not only hover exit)
+- **S Pen event wiring** — `spen_button_service.dart` recognizes secondary barrel button (0x40) in pointer fallback; hold-to-eraser/lasso/pen follows Settings preference
+
 ## [0.2.42] — 2026
 
 ### Fixed
@@ -320,6 +342,9 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.45]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.45
+[0.2.44]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.44
+[0.2.43]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.43
 [0.2.42]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.42
 [0.2.41]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.41
 [0.2.40]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.40

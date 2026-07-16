@@ -1,8 +1,60 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.41
+**Version:** 0.2.45
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.41.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.45.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+
+---
+
+## Data recovery (adb)
+
+If a notebook was deleted or the app misbehaved, your data may still be in SQLite on the device. **Do not reinstall or clear app data** until you have pulled a copy.
+
+**Package:** `com.itsbryce.penfold`
+
+**Database path (internal storage):**
+
+```text
+/data/data/com.itsbryce.penfold/databases/penfold.db
+```
+
+**App documents** (images, PDFs, thumbnails, auto-backups) live under the app’s private files directory — typically:
+
+```text
+/data/data/com.itsbryce.penfold/app_flutter/
+```
+
+Auto-backup zips (when present) are in:
+
+```text
+/data/data/com.itsbryce.penfold/app_flutter/backups/auto-backup-*.zip
+```
+
+### Pull database with adb (debug build or backupable app)
+
+1. Enable **Developer options** and **USB debugging** on the device.
+2. Connect via USB; confirm the device: `adb devices`
+3. Pull the database to your PC:
+
+```bash
+adb exec-out run-as com.itsbryce.penfold cat databases/penfold.db > penfold-recovered.db
+```
+
+If `run-as` fails (release build without debuggable flag), use a full backup or root:
+
+```bash
+adb backup -f penfold.ab com.itsbryce.penfold
+```
+
+Then extract `penfold.db` from the backup on a workstation, or use Settings → **Recover from backup** / **Restore backup** inside Penfold if an auto-backup or manual zip exists.
+
+4. Inspect the file with any SQLite browser, or copy it into a test device’s app documents and use **Restore backup**.
+
+### In-app recovery
+
+- [ ] Settings → **Recover from backup** appears when an auto-backup exists (created at most once per 24h on app open)
+- [ ] Settings → **Restore backup** accepts a Penfold `.zip` from manual export
+- [ ] Long-press notebook → **Move to Trash** → **Export first** shares a backup zip before trashing
 
 ---
 
@@ -11,7 +63,7 @@ Install the release APK from `APKs/` (for example `Penfold-v0.2.41.apk`) on your
 - [ ] Create a new notebook from the library
 - [ ] Open a notebook and return to the library
 - [ ] Rename a notebook (long-press or menu)
-- [ ] Delete a notebook
+- [ ] Delete a notebook (moves to Trash — hidden from library; data kept on device)
 - [ ] Create nested folders and drill in with breadcrumbs
 - [ ] Move a notebook into a folder
 - [ ] Filter: All, Uncategorized, and folder chips
@@ -119,7 +171,7 @@ Install the release APK from `APKs/` (for example `Penfold-v0.2.41.apk`) on your
 - [ ] **Page-turn scroll mode** — toggle on/off
 - [ ] **Stroke smoothing** — toggle on/off
 - [ ] **Gesture ink editing** — toggle scratch-to-delete on/off
-- [ ] **Backup & Restore** — export zip and restore (from library settings)
+- [ ] **Backup & Restore** — export zip, recover from auto-backup, restore from file
 
 ---
 
@@ -144,4 +196,4 @@ Install the release APK from `APKs/` (for example `Penfold-v0.2.41.apk`) on your
 
 ---
 
-*Last updated for Penfold v0.2.41*
+*Last updated for Penfold v0.2.45*

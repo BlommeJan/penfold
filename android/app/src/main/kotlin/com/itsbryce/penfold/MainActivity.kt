@@ -31,19 +31,32 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun stylusButtonPressed(event: MotionEvent): Boolean {
+    private fun isStylusEvent(event: MotionEvent): Boolean {
         if (event.pointerCount == 0) return false
-        if (event.getToolType(0) != MotionEvent.TOOL_TYPE_STYLUS) return false
-        return (event.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY) != 0
+        return event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS
+    }
+
+    private fun stylusButtonPressed(event: MotionEvent): Boolean {
+        if (!isStylusEvent(event)) return false
+        val buttons = event.buttonState
+        return (buttons and MotionEvent.BUTTON_STYLUS_PRIMARY) != 0 ||
+            (buttons and MotionEvent.BUTTON_STYLUS_SECONDARY) != 0
+    }
+
+    private fun syncStylusButton(event: MotionEvent) {
+        if (isStylusEvent(event)) {
+            sendButtonState(stylusButtonPressed(event))
+        }
     }
 
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        if (stylusButtonPressed(event)) {
-            sendButtonState(true)
-        } else if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS &&
-            event.actionMasked == MotionEvent.ACTION_HOVER_EXIT
-        ) {
-            sendButtonState(false)
+        when (event.actionMasked) {
+            MotionEvent.ACTION_HOVER_ENTER,
+            MotionEvent.ACTION_HOVER_MOVE,
+            MotionEvent.ACTION_HOVER_EXIT,
+            MotionEvent.ACTION_BUTTON_PRESS,
+            MotionEvent.ACTION_BUTTON_RELEASE,
+            MotionEvent.ACTION_CANCEL -> syncStylusButton(event)
         }
         return super.dispatchGenericMotionEvent(event)
     }
@@ -55,11 +68,7 @@ class MainActivity : FlutterActivity() {
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL,
             MotionEvent.ACTION_BUTTON_PRESS,
-            MotionEvent.ACTION_BUTTON_RELEASE -> {
-                if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                    sendButtonState(stylusButtonPressed(event))
-                }
-            }
+            MotionEvent.ACTION_BUTTON_RELEASE -> syncStylusButton(event)
         }
         return super.dispatchTouchEvent(event)
     }

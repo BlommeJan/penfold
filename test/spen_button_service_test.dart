@@ -77,5 +77,26 @@ void main() {
       );
       expect(SpenButtonService.instance.buttonPressed, isFalse);
     });
+
+    test('secondary barrel button triggers override', () {
+      expect(SpenButtonService.instance.overrideTool, isNull);
+      SpenButtonService.instance.updateFromPointer(
+        PointerDeviceKind.stylus,
+        0x40,
+      );
+      expect(SpenButtonService.instance.overrideTool, ToolType.eraser);
+      SpenButtonService.instance.updateFromPointer(
+        PointerDeviceKind.stylus,
+        0,
+      );
+      expect(SpenButtonService.instance.overrideTool, isNull);
+    });
+
+    test('stylusButtonsPressed detects primary and secondary', () {
+      expect(SpenButtonService.stylusButtonsPressed(0), isFalse);
+      expect(SpenButtonService.stylusButtonsPressed(0x20), isTrue);
+      expect(SpenButtonService.stylusButtonsPressed(0x40), isTrue);
+      expect(SpenButtonService.stylusButtonsPressed(0x60), isTrue);
+    });
   });
 }

@@ -98,12 +98,18 @@ class SpenButtonService extends ChangeNotifier {
     }
   }
 
+  /// Primary (0x20) and secondary (0x40) Samsung stylus barrel buttons.
+  static bool stylusButtonsPressed(int buttons) {
+    const primary = 0x20; // kStylusButton
+    const secondary = 0x40; // kSecondaryStylusButton
+    return (buttons & primary) != 0 || (buttons & secondary) != 0;
+  }
+
   /// Pointer-event fallback when native channel is unavailable.
   void updateFromPointer(PointerDeviceKind kind, int buttons) {
     if (kind != PointerDeviceKind.stylus) return;
     if (_action == SpenBarrelAction.none) return;
-    const stylusButton = 0x20; // kStylusButton
-    final pressed = (buttons & stylusButton) != 0;
+    final pressed = stylusButtonsPressed(buttons);
     if (_buttonPressed != pressed) {
       _buttonPressed = pressed;
       notifyListeners();

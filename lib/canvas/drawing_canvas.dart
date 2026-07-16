@@ -663,6 +663,11 @@ class DrawingCanvas extends StatefulWidget {
   final void Function(int strokeCount)? onStrokeCountChanged;
   final ValueChanged<bool>? onPaperFingerActive;
 
+  /// When set, pointer [localPosition] values are in viewport/parent space and
+  /// are mapped into paper space before routing (unified document transform).
+  /// Leave null when the canvas [Listener] sits inside the matching transform.
+  final Matrix4? contentTransform;
+
   const DrawingCanvas({
     super.key,
     required this.page,
@@ -674,6 +679,7 @@ class DrawingCanvas extends StatefulWidget {
     this.onSelectionChanged,
     this.onStrokeCountChanged,
     this.onPaperFingerActive,
+    this.contentTransform,
   });
 
   @override
@@ -786,6 +792,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         widget.displaySize,
         _pageSize,
         orientation: _orientation,
+      );
+
+  /// Paper-space position for routing and ink, accounting for [contentTransform].
+  Offset _paperLocal(PointerEvent e) => paperPointFromTransform(
+        e.localPosition,
+        widget.contentTransform ?? Matrix4.identity(),
       );
 
   @override
@@ -1215,14 +1227,15 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         tool == ToolType.lasso ||
         tool == ToolType.text ||
         tool == ToolType.tape;
+    final paperPos = _paperLocal(e);
     if (manipulatesWithFinger &&
         e.kind == PointerDeviceKind.touch &&
-        (Offset.zero & widget.displaySize).contains(e.localPosition)) {
+        (Offset.zero & widget.displaySize).contains(paperPos)) {
       return true;
     }
     return shouldRouteToDrawing(
       kind: e.kind,
-      localPos: e.localPosition,
+      localPos: paperPos,
       paperSize: widget.displaySize,
       stylusOnly: widget.toolState.stylusOnly,
       stylusActive: _stylusActive,
@@ -1259,7 +1272,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (!shouldLockScrollForPaperTouch(
       stylusOnly: widget.toolState.stylusOnly,
       kind: e.kind,
-      localPos: e.localPosition,
+      localPos: _paperLocal(e),
       paperSize: widget.displaySize,
     )) {
       return;
@@ -1289,7 +1302,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (!_loaded) return;
 
     final tool = widget.toolState.tool;
-    final pos = e.localPosition;
+    final pos = _paperLocal(e);
     final cPos = _toCanonical(pos);
     _activePointer = e.pointer;
 
@@ -1603,7 +1616,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _syncSpenButton(e);
     if (e.pointer != _activePointer) return;
     if (_isStylus(e)) _lastStylusSeen = DateTime.now();
-    final pos = e.localPosition;
+    final pos = _paperLocal(e);
     final cPos = _toCanonical(pos);
     final tool = _gestureEffectiveTool ?? widget.toolState.tool;
 

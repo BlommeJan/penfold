@@ -98,6 +98,10 @@ class PageViewportState extends State<PageViewport> {
     return PointerDeviceKind.touch;
   }
 
+  /// Pan/zoom gestures run outside the [Transform], so focal points are in
+  /// viewport space and must be mapped into paper space for routing.
+  Matrix4 get _contentTransform => _transform.value;
+
   bool _allowsGesture({required Offset focal, required int pointerCount}) {
     if (!widget.zoomEnabled) return false;
 
@@ -121,8 +125,10 @@ class PageViewportState extends State<PageViewport> {
       paperSize: widget.paperSize,
       stylusOnly: widget.toolState.stylusOnly,
       touchPointerCount: effectiveTouches,
+      contentTransform: _contentTransform,
     );
   }
+
 
   void _onPointerDown(PointerDownEvent e) {
     _activePointers[e.pointer] = e.kind;

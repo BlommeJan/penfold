@@ -2,6 +2,17 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.64] — 2026
+
+### Changed
+
+- **Cold start** — always opens the library; session persistence remains for in-notebook restore but no longer auto-navigates to the last notebook on launch
+
+### Fixed
+
+- **Notebook back** — toolbar and system back pop to the library instead of exiting the app when the notebook was the root route
+- **Finger drawing while zoomed** — pan/zoom routing maps viewport focal points into paper space so finger ink works at any zoom; two-finger pinch still zooms
+
 ## [0.2.63] — 2026
 
 ### Fixed

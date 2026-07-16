@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.68] — 2026
+
+### Fixed
+
+- **Pinch on paper** — disabled per-page `GestureDetector` when document zoom is active so pinch reaches the document viewport on the page, not only on grey margins
+- **Zoom out** — centers the **visible page** when zooming out (not the entire multi-page stack) and prevents zooming past fit-to-page so content never vanishes
+- **Eraser icon** — pink angled eraser block with metal sleeve, reads clearly at toolbar size
+
 ## [0.2.67] — 2026
 
 ### Fixed

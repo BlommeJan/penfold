@@ -1080,22 +1080,45 @@ class _EraserIconPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
+    final outline = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4
+      ..strokeJoin = StrokeJoin.round;
+
+    // Pink eraser body (angled block).
     final body = Path()
-      ..moveTo(w * 0.18, h * 0.28)
-      ..lineTo(w * 0.82, h * 0.18)
-      ..lineTo(w * 0.88, h * 0.72)
-      ..lineTo(w * 0.12, h * 0.82)
+      ..moveTo(w * 0.14, h * 0.30)
+      ..lineTo(w * 0.86, h * 0.18)
+      ..lineTo(w * 0.78, h * 0.58)
+      ..lineTo(w * 0.08, h * 0.66)
       ..close();
-    canvas.drawPath(body, Paint()..color = color.withOpacity(0.85));
+    canvas.drawPath(
+      body,
+      Paint()..color = const Color(0xFFF2A0A0).withOpacity(0.95),
+    );
+    canvas.drawPath(body, outline);
+
+    // Metal sleeve below the eraser.
     final sleeve = Path()
-      ..moveTo(w * 0.12, h * 0.82)
-      ..lineTo(w * 0.88, h * 0.72)
-      ..lineTo(w * 0.90, h * 0.92)
-      ..lineTo(w * 0.10, h * 0.96)
+      ..moveTo(w * 0.08, h * 0.66)
+      ..lineTo(w * 0.78, h * 0.58)
+      ..lineTo(w * 0.82, h * 0.84)
+      ..lineTo(w * 0.06, h * 0.90)
       ..close();
     canvas.drawPath(
       sleeve,
-      Paint()..color = color.withOpacity(0.45),
+      Paint()..color = color.withOpacity(0.35),
+    );
+    canvas.drawPath(sleeve, outline);
+
+    // Angled top edge highlight.
+    canvas.drawLine(
+      Offset(w * 0.14, h * 0.30),
+      Offset(w * 0.86, h * 0.18),
+      Paint()
+        ..color = Colors.white.withOpacity(0.55)
+        ..strokeWidth = 1.2,
     );
   }
 

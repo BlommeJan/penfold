@@ -266,6 +266,31 @@ class _NotebookScreenState extends State<NotebookScreen>
     return Rect.fromLTWH(0, 0, slotViewport.width, height);
   }
 
+  /// Bounds of the visible page paper — used to center/fit when zooming out.
+  Rect _documentFitCenterBounds(Size viewport) {
+    final slotViewport = _pageSlotViewport(viewport);
+    if (_pages.isEmpty) {
+      return Offset.zero & slotViewport;
+    }
+    if (_pageTurnEnabled) {
+      final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
+      final paper = _paperRectInSlot(_pages[idx], slotViewport);
+      return paper;
+    }
+    final pageHeight = slotViewport.height;
+    final scrollOffset =
+        _scrollController.hasClients ? _scrollController.offset : 0.0;
+    final pageIndex =
+        (scrollOffset / pageHeight).floor().clamp(0, _pages.length - 1);
+    final paper = _paperRectInSlot(_pages[pageIndex], slotViewport);
+    return Rect.fromLTWH(
+      paper.left,
+      pageIndex * pageHeight + paper.top,
+      paper.width,
+      paper.height,
+    );
+  }
+
   Rect _paperRectInSlot(NotePage page, Size slotViewport) {
     final displaySize = PageCoords.pageDisplaySize(
       slotViewport,
@@ -308,6 +333,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       toolState: _toolState,
       viewportSize: viewport,
       contentBounds: _documentContentBounds(viewport),
+      fitCenterBounds: _documentFitCenterBounds(viewport),
       scrollController: _pageTurnEnabled ? null : _scrollController,
       zoomEnabled: _zoomNavigationEnabled,
       isFocalOnPaper: _isFocalOnPaper,

@@ -241,6 +241,13 @@ class PageViewportState extends State<PageViewport> {
 
   @override
   Widget build(BuildContext context) {
+    // Per-page scale is disabled; document-level DocumentViewport owns pinch.
+    // A nested GestureDetector here would win the arena on paper and block
+    // document pinch when fingers are on the page.
+    if (!widget.zoomEnabled) {
+      return widget.child;
+    }
+
     return Listener(
       onPointerDown: _onPointerDown,
       onPointerUp: _onPointerUp,

@@ -2,8 +2,21 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' show Matrix4, MatrixUtils;
 
-/// Minimum document zoom (see multiple pages when zoomed out).
+/// Absolute floor for document zoom (fit-to-page may be higher).
 const double kDocumentMinScale = 0.25;
+
+/// Computes the minimum scale that still fits [fitBounds] inside [viewportSize].
+double documentFitMinScale({
+  required Size viewportSize,
+  required Rect fitBounds,
+}) {
+  if (fitBounds.width <= 0 || fitBounds.height <= 0) {
+    return kDocumentMinScale;
+  }
+  final sx = viewportSize.width / fitBounds.width;
+  final sy = viewportSize.height / fitBounds.height;
+  return (sx < sy ? sx : sy).clamp(kDocumentMinScale, 1.0);
+}
 
 /// Maximum document zoom.
 const double kDocumentMaxScale = 8.0;
@@ -51,8 +64,8 @@ Offset documentCenteredTranslation({
   final contentW = contentBounds.width * scale;
   final contentH = contentBounds.height * scale;
   return Offset(
-    (viewportSize.width - contentW) / 2 + contentBounds.left * scale,
-    (viewportSize.height - contentH) / 2 + contentBounds.top * scale,
+    (viewportSize.width - contentW) / 2 - contentBounds.left * scale,
+    (viewportSize.height - contentH) / 2 - contentBounds.top * scale,
   );
 }
 
@@ -93,16 +106,21 @@ Matrix4 clampDocumentTransform({
   required Matrix4 matrix,
   required Size viewportSize,
   required Rect contentBounds,
+  Rect? fitCenterBounds,
   double boundaryMargin = kDocumentBoundaryMargin,
 }) {
-  final scale =
-      documentScale(matrix).clamp(kDocumentMinScale, kDocumentMaxScale);
+  final fitBounds = fitCenterBounds ?? contentBounds;
+  final minScale = documentFitMinScale(
+    viewportSize: viewportSize,
+    fitBounds: fitBounds,
+  );
+  final scale = documentScale(matrix).clamp(minScale, kDocumentMaxScale);
   var translation = documentTranslation(matrix);
 
   if (scale < kDocumentFitCenterScaleMax) {
     translation = documentCenteredTranslation(
       viewportSize: viewportSize,
-      contentBounds: contentBounds,
+      contentBounds: fitBounds,
       scale: scale,
     );
     return documentMatrixFromScaleTranslation(scale, translation);
@@ -115,7 +133,7 @@ Matrix4 clampDocumentTransform({
   double maxTx;
   if (contentW <= viewportSize.width) {
     final centered =
-        (viewportSize.width - contentW) / 2 + contentBounds.left * scale;
+        (viewportSize.width - contentW) / 2 - contentBounds.left * scale;
     minTx = centered;
     maxTx = centered;
   } else {
@@ -127,7 +145,7 @@ Matrix4 clampDocumentTransform({
   double maxTy;
   if (contentH <= viewportSize.height) {
     final centered =
-        (viewportSize.height - contentH) / 2 + contentBounds.top * scale;
+        (viewportSize.height - contentH) / 2 - contentBounds.top * scale;
     minTy = centered;
     maxTy = centered;
   } else {

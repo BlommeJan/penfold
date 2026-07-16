@@ -23,17 +23,44 @@ void main() {
       expect(documentTranslation(clamped), const Offset(0, -1200));
     });
 
-    test('centers content when zoomed out below 1×', () {
+    test('centers visible page when zoomed out below 1×', () {
+      const pageSlot = Rect.fromLTWH(0, 1200, 1600, 2400);
       final matrix = documentMatrixFromScaleTranslation(0.5, Offset.zero);
       final clamped = clampDocumentTransform(
         matrix: matrix,
         viewportSize: viewport,
         contentBounds: content,
+        fitCenterBounds: pageSlot,
       );
       expect(documentScale(clamped), closeTo(0.5, 0.001));
       final t = documentTranslation(clamped);
-      expect(t.dx, closeTo(200, 0.5));
-      expect(t.dy, closeTo(-300, 0.5));
+      expect(t.dx, closeTo(0, 0.5));
+      expect(t.dy, closeTo(-600, 0.5));
+      expect(
+        documentContentIntersectsViewport(
+          matrix: clamped,
+          viewportSize: viewport,
+          contentBounds: pageSlot,
+        ),
+        isTrue,
+      );
+    });
+
+    test('fit min scale prevents zooming out past full page', () {
+      const pageSlot = Rect.fromLTWH(0, 0, 800, 1200);
+      final minScale = documentFitMinScale(
+        viewportSize: viewport,
+        fitBounds: pageSlot,
+      );
+      expect(minScale, closeTo(1.0, 0.001));
+      final matrix = documentMatrixFromScaleTranslation(0.25, Offset.zero);
+      final clamped = clampDocumentTransform(
+        matrix: matrix,
+        viewportSize: viewport,
+        contentBounds: content,
+        fitCenterBounds: pageSlot,
+      );
+      expect(documentScale(clamped), greaterThanOrEqualTo(minScale - 0.001));
     });
 
     test('clamps pan when zoomed in so content stays reachable', () {
@@ -54,14 +81,20 @@ void main() {
       expect(t.dy, greaterThanOrEqualTo(-9600 - kDocumentBoundaryMargin));
     });
 
-    test('allows zoom out to minimum scale', () {
-      final matrix = documentMatrixFromScaleTranslation(0.25, Offset.zero);
+    test('allows zoom out to fit minimum scale', () {
+      const pageSlot = Rect.fromLTWH(0, 0, 800, 1200);
+      final minScale = documentFitMinScale(
+        viewportSize: viewport,
+        fitBounds: pageSlot,
+      );
+      final matrix = documentMatrixFromScaleTranslation(minScale, Offset.zero);
       final clamped = clampDocumentTransform(
         matrix: matrix,
         viewportSize: viewport,
         contentBounds: content,
+        fitCenterBounds: pageSlot,
       );
-      expect(documentScale(clamped), closeTo(0.25, 0.001));
+      expect(documentScale(clamped), closeTo(minScale, 0.001));
     });
 
     test('never moves content fully outside viewport after clamp', () {

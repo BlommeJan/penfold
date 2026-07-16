@@ -14,6 +14,7 @@ class DocumentViewport extends StatefulWidget {
   final Widget child;
   final Size viewportSize;
   final Rect contentBounds;
+  final Rect fitCenterBounds;
   final ScrollController? scrollController;
   final bool zoomEnabled;
   final bool Function(Offset viewportFocal) isFocalOnPaper;
@@ -25,6 +26,7 @@ class DocumentViewport extends StatefulWidget {
     required this.child,
     required this.viewportSize,
     required this.contentBounds,
+    required this.fitCenterBounds,
     required this.isFocalOnPaper,
     this.scrollController,
     this.zoomEnabled = true,
@@ -109,6 +111,7 @@ class DocumentViewportState extends State<DocumentViewport> {
       matrix: normalizeDocumentTransform(matrix),
       viewportSize: _effectiveViewportSize,
       contentBounds: widget.contentBounds,
+      fitCenterBounds: widget.fitCenterBounds,
     );
   }
 

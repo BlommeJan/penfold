@@ -18,6 +18,8 @@ import '../services/session_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
+import '../services/ink_ocr_service.dart';
+import '../services/zoom_navigation_service.dart';
 import '../widgets/contents_sheet.dart';
 import '../widgets/page_audio_settings.dart';
 import '../widgets/page_editor.dart';
@@ -44,7 +46,8 @@ class NotebookScreen extends StatefulWidget {
   State<NotebookScreen> createState() => _NotebookScreenState();
 }
 
-class _NotebookScreenState extends State<NotebookScreen> {
+class _NotebookScreenState extends State<NotebookScreen>
+    with WidgetsBindingObserver {
   final _db = AppDatabase.instance;
   final _toolState = ToolState();
   final _scrollController = ScrollController();
@@ -54,6 +57,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   List<NotePage> _pages = [];
   bool _loading = true;
   bool _pageTurnEnabled = false;
+  bool _zoomNavigationEnabled = true;
   bool _canUndo = false;
   bool _canRedo = false;
   bool _hasSelection = false;
@@ -68,6 +72,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _pageController = PageController();
     _scrollController.addListener(_onScroll);
     _toolState.addListener(_scheduleSessionSave);
@@ -75,6 +80,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
     StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
     _syncPageTurnMode();
     PageTurnModeService.instance.addListener(_onPageTurnModeChanged);
+    _syncZoomNavigation();
+    ZoomNavigationService.instance.addListener(_onZoomNavigationChanged);
     _syncSpenButton();
     SpenButtonService.instance.addListener(_onSpenButtonChanged);
     unawaited(SpenButtonService.instance.startListening());
@@ -82,12 +89,28 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        _sessionSaveTimer?.cancel();
+        unawaited(_persistSession());
+      case AppLifecycleState.resumed:
+      case AppLifecycleState.inactive:
+        break;
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _sessionSaveTimer?.cancel();
     unawaited(_persistSession());
     _toolState.removeListener(_scheduleSessionSave);
     StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
     PageTurnModeService.instance.removeListener(_onPageTurnModeChanged);
+    ZoomNavigationService.instance.removeListener(_onZoomNavigationChanged);
     SpenButtonService.instance.removeListener(_onSpenButtonChanged);
     SpenButtonService.instance.stopListening();
     _toolState.dispose();
@@ -107,10 +130,21 @@ class _NotebookScreenState extends State<NotebookScreen> {
     final enabled = PageTurnModeService.instance.enabled;
     if (enabled == _pageTurnEnabled) return;
     setState(() => _pageTurnEnabled = enabled);
+    _resetVisiblePageTransform();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _syncViewportToVisiblePage();
     });
+  }
+
+  void _onZoomNavigationChanged() {
+    if (!mounted) return;
+    final enabled = ZoomNavigationService.instance.enabled;
+    if (enabled == _zoomNavigationEnabled) return;
+    setState(() => _zoomNavigationEnabled = enabled);
+    if (!enabled) {
+      _resetVisiblePageTransform();
+    }
   }
 
   Future<void> _syncPageTurnMode() async {
@@ -119,6 +153,28 @@ class _NotebookScreenState extends State<NotebookScreen> {
     }
     if (!mounted) return;
     setState(() => _pageTurnEnabled = PageTurnModeService.instance.enabled);
+  }
+
+  Future<void> _syncZoomNavigation() async {
+    if (!ZoomNavigationService.instance.isLoaded) {
+      await ZoomNavigationService.instance.load();
+    }
+    if (!mounted) return;
+    setState(
+      () => _zoomNavigationEnabled = ZoomNavigationService.instance.enabled,
+    );
+  }
+
+  /// Unified per-page slot height for scroll and page-turn modes.
+  double _pageSlotHeight(Size viewport) => viewport.height;
+
+  Size _pageSlotViewport(Size viewport) =>
+      Size(viewport.width, _pageSlotHeight(viewport));
+
+  void _resetVisiblePageTransform() {
+    if (_pages.isEmpty) return;
+    final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
+    _pageKeys[_pages[idx].id]?.currentState?.resetViewportTransform();
   }
 
   Future<void> _syncStrokeSmoothing() async {
@@ -145,7 +201,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   void _onScroll() {
     if (_pages.isEmpty) return;
     final offset = _scrollController.offset;
-    final pageHeight = MediaQuery.of(context).size.height * 0.85;
+    final pageHeight = _pageSlotHeight(MediaQuery.of(context).size);
     final idx = (offset / pageHeight).round().clamp(0, _pages.length - 1);
     if (idx != _visiblePageIndex) {
       setState(() => _visiblePageIndex = idx);
@@ -322,7 +378,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
       return;
     }
     if (!_scrollController.hasClients) return;
-    final pageHeight = MediaQuery.of(context).size.height * 0.85;
+    final viewport = MediaQuery.of(context).size;
+    final pageHeight = _pageSlotHeight(viewport);
     if (scrollOffset != null && scrollOffset > 0) {
       _scrollController.jumpTo(
         scrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
@@ -372,6 +429,48 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   Future<void> _convertSelectionToText() async {
+    final ocr = InkOcrService.instance;
+    if (!InkOcrService.disableMlKit &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        ocr.modelStatus != InkModelStatus.ready) {
+      if (!mounted) return;
+      unawaited(
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Handwriting model'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const LinearProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(
+                  ocr.modelStatus == InkModelStatus.error
+                      ? 'Retrying download…'
+                      : 'Downloading English handwriting model (one-time, on-device)…',
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      final ready = await ocr.ensureModelReady();
+      if (mounted) Navigator.of(context, rootNavigator: true).pop();
+      if (!mounted) return;
+      if (!ready) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              ocr.modelError ??
+                  'Handwriting model not ready. Check network and try again.',
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
     final text = await _activeCanvas?.convertSelectionToText();
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
@@ -426,7 +525,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       unawaited(_maybeWarnPageComplexity(_pages[index].id, onOpen: true));
       return;
     }
-    final pageHeight = MediaQuery.of(context).size.height * 0.85;
+    final pageHeight = _pageSlotHeight(MediaQuery.of(context).size);
     await _scrollController.animateTo(
       index * pageHeight,
       duration: const Duration(milliseconds: 350),
@@ -688,6 +787,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       }
       await _db.updatePageSize(_activePage.id, chosen);
       setState(() => _activePage.pageSize = chosen);
+      _resetVisiblePageTransform();
       return;
     }
 
@@ -727,6 +827,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         _activePage.orientation = chosen;
         _activePage.aspect = aspect;
       });
+      _resetVisiblePageTransform();
       return;
     }
 
@@ -875,13 +976,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
     });
   }
 
-  Widget _pageEditorAt(int i, Size viewportSize) {
+  Widget _pageEditorAt(int i, Size slotViewport) {
     return PageEditor(
       key: _pageKeys[_pages[i].id],
       page: _pages[i],
       notebook: widget.notebook,
       toolState: _toolState,
-      viewportSize: viewportSize,
+      viewportSize: slotViewport,
+      zoomEnabled: _zoomNavigationEnabled,
       onCanvasReady: (state) {
         if (i == _visiblePageIndex) {
           _setActiveCanvas(state);
@@ -905,7 +1007,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   Widget _buildScrollBody(Size viewport) {
-    final pageHeight = viewport.height * 0.85;
+    final slotViewport = _pageSlotViewport(viewport);
+    final pageHeight = slotViewport.height;
     return ScrollConfiguration(
       behavior: const PenfoldScrollBehavior(),
       child: CustomScrollView(
@@ -918,10 +1021,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
             SliverToBoxAdapter(
               child: SizedBox(
                 height: pageHeight,
-                child: _pageEditorAt(
-                  i,
-                  Size(viewport.width, pageHeight),
-                ),
+                child: _pageEditorAt(i, slotViewport),
               ),
             ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -931,6 +1031,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   Widget _buildPageTurnBody(Size viewport) {
+    final slotViewport = _pageSlotViewport(viewport);
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
@@ -939,7 +1040,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
           : const PageScrollPhysics(),
       onPageChanged: _onVisiblePageChanged,
       itemCount: _pages.length,
-      itemBuilder: (context, i) => _pageEditorAt(i, viewport),
+      itemBuilder: (context, i) => _pageEditorAt(i, slotViewport),
     );
   }
 

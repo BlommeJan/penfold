@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math' as math;
-import 'dart:typed_data';
-import 'dart:ui' as ui;
+import 'dart:ui' show Rect;
 
-import 'package:flutter/material.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_mlkit_digital_ink_recognition/google_mlkit_digital_ink_recognition.dart'
+    as mlkit;
 import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
@@ -16,7 +14,18 @@ import 'ocr_dictionary.dart';
 
 const _uuid = Uuid();
 
-/// On-device handwriting OCR queue (ML Kit, no network).
+/// BCP-47 language tag for English handwriting (ML Kit base model).
+const inkRecognitionLanguageModel = 'en-US';
+
+/// Download / readiness state for the on-device handwriting model.
+enum InkModelStatus {
+  notReady,
+  downloading,
+  ready,
+  error,
+}
+
+/// On-device handwriting OCR queue (ML Kit Digital Ink, no cloud accounts).
 class InkOcrService {
   InkOcrService._();
   static final InkOcrService instance = InkOcrService._();
@@ -24,7 +33,15 @@ class InkOcrService {
   final _db = AppDatabase.instance;
   final _queue = <_OcrJob>[];
   bool _processing = false;
-  TextRecognizer? _recognizer;
+  mlkit.DigitalInkRecognizer? _recognizer;
+  final _modelManager = mlkit.DigitalInkRecognizerModelManager();
+
+  InkModelStatus modelStatus = InkModelStatus.notReady;
+  String? modelError;
+  final modelStatusNotifier =
+      ValueNotifier<InkModelStatus>(InkModelStatus.notReady);
+
+  Future<bool>? _modelEnsureFuture;
 
   /// When true (unit tests), skips ML Kit and marks strokes failed quietly.
   static bool disableMlKit = false;
@@ -32,12 +49,15 @@ class InkOcrService {
   /// When [disableMlKit] is true, selection OCR returns this (v0.2.37 tests).
   static String? testSelectionRecognitionResult;
 
+  /// When [disableMlKit] is true, background stroke OCR returns this.
+  static String? testStrokeRecognitionResult;
+
   Future<void> enqueueStroke(Stroke stroke) async {
     if (stroke.tool != ToolType.pen &&
         stroke.tool != ToolType.highlighter) {
       return;
     }
-    if (stroke.points.length < 2) return;
+    if (stroke.points.length < minInkPointsForRecognition) return;
 
     final entryId = _uuid.v4();
     await _db.insertInkIndexPending(
@@ -47,6 +67,50 @@ class InkOcrService {
     );
     _queue.add(_OcrJob(entryId: entryId, stroke: stroke.copy()));
     unawaited(_drainQueue());
+    unawaited(ensureModelReady());
+  }
+
+  /// Ensures the English handwriting model is downloaded and the recognizer is open.
+  Future<bool> ensureModelReady() async {
+    if (disableMlKit || !_mlKitAvailable) return false;
+    if (modelStatus == InkModelStatus.ready) return true;
+
+    _modelEnsureFuture ??= _ensureModelOnce();
+    return _modelEnsureFuture!;
+  }
+
+  Future<bool> _ensureModelOnce() async {
+    try {
+      _setModelStatus(InkModelStatus.downloading);
+      modelError = null;
+
+      final alreadyDownloaded =
+          await _modelManager.isModelDownloaded(inkRecognitionLanguageModel);
+      if (!alreadyDownloaded) {
+        final ok = await _modelManager.downloadModel(
+          inkRecognitionLanguageModel,
+          isWifiRequired: false,
+        );
+        if (!ok) {
+          throw StateError('Handwriting model download failed');
+        }
+      }
+
+      _recognizer ??=
+          mlkit.DigitalInkRecognizer(languageCode: inkRecognitionLanguageModel);
+      _setModelStatus(InkModelStatus.ready);
+      return true;
+    } catch (e) {
+      modelError = e.toString();
+      _setModelStatus(InkModelStatus.error);
+      _modelEnsureFuture = null;
+      return false;
+    }
+  }
+
+  void _setModelStatus(InkModelStatus status) {
+    modelStatus = status;
+    modelStatusNotifier.value = status;
   }
 
   Future<void> _drainQueue() async {
@@ -89,14 +153,14 @@ class InkOcrService {
   ) async {
     final ink = strokes.where(isConvertibleInkStroke).toList();
     if (ink.isEmpty || bounds.width <= 0 || bounds.height <= 0) return null;
+    if (!hasEnoughInkPoints(ink)) return null;
 
     String? text;
     if (disableMlKit || !_mlKitAvailable) {
       text = testSelectionRecognitionResult;
     } else {
-      final png = await _renderStrokesPng(ink, bounds);
-      if (png == null) return null;
-      text = await _recognizePng(png, tag: 'selection');
+      if (!await ensureModelReady()) return null;
+      text = await _recognizeInk(ink, bounds);
     }
 
     if (text == null || text.trim().isEmpty) return null;
@@ -105,27 +169,30 @@ class InkOcrService {
   }
 
   Future<String?> _recognizeStroke(Stroke stroke) async {
-    if (disableMlKit || !_mlKitAvailable) return null;
-    final png = await _renderStrokesPng([stroke], stroke.bounds);
-    if (png == null) return null;
-    return _recognizePng(png, tag: stroke.id);
+    if (disableMlKit || !_mlKitAvailable) {
+      return testStrokeRecognitionResult;
+    }
+    if (!await ensureModelReady()) return null;
+    return _recognizeInk([stroke], stroke.bounds);
   }
 
-  Future<String?> _recognizePng(_PngImage png, {required String tag}) async {
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/penfold_ocr_$tag.png');
-    await file.writeAsBytes(png.bytes, flush: true);
+  Future<String?> _recognizeInk(List<Stroke> strokes, Rect bounds) async {
+    final recognizer = _recognizer;
+    if (recognizer == null) return null;
 
-    _recognizer ??= TextRecognizer(script: TextRecognitionScript.latin);
-    try {
-      final input = InputImage.fromFilePath(file.path);
-      final result = await _recognizer!.processImage(input);
-      return result.text;
-    } finally {
-      if (await file.exists()) {
-        await file.delete();
-      }
-    }
+    final ink = strokesToMlKitInk(strokes);
+    if (ink.strokes.isEmpty) return null;
+
+    final context = mlkit.DigitalInkRecognitionContext(
+      writingArea: mlkit.WritingArea(
+        width: bounds.width.clamp(1.0, double.infinity),
+        height: bounds.height.clamp(1.0, double.infinity),
+      ),
+    );
+
+    final candidates = await recognizer.recognize(ink, context: context);
+    if (candidates.isEmpty) return null;
+    return candidates.first.text;
   }
 
   bool get _mlKitAvailable {
@@ -137,57 +204,11 @@ class InkOcrService {
     }
   }
 
-  Future<_PngImage?> _renderStrokesPng(List<Stroke> strokes, Rect bounds) async {
-    if (strokes.isEmpty) return null;
-    final maxWidth =
-        strokes.map((s) => s.width).fold(0.0, math.max);
-    final padded = bounds.inflate(maxWidth * 2 + 20);
-    if (padded.width <= 0 || padded.height <= 0) return null;
-
-    const scale = 2.0;
-    final w = (padded.width * scale).ceil().clamp(32, 640);
-    final h = (padded.height * scale).ceil().clamp(32, 640);
-
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()));
-    canvas.drawRect(
-      Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()),
-      Paint()..color = Colors.white,
-    );
-
-    for (final stroke in strokes) {
-      final paint = Paint()
-        ..color = Colors.black
-        ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round
-        ..style = PaintingStyle.stroke
-        ..isAntiAlias = true
-        ..strokeWidth = (stroke.width * scale).clamp(2.0, 12.0);
-
-      final pts = stroke.points;
-      for (var i = 1; i < pts.length; i++) {
-        final a = Offset(
-          (pts[i - 1].x - padded.left) * scale,
-          (pts[i - 1].y - padded.top) * scale,
-        );
-        final b = Offset(
-          (pts[i].x - padded.left) * scale,
-          (pts[i].y - padded.top) * scale,
-        );
-        canvas.drawLine(a, b, paint);
-      }
-    }
-
-    final picture = recorder.endRecording();
-    final image = await picture.toImage(w, h);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    if (byteData == null) return null;
-    return _PngImage(byteData.buffer.asUint8List(), w, h);
-  }
-
   Future<void> dispose() async {
     await _recognizer?.close();
     _recognizer = null;
+    _setModelStatus(InkModelStatus.notReady);
+    _modelEnsureFuture = null;
   }
 }
 
@@ -196,12 +217,4 @@ class _OcrJob {
   final Stroke stroke;
 
   const _OcrJob({required this.entryId, required this.stroke});
-}
-
-class _PngImage {
-  final Uint8List bytes;
-  final int width;
-  final int height;
-
-  const _PngImage(this.bytes, this.width, this.height);
 }

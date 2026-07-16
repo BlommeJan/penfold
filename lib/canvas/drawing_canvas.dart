@@ -66,6 +66,22 @@ class ToolState extends ChangeNotifier {
   /// Chaikin smoothing on ink before stroke commit (default on).
   bool strokeSmoothing = true;
 
+  /// User-added swatches beyond toolbar presets (Agent 11 brush UI).
+  final List<Color> customPenColors = [];
+  final List<Color> customHighlighterColors = [];
+
+  void addCustomPenColor(Color color) {
+    if (!customPenColors.contains(color)) {
+      customPenColors.add(color);
+    }
+  }
+
+  void addCustomHighlighterColor(Color color) {
+    if (!customHighlighterColors.contains(color)) {
+      customHighlighterColors.add(color);
+    }
+  }
+
   void set(void Function(ToolState) fn) {
     fn(this);
     notifyListeners();

@@ -128,6 +128,31 @@ void main() {
     });
   });
 
+  group('strokesToMlKitInk', () {
+    test('maps stroke points with synthetic timestamps', () {
+      final stroke = _penStroke('s1', 'pg');
+      final ink = strokesToMlKitInk([stroke]);
+      expect(ink.strokes.length, 1);
+      expect(ink.strokes.first.points.length, stroke.points.length);
+      expect(ink.strokes.first.points.first.x, stroke.points.first.x);
+      expect(ink.strokes.first.points.last.t, greaterThan(0));
+    });
+
+    test('skips strokes with fewer than two points', () {
+      final short = Stroke(
+        id: 's2',
+        pageId: 'pg',
+        tool: ToolType.pen,
+        color: 0xFF000000,
+        width: 3,
+        points: const [StrokePoint(1, 1, 0.5)],
+        z: 1,
+      );
+      final ink = strokesToMlKitInk([short]);
+      expect(ink.strokes, isEmpty);
+    });
+  });
+
   group('recognizeSelection', () {
     test('returns test hook result with dictionary correction', () async {
       final db = AppDatabase.instance;

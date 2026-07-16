@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.57
+**Version:** 0.2.58
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.57.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.58.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -64,8 +64,12 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] Open a notebook and return to the library
 - [ ] Rename a notebook (long-press or menu)
 - [ ] Delete a notebook (moves to Trash — hidden from library; data kept on device)
+- [ ] Open Trash and restore a notebook
+- [ ] Permanently delete a notebook from Trash
 - [ ] Create nested folders and drill in with breadcrumbs
 - [ ] Move a notebook into a folder
+- [ ] Delete a folder (moves to Trash with its notebooks)
+- [ ] Restore a folder from Trash
 - [ ] Filter: All, Uncategorized, and folder chips
 - [ ] Search notebooks by title or content
 - [ ] Add tags to a notebook and filter by tag
@@ -198,4 +202,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.2.57*
+*Last updated for Penfold v0.2.58*

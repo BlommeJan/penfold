@@ -13,6 +13,7 @@ import '../services/pdf_import.dart';
 import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
 import 'settings_screen.dart';
+import 'trash_screen.dart';
 
 const _uuid = Uuid();
 
@@ -229,6 +230,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
     _refresh();
   }
 
+  Future<void> _openTrash() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const TrashScreen()),
+    );
+    _refresh();
+  }
+
   Future<void> _createFolder({String? parentId}) async {
     final ctrl = TextEditingController(text: 'New folder');
     final ok = await showDialog<bool>(
@@ -280,7 +288,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('Delete'),
+              title: const Text('Move to Trash'),
               onTap: () => Navigator.pop(ctx, 'delete'),
             ),
           ],
@@ -314,16 +322,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Delete "${folder.name}"?'),
+          title: Text('Move "${folder.name}" to Trash?'),
           content: const Text(
-              'Notebooks move to the parent folder. Subfolders are kept.'),
+            'The folder and its notebooks move to Trash for 30 days.',
+          ),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
                 child: const Text('Cancel')),
             FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
+                child: const Text('Move to Trash')),
           ],
         ),
       );
@@ -331,7 +340,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         if (_currentFolderId == folder.id) {
           _goToFolder(folder.parentId);
         }
-        await _db.deleteFolder(folder.id);
+        await _db.softDeleteFolder(folder.id);
         _refresh();
       }
     }
@@ -637,8 +646,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
       builder: (ctx) => AlertDialog(
         title: Text('Move "${n.title}" to Trash?'),
         content: const Text(
-          'The notebook is hidden from the library. Ink and pages stay on this '
-          'device until Trash is emptied (Trash view coming soon). '
+          'The notebook is hidden from the library for 30 days. '
+          'Ink and pages stay on this device until Trash is emptied. '
           'Export a backup first if you want an extra copy.',
         ),
         actions: [
@@ -1140,6 +1149,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const SettingsScreen()),
             ),
+          ),
+          IconButton(
+            tooltip: 'Trash',
+            icon: const Icon(Icons.delete_outline_rounded),
+            onPressed: _openTrash,
           ),
           IconButton(
             tooltip: 'New notebook',

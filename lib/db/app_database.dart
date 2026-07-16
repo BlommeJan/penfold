@@ -14,8 +14,10 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 15;
+  static const _schemaVersion = 16;
   static const _notDeleted = 'deleted_at IS NULL';
+  static const _folderNotDeleted = 'deleted_at IS NULL';
+  static const trashRetention = Duration(days: 30);
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -50,7 +52,8 @@ class AppDatabase {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         sort_order INTEGER NOT NULL,
-        parent_id TEXT REFERENCES folders(id)
+        parent_id TEXT REFERENCES folders(id),
+        deleted_at INTEGER
       )''');
     await db.execute('''
       CREATE TABLE notebooks(
@@ -237,6 +240,11 @@ class AppDatabase {
     if (oldV < 15) {
       if (await _hasTable(db, 'notebooks')) {
         await _addColumnIfMissing(db, 'notebooks', 'deleted_at', 'INTEGER');
+      }
+    }
+    if (oldV < 16) {
+      if (await _hasTable(db, 'folders')) {
+        await _addColumnIfMissing(db, 'folders', 'deleted_at', 'INTEGER');
       }
     }
   }
@@ -458,10 +466,10 @@ class AppDatabase {
     final database = await db;
     final rows = parentId == null
         ? await database.query('folders',
-            where: 'parent_id IS NULL',
+            where: 'parent_id IS NULL AND $_folderNotDeleted',
             orderBy: 'sort_order ASC, name ASC')
         : await database.query('folders',
-            where: 'parent_id = ?',
+            where: 'parent_id = ? AND $_folderNotDeleted',
             whereArgs: [parentId],
             orderBy: 'sort_order ASC, name ASC');
     return rows.map(Folder.fromRow).toList();
@@ -469,7 +477,17 @@ class AppDatabase {
 
   Future<List<Folder>> allFolders() async {
     final rows = await (await db)
-        .query('folders', orderBy: 'sort_order ASC, name ASC');
+        .query('folders', where: _folderNotDeleted, orderBy: 'sort_order ASC, name ASC');
+    return rows.map(Folder.fromRow).toList();
+  }
+
+  /// Soft-deleted folders (Trash).
+  Future<List<Folder>> trashedFolders() async {
+    final rows = await (await db).query(
+      'folders',
+      where: 'deleted_at IS NOT NULL',
+      orderBy: 'deleted_at DESC',
+    );
     return rows.map(Folder.fromRow).toList();
   }
 
@@ -498,6 +516,162 @@ class AppDatabase {
     await database.update('notebooks', {'folder_id': parentId},
         where: 'folder_id = ?', whereArgs: [id]);
     await database.delete('folders', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<String>> _collectFolderTreeIds(
+    Database database,
+    String rootId,
+  ) async {
+    final ids = <String>[rootId];
+    var index = 0;
+    while (index < ids.length) {
+      final parent = ids[index++];
+      final rows = await database.query(
+        'folders',
+        columns: ['id'],
+        where: 'parent_id = ?',
+        whereArgs: [parent],
+      );
+      for (final row in rows) {
+        final id = row['id'] as String;
+        if (!ids.contains(id)) ids.add(id);
+      }
+    }
+    return ids;
+  }
+
+  Future<bool> _folderIsActive(Database database, String id) async {
+    final rows = await database.query(
+      'folders',
+      columns: ['deleted_at'],
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (rows.isEmpty) return false;
+    return rows.first['deleted_at'] == null;
+  }
+
+  Future<void> softDeleteFolder(String id) async {
+    final database = await db;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final folderIds = await _collectFolderTreeIds(database, id);
+    if (folderIds.isEmpty) return;
+    final placeholders = List.filled(folderIds.length, '?').join(',');
+    await database.transaction((txn) async {
+      await txn.update(
+        'folders',
+        {'deleted_at': now},
+        where: 'id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      final notebookRows = await txn.query(
+        'notebooks',
+        columns: ['id'],
+        where: 'folder_id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      await txn.update(
+        'notebooks',
+        {'deleted_at': now},
+        where: 'folder_id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      if (_searchBackend != _SearchBackend.none && notebookRows.isNotEmpty) {
+        final nbIds =
+            notebookRows.map((row) => row['id'] as String).toList();
+        final nbPlaceholders = List.filled(nbIds.length, '?').join(',');
+        await txn.delete(
+          'search_index',
+          where: 'notebook_id IN ($nbPlaceholders)',
+          whereArgs: nbIds,
+        );
+      }
+    });
+  }
+
+  Future<void> restoreFolder(String id) async {
+    final database = await db;
+    final folderIds = await _collectFolderTreeIds(database, id);
+    if (folderIds.isEmpty) return;
+    final placeholders = List.filled(folderIds.length, '?').join(',');
+    String? parentId;
+    final rootRows = await database.query(
+      'folders',
+      columns: ['parent_id'],
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (rootRows.isNotEmpty) {
+      parentId = rootRows.first['parent_id'] as String?;
+    }
+    if (parentId != null && !await _folderIsActive(database, parentId)) {
+      await database.update(
+        'folders',
+        {'parent_id': null},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }
+    final notebookRows = await database.query(
+      'notebooks',
+      columns: ['id'],
+      where: 'folder_id IN ($placeholders)',
+      whereArgs: folderIds,
+    );
+    await database.transaction((txn) async {
+      await txn.update(
+        'folders',
+        {'deleted_at': null},
+        where: 'id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      await txn.update(
+        'notebooks',
+        {'deleted_at': null},
+        where: 'folder_id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+    });
+    for (final row in notebookRows) {
+      await refreshSearchIndex(row['id'] as String);
+    }
+  }
+
+  Future<void> deleteFolderPermanently(String id) async {
+    final database = await db;
+    final folderIds = await _collectFolderTreeIds(database, id);
+    if (folderIds.isEmpty) return;
+    final placeholders = List.filled(folderIds.length, '?').join(',');
+    await database.transaction((txn) async {
+      final notebookRows = await txn.query(
+        'notebooks',
+        columns: ['id'],
+        where: 'folder_id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      if (_searchBackend != _SearchBackend.none && notebookRows.isNotEmpty) {
+        final nbIds =
+            notebookRows.map((row) => row['id'] as String).toList();
+        final nbPlaceholders = List.filled(nbIds.length, '?').join(',');
+        await txn.delete(
+          'search_index',
+          where: 'notebook_id IN ($nbPlaceholders)',
+          whereArgs: nbIds,
+        );
+      }
+      await txn.delete(
+        'notebooks',
+        where: 'folder_id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+      await txn.delete(
+        'folders',
+        where: 'id IN ($placeholders)',
+        whereArgs: folderIds,
+      );
+    });
   }
 
   Future<void> moveNotebookToFolder(String notebookId, String? folderId) async {
@@ -738,6 +912,31 @@ class AppDatabase {
     }
   }
 
+  Future<void> restoreNotebook(String id) async {
+    final database = await db;
+    String? folderId;
+    final row = await database.query(
+      'notebooks',
+      columns: ['folder_id'],
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (row.isNotEmpty) {
+      folderId = row.first['folder_id'] as String?;
+    }
+    if (folderId != null && !await _folderIsActive(database, folderId)) {
+      folderId = null;
+    }
+    await database.update(
+      'notebooks',
+      {'deleted_at': null, 'folder_id': folderId},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await refreshSearchIndex(id);
+  }
+
   Future<void> deleteNotebook(String id) async {
     final database = await db;
     if (_searchBackend != _SearchBackend.none) {
@@ -745,6 +944,59 @@ class AppDatabase {
           where: 'notebook_id = ?', whereArgs: [id]);
     }
     await database.delete('notebooks', where: 'id = ?', whereArgs: [id]);
+  }
+
+  /// Hard-delete notebooks and folders older than [trashRetention].
+  Future<void> purgeTrash({int? nowMs}) async {
+    final database = await db;
+    final now = nowMs ?? DateTime.now().millisecondsSinceEpoch;
+    final cutoff = now - trashRetention.inMilliseconds;
+    await database.transaction((txn) async {
+      final nbRows = await txn.query(
+        'notebooks',
+        columns: ['id'],
+        where: 'deleted_at IS NOT NULL AND deleted_at < ?',
+        whereArgs: [cutoff],
+      );
+      if (nbRows.isNotEmpty) {
+        final nbIds = nbRows.map((row) => row['id'] as String).toList();
+        final nbPlaceholders = List.filled(nbIds.length, '?').join(',');
+        if (_searchBackend != _SearchBackend.none) {
+          await txn.delete(
+            'search_index',
+            where: 'notebook_id IN ($nbPlaceholders)',
+            whereArgs: nbIds,
+          );
+        }
+        await txn.delete(
+          'notebooks',
+          where: 'id IN ($nbPlaceholders)',
+          whereArgs: nbIds,
+        );
+      }
+
+      final folderRows = await txn.query(
+        'folders',
+        columns: ['id'],
+        where: 'deleted_at IS NOT NULL AND deleted_at < ?',
+        whereArgs: [cutoff],
+      );
+      if (folderRows.isNotEmpty) {
+        final folderIds =
+            folderRows.map((row) => row['id'] as String).toList();
+        final placeholders = List.filled(folderIds.length, '?').join(',');
+        await txn.delete(
+          'notebooks',
+          where: 'folder_id IN ($placeholders)',
+          whereArgs: folderIds,
+        );
+        await txn.delete(
+          'folders',
+          where: 'id IN ($placeholders)',
+          whereArgs: folderIds,
+        );
+      }
+    });
   }
 
   // ---- Pages ----

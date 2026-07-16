@@ -2,6 +2,18 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.58] — 2026
+
+### Added
+
+- **Trash screen** — restore or permanently delete trashed notebooks and folders with days-remaining labels
+- **Trash retention** — folders gain `deleted_at` and purge runs on app start (30-day retention)
+- **Trash tests** — purge and restore coverage in `trash_retention_test.dart`
+
+### Changed
+
+- **Folder deletion** — library folder delete now moves the folder + notebooks into Trash
+
 ## [0.2.57] — 2026
 
 ### Added

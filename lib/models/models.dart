@@ -94,19 +94,24 @@ class Folder {
   String name;
   int sortOrder;
   String? parentId;
+  final int? deletedAt;
 
   Folder({
     required this.id,
     required this.name,
     required this.sortOrder,
     this.parentId,
+    this.deletedAt,
   });
+
+  bool get isDeleted => deletedAt != null;
 
   Map<String, Object?> toRow() => {
         'id': id,
         'name': name,
         'sort_order': sortOrder,
         'parent_id': parentId,
+        'deleted_at': deletedAt,
       };
 
   static Folder fromRow(Map<String, Object?> r) => Folder(
@@ -114,6 +119,7 @@ class Folder {
         name: r['name'] as String,
         sortOrder: r['sort_order'] as int,
         parentId: r['parent_id'] as String?,
+        deletedAt: r['deleted_at'] as int?,
       );
 }
 

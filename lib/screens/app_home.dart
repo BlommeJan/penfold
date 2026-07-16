@@ -25,6 +25,7 @@ class _AppHomeState extends State<AppHome> {
   void initState() {
     super.initState();
     unawaited(BackupService.instance.createAutoBackupIfDue());
+    unawaited(AppDatabase.instance.purgeTrash());
     _resolve();
   }
 

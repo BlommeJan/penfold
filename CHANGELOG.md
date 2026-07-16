@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.59] — 2026
+
+### Added
+
+- **Library drawer** — hamburger menu for overview, folders, Trash, and Settings with live trash counts
+
 ## [0.2.58] — 2026
 
 ### Added

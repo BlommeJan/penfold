@@ -14,6 +14,7 @@ import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
 import 'settings_screen.dart';
 import 'trash_screen.dart';
+import '../widgets/library_drawer.dart';
 
 const _uuid = Uuid();
 
@@ -51,6 +52,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
   String? _loadError;
   final Map<String, String> _thumbnailPaths = {};
   int _prefetchGeneration = 0;
+  int _trashedNotebookCount = 0;
+  int _trashedFolderCount = 0;
 
   @override
   void initState() {
@@ -105,6 +108,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
     try {
       final allFolders = await _db.allFolders();
       final allTags = await _db.allTags();
+      final trashedNotebooks = await _db.trashedNotebooks();
+      final trashedFolders = await _db.trashedFolders();
       final childFolders = _currentFolderId == null
           ? await _db.folders()
           : await _db.folders(parentId: _currentFolderId);
@@ -128,6 +133,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
         _allTags = allTags;
         _childFolders = childFolders;
         _notebooks = filtered;
+        _trashedNotebookCount = trashedNotebooks.length;
+        _trashedFolderCount = trashedFolders.length;
         _loading = false;
       });
       await _syncThumbnailPaths(filtered);
@@ -1137,6 +1144,29 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     : 'No notebooks yet';
 
     return Scaffold(
+      drawer: LibraryDrawer(
+        folders: _allFolders,
+        currentFolderId: _currentFolderId,
+        trashCount: _trashedNotebookCount + _trashedFolderCount,
+        onOverview: () {
+          Navigator.pop(context);
+          _goToRoot();
+        },
+        onOpenTrash: () {
+          Navigator.pop(context);
+          _openTrash();
+        },
+        onOpenSettings: () {
+          Navigator.pop(context);
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const SettingsScreen()),
+          );
+        },
+        onFolderSelected: (id) {
+          Navigator.pop(context);
+          _openFolder(id);
+        },
+      ),
       backgroundColor: const Color(0xFFF6F7F9),
       appBar: AppBar(
         backgroundColor: Colors.white,

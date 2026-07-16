@@ -6,6 +6,7 @@ import 'package:penfold/db/app_database.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/services/backup_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path/path.dart' as p;
 
 void main() {
   late Directory tmp;
@@ -75,5 +76,44 @@ void main() {
     final archive = ZipDecoder().decodeBytes(await zip.readAsBytes());
     final names = archive.map((e) => e.name).toList();
     expect(names.any((n) => n.startsWith('images/')), isTrue);
+  });
+
+  test('createAutoBackup writes zip under backups/', () async {
+    final db = AppDatabase.instance;
+    await db.insertNotebook(Notebook(
+      id: 'nb-auto',
+      title: 'Auto',
+      coverColor: 0xFF2455C3,
+      template: PageTemplate.lined,
+      createdAt: 1,
+      updatedAt: 1,
+    ));
+
+    final zip = await BackupService.instance.createAutoBackup();
+    expect(zip, isNotNull);
+    expect(await zip!.exists(), isTrue);
+    expect(p.basename(zip.path), startsWith(BackupService.autoBackupPrefix));
+
+    final latest = await BackupService.instance.latestAutoBackup();
+    expect(latest, isNotNull);
+    expect(latest!.file.path, zip.path);
+  });
+
+  test('createAutoBackupIfDue skips when recent backup exists', () async {
+    final db = AppDatabase.instance;
+    await db.insertNotebook(Notebook(
+      id: 'nb-due',
+      title: 'Due',
+      coverColor: 0xFF2455C3,
+      template: PageTemplate.lined,
+      createdAt: 1,
+      updatedAt: 1,
+    ));
+
+    final first = await BackupService.instance.createAutoBackupIfDue();
+    expect(first, isNotNull);
+
+    final second = await BackupService.instance.createAutoBackupIfDue();
+    expect(second, isNull);
   });
 }

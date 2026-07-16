@@ -14,7 +14,8 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 14;
+  static const _schemaVersion = 15;
+  static const _notDeleted = 'deleted_at IS NULL';
 
   /// Test hook: when set, the database lives here instead of the app
   /// documents directory (used by unit tests with sqflite_common_ffi).
@@ -60,7 +61,8 @@ class AppDatabase {
         page_size INTEGER NOT NULL DEFAULT 0,
         folder_id TEXT REFERENCES folders(id),
         created INTEGER NOT NULL,
-        updated INTEGER NOT NULL
+        updated INTEGER NOT NULL,
+        deleted_at INTEGER
       )''');
     await db.execute('''
       CREATE TABLE pages(
@@ -230,6 +232,11 @@ class AppDatabase {
     if (oldV < 14) {
       if (await _hasTable(db, 'pages')) {
         await _addColumnIfMissing(db, 'pages', 'audio_path', 'TEXT');
+      }
+    }
+    if (oldV < 15) {
+      if (await _hasTable(db, 'notebooks')) {
+        await _addColumnIfMissing(db, 'notebooks', 'deleted_at', 'INTEGER');
       }
     }
   }
@@ -502,8 +509,11 @@ class AppDatabase {
 
   Future<Notebook?> notebookById(String id) async {
     final database = await db;
-    final rows =
-        await database.query('notebooks', where: 'id = ?', whereArgs: [id]);
+    final rows = await database.query(
+      'notebooks',
+      where: 'id = ? AND $_notDeleted',
+      whereArgs: [id],
+    );
     if (rows.isEmpty) return null;
     return Notebook.fromRow(rows.first);
   }
@@ -561,14 +571,26 @@ class AppDatabase {
   Future<List<Notebook>> notebooks({String? folderId}) async {
     final database = await db;
     final rows = folderId == null
-        ? await database.query('notebooks', orderBy: 'updated DESC')
+        ? await database.query('notebooks',
+            where: _notDeleted, orderBy: 'updated DESC')
         : folderId == ''
             ? await database.query('notebooks',
-                where: 'folder_id IS NULL', orderBy: 'updated DESC')
+                where: 'folder_id IS NULL AND $_notDeleted',
+                orderBy: 'updated DESC')
             : await database.query('notebooks',
-                where: 'folder_id = ?',
+                where: 'folder_id = ? AND $_notDeleted',
                 whereArgs: [folderId],
                 orderBy: 'updated DESC');
+    return rows.map(Notebook.fromRow).toList();
+  }
+
+  /// Soft-deleted notebooks (Trash prep for Agent 17).
+  Future<List<Notebook>> trashedNotebooks() async {
+    final rows = await (await db).query(
+      'notebooks',
+      where: 'deleted_at IS NOT NULL',
+      orderBy: 'deleted_at DESC',
+    );
     return rows.map(Notebook.fromRow).toList();
   }
 
@@ -630,8 +652,11 @@ class AppDatabase {
     final results = <SearchResult>[];
     for (final row in rows) {
       final id = row['notebook_id'] as String;
-      final nbRows =
-          await database.query('notebooks', where: 'id = ?', whereArgs: [id]);
+      final nbRows = await database.query(
+        'notebooks',
+        where: 'id = ? AND $_notDeleted',
+        whereArgs: [id],
+      );
       if (nbRows.isEmpty) continue;
       results.add(SearchResult(
         notebook: Notebook.fromRow(nbRows.first),
@@ -645,7 +670,9 @@ class AppDatabase {
       Database database, String query) async {
     final like = '%${query.replaceAll('%', '').replaceAll('_', '')}%';
     final titleRows = await database.query('notebooks',
-        where: 'title LIKE ?', whereArgs: [like], orderBy: 'updated DESC');
+        where: 'title LIKE ? AND $_notDeleted',
+        whereArgs: [like],
+        orderBy: 'updated DESC');
     final textRows = await database.rawQuery('''
       SELECT DISTINCT p.notebook_id AS notebook_id, tb.text AS text
       FROM text_blocks tb
@@ -661,8 +688,11 @@ class AppDatabase {
     for (final row in textRows) {
       final id = row['notebook_id'] as String;
       if (byId.containsKey(id)) continue;
-      final nbRows =
-          await database.query('notebooks', where: 'id = ?', whereArgs: [id]);
+      final nbRows = await database.query(
+        'notebooks',
+        where: 'id = ? AND $_notDeleted',
+        whereArgs: [id],
+      );
       if (nbRows.isEmpty) continue;
       final text = row['text'] as String;
       byId[id] = SearchResult(
@@ -690,6 +720,22 @@ class AppDatabase {
     await database.update('notebooks', {'title': title},
         where: 'id = ?', whereArgs: [id]);
     await refreshSearchIndex(id);
+  }
+
+  /// Marks a notebook deleted (Trash). Data stays on disk until hard purge.
+  Future<void> softDeleteNotebook(String id) async {
+    final database = await db;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await database.update(
+      'notebooks',
+      {'deleted_at': now},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (_searchBackend != _SearchBackend.none) {
+      await database.delete('search_index',
+          where: 'notebook_id = ?', whereArgs: [id]);
+    }
   }
 
   Future<void> deleteNotebook(String id) async {
@@ -1126,7 +1172,7 @@ class AppDatabase {
       SELECT n.*
       FROM notebooks n
       JOIN notebook_tags nt ON nt.notebook_id = n.id
-      WHERE nt.tag_id = ?
+      WHERE nt.tag_id = ? AND n.deleted_at IS NULL
       ORDER BY n.updated DESC
     ''', [tagId]);
     return rows.map(Notebook.fromRow).toList();

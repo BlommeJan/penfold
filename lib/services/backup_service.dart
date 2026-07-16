@@ -9,6 +9,19 @@ import 'package:share_plus/share_plus.dart';
 
 import '../db/app_database.dart';
 
+/// Metadata for an on-device auto-backup zip.
+class AutoBackupInfo {
+  const AutoBackupInfo({
+    required this.file,
+    required this.createdAt,
+    required this.bytes,
+  });
+
+  final File file;
+  final DateTime createdAt;
+  final int bytes;
+}
+
 /// Full-database backup and restore — local zip of SQLite + asset folders.
 class BackupService {
   BackupService._();
@@ -16,11 +29,22 @@ class BackupService {
 
   static const dbFileName = 'penfold.db';
   static const assetDirs = ['pdf_sources', 'images', 'pdf_pages', 'thumbnails', 'audio'];
+  static const backupsDirName = 'backups';
+  static const autoBackupPrefix = 'auto-backup-';
+  static const maxAutoBackups = 3;
+  static const autoBackupMinInterval = Duration(hours: 24);
 
   Future<Directory> _docsDir() async {
     final override = AppDatabase.overrideDirPath;
     if (override != null) return Directory(override);
     return getApplicationDocumentsDirectory();
+  }
+
+  Future<Directory> _backupsDir() async {
+    final docs = await _docsDir();
+    final dir = Directory(p.join(docs.path, backupsDirName));
+    if (!dir.existsSync()) dir.createSync(recursive: true);
+    return dir;
   }
 
   /// Creates a zip containing [dbFileName] and known asset directories.
@@ -64,6 +88,63 @@ class BackupService {
     }
   }
 
+  /// Writes an auto-backup zip under `backups/` and prunes older copies.
+  Future<File?> createAutoBackup() async {
+    final docs = await _docsDir();
+    final dbFile = File(p.join(docs.path, dbFileName));
+    if (!dbFile.existsSync()) return null;
+
+    final backups = await _backupsDir();
+    final stamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+    final target = p.join(backups.path, '$autoBackupPrefix$stamp.zip');
+    final zip = await createBackupZip(docsDir: docs, zipPath: target);
+    await _pruneAutoBackups(backups);
+    return zip;
+  }
+
+  /// Creates an auto-backup when the last one is older than [autoBackupMinInterval].
+  Future<File?> createAutoBackupIfDue() async {
+    final latest = await latestAutoBackup();
+    if (latest != null &&
+        DateTime.now().difference(latest.createdAt) < autoBackupMinInterval) {
+      return null;
+    }
+    return createAutoBackup();
+  }
+
+  Future<void> _pruneAutoBackups(Directory backups) async {
+    final files = backups
+        .listSync()
+        .whereType<File>()
+        .where((f) => p.basename(f.path).startsWith(autoBackupPrefix))
+        .toList()
+      ..sort(
+        (a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()),
+      );
+    for (var i = maxAutoBackups; i < files.length; i++) {
+      await files[i].delete();
+    }
+  }
+
+  Future<AutoBackupInfo?> latestAutoBackup() async {
+    final backups = await _backupsDir();
+    final files = backups
+        .listSync()
+        .whereType<File>()
+        .where((f) => p.basename(f.path).startsWith(autoBackupPrefix))
+        .toList()
+      ..sort(
+        (a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()),
+      );
+    if (files.isEmpty) return null;
+    final file = files.first;
+    return AutoBackupInfo(
+      file: file,
+      createdAt: file.lastModifiedSync(),
+      bytes: await file.length(),
+    );
+  }
+
   Future<void> exportAndShare() async {
     final zip = await createBackupZip();
     final result = await Share.shareXFiles(
@@ -93,8 +174,7 @@ class BackupService {
   /// Saves current DB to backups/, then extracts [zipPath] into documents dir.
   Future<String> restoreFromZip(String zipPath) async {
     final docs = await _docsDir();
-    final backupsDir = Directory(p.join(docs.path, 'backups'));
-    if (!backupsDir.existsSync()) backupsDir.createSync(recursive: true);
+    final backupsDir = await _backupsDir();
 
     await AppDatabase.instance.resetForTests();
 
@@ -106,6 +186,14 @@ class BackupService {
 
     _extractZipToDir(zipPath, docs.path);
     return 'Restore complete. Please restart the app to load the restored data.';
+  }
+
+  Future<String> restoreFromLatestAutoBackup() async {
+    final latest = await latestAutoBackup();
+    if (latest == null) {
+      throw StateError('No auto-backup found on this device');
+    }
+    return restoreFromZip(latest.file.path);
   }
 
   void _extractZipToDir(String zipPath, String destDir) {

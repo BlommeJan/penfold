@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/backup_service.dart';
 import '../services/pdf_import.dart';
 import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
@@ -543,7 +544,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('Delete'),
+              title: const Text('Move to Trash'),
               onTap: () => Navigator.pop(ctx, 'delete'),
             ),
           ],
@@ -576,26 +577,59 @@ class _LibraryScreenState extends State<LibraryScreen> {
         _refresh();
       }
     } else if (action == 'delete') {
-      final ok = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Delete "${n.title}"?'),
-          content: const Text('All pages and ink are removed from this device.'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            FilledButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
+      await _confirmDeleteNotebook(n);
+    }
+  }
+
+  Future<void> _confirmDeleteNotebook(Notebook n) async {
+    final action = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Move "${n.title}" to Trash?'),
+        content: const Text(
+          'The notebook is hidden from the library. Ink and pages stay on this '
+          'device until Trash is emptied (Trash view coming soon). '
+          'Export a backup first if you want an extra copy.',
         ),
-      );
-      if (ok == true) {
-        await _db.deleteNotebook(n.id);
-        await ThumbnailCache.instance.deleteForNotebook(n.id);
-        _refresh();
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, 'cancel'),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, 'export'),
+            child: const Text('Export first'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, 'delete'),
+            child: const Text('Move to Trash'),
+          ),
+        ],
+      ),
+    );
+    if (action == 'export') {
+      try {
+        await BackupService.instance.exportAndShare();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Backup exported. You can move to Trash when ready.'),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Export failed: $e')),
+          );
+        }
       }
+      return;
+    }
+    if (action == 'delete') {
+      await _db.softDeleteNotebook(n.id);
+      await ThumbnailCache.instance.deleteForNotebook(n.id);
+      _refresh();
     }
   }
 

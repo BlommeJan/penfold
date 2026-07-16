@@ -126,4 +126,17 @@ void main() {
     final back = (await db.pagesOf('nb1')).single;
     expect(back.template, PageTemplate.dotted);
   });
+
+  test('soft delete hides notebook from library but keeps pages', () async {
+    final db = AppDatabase.instance;
+    await db.insertNotebook(nb());
+    await db.insertPage(pg());
+    await db.insertStroke(stroke());
+
+    await db.softDeleteNotebook('nb1');
+    expect((await db.notebooks()).length, 0);
+    expect((await db.trashedNotebooks()).length, 1);
+    expect((await db.pagesOf('nb1')).length, 1);
+    expect((await db.strokesOf('pg1')).length, 1);
+  });
 }

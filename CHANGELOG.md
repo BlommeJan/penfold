@@ -2,6 +2,27 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.49] — 2026
+
+### Added
+
+- **Auto-backup** — daily zip of `penfold.db` and asset folders under `backups/` (keeps last 3); Settings → **Recover from backup** when a recent auto-backup exists
+- **Soft-delete notebooks** — library delete moves notebooks to Trash (`deleted_at` column, schema v15); ink stays on device until hard purge (Trash UI in a later release)
+- **Delete safety** — pre-delete dialog with **Export first** shortcut (full backup zip via share sheet)
+- **Data recovery docs** — `docs/DEVICE_TESTING.md` adb pull instructions for `penfold.db` and auto-backup paths
+
+## [0.2.48] — 2026
+
+### Fixed
+
+- **Page alignment** — scroll and page-turn modes use the same full-viewport page slots; each page is a discrete centered card at canonical aspect ratio (not stretched continuous canvas)
+- **Viewport reset** — pinch/pan zoom resets to 1.0 when page orientation, size, or device rotation changes layout
+- **Scroll modes** — page-turn (`PageView`) and continuous scroll (`CustomScrollView`) wired consistently from Settings; scroll locks during paper touch and pinch without blocking draw
+
+### Added
+
+- **Zoom navigation toggle** — Settings → Notebook → "Zoom navigation" gates pinch/pan zoom on pages (default on)
+
 ## [0.2.47] — 2026
 
 ### Fixed
@@ -353,6 +374,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.49]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.49
+[0.2.48]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.48
 [0.2.47]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.47
 [0.2.46]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.46
 [0.2.45]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.45

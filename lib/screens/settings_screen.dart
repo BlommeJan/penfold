@@ -8,6 +8,7 @@ import '../services/page_turn_mode_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/toolbar_order_service.dart';
+import '../services/zoom_navigation_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -28,10 +29,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _gestureInkEditingLoaded = false;
   bool _pageTurnMode = false;
   bool _pageTurnModeLoaded = false;
+  bool _zoomNavigation = true;
+  bool _zoomNavigationLoaded = false;
   SpenBarrelAction _spenAction = SpenBarrelAction.eraser;
   bool _spenLoaded = false;
   YourDataSnapshot? _yourData;
   bool _yourDataLoaded = false;
+  AutoBackupInfo? _latestAutoBackup;
+  bool _autoBackupLoaded = false;
 
   @override
   void initState() {
@@ -41,8 +46,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadStrokeSmoothing();
     _loadGestureInkEditing();
     _loadPageTurnMode();
+    _loadZoomNavigation();
     _loadSpenAction();
     _loadYourData();
+    _loadAutoBackup();
+  }
+
+  Future<void> _loadAutoBackup() async {
+    final latest = await BackupService.instance.latestAutoBackup();
+    if (!mounted) return;
+    setState(() {
+      _latestAutoBackup = latest;
+      _autoBackupLoaded = true;
+    });
   }
 
   Future<void> _loadYourData() async {
@@ -116,6 +132,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await PageTurnModeService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _pageTurnMode = value);
+  }
+
+  Future<void> _loadZoomNavigation() async {
+    await ZoomNavigationService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _zoomNavigation = ZoomNavigationService.instance.enabled;
+      _zoomNavigationLoaded = true;
+    });
+  }
+
+  Future<void> _setZoomNavigation(bool value) async {
+    await ZoomNavigationService.instance.setEnabled(value);
+    if (!mounted) return;
+    setState(() => _zoomNavigation = value);
   }
 
   Future<void> _loadSpenAction() async {
@@ -198,6 +229,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  Future<void> _recoverFromAutoBackup() async {
+    final latest = _latestAutoBackup;
+    if (latest == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Recover from auto-backup?'),
+        content: Text(
+          'This replaces your current notebooks and files with the backup '
+          'from ${_formatBackupTime(latest.createdAt)}. '
+          'Your current database will be saved to backups/ before restore.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Recover'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _busy = true);
+    try {
+      final message =
+          await BackupService.instance.restoreFromLatestAutoBackup();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 8),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Recovery failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  String _formatBackupTime(DateTime time) {
+    final local = time.toLocal();
+    final y = local.year.toString().padLeft(4, '0');
+    final m = local.month.toString().padLeft(2, '0');
+    final d = local.day.toString().padLeft(2, '0');
+    final h = local.hour.toString().padLeft(2, '0');
+    final min = local.minute.toString().padLeft(2, '0');
+    return '$y-$m-$d $h:$min';
   }
 
   Future<void> _restore() async {
@@ -339,6 +430,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     value: _pageTurnMode,
                     onChanged: _setPageTurnMode,
+                  ),
+                if (!_zoomNavigationLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  SwitchListTile(
+                    secondary: const Icon(Icons.zoom_in_map_outlined),
+                    title: const Text('Zoom navigation'),
+                    subtitle: const Text(
+                      'Pinch to zoom and pan on pages (default on)',
+                    ),
+                    value: _zoomNavigation,
+                    onChanged: _setZoomNavigation,
                   ),
                 const Divider(height: 32),
                 Padding(
@@ -560,6 +666,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   onTap: _export,
                 ),
+                if (!_autoBackupLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_latestAutoBackup != null)
+                  ListTile(
+                    leading: const Icon(Icons.history_rounded),
+                    title: const Text('Recover from backup'),
+                    subtitle: Text(
+                      'Latest auto-backup: '
+                      '${_formatBackupTime(_latestAutoBackup!.createdAt)} '
+                      '(${YourDataService.formatBytes(_latestAutoBackup!.bytes)})',
+                    ),
+                    onTap: _recoverFromAutoBackup,
+                  ),
                 ListTile(
                   leading: const Icon(Icons.download_outlined),
                   title: const Text('Restore backup'),

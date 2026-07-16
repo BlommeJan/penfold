@@ -126,6 +126,7 @@ class Notebook {
   String? folderId;
   final int createdAt;
   int updatedAt;
+  final int? deletedAt;
 
   Notebook({
     required this.id,
@@ -136,7 +137,10 @@ class Notebook {
     this.folderId,
     required this.createdAt,
     required this.updatedAt,
+    this.deletedAt,
   });
+
+  bool get isDeleted => deletedAt != null;
 
   Map<String, Object?> toRow() => {
         'id': id,
@@ -147,6 +151,7 @@ class Notebook {
         'folder_id': folderId,
         'created': createdAt,
         'updated': updatedAt,
+        'deleted_at': deletedAt,
       };
 
   static Notebook fromRow(Map<String, Object?> r) => Notebook(
@@ -158,6 +163,7 @@ class Notebook {
         folderId: r['folder_id'] as String?,
         createdAt: r['created'] as int,
         updatedAt: r['updated'] as int,
+        deletedAt: r['deleted_at'] as int?,
       );
 }
 

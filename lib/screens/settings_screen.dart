@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
 import '../services/backup_service.dart';
+import '../services/finger_drawing_service.dart';
 import '../services/gesture_ink_service.dart';
 import '../services/your_data_service.dart';
 import '../services/page_turn_mode_service.dart';
@@ -27,6 +28,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _strokeSmoothingLoaded = false;
   bool _gestureInkEditing = true;
   bool _gestureInkEditingLoaded = false;
+  bool _fingerDrawing = false;
+  bool _fingerDrawingLoaded = false;
   bool _pageTurnMode = false;
   bool _pageTurnModeLoaded = false;
   bool _zoomNavigation = true;
@@ -45,6 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadOcrTerms();
     _loadStrokeSmoothing();
     _loadGestureInkEditing();
+    _loadFingerDrawing();
     _loadPageTurnMode();
     _loadZoomNavigation();
     _loadSpenAction();
@@ -117,6 +121,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await GestureInkService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _gestureInkEditing = value);
+  }
+
+  Future<void> _loadFingerDrawing() async {
+    await FingerDrawingService.instance.load();
+    if (!mounted) return;
+    setState(() {
+      _fingerDrawing = FingerDrawingService.instance.enabled;
+      _fingerDrawingLoaded = true;
+    });
+  }
+
+  Future<void> _setFingerDrawing(bool value) async {
+    await FingerDrawingService.instance.setEnabled(value);
+    if (!mounted) return;
+    setState(() => _fingerDrawing = value);
   }
 
   Future<void> _loadPageTurnMode() async {
@@ -471,6 +490,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     value: _strokeSmoothing,
                     onChanged: _setStrokeSmoothing,
+                  ),
+                if (!_fingerDrawingLoaded)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  SwitchListTile(
+                    secondary: const Icon(Icons.touch_app_outlined),
+                    title: const Text('Finger drawing'),
+                    subtitle: const Text(
+                      'Draw with finger on paper; when off, only stylus draws (default off)',
+                    ),
+                    value: _fingerDrawing,
+                    onChanged: _setFingerDrawing,
                   ),
                 if (!_gestureInkEditingLoaded)
                   const Padding(

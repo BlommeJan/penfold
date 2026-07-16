@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.56] — 2026
+
+### Fixed
+
+- **Finger drawing** — ship `FingerDrawingService` (SharedPreferences), Settings → Drawing toggle, and routing-matrix tests; completes v0.2.52 pointer/scroll-lock lifecycle fixes
+
 ## [0.2.55] — 2026
 
 ### Added
@@ -24,6 +30,13 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 ### Added
 
 - **Session tests** — `SessionService` roundtrip, simulated restart persistence, cold-start restore, and stale-session cleanup coverage
+- **Page settings popup** — top-right page info chip opens a scrollable sheet for template/size/orientation, bookmarks, audio, and export actions
+- **Export entry points** — page settings includes PNG/PDF export; library long-press adds “Export workbook” with progress dialog
+- **Split page action** — page settings and complexity warnings offer a one-tap split flow for heavy pages
+
+### Changed
+
+- **Page complexity warning** — warn at ~500 strokes (export block remains at 2000)
 
 ## [0.2.53] — 2026
 
@@ -427,6 +440,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.56]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.56
 [0.2.55]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.55
 [0.2.54]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.54
 [0.2.53]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.53

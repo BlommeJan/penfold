@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.55
+**Version:** 0.2.56
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.55.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.56.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -92,7 +92,7 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] Set a page to portrait or landscape (non-PDF pages)
 - [ ] Insert an image on a page
 - [ ] Open auto table of contents and jump to a heading
-- [ ] Heavy page warning appears around 2000 strokes; try Split page
+- [ ] Heavy page warning appears around 500 strokes; try Split page
 - [ ] Switch pages, draw on each, switch back — undo history is still there
 
 ---
@@ -198,4 +198,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.2.55*
+*Last updated for Penfold v0.2.56*

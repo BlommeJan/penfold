@@ -114,7 +114,7 @@ void main() {
 
     final listView = find.byType(ListView);
     Future<void> scrollTo(Finder target) async {
-      for (var i = 0; i < 16; i++) {
+      for (var i = 0; i < 24; i++) {
         if (target.evaluate().isNotEmpty) return;
         await tester.drag(listView, const Offset(0, -400));
         await settle(tester);
@@ -127,6 +127,7 @@ void main() {
 
     await scrollTo(find.text('Database'));
     expect(find.text('Database'), findsOneWidget);
+    await scrollTo(find.text('images'));
     expect(find.text('images'), findsOneWidget);
 
     await scrollTo(find.text('thumbnails'));
@@ -136,6 +137,7 @@ void main() {
 
     await scrollTo(find.text('Export backup'));
     expect(find.text('Export backup'), findsOneWidget);
+    await scrollTo(find.text('Restore backup'));
     expect(find.text('Restore backup'), findsOneWidget);
   });
 }

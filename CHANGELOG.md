@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.66] — 2026
+
+### Fixed
+
+- **Document zoom/pan** — transform stays scale+translate only (no rotation drift); zoom-out centers the page in the viewport; pinch-to-zoom works on paper in finger-drawing mode; pan clamping no longer shoves content to the left edge
+- **Page settings UI** — removed redundant summary from the settings sheet; gear icon opens an anchored popup menu with subcategories (template, size, orientation, TOC, bookmark, audio, split, export)
+- **Eraser toolbar icon** — replaced with a recognizable eraser shape
+
 ## [0.2.65] — 2026
 
 ### Fixed

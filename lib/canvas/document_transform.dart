@@ -14,6 +14,9 @@ const double kDocumentSnapScaleMax = 1.02;
 /// Near 1× during clamp, clear translation so scroll owns vertical navigation.
 const double kDocumentUnitScaleMax = 1.02;
 
+/// Below this scale, content is centered in the viewport (fit-to-view zoom-out).
+const double kDocumentFitCenterScaleMax = 0.98;
+
 /// Above this scale, two-finger pan navigates the zoomed document.
 const double kDocumentZoomedPanThreshold = 1.02;
 
@@ -32,21 +35,53 @@ Matrix4 documentMatrixFromScaleTranslation(double scale, Offset translation) =>
       ..scale(scale)
       ..translate(translation.dx / scale, translation.dy / scale);
 
+/// Rebuilds the matrix as uniform scale + translation only (no rotation/skew).
+Matrix4 normalizeDocumentTransform(Matrix4 matrix) {
+  final scale =
+      documentScale(matrix).clamp(kDocumentMinScale, kDocumentMaxScale);
+  return documentMatrixFromScaleTranslation(scale, documentTranslation(matrix));
+}
+
+/// Translation that centers [contentBounds] in [viewportSize] at [scale].
+Offset documentCenteredTranslation({
+  required Size viewportSize,
+  required Rect contentBounds,
+  required double scale,
+}) {
+  final contentW = contentBounds.width * scale;
+  final contentH = contentBounds.height * scale;
+  return Offset(
+    (viewportSize.width - contentW) / 2 + contentBounds.left * scale,
+    (viewportSize.height - contentH) / 2 + contentBounds.top * scale,
+  );
+}
+
 /// Clamps uniform scale + translation so content stays reachable in [viewportSize].
 ///
 /// When scale is near 1×, translation is cleared so [CustomScrollView] owns
-/// vertical navigation.
+/// vertical navigation. When zoomed out below 1×, content is centered.
 Matrix4 clampDocumentTransform({
   required Matrix4 matrix,
   required Size viewportSize,
   required Rect contentBounds,
   double boundaryMargin = kDocumentBoundaryMargin,
 }) {
-  final scale = documentScale(matrix).clamp(kDocumentMinScale, kDocumentMaxScale);
-  final translation = documentTranslation(matrix);
+  final scale =
+      documentScale(matrix).clamp(kDocumentMinScale, kDocumentMaxScale);
+  var translation = documentTranslation(matrix);
 
-  if (scale <= kDocumentUnitScaleMax) {
+  if (scale >= kDocumentFitCenterScaleMax &&
+      scale <= kDocumentUnitScaleMax) {
     return documentMatrixFromScaleTranslation(scale, Offset.zero);
+  }
+
+  if (scale < kDocumentFitCenterScaleMax) {
+    translation = documentCenteredTranslation(
+      viewportSize: viewportSize,
+      contentBounds: contentBounds,
+      scale: scale,
+    );
+    return documentMatrixFromScaleTranslation(scale, translation);
   }
 
   final contentW = contentBounds.width * scale;
@@ -101,7 +136,7 @@ Matrix4 documentScaleAroundFocal({
   m.translate(focal.dx, focal.dy);
   m.scale(scaleFactor);
   m.translate(-focal.dx, -focal.dy);
-  return m;
+  return normalizeDocumentTransform(m);
 }
 
 /// Incremental pan applied to [matrix]; [delta] is in viewport pixels.
@@ -110,7 +145,7 @@ Matrix4 documentPan(Matrix4 matrix, Offset delta) {
   final scale = documentScale(matrix);
   final m = Matrix4.copy(matrix);
   m.translate(delta.dx / scale, delta.dy / scale);
-  return m;
+  return normalizeDocumentTransform(m);
 }
 
 /// Test hook: apply uniform scale from gesture-start values.
@@ -124,13 +159,15 @@ Matrix4 documentPinchFromStart({
   final newScale =
       (gestureStartScale * cumulativeScale).clamp(kDocumentMinScale, kDocumentMaxScale);
   var m = Matrix4.copy(gestureStartMatrix);
-  m.translate(
-    currentFocal.dx - gestureStartFocal.dx,
-    currentFocal.dy - gestureStartFocal.dy,
-  );
-  m.translate(gestureStartFocal.dx, gestureStartFocal.dy);
-  m.scale(newScale / gestureStartScale);
-  m.translate(-gestureStartFocal.dx, -gestureStartFocal.dy);
+  m = documentPan(m, currentFocal - gestureStartFocal);
+  final oldScale = documentScale(m);
+  if ((newScale - oldScale).abs() > 0.0001) {
+    m = documentScaleAroundFocal(
+      matrix: m,
+      focal: currentFocal,
+      scaleFactor: newScale / oldScale,
+    );
+  }
   return m;
 }
 

@@ -39,6 +39,7 @@ class DocumentViewportState extends State<DocumentViewport> {
   Offset? _lastFocal;
   Offset? _gestureStartFocal;
   double _gestureStartScale = 1;
+  Matrix4 _gestureStartMatrix = Matrix4.identity();
   bool _gestureActive = false;
   bool _pinchScrollLockHeld = false;
 
@@ -95,7 +96,7 @@ class DocumentViewportState extends State<DocumentViewport> {
 
   void _applyClampedTransform(Matrix4 matrix) {
     _transform.value = clampDocumentTransform(
-      matrix: matrix,
+      matrix: normalizeDocumentTransform(matrix),
       viewportSize: widget.viewportSize,
       contentBounds: widget.contentBounds,
     );
@@ -120,6 +121,9 @@ class DocumentViewportState extends State<DocumentViewport> {
 
   bool _allowsGesture({required Offset focal, required int pointerCount}) {
     if (!widget.zoomEnabled) return false;
+
+    // Two-finger pinch always zooms, including on paper in finger-drawing mode.
+    if (pointerCount >= 2) return true;
 
     final touches = _touchPointerCount();
     final effectiveTouches = pointerCount > touches ? pointerCount : touches;
@@ -148,7 +152,6 @@ class DocumentViewportState extends State<DocumentViewport> {
 
     // Zoomed in: two-finger pan works everywhere; single-finger stays margin-only
     // so finger-drawing on paper is preserved.
-    if (pointerCount >= 2) return true;
     return !widget.isFocalOnPaper(focal);
   }
 
@@ -198,6 +201,7 @@ class DocumentViewportState extends State<DocumentViewport> {
     _gestureActive = true;
     _lastFocal = focal;
     _gestureStartFocal = focal;
+    _gestureStartMatrix = Matrix4.copy(_transform.value);
     _gestureStartScale = _currentScale;
   }
 
@@ -228,27 +232,19 @@ class DocumentViewportState extends State<DocumentViewport> {
     }
 
     final focal = d.localFocalPoint;
+    final startFocal = _gestureStartFocal ?? focal;
 
     if (d.pointerCount >= 2) {
       _holdPinchScrollLock();
-      var m = Matrix4.copy(_transform.value);
-
-      if (_lastFocal != null) {
-        m = documentPan(m, focal - _lastFocal!);
-      }
-
-      final oldScale = documentScale(m);
-      final newScale =
-          (_gestureStartScale * d.scale).clamp(kDocumentMinScale, kDocumentMaxScale);
-      if ((newScale - oldScale).abs() > 0.0001) {
-        m = documentScaleAroundFocal(
-          matrix: m,
-          focal: focal,
-          scaleFactor: newScale / oldScale,
-        );
-      }
-
-      _applyClampedTransform(m);
+      _applyClampedTransform(
+        documentPinchFromStart(
+          gestureStartMatrix: _gestureStartMatrix,
+          gestureStartFocal: startFocal,
+          currentFocal: focal,
+          gestureStartScale: _gestureStartScale,
+          cumulativeScale: d.scale,
+        ),
+      );
     } else if (_lastFocal != null) {
       _applyClampedTransform(
         documentPan(_transform.value, focal - _lastFocal!),
@@ -260,7 +256,8 @@ class DocumentViewportState extends State<DocumentViewport> {
 
   void _onScaleEnd(ScaleEndDetails d) {
     // Snap to 1× when the pinch landed near identity so scroll resumes cleanly.
-    if (_currentScale >= 0.98 && _currentScale <= kDocumentSnapScaleMax) {
+    if (_currentScale >= kDocumentFitCenterScaleMax &&
+        _currentScale <= kDocumentSnapScaleMax) {
       resetTransform();
     } else {
       _applyClampedTransform(_transform.value);

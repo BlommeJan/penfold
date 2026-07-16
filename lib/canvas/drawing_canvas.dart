@@ -1268,6 +1268,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     }
   }
 
+  void _abortActiveGestureForPinch() {
+    _current = null;
+    _activePointer = null;
+    _gestureEffectiveTool = null;
+  }
+
   void _trackPaperFinger(PointerDownEvent e) {
     if (!shouldLockScrollForPaperTouch(
       stylusOnly: widget.toolState.stylusOnly,
@@ -1277,8 +1283,14 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     )) {
       return;
     }
+    final wasEmpty = _paperTouchPointers.isEmpty;
     _paperTouchPointers.add(e.pointer);
-    if (_paperTouchPointers.length == 1) {
+    if (_paperTouchPointers.length >= 2) {
+      _abortActiveGestureForPinch();
+      widget.onPaperFingerActive?.call(false);
+      return;
+    }
+    if (wasEmpty) {
       widget.onPaperFingerActive?.call(true);
     }
   }
@@ -1296,6 +1308,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (_isStylus(e)) {
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
+    }
+    if (e.kind == PointerDeviceKind.touch && _paperTouchPointers.length >= 2) {
+      return;
     }
     if (_activePointer != null) return;
     if (!_mayDraw(e)) return;

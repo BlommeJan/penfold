@@ -729,34 +729,99 @@ class _NotebookScreenState extends State<NotebookScreen>
     return PageComplexityService.instance.exportBlockReasonForPages(ids);
   }
 
-  Future<void> _openPageSettings() async {
-    final chosen = await showPageSettingsPopup(
+  Future<void> _openPageTemplateSettings() async {
+    final chosen = await showPageTemplatePicker(
       context: context,
       page: _activePage,
       isPdfPage: _isPdfPage(_activePage),
+    );
+    await _handlePageActionResult(chosen);
+  }
+
+  Future<void> _openPageSizeSettings() async {
+    final chosen = await showPageSizePicker(
+      context: context,
+      page: _activePage,
+      isPdfPage: _isPdfPage(_activePage),
+    );
+    await _handlePageActionResult(chosen);
+  }
+
+  Future<void> _openPageOrientationSettings() async {
+    final chosen = await showPageOrientationPicker(
+      context: context,
+      page: _activePage,
+      isPdfPage: _isPdfPage(_activePage),
+    );
+    await _handlePageActionResult(chosen);
+  }
+
+  Future<void> _openPageExportMenu() async {
+    final chosen = await showPageExportPicker(
+      context: context,
       notebookPageCount: _pages.length,
+    );
+    await _handlePageActionResult(chosen);
+  }
+
+  Future<void> _openPageAudioSettings() async {
+    await showPageAudioSheet(
+      context: context,
+      page: _activePage,
       onAudioChanged: (path) {
         _activePage.audioPath = path;
       },
     );
+  }
+
+  Future<void> _togglePageBookmark() async {
+    final next = !_activePage.bookmarked;
+    await _db.setPageBookmarked(_activePage.id, next);
+    if (!mounted) return;
+    setState(() => _activePage.bookmarked = next);
+  }
+
+  Future<void> _showEditorPageMenu(BuildContext buttonContext) async {
+    final box = buttonContext.findRenderObject() as RenderBox?;
+    if (box == null || !mounted) return;
+    final overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        box.localToGlobal(Offset.zero, ancestor: overlay),
+        box.localToGlobal(box.size.bottomRight(Offset.zero), ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    final action = await showEditorPageMenu(
+      context: context,
+      position: position,
+      bookmarked: _activePage.bookmarked,
+    );
+    if (action == null || !mounted) return;
+
+    switch (action) {
+      case EditorPageMenuAction.pageSettings:
+        await _openPageTemplateSettings();
+      case EditorPageMenuAction.pageSize:
+        await _openPageSizeSettings();
+      case EditorPageMenuAction.orientation:
+        await _openPageOrientationSettings();
+      case EditorPageMenuAction.contents:
+        await _openContents();
+      case EditorPageMenuAction.bookmark:
+        await _togglePageBookmark();
+      case EditorPageMenuAction.audio:
+        await _openPageAudioSettings();
+      case EditorPageMenuAction.split:
+        await _splitActivePage();
+      case EditorPageMenuAction.export:
+        await _openPageExportMenu();
+    }
+  }
+
+  Future<void> _handlePageActionResult(Object? chosen) async {
     if (chosen == null || !mounted) return;
-
-    if (chosen == 'contents') {
-      await _openContents();
-      return;
-    }
-
-    if (chosen == 'split_page') {
-      await _splitActivePage();
-      return;
-    }
-
-    if (chosen is String && chosen.startsWith('bookmark:')) {
-      final v = chosen == 'bookmark:true';
-      await _db.setPageBookmarked(_activePage.id, v);
-      setState(() => _activePage.bookmarked = v);
-      return;
-    }
 
     if (chosen is PageTemplate) {
       if (_activePage.pdfImagePath != null) {
@@ -1063,7 +1128,7 @@ class _NotebookScreenState extends State<NotebookScreen>
           onPaste: () => _activeCanvas?.pasteClipboard(),
           onConvertToText: _convertSelectionToText,
           onAddPage: _addPage,
-          onPageSettings: _openPageSettings,
+          onPageMenu: _showEditorPageMenu,
           onAddImage: _addImage,
           onPageOverview: _openOverview,
           onContents: _openContents,
@@ -1087,7 +1152,7 @@ class _NotebookScreenState extends State<NotebookScreen>
                       child: PageInfoChip(
                         page: _activePage,
                         isPdfPage: _isPdfPage(_activePage),
-                        onTap: _openPageSettings,
+                        onTap: _openPageTemplateSettings,
                       ),
                     ),
                 ],

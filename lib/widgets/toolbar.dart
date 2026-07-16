@@ -76,7 +76,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onPaste;
   final VoidCallback? onConvertToText;
   final VoidCallback onAddPage;
-  final VoidCallback onPageSettings;
+  final void Function(BuildContext anchorContext)? onPageMenu;
   final VoidCallback onAddImage;
   final VoidCallback? onPageOverview;
   final VoidCallback? onContents;
@@ -101,7 +101,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     this.onPaste,
     this.onConvertToText,
     required this.onAddPage,
-    required this.onPageSettings,
+    this.onPageMenu,
     required this.onAddImage,
     this.onPageOverview,
     this.onContents,
@@ -234,11 +234,14 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       icon: Icons.list_alt_rounded,
                       onPressed: onContents,
                     ),
-                  _ActionIconButton(
-                    tooltip: 'Page settings',
-                    icon: Icons.settings_rounded,
-                    onPressed: onPageSettings,
-                  ),
+                  if (onPageMenu != null)
+                    Builder(
+                      builder: (btnContext) => _ActionIconButton(
+                        tooltip: 'Page menu',
+                        icon: Icons.settings_rounded,
+                        onPressed: () => onPageMenu!(btnContext),
+                      ),
+                    ),
                   const SizedBox(width: 4),
                 ],
               ),
@@ -308,7 +311,12 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
         case ToolbarToolId.eraser:
           widgets.add(
             _ToolButton(
-              icon: Icons.cleaning_services_rounded,
+              iconWidget: _EraserIcon(
+                size: _kToolbarIconSize,
+                color: t.tool == ToolType.eraser
+                    ? Theme.of(context).colorScheme.primary
+                    : const Color(0xFF6B7280),
+              ),
               selected: t.tool == ToolType.eraser,
               tooltip: 'Eraser',
               onTap: () => t.set((s) => s.tool = ToolType.eraser),
@@ -972,7 +980,8 @@ class _SliderRow extends StatelessWidget {
 }
 
 class _ToolButton extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final Widget? iconWidget;
   final bool selected;
   final String tooltip;
   final VoidCallback onTap;
@@ -980,13 +989,14 @@ class _ToolButton extends StatelessWidget {
   final Color? accent;
 
   const _ToolButton({
-    required this.icon,
+    this.icon,
+    this.iconWidget,
     required this.selected,
     required this.tooltip,
     required this.onTap,
     this.onTapWhenSelected,
     this.accent,
-  });
+  }) : assert(icon != null || iconWidget != null);
 
   @override
   Widget build(BuildContext context) {
@@ -1016,11 +1026,12 @@ class _ToolButton extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    icon,
-                    size: _kToolbarIconSize,
-                    color: selected ? primary : const Color(0xFF6B7280),
-                  ),
+                  iconWidget ??
+                      Icon(
+                        icon,
+                        size: _kToolbarIconSize,
+                        color: selected ? primary : const Color(0xFF6B7280),
+                      ),
                   const SizedBox(height: 3),
                   Container(
                     height: 3,
@@ -1039,4 +1050,56 @@ class _ToolButton extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Eraser-shaped toolbar icon (rectangular block with angled top).
+class _EraserIcon extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const _EraserIcon({required this.size, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _EraserIconPainter(color: color),
+      ),
+    );
+  }
+}
+
+class _EraserIconPainter extends CustomPainter {
+  final Color color;
+
+  _EraserIconPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final body = Path()
+      ..moveTo(w * 0.18, h * 0.28)
+      ..lineTo(w * 0.82, h * 0.18)
+      ..lineTo(w * 0.88, h * 0.72)
+      ..lineTo(w * 0.12, h * 0.82)
+      ..close();
+    canvas.drawPath(body, Paint()..color = color.withOpacity(0.85));
+    final sleeve = Path()
+      ..moveTo(w * 0.12, h * 0.82)
+      ..lineTo(w * 0.88, h * 0.72)
+      ..lineTo(w * 0.90, h * 0.92)
+      ..lineTo(w * 0.10, h * 0.96)
+      ..close();
+    canvas.drawPath(
+      sleeve,
+      Paint()..color = color.withOpacity(0.45),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _EraserIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

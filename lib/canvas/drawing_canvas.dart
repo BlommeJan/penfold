@@ -419,6 +419,31 @@ class _CanvasController {
     onChanged();
   }
 
+  void removeStrokesInMemory(List<Stroke> toRemove) {
+    final ids = toRemove.map((s) => s.id).toSet();
+    strokes.removeWhere((s) => ids.contains(s.id));
+    onChanged();
+  }
+
+  void addStrokeInMemory(Stroke s) {
+    strokes
+      ..add(s)
+      ..sort((a, b) => a.z.compareTo(b.z));
+    onChanged();
+  }
+
+  Future<void> persistEraseBatch({
+    required Set<String> deleteIds,
+    required List<Stroke> inserts,
+  }) async {
+    if (deleteIds.isNotEmpty) {
+      await _db.deleteStrokes(deleteIds);
+    }
+    for (final s in inserts) {
+      await _db.insertStroke(s);
+    }
+  }
+
   Future<void> moveStrokesById(List<String> ids, Offset delta) async {
     for (final s in strokes.where((s) => ids.contains(s.id))) {
       s.translate(delta);
@@ -668,6 +693,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   final Map<String, Stroke> _partialEraseOriginals = {};
   final Map<String, String> _partialSegmentToRoot = {};
   final Set<String> _partialEraseAddedIds = {};
+  final Set<String> _eraseSessionDeleteIds = {};
+  final Map<String, Stroke> _eraseSessionInserts = {};
+  Offset? _coalescedErasePos;
+  Future<void>? _eraseDrainFuture;
 
   final Set<String> _selectedIds = {};
   final Set<String> _selectedFillIds = {};
@@ -1284,6 +1313,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _partialEraseOriginals.clear();
         _partialSegmentToRoot.clear();
         _partialEraseAddedIds.clear();
+        _eraseSessionDeleteIds.clear();
+        _eraseSessionInserts.clear();
+        _coalescedErasePos = null;
         _eraseAt(cPos);
       case ToolType.lasso:
         final selImg = _selectedImage();
@@ -1722,6 +1754,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     }
 
     if (tool == ToolType.eraser) {
+      await _waitForEraseDrain();
+      await _flushEraseSessionToDb();
       if (_partialEraseOriginals.isNotEmpty) {
         final added = _strokes
             .where((s) => _partialEraseAddedIds.contains(s.id))
@@ -1731,20 +1765,19 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           _partialEraseOriginals.values.map((s) => s.copy()).toList(),
           added,
         ));
-        _partialEraseOriginals.clear();
-        _partialSegmentToRoot.clear();
-        _partialEraseAddedIds.clear();
+        _clearEraseSessionState();
         widget.onHistoryChanged
             ?.call(_controller.canUndo, _controller.canRedo);
         return;
       }
       if (_erasedThisPass.isNotEmpty) {
         _controller.commit(_RemoveStrokes(List.of(_erasedThisPass)));
-        _erasedThisPass.clear();
+        _clearEraseSessionState();
         widget.onHistoryChanged
             ?.call(_controller.canUndo, _controller.canRedo);
         return;
       }
+      _clearEraseSessionState();
     }
 
     if (tool == ToolType.lasso) {
@@ -1889,9 +1922,68 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   void _eraseAt(Offset canonicalPos) {
     if (widget.toolState.eraserMode == EraserMode.partial) {
-      unawaited(_erasePartialAt(canonicalPos));
+      _enqueuePartialErase(canonicalPos);
       return;
     }
+    _eraseWholeAt(canonicalPos);
+  }
+
+  void _enqueuePartialErase(Offset canonicalPos) {
+    _coalescedErasePos = canonicalPos;
+    _eraseDrainFuture ??= _drainEraseQueue();
+  }
+
+  Future<void> _drainEraseQueue() async {
+    try {
+      while (_coalescedErasePos != null) {
+        final pos = _coalescedErasePos!;
+        _coalescedErasePos = null;
+        await _erasePartialAt(pos);
+      }
+    } finally {
+      _eraseDrainFuture = null;
+      if (_coalescedErasePos != null) {
+        _eraseDrainFuture = _drainEraseQueue();
+      }
+    }
+  }
+
+  Future<void> _waitForEraseDrain() async {
+    while (_eraseDrainFuture != null) {
+      await _eraseDrainFuture;
+    }
+  }
+
+  void _trackEraseRemove(Stroke s) {
+    _eraseSessionDeleteIds.add(s.id);
+    _eraseSessionInserts.remove(s.id);
+  }
+
+  void _trackEraseAdd(Stroke s) {
+    _eraseSessionInserts[s.id] = s;
+  }
+
+  Future<void> _flushEraseSessionToDb() async {
+    if (_eraseSessionDeleteIds.isEmpty && _eraseSessionInserts.isEmpty) {
+      return;
+    }
+    await _controller.persistEraseBatch(
+      deleteIds: Set.of(_eraseSessionDeleteIds),
+      inserts: _eraseSessionInserts.values.toList(),
+    );
+  }
+
+  void _clearEraseSessionState() {
+    _erasedThisPass.clear();
+    _partialEraseOriginals.clear();
+    _partialSegmentToRoot.clear();
+    _partialEraseAddedIds.clear();
+    _eraseSessionDeleteIds.clear();
+    _eraseSessionInserts.clear();
+    _coalescedErasePos = null;
+  }
+
+  void _eraseWholeAt(Offset canonicalPos) {
     final r = _toCanonicalLen(widget.toolState.eraserRadius);
     final doomed = <Stroke>[];
     for (final s in _strokes) {
@@ -1900,9 +1992,14 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     }
     if (doomed.isEmpty) return;
     for (final s in doomed) {
-      _erasedThisPass.add(s.copy());
+      if (!_erasedThisPass.any((e) => e.id == s.id)) {
+        _erasedThisPass.add(s.copy());
+      }
+      _trackEraseRemove(s);
     }
-    _controller.removeStrokes(doomed);
+    _controller.removeStrokesInMemory(doomed);
+    _notifyStrokeCountChanged();
+    _bump();
   }
 
   Future<void> _erasePartialAt(Offset canonicalPos) async {
@@ -1913,13 +2010,31 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       if (!s.bounds.inflate(r).contains(canonicalPos)) continue;
       if (!_strokeHit(s, canonicalPos, r)) continue;
 
+      if (shouldWholeStrokeErase(s)) {
+        final rootId = _partialSegmentToRoot[s.id] ?? s.id;
+        _partialEraseOriginals.putIfAbsent(rootId, () {
+          if (rootId == s.id) return s.copy();
+          return _partialEraseOriginals[rootId] ?? s.copy();
+        });
+        _trackEraseRemove(s);
+        _controller.removeStrokesInMemory([s]);
+        _partialEraseAddedIds.remove(s.id);
+        _partialSegmentToRoot.remove(s.id);
+        changed = true;
+        continue;
+      }
+
       final result = partialEraseStroke(s, canonicalPos, r);
       if (result == null) continue;
 
       final rootId = _partialSegmentToRoot[s.id] ?? s.id;
-      _partialEraseOriginals.putIfAbsent(rootId, () => s.copy());
+      _partialEraseOriginals.putIfAbsent(rootId, () {
+        if (rootId == s.id) return s.copy();
+        return _partialEraseOriginals[rootId] ?? s.copy();
+      });
 
-      await _controller.removeStrokes([s]);
+      _trackEraseRemove(s);
+      _controller.removeStrokesInMemory([s]);
       _partialEraseAddedIds.remove(s.id);
       _partialSegmentToRoot.remove(s.id);
 
@@ -1938,9 +2053,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         newSegs.add(ns);
         _partialEraseAddedIds.add(ns.id);
         _partialSegmentToRoot[ns.id] = rootId;
+        _trackEraseAdd(ns);
       }
       for (final ns in newSegs) {
-        await _controller.addStroke(ns);
+        _controller.addStrokeInMemory(ns);
       }
       changed = true;
     }

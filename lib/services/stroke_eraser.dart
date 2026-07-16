@@ -12,6 +12,15 @@ enum EraserMode {
   partial,
 }
 
+/// Minimum points for a surviving partial-erase fragment.
+const int kMinPartialSegmentPoints = 3;
+
+/// Minimum polyline length (canonical units) for a surviving fragment.
+const double kMinPartialSegmentLength = 8.0;
+
+/// Maximum fragments produced by one partial-erase pass on pen ink.
+const int kMaxPartialEraseFragments = 2;
+
 /// Result of partially erasing one stroke.
 class PartialEraseResult {
   final Stroke original;
@@ -19,6 +28,12 @@ class PartialEraseResult {
 
   const PartialEraseResult({required this.original, required this.segments});
 }
+
+/// Translucent or tape strokes erase as whole units — no partial split.
+bool shouldWholeStrokeErase(Stroke stroke) =>
+    stroke.tool == ToolType.highlighter ||
+    stroke.tool == ToolType.tape ||
+    stroke.brushStyle == BrushStyle.marker;
 
 /// Clip [stroke] at a circular eraser zone; returns remaining point sequences.
 ///
@@ -112,6 +127,54 @@ List<List<StrokePoint>> clipStrokePoints(
   return segments;
 }
 
+double segmentPolylineLength(List<StrokePoint> points) {
+  if (points.length < 2) return 0;
+  var len = 0.0;
+  for (var i = 1; i < points.length; i++) {
+    final a = Offset(points[i - 1].x, points[i - 1].y);
+    final b = Offset(points[i].x, points[i].y);
+    len += (b - a).distance;
+  }
+  return len;
+}
+
+/// Drop micro-fragments and cap fragment count after clipping.
+List<List<StrokePoint>> finalizePartialSegments(
+  List<List<StrokePoint>> clipped,
+) {
+  var segments = clipped.where((pts) {
+    if (pts.length >= kMinPartialSegmentPoints) return true;
+    return segmentPolylineLength(pts) >= kMinPartialSegmentLength;
+  }).toList();
+
+  if (segments.isEmpty) return const [];
+
+  if (segments.length > kMaxPartialEraseFragments) {
+    segments.sort(
+      (a, b) =>
+          segmentPolylineLength(b).compareTo(segmentPolylineLength(a)),
+    );
+    segments = segments.take(kMaxPartialEraseFragments).toList();
+  }
+
+  return segments;
+}
+
+bool strokeEraserHit(Stroke stroke, Offset center, double hitRadius) {
+  final pts = stroke.points;
+  if (pts.isEmpty) return false;
+  if (pts.length == 1) {
+    return Offset(pts[0].x - center.dx, pts[0].y - center.dy).distance <=
+        hitRadius;
+  }
+  for (var i = 1; i < pts.length; i++) {
+    final a = Offset(pts[i - 1].x, pts[i - 1].y);
+    final b = Offset(pts[i].x, pts[i].y);
+    if (_distToSegment(center, a, b) <= hitRadius) return true;
+  }
+  return false;
+}
+
 /// Partially erase [stroke] at [center] with screen-space [eraserRadius].
 /// Returns `null` when nothing changes.
 PartialEraseResult? partialEraseStroke(
@@ -122,7 +185,14 @@ PartialEraseResult? partialEraseStroke(
   final hitR = eraserRadius + stroke.width / 2;
   if (!stroke.bounds.inflate(hitR).contains(center)) return null;
 
-  final clipped = clipStrokePoints(stroke.points, center, hitR);
+  if (shouldWholeStrokeErase(stroke)) {
+    if (!strokeEraserHit(stroke, center, hitR)) return null;
+    return PartialEraseResult(original: stroke, segments: const []);
+  }
+
+  final clipped = finalizePartialSegments(
+    clipStrokePoints(stroke.points, center, hitR),
+  );
   if (clipped.length == 1 &&
       clipped.first.length == stroke.points.length &&
       _pointsEqual(clipped.first, stroke.points)) {
@@ -165,6 +235,15 @@ bool _pointsEqual(List<StrokePoint> a, List<StrokePoint> b) {
     if (a[i].x != b[i].x || a[i].y != b[i].y) return false;
   }
   return true;
+}
+
+double _distToSegment(Offset p, Offset a, Offset b) {
+  final ab = b - a;
+  final len2 = ab.dx * ab.dx + ab.dy * ab.dy;
+  if (len2 == 0) return (p - a).distance;
+  var t = ((p - a).dx * ab.dx + (p - a).dy * ab.dy) / len2;
+  t = t.clamp(0.0, 1.0);
+  return (p - (a + Offset(ab.dx * t, ab.dy * t))).distance;
 }
 
 /// Intersection parameters along segment A→B with circle (center, radius).

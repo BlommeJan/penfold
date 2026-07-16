@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.42] — 2026
+
+### Fixed
+
+- **Eraser crash + ghost strokes** — serialize partial erase per pointer session (one in-flight op, coalesced moves); defer DB writes and undo until erase ends
+- **Stroke splitting explosion** — highlighter/tape/marker erase whole strokes; cap pen partial splits to two fragments; drop micro-fragments below point/length threshold
+- **Regression tests** — `test/stroke_eraser_test.dart` covers whole-stroke tools, fragment caps, and repeated partial erase
+
 ## [0.2.41] — 2026
 
 ### Fixed
@@ -312,6 +320,7 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.42]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.42
 [0.2.41]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.41
 [0.2.40]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.40
 [0.2.38]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.38

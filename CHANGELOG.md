@@ -2,6 +2,20 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.51] — 2026
+
+### Changed
+
+- **Handwriting OCR** — replaced printed-text ML Kit (`google_mlkit_text_recognition`) with on-device Digital Ink Recognition (`google_mlkit_digital_ink_recognition`); English (`en-US`) handwriting model downloads once on first use (local inference, no accounts)
+- **Convert to text** — lasso selection and background ink search indexing feed stroke points directly to the digital ink recognizer; progress dialog shown while the model downloads
+
+## [0.2.50] — 2026
+
+### Fixed
+
+- **Library notebook titles** — titles sit below the cover thumbnail (v0.2.6 style) with `onSurface` text; thumbnails no longer carry a title overlay
+- **New notebook dialog** — size and paper `ChoiceChip`s use `ColorScheme` for selected/unselected states (readable in light and dark theme)
+
 ## [0.2.49] — 2026
 
 ### Added
@@ -41,13 +55,6 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 ### Fixed
 
 - **Pen options popup** — brush chips and labels use `ColorScheme` so selected/unselected states stay readable in light and dark theme
-
-## [0.2.45] — 2026
-
-### Changed
-
-- **Handwriting OCR** — replaced printed-text ML Kit (`google_mlkit_text_recognition`) with on-device Digital Ink Recognition (`google_mlkit_digital_ink_recognition`); English handwriting model downloads once on first use (local inference, no accounts)
-- **Convert to text** — lasso selection and background ink search indexing now feed stroke points directly to the digital ink recognizer; progress dialog shown while the model downloads
 
 ## [0.2.43] — 2026
 
@@ -374,6 +381,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.51]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.51
+[0.2.50]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.50
 [0.2.49]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.49
 [0.2.48]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.48
 [0.2.47]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.47

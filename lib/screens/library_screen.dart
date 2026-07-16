@@ -406,10 +406,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   spacing: 8,
                   children: [
                     for (final s in PageSize.values)
-                      ChoiceChip(
-                        label: Text(s.label),
+                      _themedChoiceChip(
+                        label: s.label,
                         selected: pageSize == s,
-                        onSelected: (_) => setDialog(() => pageSize = s),
+                        onSelected: () => setDialog(() => pageSize = s),
                       ),
                   ],
                 ),
@@ -421,16 +421,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   runSpacing: 8,
                   children: [
                     for (final t in PageTemplate.values)
-                      ChoiceChip(
-                        label: Text(switch (t) {
+                      _themedChoiceChip(
+                        label: switch (t) {
                           PageTemplate.blank => 'Blank',
                           PageTemplate.lined => 'Lined',
                           PageTemplate.grid => 'Grid',
                           PageTemplate.dotted => 'Dotted',
                           PageTemplate.collegeRuled => 'College',
-                        }),
+                        },
                         selected: template == t,
-                        onSelected: (_) => setDialog(() => template = t),
+                        onSelected: () => setDialog(() => template = t),
                       ),
                   ],
                 ),
@@ -738,6 +738,28 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
+  Widget _themedChoiceChip({
+    required String label,
+    required bool selected,
+    required VoidCallback onSelected,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onSelected(),
+      selectedColor: scheme.primaryContainer,
+      backgroundColor: scheme.surfaceContainerHighest,
+      labelStyle: TextStyle(
+        color: selected ? scheme.onPrimaryContainer : scheme.onSurface,
+        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+      ),
+      side: BorderSide(
+        color: selected ? scheme.primary : scheme.outline.withOpacity(0.35),
+      ),
+    );
+  }
+
   Widget _filterChip({
     required String label,
     required bool selected,
@@ -769,6 +791,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget _notebookCard(Notebook n) {
     final cover = Color(n.coverColor);
     final thumbPath = _thumbnailPaths[n.id];
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => _open(n),
       onLongPress: () => _notebookMenu(n),
@@ -815,52 +838,34 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                 ],
               ),
-              child: Stack(
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.22),
-                              Colors.black.withOpacity(0.12),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 14,
-                    right: 8,
-                    child: Text(
-                      n.title,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        height: 1.2,
-                        shadows: [
-                          Shadow(
-                            color: Color(0x66000000),
-                            offset: Offset(0, 1),
-                            blurRadius: 3,
-                          ),
+                  Container(
+                    width: 8,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.22),
+                          Colors.black.withOpacity(0.12),
                         ],
                       ),
                     ),
                   ),
+                  const Spacer(),
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            n.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: scheme.onSurface,
+                ),
           ),
         ],
       ),

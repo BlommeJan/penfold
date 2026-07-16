@@ -94,3 +94,64 @@ TextBlock buildHwrTextBlock({
     z: z,
   );
 }
+
+/// OCR text segment with bounds used for merging handwriting runs.
+class InkTextSegment {
+  final String text;
+  final Rect bounds;
+
+  const InkTextSegment({required this.text, required this.bounds});
+}
+
+/// Default maximum horizontal gap (in canonical units) to merge segments.
+const double defaultInkMergeGap = 28;
+
+/// Merge adjacent OCR segments on the same line when the horizontal gap is small.
+List<InkTextSegment> mergeInkTextSegments(
+  List<InkTextSegment> segments, {
+  double maxGap = defaultInkMergeGap,
+}) {
+  if (segments.length <= 1) return List<InkTextSegment>.from(segments);
+  final sorted = [...segments]
+    ..sort((a, b) {
+      final ay = a.bounds.top;
+      final by = b.bounds.top;
+      if ((ay - by).abs() > 4) return ay.compareTo(by);
+      return a.bounds.left.compareTo(b.bounds.left);
+    });
+
+  final merged = <InkTextSegment>[];
+  var current = sorted.first;
+  for (final next in sorted.skip(1)) {
+    if (_canMergeSegments(current, next, maxGap)) {
+      final gap = next.bounds.left - current.bounds.right;
+      final lineHeight =
+          math.max(current.bounds.height, next.bounds.height).clamp(1.0, 9999);
+      final joiner = gap > lineHeight * 0.35 ? ' ' : '';
+      current = InkTextSegment(
+        text: '${current.text}$joiner${next.text}',
+        bounds: current.bounds.expandToInclude(next.bounds),
+      );
+    } else {
+      merged.add(current);
+      current = next;
+    }
+  }
+  merged.add(current);
+  return merged;
+}
+
+bool _canMergeSegments(
+  InkTextSegment a,
+  InkTextSegment b,
+  double maxGap,
+) {
+  final gap = b.bounds.left - a.bounds.right;
+  if (gap < 0 || gap > maxGap) return false;
+
+  final overlap =
+      math.min(a.bounds.bottom, b.bounds.bottom) - math.max(a.bounds.top, b.bounds.top);
+  if (overlap <= 0) return false;
+  final minHeight = math.min(a.bounds.height, b.bounds.height).clamp(1.0, 9999);
+  return overlap / minHeight >= 0.4;
+}

@@ -58,15 +58,18 @@ void main() {
 
   group('PageComplexityService', () {
     test('shouldWarn at and above threshold', () {
-      expect(PageComplexityService.shouldWarn(1999), isFalse);
-      expect(PageComplexityService.shouldWarn(2000), isTrue);
-      expect(PageComplexityService.shouldWarn(2500), isTrue);
+      final threshold = PageComplexityService.strokeWarningThreshold;
+      expect(PageComplexityService.shouldWarn(threshold - 1), isFalse);
+      expect(PageComplexityService.shouldWarn(threshold), isTrue);
+      expect(PageComplexityService.shouldWarn(threshold + 250), isTrue);
     });
 
     test('warningMessage includes stroke count', () {
       expect(
-        PageComplexityService.warningMessage(2000),
-        contains('2000'),
+        PageComplexityService.warningMessage(
+          PageComplexityService.strokeWarningThreshold,
+        ),
+        contains('${PageComplexityService.strokeWarningThreshold}'),
       );
     });
   });

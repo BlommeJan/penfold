@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.57] — 2026
+
+### Added
+
+- **HWR segment merge** — merge adjacent handwriting OCR segments on the same line to reduce fragmented headings; TOC uses merged ink runs
+- **HWR merge tests** — coverage for segment merging and spacing behavior
+
 ## [0.2.56] — 2026
 
 ### Fixed

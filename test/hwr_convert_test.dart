@@ -128,6 +128,61 @@ void main() {
     });
   });
 
+  group('mergeInkTextSegments', () {
+    test('merges adjacent segments on the same line', () {
+      final merged = mergeInkTextSegments(
+        const [
+          InkTextSegment(
+            text: 'Hel',
+            bounds: Rect.fromLTWH(10, 10, 24, 10),
+          ),
+          InkTextSegment(
+            text: 'lo',
+            bounds: Rect.fromLTWH(36, 11, 18, 10),
+          ),
+        ],
+        maxGap: 8,
+      );
+      expect(merged.length, 1);
+      expect(merged.first.text, 'Hello');
+    });
+
+    test('inserts space when the gap is wider', () {
+      final merged = mergeInkTextSegments(
+        const [
+          InkTextSegment(
+            text: 'Hello',
+            bounds: Rect.fromLTWH(10, 10, 30, 10),
+          ),
+          InkTextSegment(
+            text: 'world',
+            bounds: Rect.fromLTWH(48, 10, 32, 10),
+          ),
+        ],
+        maxGap: 12,
+      );
+      expect(merged.length, 1);
+      expect(merged.first.text, 'Hello world');
+    });
+
+    test('keeps segments on separate lines', () {
+      final merged = mergeInkTextSegments(
+        const [
+          InkTextSegment(
+            text: 'Top',
+            bounds: Rect.fromLTWH(10, 10, 20, 10),
+          ),
+          InkTextSegment(
+            text: 'Bottom',
+            bounds: Rect.fromLTWH(12, 40, 32, 10),
+          ),
+        ],
+        maxGap: 12,
+      );
+      expect(merged.length, 2);
+    });
+  });
+
   group('strokesToMlKitInk', () {
     test('maps stroke points with synthetic timestamps', () {
       final stroke = _penStroke('s1', 'pg');

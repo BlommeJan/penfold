@@ -1,5 +1,6 @@
 import '../db/app_database.dart';
 import '../models/models.dart';
+import 'hwr_convert.dart';
 
 /// Detects heading-like text and builds a notebook table of contents (v0.2.36).
 class TocService {
@@ -99,21 +100,37 @@ class TocService {
       }
 
       final strokes = await db.strokesOf(page.id);
-      final strokeTop = {
-        for (final s in strokes) s.id: s.bounds.top,
+      final strokeBounds = {
+        for (final s in strokes) s.id: s.bounds,
       };
 
       final inkRows = await db.indexedInkTextOfPage(page.id);
+      final segments = <InkTextSegment>[];
       for (final row in inkRows) {
-        if (!isHeadingLike(row.text)) continue;
-        final y = row.strokeId != null
-            ? strokeTop[row.strokeId] ?? 0.0
-            : 0.0;
+        final bounds =
+            row.strokeId != null ? strokeBounds[row.strokeId!] : null;
+        if (bounds == null) {
+          if (!isHeadingLike(row.text)) continue;
+          entries.add(TocEntry(
+            title: displayTitle(row.text),
+            pageId: page.id,
+            pageIndex: i,
+            sortY: 0.0,
+            source: TocSource.inkOcr,
+          ));
+          continue;
+        }
+        segments.add(InkTextSegment(text: row.text, bounds: bounds));
+      }
+
+      final merged = mergeInkTextSegments(segments);
+      for (final segment in merged) {
+        if (!isHeadingLike(segment.text)) continue;
         entries.add(TocEntry(
-          title: displayTitle(row.text),
+          title: displayTitle(segment.text),
           pageId: page.id,
           pageIndex: i,
-          sortY: y,
+          sortY: segment.bounds.top,
           source: TocSource.inkOcr,
         ));
       }

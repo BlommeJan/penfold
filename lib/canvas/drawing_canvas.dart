@@ -801,15 +801,29 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   void didUpdateWidget(covariant DrawingCanvas old) {
     super.didUpdateWidget(old);
     if (old.page.id != widget.page.id) {
+      resetPointerSession();
       _loaded = false;
       _current = null;
-      _activePointer = null;
       _lassoPath = null;
       _fillPath = null;
       _clearSelection();
       _dismissTextEditor();
       _load();
+    } else if (old.toolState.stylusOnly != widget.toolState.stylusOnly) {
+      resetPointerSession();
     }
+  }
+
+  /// Clears in-flight pointers, stylus proximity state, and scroll-lock tracking.
+  void resetPointerSession() {
+    if (_paperTouchPointers.isNotEmpty) {
+      _paperTouchPointers.clear();
+      widget.onPaperFingerActive?.call(false);
+    }
+    _activePointer = null;
+    _stylusActive = false;
+    _lastStylusSeen = DateTime.fromMillisecondsSinceEpoch(0);
+    _gestureEffectiveTool = null;
   }
 
   @override

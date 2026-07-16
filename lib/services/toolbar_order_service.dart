@@ -76,7 +76,10 @@ class ToolbarOrderService extends ChangeNotifier {
     if (saved == null || saved.isEmpty) {
       return List<String>.from(ToolbarToolId.defaultOrder);
     }
-    final known = saved.where(ToolbarToolId.isKnown).toList();
+    // Drop legacy ids (e.g. removed standalone marker tool).
+    final known = saved
+        .where((id) => ToolbarToolId.isKnown(id) && id != 'marker')
+        .toList();
     for (final id in ToolbarToolId.defaultOrder) {
       if (!known.contains(id)) known.add(id);
     }

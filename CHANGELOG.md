@@ -2,12 +2,45 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.53] — 2026
+
+### Changed
+
+- **Toolbar brushes** — brush styles (pen, fountain, pencil, marker, calligraphy) live only in the pen options popup; removed inline `_BrushStyleRow` from the top toolbar
+- **Pen/highlighter colors** — expanded preset palettes plus HSV custom color picker; user-picked swatches persist for the session
+
+### Fixed
+
+- **Pen options popup** — brush chips use `ColorScheme` for readable selected/unselected contrast in light and dark theme
+- **Legacy marker tool** — dropped standalone `marker` toolbar id from saved tool order (marker remains a pen brush style)
+
+## [0.2.52] — 2026
+
+### Fixed
+
+- **Finger drawing** — pointer and scroll-lock state resets on page switch; stylus proximity no longer leaves scroll stuck on older pages
+- **Finger drawing setting** — Settings → Drawing → "Finger drawing" persists via SharedPreferences and applies to all pages immediately (toolbar toggle syncs too)
+
+### Added
+
+- **Pointer routing tests** — routing matrix for stylus-only on/off × paper/margin touch (scroll lock, draw, pan/zoom)
+
 ## [0.2.51] — 2026
 
 ### Changed
 
 - **Handwriting OCR** — replaced printed-text ML Kit (`google_mlkit_text_recognition`) with on-device Digital Ink Recognition (`google_mlkit_digital_ink_recognition`); English (`en-US`) handwriting model downloads once on first use (local inference, no accounts)
 - **Convert to text** — lasso selection and background ink search indexing feed stroke points directly to the digital ink recognizer; progress dialog shown while the model downloads
+
+## [0.2.51] — 2026
+
+### Fixed
+
+- **Session restore** — flush notebook + page index to SQLite on app pause/background (crash recovery); cold start via `AppHome` verified with widget tests
+
+### Added
+
+- **Session tests** — `SessionService` roundtrip, simulated restart persistence, cold-start restore, and stale-session cleanup coverage
 
 ## [0.2.50] — 2026
 
@@ -381,6 +414,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 - Initial release: pen, highlighter, eraser, lasso, shapes, PDF import
 
+[0.2.53]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.53
+[0.2.52]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.52
 [0.2.51]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.51
 [0.2.50]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.50
 [0.2.49]: https://github.com/BlommeJan/penfold/releases/tag/v0.2.49

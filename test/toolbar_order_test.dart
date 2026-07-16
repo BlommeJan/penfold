@@ -32,6 +32,18 @@ void main() {
     expect(normalized.length, ToolbarToolId.defaultOrder.length);
   });
 
+  test('normalizeOrder drops legacy marker tool id', () {
+    final saved = [
+      'marker',
+      ToolbarToolId.pen,
+      ToolbarToolId.highlighter,
+    ];
+    final normalized = ToolbarOrderService.normalizeOrder(saved);
+    expect(normalized, isNot(contains('marker')));
+    expect(normalized.indexOf(ToolbarToolId.pen), 0);
+    expect(normalized.indexOf(ToolbarToolId.highlighter), 1);
+  });
+
   test('save and load order roundtrip', () async {
     final customOrder = [
       ToolbarToolId.lasso,

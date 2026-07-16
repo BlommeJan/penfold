@@ -14,6 +14,13 @@ const _penColors = [
   Color(0xFFC0392B),
   Color(0xFF1E8449),
   Color(0xFF7D3C98),
+  Color(0xFFE67E22),
+  Color(0xFF16A085),
+  Color(0xFF2C3E50),
+  Color(0xFF95A5A6),
+  Color(0xFFE91E63),
+  Color(0xFF795548),
+  Color(0xFFFFFFFF),
 ];
 
 const _highlighterColors = [
@@ -22,6 +29,20 @@ const _highlighterColors = [
   Color(0xFF7CD6F7),
   Color(0xFFF77CE0),
   Color(0xFFFFA94D),
+  Color(0xFFFF6B6B),
+  Color(0xFFB388FF),
+  Color(0xFF80DEEA),
+  Color(0xFFFFF59D),
+  Color(0xFFA5D6A7),
+];
+
+/// Brush styles shown in the pen options popup (marker is a style, not a tool).
+const _penBrushStyles = [
+  BrushStyle.pen,
+  BrushStyle.fountainPen,
+  BrushStyle.pencil,
+  BrushStyle.marker,
+  BrushStyle.calligraphy,
 ];
 
 const _tapeColors = [
@@ -256,9 +277,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
               accent: penFamily && t.tool != ToolType.fill ? t.penColor : null,
             ),
           );
-          if (penFamily && t.tool != ToolType.fill) {
-            widgets.add(_BrushStyleRow(toolState: t));
-          }
         case ToolbarToolId.highlighter:
           widgets.add(
             _ToolButton(
@@ -362,106 +380,145 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   void _showPenOptions(BuildContext context, ToolState t,
       {required bool highlighter}) {
-    final colors = highlighter ? _highlighterColors : _penColors;
+    final presetColors = highlighter ? _highlighterColors : _penColors;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(highlighter ? 'Highlighter' : 'Pen',
-                style: Theme.of(ctx).textTheme.titleMedium),
-            if (!highlighter) ...[
-              const SizedBox(height: 12),
-              Text('Brush', style: Theme.of(ctx).textTheme.labelLarge),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (ctx) {
+        final scheme = Theme.of(ctx).colorScheme;
+        return ListenableBuilder(
+          listenable: t,
+          builder: (ctx, _) {
+            final customColors =
+                highlighter ? t.customHighlighterColors : t.customPenColors;
+            final allColors = [...presetColors, ...customColors];
+            final activeColor =
+                highlighter ? t.highlighterColor : t.penColor;
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final b in BrushStyle.values)
-                    ChoiceChip(
-                      label: Text(switch (b) {
-                        BrushStyle.pen => 'Pen',
-                        BrushStyle.fountainPen => 'Fountain',
-                        BrushStyle.pencil => 'Pencil',
-                        BrushStyle.marker => 'Marker',
-                        BrushStyle.calligraphy => 'Calligraphy',
-                      }),
-                      selected: t.brushStyle == b,
-                      onSelected: (_) => t.set((s) => s.brushStyle = b),
-                    ),
-                ],
-              ),
-            ],
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                for (final c in colors)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 14),
-                    child: GestureDetector(
-                      onTap: () {
-                        t.set((s) {
-                          if (highlighter) {
-                            s.highlighterColor = c;
-                          } else {
-                            s.penColor = c;
-                          }
-                        });
-                        Navigator.pop(ctx);
-                      },
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: c,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 3,
-                            color: (highlighter
-                                        ? t.highlighterColor
-                                        : t.penColor) ==
-                                    c
-                                ? Theme.of(ctx).colorScheme.primary
-                                : Colors.transparent,
+                  Text(
+                    highlighter ? 'Highlighter' : 'Pen',
+                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                          color: scheme.onSurface,
+                        ),
+                  ),
+                  if (!highlighter) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      'Brush',
+                      style: Theme.of(ctx).textTheme.labelLarge?.copyWith(
+                            color: scheme.onSurfaceVariant,
                           ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final b in _penBrushStyles)
+                          _ThemedChoiceChip(
+                            label: _brushLabel(b),
+                            selected: t.brushStyle == b,
+                            onSelected: () => t.set((s) => s.brushStyle = b),
+                          ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  Text(
+                    'Color',
+                    style: Theme.of(ctx).textTheme.labelLarge?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      for (final c in allColors)
+                        _ColorSwatch(
+                          color: c,
+                          selected: _colorsMatch(activeColor, c),
+                          onTap: () {
+                            t.set((s) {
+                              if (highlighter) {
+                                s.highlighterColor = c;
+                              } else {
+                                s.penColor = c;
+                              }
+                            });
+                            Navigator.pop(ctx);
+                          },
+                        ),
+                      _AddColorSwatch(
+                        onTap: () async {
+                          final picked = await _showCustomColorPicker(
+                            ctx,
+                            initial: activeColor,
+                          );
+                          if (picked == null || !ctx.mounted) return;
+                          t.set((s) {
+                            if (highlighter) {
+                              s.highlighterColor = picked;
+                              s.addCustomHighlighterColor(picked);
+                            } else {
+                              s.penColor = picked;
+                              s.addCustomPenColor(picked);
+                            }
+                          });
+                          if (ctx.mounted) Navigator.pop(ctx);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.line_weight_rounded,
+                        size: 20,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                      Expanded(
+                        child: Slider(
+                          value: highlighter ? t.highlighterWidth : t.penWidth,
+                          min: highlighter ? 8 : 1,
+                          max: highlighter ? 36 : 12,
+                          onChanged: (v) {
+                            t.set((s) {
+                              if (highlighter) {
+                                s.highlighterWidth = v;
+                              } else {
+                                s.penWidth = v;
+                              }
+                            });
+                          },
                         ),
                       ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            StatefulBuilder(
-              builder: (ctx, setSheet) => Row(
-                children: [
-                  const Icon(Icons.line_weight_rounded, size: 20),
-                  Expanded(
-                    child: Slider(
-                      value: highlighter ? t.highlighterWidth : t.penWidth,
-                      min: highlighter ? 8 : 1,
-                      max: highlighter ? 36 : 12,
-                      onChanged: (v) {
-                        setSheet(() {});
-                        t.set((s) {
-                          if (highlighter) {
-                            s.highlighterWidth = v;
-                          } else {
-                            s.penWidth = v;
-                          }
-                        });
-                      },
-                    ),
+                    ],
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<Color?> _showCustomColorPicker(
+    BuildContext context, {
+    required Color initial,
+  }) {
+    return showDialog<Color>(
+      context: context,
+      builder: (ctx) => _CustomColorPickerDialog(initial: initial),
     );
   }
 
@@ -707,68 +764,205 @@ String _brushLabel(BrushStyle b) => switch (b) {
       BrushStyle.calligraphy => 'Calligraphy',
     };
 
-IconData _brushIcon(BrushStyle b) => switch (b) {
-      BrushStyle.pen => Icons.edit_rounded,
-      BrushStyle.fountainPen => Icons.draw_rounded,
-      BrushStyle.pencil => Icons.create_rounded,
-      BrushStyle.marker => Icons.brush_rounded,
-      BrushStyle.calligraphy => Icons.format_paint_rounded,
-    };
+bool _colorsMatch(Color a, Color b) => a.value == b.value;
 
-/// Compact horizontal brush picker shown when pen/shape is active.
-class _BrushStyleRow extends StatelessWidget {
-  final ToolState toolState;
+/// Choice chip with theme-aware contrast (fixes white-on-white in light theme).
+class _ThemedChoiceChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onSelected;
 
-  const _BrushStyleRow({required this.toolState});
+  const _ThemedChoiceChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: toolState,
-      builder: (context, _) {
-        final primary = Theme.of(context).colorScheme.primary;
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(
-            color: primary.withOpacity(0.06),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: primary.withOpacity(0.12)),
+    final scheme = Theme.of(context).colorScheme;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onSelected(),
+      selectedColor: scheme.primaryContainer,
+      backgroundColor: scheme.surfaceContainerHighest,
+      labelStyle: TextStyle(
+        color: selected ? scheme.onPrimaryContainer : scheme.onSurface,
+        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+      ),
+      side: BorderSide(
+        color: selected ? scheme.primary : scheme.outline.withOpacity(0.35),
+      ),
+    );
+  }
+}
+
+class _ColorSwatch extends StatelessWidget {
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _ColorSwatch({
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final needsBorder = color.computeLuminance() > 0.85;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            width: selected ? 3 : 1,
+            color: selected
+                ? primary
+                : needsBorder
+                    ? const Color(0xFFD0D4DC)
+                    : Colors.transparent,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final b in BrushStyle.values)
-                Padding(
-                  padding: const EdgeInsets.only(right: 2),
-                  child: Tooltip(
-                    message: _brushLabel(b),
-                    child: Material(
-                      color: toolState.brushStyle == b
-                          ? primary.withOpacity(0.16)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () => toolState.set((s) => s.brushStyle = b),
-                        child: Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Icon(
-                            _brushIcon(b),
-                            size: 18,
-                            color: toolState.brushStyle == b
-                                ? primary
-                                : const Color(0xFF7A8494),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddColorSwatch extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _AddColorSwatch({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: scheme.outline.withOpacity(0.5)),
+        ),
+        child: Icon(Icons.add_rounded, size: 20, color: scheme.onSurfaceVariant),
+      ),
+    );
+  }
+}
+
+class _CustomColorPickerDialog extends StatefulWidget {
+  final Color initial;
+
+  const _CustomColorPickerDialog({required this.initial});
+
+  @override
+  State<_CustomColorPickerDialog> createState() =>
+      _CustomColorPickerDialogState();
+}
+
+class _CustomColorPickerDialogState extends State<_CustomColorPickerDialog> {
+  late HSVColor _hsv;
+
+  @override
+  void initState() {
+    super.initState();
+    _hsv = HSVColor.fromColor(widget.initial);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final color = _hsv.toColor();
+    return AlertDialog(
+      title: const Text('Custom color'),
+      content: SizedBox(
+        width: 280,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+                border: Border.all(color: scheme.outline),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _SliderRow(
+              label: 'Hue',
+              value: _hsv.hue,
+              max: 360,
+              onChanged: (v) => setState(() => _hsv = _hsv.withHue(v)),
+            ),
+            _SliderRow(
+              label: 'Saturation',
+              value: _hsv.saturation,
+              max: 1,
+              onChanged: (v) => setState(() => _hsv = _hsv.withSaturation(v)),
+            ),
+            _SliderRow(
+              label: 'Brightness',
+              value: _hsv.value,
+              max: 1,
+              onChanged: (v) => setState(() => _hsv = _hsv.withValue(v)),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, color),
+          child: const Text('Use color'),
+        ),
+      ],
+    );
+  }
+}
+
+class _SliderRow extends StatelessWidget {
+  final String label;
+  final double value;
+  final double max;
+  final ValueChanged<double> onChanged;
+
+  const _SliderRow({
+    required this.label,
+    required this.value,
+    required this.max,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 88,
+          child: Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ),
+        Expanded(
+          child: Slider(
+            value: value.clamp(0, max),
+            min: 0,
+            max: max,
+            onChanged: onChanged,
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

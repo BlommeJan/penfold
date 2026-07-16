@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
@@ -730,6 +731,54 @@ class PageExportService {
       rethrow;
     } catch (e) {
       throw StateError('Failed to share export: $e');
+    }
+  }
+}
+
+/// Shows a blocking progress dialog while [run] exports one or more pages.
+Future<T?> withExportProgressDialog<T>({
+  required BuildContext context,
+  required int totalPages,
+  required Future<T> Function(ExportProgressCallback onProgress) run,
+}) async {
+  final progress = ValueNotifier<(int current, int total)>((0, totalPages));
+
+  unawaited(
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => PopScope(
+        canPop: false,
+        child: ValueListenableBuilder<(int current, int total)>(
+          valueListenable: progress,
+          builder: (_, value, __) {
+            final label = value.$2 <= 1
+                ? 'Preparing export…'
+                : 'Exporting page ${value.$1} of ${value.$2}…';
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(label),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+
+  try {
+    return await run((current, total) {
+      progress.value = (current, total);
+    });
+  } finally {
+    progress.dispose();
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 }

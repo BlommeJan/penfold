@@ -7,14 +7,36 @@ class PageComplexityService {
 
   static final PageComplexityService instance = PageComplexityService._();
 
-  /// Warn when a page reaches this many strokes (OneNote-style page bloat guard).
-  static const strokeWarningThreshold = 2000;
+  /// Warn when a page starts getting heavy (OneNote-style bloat guard).
+  static const strokeWarningThreshold = 500;
+
+  /// Block PDF/PNG export above this count to avoid OOM from eraser bloat.
+  static const strokeExportBlockThreshold = 2000;
 
   static bool shouldWarn(int strokeCount) =>
       strokeCount >= strokeWarningThreshold;
 
+  static bool shouldBlockExport(int strokeCount) =>
+      strokeCount >= strokeExportBlockThreshold;
+
   static String warningMessage(int strokeCount) =>
-      'This page has $strokeCount strokes. Consider splitting it for better performance.';
+      'This page has $strokeCount strokes and may feel slow. '
+      'Consider splitting it for better performance.';
+
+  static String exportBlockedMessage(int strokeCount) =>
+      'Export blocked: a page has $strokeCount strokes (limit '
+      '$strokeExportBlockThreshold). Split heavy pages first.';
+
+  /// Returns a user-facing block reason when any page exceeds the export limit.
+  Future<String?> exportBlockReasonForPages(Iterable<String> pageIds) async {
+    for (final id in pageIds) {
+      final count = await strokeCount(id);
+      if (shouldBlockExport(count)) {
+        return exportBlockedMessage(count);
+      }
+    }
+    return null;
+  }
 
   Future<int> strokeCount(String pageId) =>
       AppDatabase.instance.countStrokes(pageId);

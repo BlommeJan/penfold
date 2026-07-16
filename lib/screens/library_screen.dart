@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/backup_service.dart';
+import '../services/page_complexity_service.dart';
+import '../services/page_export.dart';
 import '../services/pdf_import.dart';
 import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
@@ -543,6 +545,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
               onTap: () => Navigator.pop(ctx, 'tags'),
             ),
             ListTile(
+              leading: const Icon(Icons.picture_as_pdf_outlined),
+              title: const Text('Export workbook'),
+              subtitle: const Text('Share all pages as PDF'),
+              onTap: () => Navigator.pop(ctx, 'export_workbook'),
+            ),
+            ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
               title: const Text('Move to Trash'),
               onTap: () => Navigator.pop(ctx, 'delete'),
@@ -555,6 +563,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
       await _moveToFolder(n);
     } else if (action == 'tags') {
       await _editNotebookTags(n);
+    } else if (action == 'export_workbook') {
+      await _exportWorkbook(n);
     } else if (action == 'rename') {
       final ctrl = TextEditingController(text: n.title);
       final ok = await showDialog<bool>(
@@ -578,6 +588,46 @@ class _LibraryScreenState extends State<LibraryScreen> {
       }
     } else if (action == 'delete') {
       await _confirmDeleteNotebook(n);
+    }
+  }
+
+  Future<void> _exportWorkbook(Notebook n) async {
+    final pages = await _db.pagesOf(n.id);
+    if (pages.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('This notebook has no pages to export')),
+      );
+      return;
+    }
+
+    final blockReason = await PageComplexityService.instance
+        .exportBlockReasonForPages(pages.map((p) => p.id));
+    if (blockReason != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(blockReason)));
+      return;
+    }
+
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await withExportProgressDialog(
+        context: context,
+        totalPages: pages.length,
+        run: (onProgress) => PageExportService.instance.exportNotebook(
+          pages: pages,
+          notebookTitle: n.title,
+          onProgress: onProgress,
+        ),
+      );
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text('"${n.title}" exported as PDF')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
     }
   }
 

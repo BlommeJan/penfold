@@ -22,8 +22,8 @@ import '../services/thumbnail_cache.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/zoom_navigation_service.dart';
 import '../widgets/contents_sheet.dart';
-import '../widgets/page_audio_settings.dart';
 import '../widgets/page_editor.dart';
+import '../widgets/page_settings_popup.dart';
 import '../widgets/toolbar.dart';
 import 'page_overview_screen.dart';
 
@@ -326,17 +326,24 @@ class _NotebookScreenState extends State<NotebookScreen>
     if (!PageComplexityService.shouldWarn(count)) return;
     if (onOpen && _complexityWarnedOnOpen.contains(pageId)) return;
     if (onOpen) _complexityWarnedOnOpen.add(pageId);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(PageComplexityService.warningMessage(count))),
-    );
+    _showComplexitySnackBar(count);
   }
 
   void _onActivePageStrokeCount(int count) {
     if (!PageComplexityService.shouldWarn(count)) return;
+    _showComplexitySnackBar(count);
+  }
+
+  void _showComplexitySnackBar(int count) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(PageComplexityService.warningMessage(count))),
+      SnackBar(
+        content: Text(PageComplexityService.warningMessage(count)),
+        action: SnackBarAction(
+          label: 'Split page',
+          onPressed: () => unawaited(_splitActivePage()),
+        ),
+      ),
     );
   }
 
@@ -628,155 +635,20 @@ class _NotebookScreenState extends State<NotebookScreen>
     );
   }
 
+  Future<String?> _exportBlockReason({String? pageId, List<String>? pageIds}) {
+    final ids = pageId != null ? [pageId] : pageIds ?? [];
+    return PageComplexityService.instance.exportBlockReasonForPages(ids);
+  }
+
   Future<void> _openPageSettings() async {
-    final chosen = await showModalBottomSheet<Object?>(
+    final chosen = await showPageSettingsPopup(
       context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text('Page template',
-                  style: Theme.of(ctx).textTheme.titleSmall),
-            ),
-            for (final t in PageTemplate.values)
-              ListTile(
-                leading: Icon(switch (t) {
-                  PageTemplate.blank => Icons.crop_portrait_rounded,
-                  PageTemplate.lined => Icons.notes_rounded,
-                  PageTemplate.grid => Icons.grid_4x4_rounded,
-                  PageTemplate.dotted => Icons.apps_rounded,
-                  PageTemplate.collegeRuled => Icons.margin_rounded,
-                }),
-                title: Text(switch (t) {
-                  PageTemplate.blank => 'Blank',
-                  PageTemplate.lined => 'Lined',
-                  PageTemplate.grid => 'Grid',
-                  PageTemplate.dotted => 'Dotted',
-                  PageTemplate.collegeRuled => 'College ruled',
-                }),
-                trailing: _activePage.template == t
-                    ? const Icon(Icons.check_rounded)
-                    : null,
-                onTap: () => Navigator.pop(ctx, t),
-              ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text('Page size',
-                  style: Theme.of(ctx).textTheme.titleSmall),
-            ),
-            for (final s in PageSize.values)
-              ListTile(
-                leading: const Icon(Icons.aspect_ratio_rounded),
-                title: Text(s.label),
-                trailing: _activePage.pageSize == s
-                    ? const Icon(Icons.check_rounded)
-                    : null,
-                enabled: !_isPdfPage(_activePage),
-                onTap: !_isPdfPage(_activePage)
-                    ? () => Navigator.pop(ctx, s)
-                    : null,
-              ),
-            if (_activePage.pdfImagePath != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  'PDF pages keep their document dimensions',
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-              ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text('Orientation',
-                  style: Theme.of(ctx).textTheme.titleSmall),
-            ),
-            for (final o in PageOrientation.values)
-              ListTile(
-                leading: Icon(o == PageOrientation.portrait
-                    ? Icons.crop_portrait_rounded
-                    : Icons.crop_landscape_rounded),
-                title: Text(o.label),
-                trailing: _activePage.orientation == o
-                    ? const Icon(Icons.check_rounded)
-                    : null,
-                enabled: !_isPdfPage(_activePage),
-                onTap: !_isPdfPage(_activePage)
-                    ? () => Navigator.pop(ctx, o)
-                    : null,
-              ),
-            if (_isPdfPage(_activePage))
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  'PDF pages keep their document orientation',
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-              ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.list_alt_rounded),
-              title: const Text('Table of contents'),
-              subtitle: const Text('Jump to headings in this notebook'),
-              onTap: () => Navigator.pop(ctx, 'contents'),
-            ),
-            const Divider(height: 1),
-            SwitchListTile(
-              secondary: const Icon(Icons.bookmark_outline_rounded),
-              title: const Text('Bookmark this page'),
-              value: _activePage.bookmarked,
-              onChanged: (v) => Navigator.pop(ctx, 'bookmark:$v'),
-            ),
-            PageAudioSettings(
-              pageId: _activePage.id,
-              audioPath: _activePage.audioPath,
-              onAudioChanged: (path) {
-                _activePage.audioPath = path;
-              },
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.call_split_rounded),
-              title: const Text('Split page'),
-              subtitle: const Text(
-                'Duplicate template and move half the ink to a new page',
-              ),
-              onTap: () => Navigator.pop(ctx, 'split_page'),
-            ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Text('Export',
-                  style: Theme.of(ctx).textTheme.titleSmall),
-            ),
-            ListTile(
-              leading: const Icon(Icons.image_outlined),
-              title: const Text('Export page as PNG'),
-              onTap: () => Navigator.pop(ctx, 'export_png'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.picture_as_pdf_outlined),
-              title: const Text('Export page as PDF'),
-              onTap: () => Navigator.pop(ctx, 'export_pdf'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.menu_book_outlined),
-              title: const Text('Export notebook as PDF'),
-              subtitle: Text('${_pages.length} pages'),
-              onTap: () => Navigator.pop(ctx, 'export_notebook_pdf'),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
+      page: _activePage,
+      isPdfPage: _isPdfPage(_activePage),
+      notebookPageCount: _pages.length,
+      onAudioChanged: (path) {
+        _activePage.audioPath = path;
+      },
     );
     if (chosen == null || !mounted) return;
 
@@ -896,57 +768,19 @@ class _NotebookScreenState extends State<NotebookScreen>
     }
   }
 
-  Future<T?> _withExportProgress<T>({
-    required int totalPages,
-    required Future<T> Function(ExportProgressCallback onProgress) run,
-  }) async {
-    if (!mounted) return null;
-    final progress = ValueNotifier<(int current, int total)>((0, totalPages));
-
-    unawaited(
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => PopScope(
-          canPop: false,
-          child: ValueListenableBuilder<(int current, int total)>(
-            valueListenable: progress,
-            builder: (_, value, __) {
-              final label = value.$2 <= 1
-                  ? 'Preparing export…'
-                  : 'Exporting page ${value.$1} of ${value.$2}…';
-              return AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
-                    Text(label),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-
-    try {
-      return await run((current, total) {
-        progress.value = (current, total);
-      });
-    } finally {
-      progress.dispose();
-      if (mounted) {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    }
-  }
-
   Future<void> _exportCurrentPage(ExportFormat format) async {
+    final blockReason =
+        await _exportBlockReason(pageId: _activePage.id);
+    if (blockReason != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(blockReason)));
+      return;
+    }
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await _withExportProgress(
+      await withExportProgressDialog(
+        context: context,
         totalPages: 1,
         run: (onProgress) => PageExportService.instance.exportPage(
           page: _activePage,
@@ -970,9 +804,19 @@ class _NotebookScreenState extends State<NotebookScreen>
   }
 
   Future<void> _exportNotebookPdf() async {
+    final blockReason = await _exportBlockReason(
+      pageIds: _pages.map((p) => p.id).toList(),
+    );
+    if (blockReason != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(blockReason)));
+      return;
+    }
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await _withExportProgress(
+      await withExportProgressDialog(
+        context: context,
         totalPages: _pages.length,
         run: (onProgress) => PageExportService.instance.exportNotebook(
           pages: _pages,
@@ -1129,9 +973,23 @@ class _NotebookScreenState extends State<NotebookScreen>
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _pageTurnEnabled
-              ? _buildPageTurnBody(viewport)
-              : _buildScrollBody(viewport),
+          : Stack(
+              children: [
+                _pageTurnEnabled
+                    ? _buildPageTurnBody(viewport)
+                    : _buildScrollBody(viewport),
+                if (!_loading && _pages.isNotEmpty)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: PageInfoChip(
+                      page: _activePage,
+                      isPdfPage: _isPdfPage(_activePage),
+                      onTap: _openPageSettings,
+                    ),
+                  ),
+              ],
+            ),
     );
   }
 }

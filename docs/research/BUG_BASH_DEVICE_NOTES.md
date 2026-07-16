@@ -1,4 +1,4 @@
-# Bug bash — device verification priorities (v0.2.60)
+# Bug bash — device verification priorities (v0.2.61)
 
 Use this after installing `APKs/Penfold-v0.2.61.apk`. Full checklist: [DEVICE_TESTING.md](../DEVICE_TESTING.md).
 

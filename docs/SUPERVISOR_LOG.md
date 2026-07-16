@@ -101,6 +101,22 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.11 | Lazy PDF import |
 | 0.2.12 | Pinch zoom fix |
 
+
+## GitHub milestone push policy
+
+Push **local main to origin** (git push, never force) only at **milestones** so work is backed up and rollback-friendly. Do **not** push after every sub-agent commit.
+
+**Push when:**
+- P0 bug-bash batch complete (e.g. eraser + recovery)
+- P1 layout/viewport batch complete
+- Full bug-bash or supervisor run wrapped
+- Immediately **before** tagging or shipping an APK release
+
+**Do not push when:**
+- Mid-feature or between sub-agents on the same milestone
+- Only docs/log edits unless closing a milestone
+
+After a push, note the range in supervisor notes (e.g. `6b5ce127..a20cfe3b`).
 ## Stability rules
 
 - Do **not** re-break page layout/zoom like 0.2.7–0.2.12 regressions

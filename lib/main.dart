@@ -5,6 +5,7 @@ import 'services/gesture_ink_service.dart';
 import 'services/spen_button_service.dart';
 import 'services/stroke_smoothing_service.dart';
 import 'services/toolbar_order_service.dart';
+import 'services/zoom_navigation_service.dart';
 
 const _kPenfoldBlue = Color(0xFF2455C3);
 const _kPenfoldBlueLight = Color(0xFF3D6FD4);
@@ -15,6 +16,7 @@ void main() {
   ToolbarOrderService.instance.load();
   StrokeSmoothingService.instance.load();
   GestureInkService.instance.load();
+  ZoomNavigationService.instance.load();
   SpenButtonService.instance.load();
   runApp(const PenfoldApp());
 }

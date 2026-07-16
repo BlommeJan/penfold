@@ -174,8 +174,7 @@ void main() {
       await tester.pump();
       expect(firstCanvas.canUndo, isTrue);
 
-      final pageHeight = tester.getSize(find.byType(CustomScrollView)).height *
-          0.85;
+      final pageHeight = tester.getSize(find.byType(CustomScrollView)).height;
       await tester.drag(find.byType(CustomScrollView), Offset(0, -pageHeight));
       await settle(tester);
 

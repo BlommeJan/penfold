@@ -11,6 +11,7 @@ import '../canvas/drawing_canvas.dart';
 import '../canvas/penfold_scroll_behavior.dart';
 import '../db/app_database.dart';
 import '../models/models.dart';
+import '../services/finger_drawing_service.dart';
 import '../services/page_complexity_service.dart';
 import '../services/page_export.dart';
 import '../services/page_turn_mode_service.dart';
@@ -66,6 +67,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   int _paperFingerLockCount = 0;
   Timer? _sessionSaveTimer;
   final Set<String> _complexityWarnedOnOpen = {};
+  bool _syncingFingerDrawing = false;
 
   DrawingCanvasState? _activeCanvas;
 
@@ -75,13 +77,15 @@ class _NotebookScreenState extends State<NotebookScreen>
     WidgetsBinding.instance.addObserver(this);
     _pageController = PageController();
     _scrollController.addListener(_onScroll);
-    _toolState.addListener(_scheduleSessionSave);
+    _toolState.addListener(_onToolStateChanged);
     _syncStrokeSmoothing();
     StrokeSmoothingService.instance.addListener(_onStrokeSmoothingChanged);
     _syncPageTurnMode();
     PageTurnModeService.instance.addListener(_onPageTurnModeChanged);
     _syncZoomNavigation();
     ZoomNavigationService.instance.addListener(_onZoomNavigationChanged);
+    _syncFingerDrawing();
+    FingerDrawingService.instance.addListener(_onFingerDrawingChanged);
     _syncSpenButton();
     SpenButtonService.instance.addListener(_onSpenButtonChanged);
     unawaited(SpenButtonService.instance.startListening());
@@ -107,16 +111,62 @@ class _NotebookScreenState extends State<NotebookScreen>
     WidgetsBinding.instance.removeObserver(this);
     _sessionSaveTimer?.cancel();
     unawaited(_persistSession());
-    _toolState.removeListener(_scheduleSessionSave);
+    _toolState.removeListener(_onToolStateChanged);
     StrokeSmoothingService.instance.removeListener(_onStrokeSmoothingChanged);
     PageTurnModeService.instance.removeListener(_onPageTurnModeChanged);
     ZoomNavigationService.instance.removeListener(_onZoomNavigationChanged);
+    FingerDrawingService.instance.removeListener(_onFingerDrawingChanged);
     SpenButtonService.instance.removeListener(_onSpenButtonChanged);
     SpenButtonService.instance.stopListening();
     _toolState.dispose();
     _scrollController.dispose();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _onToolStateChanged() {
+    _scheduleSessionSave();
+    if (_syncingFingerDrawing) return;
+    final fingerEnabled = !_toolState.stylusOnly;
+    if (FingerDrawingService.instance.enabled != fingerEnabled) {
+      unawaited(FingerDrawingService.instance.setEnabled(fingerEnabled));
+    }
+  }
+
+  void _onFingerDrawingChanged() {
+    if (!mounted) return;
+    _applyFingerDrawingFromService();
+  }
+
+  void _applyFingerDrawingFromService() {
+    final stylusOnly = FingerDrawingService.instance.stylusOnly;
+    if (_toolState.stylusOnly == stylusOnly) return;
+    _syncingFingerDrawing = true;
+    _toolState.set((s) => s.stylusOnly = stylusOnly);
+    _syncingFingerDrawing = false;
+    for (final key in _pageKeys.values) {
+      key.currentState?.canvasState?.resetPointerSession();
+    }
+  }
+
+  Future<void> _syncFingerDrawing() async {
+    if (!FingerDrawingService.instance.isLoaded) {
+      await FingerDrawingService.instance.load();
+    }
+    if (!mounted) return;
+    _applyFingerDrawingFromService();
+  }
+
+  void _resetScrollAndPointerState() {
+    for (final key in _pageKeys.values) {
+      key.currentState?.resetPointerTracking();
+    }
+    if (_paperFingerLockCount != 0 || _pinchLockCount != 0) {
+      setState(() {
+        _paperFingerLockCount = 0;
+        _pinchLockCount = 0;
+      });
+    }
   }
 
   void _onStrokeSmoothingChanged() {
@@ -204,6 +254,7 @@ class _NotebookScreenState extends State<NotebookScreen>
     final pageHeight = _pageSlotHeight(MediaQuery.of(context).size);
     final idx = (offset / pageHeight).round().clamp(0, _pages.length - 1);
     if (idx != _visiblePageIndex) {
+      _resetScrollAndPointerState();
       setState(() => _visiblePageIndex = idx);
       _setActiveCanvas(_pageKeys[_pages[idx].id]?.currentState?.canvasState);
       unawaited(_maybeWarnPageComplexity(_pages[idx].id, onOpen: true));
@@ -358,6 +409,7 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   void _onVisiblePageChanged(int index) {
     if (index == _visiblePageIndex) return;
+    _resetScrollAndPointerState();
     setState(() => _visiblePageIndex = index);
     _setActiveCanvas(_pageKeys[_pages[index].id]?.currentState?.canvasState);
     _scheduleSessionSave();
@@ -512,6 +564,7 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   Future<void> _scrollToPage(int index) async {
     if (index < 0 || index >= _pages.length) return;
+    _resetScrollAndPointerState();
     if (_pageTurnEnabled) {
       if (_pageController.hasClients) {
         await _pageController.animateToPage(

@@ -23,6 +23,7 @@ class PageEditor extends StatefulWidget {
   final void Function(int strokeCount)? onStrokeCountChanged;
   final ValueChanged<bool>? onTransformGestureActive;
   final ValueChanged<bool>? onPaperFingerActive;
+  final bool zoomEnabled;
 
   const PageEditor({
     super.key,
@@ -36,6 +37,7 @@ class PageEditor extends StatefulWidget {
     this.onStrokeCountChanged,
     this.onTransformGestureActive,
     this.onPaperFingerActive,
+    this.zoomEnabled = true,
   });
 
   @override
@@ -80,6 +82,10 @@ class PageEditorState extends State<PageEditor> {
         orientation: _orientation,
       );
 
+  void resetViewportTransform() {
+    _viewportKey.currentState?.resetTransform();
+  }
+
   DrawingCanvasState? get canvasState => _canvasKey.currentState;
 
   @override
@@ -88,11 +94,24 @@ class PageEditorState extends State<PageEditor> {
     _loadPdf();
   }
 
+  void resetPointerTracking() {
+    _canvasKey.currentState?.resetPointerSession();
+    _viewportKey.currentState?.resetPointerTracking();
+  }
+
   @override
   void didUpdateWidget(covariant PageEditor old) {
     super.didUpdateWidget(old);
     if (old.page.id != widget.page.id) {
+      resetPointerTracking();
       _loadPdf();
+    }
+    final layoutChanged = old.page.orientation != widget.page.orientation ||
+        old.page.pageSize != widget.page.pageSize ||
+        (old.page.aspect - widget.page.aspect).abs() > 0.02 ||
+        old.viewportSize != widget.viewportSize;
+    if (layoutChanged) {
+      _viewportKey.currentState?.resetTransform();
     }
   }
 
@@ -156,6 +175,7 @@ class PageEditorState extends State<PageEditor> {
           key: _viewportKey,
           toolState: widget.toolState,
           paperSize: size,
+          zoomEnabled: widget.zoomEnabled,
           onTransformGestureActive: widget.onTransformGestureActive,
           child: DecoratedBox(
             decoration: BoxDecoration(

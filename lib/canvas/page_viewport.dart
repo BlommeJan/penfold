@@ -11,6 +11,7 @@ class PageViewport extends StatefulWidget {
   final ToolState toolState;
   final Size paperSize;
   final Widget child;
+  final bool zoomEnabled;
   final ValueChanged<bool>? onTransformGestureActive;
 
   const PageViewport({
@@ -18,6 +19,7 @@ class PageViewport extends StatefulWidget {
     required this.toolState,
     required this.paperSize,
     required this.child,
+    this.zoomEnabled = true,
     this.onTransformGestureActive,
   });
 
@@ -39,6 +41,19 @@ class PageViewportState extends State<PageViewport> {
   }
 
   @override
+  void didUpdateWidget(covariant PageViewport oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.zoomEnabled && !widget.zoomEnabled) {
+      resetTransform();
+      if (_gestureActive) {
+        widget.onTransformGestureActive?.call(false);
+      }
+      _gestureActive = false;
+      _lastFocal = null;
+    }
+  }
+
+  @override
   void dispose() {
     widget.toolState.removeListener(_onToolStateChanged);
     _transform.dispose();
@@ -48,6 +63,16 @@ class PageViewportState extends State<PageViewport> {
   void _onToolStateChanged() => setState(() {});
 
   void resetTransform() => _transform.value = Matrix4.identity();
+
+  /// Clears tracked pointers and ends any in-flight pan/zoom gesture.
+  void resetPointerTracking() {
+    _activePointers.clear();
+    if (_gestureActive) {
+      widget.onTransformGestureActive?.call(false);
+    }
+    _gestureActive = false;
+    _lastFocal = null;
+  }
 
   bool _isStylusKind(PointerDeviceKind k) =>
       k == PointerDeviceKind.stylus ||
@@ -67,6 +92,8 @@ class PageViewportState extends State<PageViewport> {
   }
 
   bool _allowsGesture({required Offset focal, required int pointerCount}) {
+    if (!widget.zoomEnabled) return false;
+
     final touches = _touchPointerCount();
     final effectiveTouches = pointerCount > touches ? pointerCount : touches;
     final kind = _dominantTouchKind();

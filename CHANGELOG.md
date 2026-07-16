@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.61] — 2026
+
+### Fixed
+
+- **Android SDK** — `compileSdk 36` and `minSdk 23` for ML Kit Digital Ink; release APK builds again
+
 ## [0.2.60] — 2026
 
 ### Fixed

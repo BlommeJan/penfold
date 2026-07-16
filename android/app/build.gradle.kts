@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "com.itsbryce.penfold"
-    // ML Kit Digital Ink Recognition requires compileSdk 35.
-    compileSdk = 35
+    // ML Kit Digital Ink Recognition requires compileSdk 36+.
+    compileSdk = 36
     // NDK omitted: no native code in this project; avoids a 2GB toolchain download.
     // ndkVersion = flutter.ndkVersion
 
@@ -26,7 +26,8 @@ android {
         applicationId = "com.itsbryce.penfold"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Digital Ink Recognition requires minSdk 23.
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

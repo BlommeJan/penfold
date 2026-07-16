@@ -68,6 +68,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   Timer? _sessionSaveTimer;
   final Set<String> _complexityWarnedOnOpen = {};
   bool _syncingFingerDrawing = false;
+  Orientation? _lastDeviceOrientation;
 
   DrawingCanvasState? _activeCanvas;
 
@@ -90,6 +91,17 @@ class _NotebookScreenState extends State<NotebookScreen>
     SpenButtonService.instance.addListener(_onSpenButtonChanged);
     unawaited(SpenButtonService.instance.startListening());
     _load();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final orientation = MediaQuery.orientationOf(context);
+    if (_lastDeviceOrientation != null &&
+        _lastDeviceOrientation != orientation) {
+      _resetAllPageTransforms();
+    }
+    _lastDeviceOrientation = orientation;
   }
 
   @override
@@ -225,6 +237,13 @@ class _NotebookScreenState extends State<NotebookScreen>
     if (_pages.isEmpty) return;
     final idx = _visiblePageIndex.clamp(0, _pages.length - 1);
     _pageKeys[_pages[idx].id]?.currentState?.resetViewportTransform();
+  }
+
+  void _resetAllPageTransforms() {
+    for (final key in _pageKeys.values) {
+      key.currentState?.resetViewportTransform();
+    }
+    _resetScrollAndPointerState();
   }
 
   Future<void> _syncStrokeSmoothing() async {
@@ -712,7 +731,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       }
       await _db.updatePageSize(_activePage.id, chosen);
       setState(() => _activePage.pageSize = chosen);
-      _resetVisiblePageTransform();
+      _resetAllPageTransforms();
       return;
     }
 
@@ -752,7 +771,7 @@ class _NotebookScreenState extends State<NotebookScreen>
         _activePage.orientation = chosen;
         _activePage.aspect = aspect;
       });
-      _resetVisiblePageTransform();
+      _resetAllPageTransforms();
       return;
     }
 

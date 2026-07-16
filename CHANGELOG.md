@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.63] — 2026
+
+### Fixed
+
+- **Pinch zoom** — scale from gesture-start matrix; lock scroll when second finger lands so pinch wins over page scroll
+- **Page layout** — page viewport sized to canonical display dimensions (no stretch inside full-height slot)
+- **Rotation** — reset zoom on device rotate and page orientation/size change
+
 ## [0.2.62] — 2026
 
 ### Added

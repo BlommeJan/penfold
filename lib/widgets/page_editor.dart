@@ -171,51 +171,55 @@ class PageEditorState extends State<PageEditor> {
 
     return Center(
       child: RepaintBoundary(
-        child: PageViewport(
-          key: _viewportKey,
-          toolState: widget.toolState,
-          paperSize: size,
-          zoomEnabled: widget.zoomEnabled,
-          onTransformGestureActive: widget.onTransformGestureActive,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.10),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                DrawingCanvas(
-                  key: _canvasKey,
-                  page: widget.page,
-                  toolState: widget.toolState,
-                  displaySize: size,
-                  pageSize: _pageSize,
-                  pdfImage: _pdfImage,
-                  onHistoryChanged: widget.onHistoryChanged,
-                  onSelectionChanged: widget.onSelectionChanged,
-                  onStrokeCountChanged: widget.onStrokeCountChanged,
-                  onPaperFingerActive: widget.onPaperFingerActive,
-                ),
-                if (_pdfLinks.isNotEmpty)
-                  PdfLinkOverlay(links: _pdfLinks, displaySize: size),
-                if (_pdfLoading && _pdfImage == null && _hasPdfBackground)
-                  const ColoredBox(
-                    color: Color(0xFFF4F6F9),
-                    child: Center(
-                      child: SizedBox(
-                        width: 28,
-                        height: 28,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
+        child: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: PageViewport(
+            key: _viewportKey,
+            toolState: widget.toolState,
+            paperSize: size,
+            zoomEnabled: widget.zoomEnabled,
+            onTransformGestureActive: widget.onTransformGestureActive,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.10),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  DrawingCanvas(
+                    key: _canvasKey,
+                    page: widget.page,
+                    toolState: widget.toolState,
+                    displaySize: size,
+                    pageSize: _pageSize,
+                    pdfImage: _pdfImage,
+                    onHistoryChanged: widget.onHistoryChanged,
+                    onSelectionChanged: widget.onSelectionChanged,
+                    onStrokeCountChanged: widget.onStrokeCountChanged,
+                    onPaperFingerActive: widget.onPaperFingerActive,
+                  ),
+                  if (_pdfLinks.isNotEmpty)
+                    PdfLinkOverlay(links: _pdfLinks, displaySize: size),
+                  if (_pdfLoading && _pdfImage == null && _hasPdfBackground)
+                    const ColoredBox(
+                      color: Color(0xFFF4F6F9),
+                      child: Center(
+                        child: SizedBox(
+                          width: 28,
+                          height: 28,
+                          child: CircularProgressIndicator(strokeWidth: 2.5),
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

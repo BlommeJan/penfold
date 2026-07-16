@@ -32,7 +32,9 @@ class PageViewportState extends State<PageViewport> {
   final Map<int, PointerDeviceKind> _activePointers = {};
   Offset? _lastFocal;
   double _gestureStartScale = 1;
+  Matrix4 _gestureStartMatrix = Matrix4.identity();
   bool _gestureActive = false;
+  bool _pinchScrollLockHeld = false;
 
   @override
   void initState() {
@@ -43,8 +45,12 @@ class PageViewportState extends State<PageViewport> {
   @override
   void didUpdateWidget(covariant PageViewport oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.paperSize != widget.paperSize) {
+      resetTransform();
+    }
     if (oldWidget.zoomEnabled && !widget.zoomEnabled) {
       resetTransform();
+      _releasePinchScrollLock();
       if (_gestureActive) {
         widget.onTransformGestureActive?.call(false);
       }
@@ -70,6 +76,7 @@ class PageViewportState extends State<PageViewport> {
     if (_gestureActive) {
       widget.onTransformGestureActive?.call(false);
     }
+    _releasePinchScrollLock();
     _gestureActive = false;
     _lastFocal = null;
   }
@@ -119,6 +126,16 @@ class PageViewportState extends State<PageViewport> {
 
   void _onPointerDown(PointerDownEvent e) {
     _activePointers[e.pointer] = e.kind;
+    // Lock ancestor scroll as soon as a second finger lands so pinch wins
+    // over CustomScrollView / PageView before ScaleStart fires.
+    if (widget.zoomEnabled &&
+        _touchPointerCount() >= 2 &&
+        shouldAllowPinchZoom(
+          touchPointerCount: _touchPointerCount(),
+          kind: _dominantTouchKind(),
+        )) {
+      _holdPinchScrollLock();
+    }
   }
 
   void _onPointerUp(PointerEvent e) {
@@ -127,17 +144,33 @@ class PageViewportState extends State<PageViewport> {
       if (_gestureActive) {
         widget.onTransformGestureActive?.call(false);
       }
+      _releasePinchScrollLock();
       _gestureActive = false;
       _lastFocal = null;
+    } else if (_touchPointerCount() < 2) {
+      _releasePinchScrollLock();
     }
   }
 
+  void _holdPinchScrollLock() {
+    if (_pinchScrollLockHeld) return;
+    _pinchScrollLockHeld = true;
+    widget.onTransformGestureActive?.call(true);
+  }
+
+  void _releasePinchScrollLock() {
+    if (!_pinchScrollLockHeld) return;
+    _pinchScrollLockHeld = false;
+    widget.onTransformGestureActive?.call(false);
+  }
+
   void _beginGesture(Offset focal) {
-    if (!_gestureActive) {
+    if (!_gestureActive && !_pinchScrollLockHeld) {
       widget.onTransformGestureActive?.call(true);
     }
     _gestureActive = true;
     _lastFocal = focal;
+    _gestureStartMatrix = Matrix4.copy(_transform.value);
     _gestureStartScale = _transform.value.getMaxScaleOnAxis();
   }
 
@@ -167,31 +200,37 @@ class PageViewportState extends State<PageViewport> {
       return;
     }
 
-    final m = Matrix4.copy(_transform.value);
+    final focal = d.localFocalPoint;
 
-    if (d.pointerCount >= 2 && (d.scale - 1.0).abs() > 0.001) {
-      final newScale = (_gestureStartScale * d.scale).clamp(0.6, 10.0);
-      final delta = newScale / m.getMaxScaleOnAxis();
-      m.translate(d.localFocalPoint.dx, d.localFocalPoint.dy);
-      m.scale(delta);
-      m.translate(-d.localFocalPoint.dx, -d.localFocalPoint.dy);
-    }
-
-    if (d.pointerCount == 1 && _lastFocal != null) {
-      final pan = d.localFocalPoint - _lastFocal!;
+    if (d.pointerCount >= 2) {
+      _holdPinchScrollLock();
+      if ((d.scale - 1.0).abs() > 0.001) {
+        final newScale = (_gestureStartScale * d.scale).clamp(0.5, 8.0);
+        final m = Matrix4.copy(_gestureStartMatrix);
+        m.translate(focal.dx, focal.dy);
+        m.scale(newScale / _gestureStartScale);
+        m.translate(-focal.dx, -focal.dy);
+        _transform.value = m;
+      }
+    } else if (_lastFocal != null) {
+      final pan = focal - _lastFocal!;
+      final m = Matrix4.copy(_transform.value);
       m.translate(pan.dx, pan.dy);
+      _transform.value = m;
     }
 
-    _lastFocal = d.localFocalPoint;
-    _transform.value = m;
+    _lastFocal = focal;
   }
 
   void _onScaleEnd(ScaleEndDetails d) {
-    if (_gestureActive) {
+    if (_gestureActive && !_pinchScrollLockHeld) {
       widget.onTransformGestureActive?.call(false);
     }
     _gestureActive = false;
     _lastFocal = null;
+    if (_touchPointerCount() < 2) {
+      _releasePinchScrollLock();
+    }
   }
 
   @override

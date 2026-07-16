@@ -56,10 +56,39 @@ Offset documentCenteredTranslation({
   );
 }
 
+/// Content bounds mapped into viewport space (top-left [Transform] alignment).
+Rect documentContentRectInViewport({
+  required Matrix4 matrix,
+  required Rect contentBounds,
+}) {
+  final scale = documentScale(matrix);
+  final translation = documentTranslation(matrix);
+  return Rect.fromLTWH(
+    contentBounds.left * scale + translation.dx,
+    contentBounds.top * scale + translation.dy,
+    contentBounds.width * scale,
+    contentBounds.height * scale,
+  );
+}
+
+/// True when scaled content still overlaps the viewport (never fully off-screen).
+bool documentContentIntersectsViewport({
+  required Matrix4 matrix,
+  required Size viewportSize,
+  required Rect contentBounds,
+}) {
+  final viewport = Offset.zero & viewportSize;
+  final content = documentContentRectInViewport(
+    matrix: matrix,
+    contentBounds: contentBounds,
+  );
+  return content.overlaps(viewport);
+}
+
 /// Clamps uniform scale + translation so content stays reachable in [viewportSize].
 ///
-/// When scale is near 1×, translation is cleared so [CustomScrollView] owns
-/// vertical navigation. When zoomed out below 1×, content is centered.
+/// Near 1×, translation is preserved (scroll fold/unfold handles handoff to
+/// [CustomScrollView]). When zoomed out below 1×, content is centered.
 Matrix4 clampDocumentTransform({
   required Matrix4 matrix,
   required Size viewportSize,
@@ -69,11 +98,6 @@ Matrix4 clampDocumentTransform({
   final scale =
       documentScale(matrix).clamp(kDocumentMinScale, kDocumentMaxScale);
   var translation = documentTranslation(matrix);
-
-  if (scale >= kDocumentFitCenterScaleMax &&
-      scale <= kDocumentUnitScaleMax) {
-    return documentMatrixFromScaleTranslation(scale, Offset.zero);
-  }
 
   if (scale < kDocumentFitCenterScaleMax) {
     translation = documentCenteredTranslation(

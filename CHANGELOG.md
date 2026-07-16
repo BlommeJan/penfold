@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.67] — 2026
+
+### Fixed
+
+- **Document zoom/pan** — transform uses top-left alignment so clamp math matches rendering; scroll offset folds into transform during pinch so zoom works when scrolled; clamp no longer zeroes translation near 1×; body uses actual layout size instead of full screen height
+
 ## [0.2.66] — 2026
 
 ### Fixed

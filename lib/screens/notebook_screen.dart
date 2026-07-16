@@ -308,6 +308,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       toolState: _toolState,
       viewportSize: viewport,
       contentBounds: _documentContentBounds(viewport),
+      scrollController: _pageTurnEnabled ? null : _scrollController,
       zoomEnabled: _zoomNavigationEnabled,
       isFocalOnPaper: _isFocalOnPaper,
       onTransformGestureActive: _onPageTransformGesture,
@@ -1103,8 +1104,6 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   @override
   Widget build(BuildContext context) {
-    final viewport = MediaQuery.of(context).size;
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -1140,22 +1139,30 @@ class _NotebookScreenState extends State<NotebookScreen>
         ),
         body: _loading
             ? const Center(child: CircularProgressIndicator())
-            : Stack(
-                children: [
-                  _pageTurnEnabled
-                      ? _buildPageTurnBody(viewport)
-                      : _buildScrollBody(viewport),
-                  if (!_loading && _pages.isNotEmpty)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: PageInfoChip(
-                        page: _activePage,
-                        isPdfPage: _isPdfPage(_activePage),
-                        onTap: _openPageTemplateSettings,
-                      ),
-                    ),
-                ],
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  final viewport = Size(
+                    constraints.maxWidth,
+                    constraints.maxHeight,
+                  );
+                  return Stack(
+                    children: [
+                      _pageTurnEnabled
+                          ? _buildPageTurnBody(viewport)
+                          : _buildScrollBody(viewport),
+                      if (!_loading && _pages.isNotEmpty)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: PageInfoChip(
+                            page: _activePage,
+                            isPdfPage: _isPdfPage(_activePage),
+                            onTap: _openPageTemplateSettings,
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
       ),
     );

@@ -14,6 +14,7 @@ class DocumentViewport extends StatefulWidget {
   final Widget child;
   final Size viewportSize;
   final Rect contentBounds;
+  final ScrollController? scrollController;
   final bool zoomEnabled;
   final bool Function(Offset viewportFocal) isFocalOnPaper;
   final ValueChanged<bool>? onTransformGestureActive;
@@ -25,6 +26,7 @@ class DocumentViewport extends StatefulWidget {
     required this.viewportSize,
     required this.contentBounds,
     required this.isFocalOnPaper,
+    this.scrollController,
     this.zoomEnabled = true,
     this.onTransformGestureActive,
   });
@@ -42,10 +44,18 @@ class DocumentViewportState extends State<DocumentViewport> {
   Matrix4 _gestureStartMatrix = Matrix4.identity();
   bool _gestureActive = false;
   bool _pinchScrollLockHeld = false;
+  Size _layoutViewportSize = Size.zero;
 
   Matrix4 get transform => _transform.value;
 
   double get _currentScale => documentScale(_transform.value);
+
+  Size get _effectiveViewportSize {
+    if (_layoutViewportSize.width > 0 && _layoutViewportSize.height > 0) {
+      return _layoutViewportSize;
+    }
+    return widget.viewportSize;
+  }
 
   @override
   void initState() {
@@ -97,9 +107,36 @@ class DocumentViewportState extends State<DocumentViewport> {
   void _applyClampedTransform(Matrix4 matrix) {
     _transform.value = clampDocumentTransform(
       matrix: normalizeDocumentTransform(matrix),
-      viewportSize: widget.viewportSize,
+      viewportSize: _effectiveViewportSize,
       contentBounds: widget.contentBounds,
     );
+  }
+
+  /// At ~1×, scroll offset and transform translation are mutually exclusive.
+  void _foldScrollIntoTransform() {
+    final controller = widget.scrollController;
+    if (controller == null || !controller.hasClients) return;
+    if (_currentScale > kDocumentUnitScaleMax) return;
+
+    final offset = controller.offset;
+    if (offset == 0) return;
+
+    final translation = documentTranslation(_transform.value);
+    _transform.value = documentMatrixFromScaleTranslation(
+      _currentScale,
+      Offset(translation.dx, translation.dy - offset),
+    );
+    controller.jumpTo(0);
+  }
+
+  void _unfoldScrollFromTransform() {
+    final controller = widget.scrollController;
+    if (controller == null || !controller.hasClients) return;
+
+    final translation = documentTranslation(_transform.value);
+    final scrollOffset =
+        (-translation.dy).clamp(0.0, controller.position.maxScrollExtent);
+    controller.jumpTo(scrollOffset);
   }
 
   bool _isStylusKind(PointerDeviceKind k) =>
@@ -198,6 +235,7 @@ class DocumentViewportState extends State<DocumentViewport> {
     if (!_gestureActive && !_pinchScrollLockHeld) {
       widget.onTransformGestureActive?.call(true);
     }
+    _foldScrollIntoTransform();
     _gestureActive = true;
     _lastFocal = focal;
     _gestureStartFocal = focal;
@@ -258,6 +296,7 @@ class DocumentViewportState extends State<DocumentViewport> {
     // Snap to 1× when the pinch landed near identity so scroll resumes cleanly.
     if (_currentScale >= kDocumentFitCenterScaleMax &&
         _currentScale <= kDocumentSnapScaleMax) {
+      _unfoldScrollFromTransform();
       resetTransform();
     } else {
       _applyClampedTransform(_transform.value);
@@ -274,7 +313,10 @@ class DocumentViewportState extends State<DocumentViewport> {
     }
   }
 
-  void _onDoubleTap() => resetTransform();
+  void _onDoubleTap() {
+    _unfoldScrollFromTransform();
+    resetTransform();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,25 +324,31 @@ class DocumentViewportState extends State<DocumentViewport> {
       return widget.child;
     }
 
-    return Listener(
-      onPointerDown: _onPointerDown,
-      onPointerUp: _onPointerUp,
-      onPointerCancel: _onPointerUp,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onScaleStart: _onScaleStart,
-        onScaleUpdate: _onScaleUpdate,
-        onScaleEnd: _onScaleEnd,
-        onDoubleTap: _onDoubleTap,
-        child: AnimatedBuilder(
-          animation: _transform,
-          builder: (context, child) => Transform(
-            transform: _transform.value,
-            child: child,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _layoutViewportSize = Size(constraints.maxWidth, constraints.maxHeight);
+        return Listener(
+          onPointerDown: _onPointerDown,
+          onPointerUp: _onPointerUp,
+          onPointerCancel: _onPointerUp,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onScaleStart: _onScaleStart,
+            onScaleUpdate: _onScaleUpdate,
+            onScaleEnd: _onScaleEnd,
+            onDoubleTap: _onDoubleTap,
+            child: AnimatedBuilder(
+              animation: _transform,
+              builder: (context, child) => Transform(
+                alignment: Alignment.topLeft,
+                transform: _transform.value,
+                child: child,
+              ),
+              child: widget.child,
+            ),
           ),
-          child: widget.child,
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -9,10 +9,10 @@ void main() {
     const viewport = Size(800, 1200);
     const content = Rect.fromLTWH(0, 0, 800, 3600);
 
-    test('clears translation near 1× so scroll owns vertical navigation', () {
+    test('preserves translation near 1× for scroll fold/unfold', () {
       final matrix = documentMatrixFromScaleTranslation(
         1.0,
-        const Offset(120, 400),
+        const Offset(0, -1200),
       );
       final clamped = clampDocumentTransform(
         matrix: matrix,
@@ -20,7 +20,7 @@ void main() {
         contentBounds: content,
       );
       expect(documentScale(clamped), closeTo(1.0, 0.001));
-      expect(documentTranslation(clamped), Offset.zero);
+      expect(documentTranslation(clamped), const Offset(0, -1200));
     });
 
     test('centers content when zoomed out below 1×', () {
@@ -62,6 +62,85 @@ void main() {
         contentBounds: content,
       );
       expect(documentScale(clamped), closeTo(0.25, 0.001));
+    });
+
+    test('never moves content fully outside viewport after clamp', () {
+      for (final scale in [0.25, 0.5, 0.99, 1.0, 1.5, 2.0, 4.0, 8.0]) {
+        for (final tx in [-50000.0, -800.0, 0.0, 400.0, 50000.0]) {
+          for (final ty in [-50000.0, -3600.0, 0.0, 600.0, 50000.0]) {
+            final matrix = documentMatrixFromScaleTranslation(
+              scale,
+              Offset(tx, ty),
+            );
+            final clamped = clampDocumentTransform(
+              matrix: matrix,
+              viewportSize: viewport,
+              contentBounds: content,
+            );
+            expect(
+              documentContentIntersectsViewport(
+                matrix: clamped,
+                viewportSize: viewport,
+                contentBounds: content,
+              ),
+              isTrue,
+              reason: 'scale=$scale tx=$tx ty=$ty',
+            );
+          }
+        }
+      }
+    });
+  });
+
+  group('documentContentIntersectsViewport', () {
+    const viewport = Size(800, 1200);
+    const content = Rect.fromLTWH(0, 0, 800, 3600);
+
+    test('2× zoom around center keeps content visible', () {
+      const focal = Offset(400, 600);
+      final start = documentMatrixFromScaleTranslation(1.0, Offset.zero);
+      final zoomed = clampDocumentTransform(
+        matrix: documentScaleAroundFocal(
+          matrix: start,
+          focal: focal,
+          scaleFactor: 2.0,
+        ),
+        viewportSize: viewport,
+        contentBounds: content,
+      );
+      expect(documentScale(zoomed), closeTo(2.0, 0.001));
+      expect(
+        documentContentIntersectsViewport(
+          matrix: zoomed,
+          viewportSize: viewport,
+          contentBounds: content,
+        ),
+        isTrue,
+      );
+      expect(transformPoint(zoomed, focal), focal);
+    });
+
+    test('0.5× zoom out keeps content centered and visible', () {
+      final matrix = documentMatrixFromScaleTranslation(0.5, Offset.zero);
+      final clamped = clampDocumentTransform(
+        matrix: matrix,
+        viewportSize: viewport,
+        contentBounds: content,
+      );
+      expect(documentScale(clamped), closeTo(0.5, 0.001));
+      expect(
+        documentContentIntersectsViewport(
+          matrix: clamped,
+          viewportSize: viewport,
+          contentBounds: content,
+        ),
+        isTrue,
+      );
+      final contentRect = documentContentRectInViewport(
+        matrix: clamped,
+        contentBounds: content,
+      );
+      expect(contentRect.center.dx, closeTo(viewport.width / 2, 1.0));
     });
   });
 

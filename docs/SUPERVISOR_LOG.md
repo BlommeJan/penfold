@@ -80,7 +80,7 @@ Original roadmap versions 0.2.7–0.2.12 largely shipped pre-run. Post-run versi
 | 0.2.38 | Page complexity warning | 0.2.36 | **DONE** | 192/192 | `a1cd203` |
 | 0.2.39 | Your data settings screen | 0.2.37 | **DONE** | 197/197 | `88e8b1e` |
 | 0.2.40 | Undo persist on page switch | 0.2.38 | **DONE** | 200/200 | `eb50760` |
-| 0.2.41 | Landscape pinch zoom | opportunistic | **DONE** | 201/201 | TBD |
+| 0.2.41 | Landscape pinch zoom | opportunistic | **DONE** | 201/201 | `9dbf0976` |
 
 ## Deferred / non-code (not in overnight queue)
 

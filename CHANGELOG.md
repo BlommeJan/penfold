@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.60] — 2026
+
+### Fixed
+
+- **Widget tests** — notebook creation and session-restore tests use reliable editor finders (`Pen` tool, page info chip) and clear session between runs; **248/248** tests green
+
 ## [0.2.59] — 2026
 
 ### Added

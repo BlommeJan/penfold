@@ -23,6 +23,16 @@ Future<void> settle(WidgetTester tester) async {
   }
 }
 
+Future<void> settleUntil(WidgetTester tester, Finder finder,
+    {int maxAttempts = 24}) async {
+  for (var i = 0; i < maxAttempts; i++) {
+    if (finder.evaluate().isNotEmpty) return;
+    await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 120)));
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
+
 void main() {
   late Directory tmp;
 
@@ -39,6 +49,7 @@ void main() {
   });
 
   tearDown(() async {
+    await SessionService.instance.clear();
     await AppDatabase.instance.resetForTests();
     await tmp.delete(recursive: true);
   });
@@ -54,6 +65,9 @@ void main() {
 
   testWidgets('new notebook dialog opens and creates a notebook',
       (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1400, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     await tester.pumpWidget(const PenfoldApp());
     await settle(tester);
 
@@ -69,9 +83,10 @@ void main() {
         'Japanese Grammar');
     await tester.tap(find.text('Create'));
     await settle(tester);
+    await settleUntil(tester, find.byTooltip('Pen'));
 
-    // Notebook was created and opened; settings gear is rightmost in toolbar.
-    expect(find.byTooltip('Page settings'), findsOneWidget);
+    expect(find.textContaining('Lined'), findsOneWidget);
+    expect(find.byTooltip('Pen'), findsOneWidget);
 
     // It's also persisted.
     final saved =
@@ -81,6 +96,9 @@ void main() {
   });
 
   testWidgets('cold start restores last notebook from session', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1400, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     await tester.runAsync(() async {
       final db = AppDatabase.instance;
       final notebook = Notebook(
@@ -112,7 +130,8 @@ void main() {
     await settle(tester);
 
     expect(find.text('No notebooks yet'), findsNothing);
-    expect(find.byTooltip('Page settings'), findsOneWidget);
+    await settleUntil(tester, find.byTooltip('Pen'));
+    expect(find.byTooltip('Pen'), findsOneWidget);
   });
 
   testWidgets('cold start clears stale session when notebook is missing',
@@ -127,7 +146,7 @@ void main() {
     });
 
     await tester.pumpWidget(const PenfoldApp());
-    await settle(tester);
+    await settleUntil(tester, find.text('No notebooks yet'));
 
     expect(find.text('No notebooks yet'), findsOneWidget);
     final session = await tester.runAsync(SessionService.instance.load);

@@ -519,7 +519,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
     await _db.insertPage(page);
     await _refresh();
-    if (mounted) _open(n);
+    if (mounted) await _open(n);
   }
 
   Future<void> _importPdf() async {

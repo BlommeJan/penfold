@@ -130,6 +130,24 @@ After a push, note the range in supervisor notes (e.g. `6b5ce127..a20cfe3b`).
 | 0.2.13 | `APKs/Penfold-v0.2.13-arm64.apk` |
 | 0.2.40 (final roadmap) | `APKs/Penfold-v0.2.40.apk` (arm64, ~65 MB, local only — gitignored) |
 | 0.2.41 | `APKs/Penfold-v0.2.41.apk` (arm64, local only — gitignored) |
+| 0.2.60 (bug-bash) | `APKs/Penfold-v0.2.60.apk` (arm64, local only — gitignored) |
+
+## Bug-bash overnight run (2026-07-16)
+
+| Metric | Value |
+|--------|-------|
+| Agents | 19/19 complete (eraser → session restore) |
+| Version | v0.2.42 → v0.2.60 |
+| Tests | **248/248** green (`flutter test`) |
+| Analyze | 81 issues (warnings/info only, no errors) |
+| Commits (local) | `ce7beed9`..`57e2f554` + follow-up fixes |
+| Push | milestone: full bug-bash complete |
+
+### v0.2.60 fixes (final verification)
+
+- Widget tests: `settleUntil` helper for sqflite async; editor toolbar finders
+- `library_screen`: `await _open(n)` after notebook create
+- `app_home`: skip backup/purge during widget tests (`overrideDirPath`)
 
 ## Run summary (v0.2.30 → 0.2.40)
 

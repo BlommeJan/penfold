@@ -7,6 +7,8 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 ### Fixed
 
 - **Widget tests** — notebook creation and session-restore tests use reliable editor finders (`Pen` tool, page info chip) and clear session between runs; **248/248** tests green
+- **Notebook create** — library now awaits navigation into the new notebook after create
+- **Test startup** — `AppHome` skips auto-backup and trash purge when `AppDatabase.overrideDirPath` is set (widget tests)
 
 ## [0.2.59] — 2026
 

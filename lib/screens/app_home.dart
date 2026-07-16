@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
-import '../models/models.dart';
 import '../services/backup_service.dart';
 import '../services/session_service.dart';
 import 'library_screen.dart';
@@ -24,8 +23,10 @@ class _AppHomeState extends State<AppHome> {
   @override
   void initState() {
     super.initState();
-    unawaited(BackupService.instance.createAutoBackupIfDue());
-    unawaited(AppDatabase.instance.purgeTrash());
+    if (AppDatabase.overrideDirPath == null) {
+      unawaited(BackupService.instance.createAutoBackupIfDue());
+      unawaited(AppDatabase.instance.purgeTrash());
+    }
     _resolve();
   }
 

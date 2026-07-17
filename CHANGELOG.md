@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.76] — 2026
+
+### Fixed
+
+- **Text tool keyboard zoom** — opening the keyboard no longer shrinks the document viewport and resets zoom; page slot height stays stable while the keyboard is visible
+
 ## [0.2.75] — 2026
 
 ### Fixed

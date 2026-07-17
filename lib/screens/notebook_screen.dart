@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 import '../canvas/document_viewport.dart';
 import '../canvas/drawing_canvas.dart';
 import '../canvas/page_coords.dart';
+import '../canvas/viewport_metrics.dart';
 import '../canvas/penfold_scroll_behavior.dart';
 import '../canvas/pointer_routing.dart';
 import '../db/app_database.dart';
@@ -72,6 +73,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   int _pinchLockCount = 0;
   int _paperFingerLockCount = 0;
   bool _documentZoomed = false;
+  Size _stableDocumentViewport = Size.zero;
   Timer? _sessionSaveTimer;
   final Set<String> _complexityWarnedOnOpen = {};
   bool _syncingFingerDrawing = false;
@@ -255,6 +257,19 @@ class _NotebookScreenState extends State<NotebookScreen>
   Size _pageSlotViewport(Size viewport) =>
       Size(viewport.width, _pageSlotHeight(viewport));
 
+  Size _documentViewportFromLayout(BoxConstraints constraints) {
+    final viewInsets = MediaQuery.viewInsetsOf(context);
+    return keyboardStableViewportSize(
+      layoutSize: Size(constraints.maxWidth, constraints.maxHeight),
+      viewInsetBottom: viewInsets.bottom,
+    );
+  }
+
+  Size get _documentViewport =>
+      _stableDocumentViewport.width > 0 && _stableDocumentViewport.height > 0
+          ? _stableDocumentViewport
+          : MediaQuery.sizeOf(context);
+
   void _resetDocumentTransform() {
     _documentViewportKey.currentState?.resetTransform();
     _documentViewportKey.currentState?.resetPointerTracking();
@@ -315,7 +330,7 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   bool _isFocalOnPaper(Offset viewportFocal) {
     if (_pages.isEmpty) return false;
-    final viewport = MediaQuery.sizeOf(context);
+    final viewport = _documentViewport;
     final slotViewport = _pageSlotViewport(viewport);
     final pageHeight = _pageSlotHeight(viewport);
     final transform =
@@ -385,7 +400,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   void _onScroll() {
     if (_pages.isEmpty) return;
     final offset = _scrollController.offset;
-    final pageHeight = _pageSlotHeight(MediaQuery.of(context).size);
+    final pageHeight = _pageSlotHeight(_documentViewport);
     final idx = (offset / pageHeight).round().clamp(0, _pages.length - 1);
     if (idx != _visiblePageIndex) {
       _resetScrollAndPointerState();
@@ -579,7 +594,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       return;
     }
     if (!_scrollController.hasClients) return;
-    final viewport = MediaQuery.of(context).size;
+    final viewport = _documentViewport;
     final pageHeight = _pageSlotHeight(viewport);
     if (scrollOffset != null && scrollOffset > 0) {
       _scrollController.jumpTo(
@@ -707,7 +722,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       unawaited(_maybeWarnPageComplexity(_pages[index].id, onOpen: true));
       return;
     }
-    final pageHeight = _pageSlotHeight(MediaQuery.of(context).size);
+    final pageHeight = _pageSlotHeight(_documentViewport);
     await _scrollController.animateTo(
       index * pageHeight,
       duration: const Duration(milliseconds: 350),
@@ -1190,10 +1205,8 @@ class _NotebookScreenState extends State<NotebookScreen>
             ? const Center(child: CircularProgressIndicator())
             : LayoutBuilder(
                 builder: (context, constraints) {
-                  final viewport = Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  );
+                  final viewport = _documentViewportFromLayout(constraints);
+                  _stableDocumentViewport = viewport;
                   return _pageTurnEnabled
                       ? _buildPageTurnBody(viewport)
                       : _buildScrollBody(viewport);

@@ -49,7 +49,6 @@ class DocumentViewportState extends State<DocumentViewport> {
   bool _gestureActive = false;
   bool _pinchScrollLockHeld = false;
   bool _lastReportedZoomed = false;
-  Size _layoutViewportSize = Size.zero;
 
   Matrix4 get transform => _transform.value;
 
@@ -59,13 +58,6 @@ class DocumentViewportState extends State<DocumentViewport> {
 
   /// True when scale is past the ~1× scroll handoff threshold.
   bool get isZoomed => _currentScale > kDocumentZoomedPanThreshold;
-
-  Size get _effectiveViewportSize {
-    if (_layoutViewportSize.width > 0 && _layoutViewportSize.height > 0) {
-      return _layoutViewportSize;
-    }
-    return widget.viewportSize;
-  }
 
   @override
   void initState() {
@@ -125,7 +117,7 @@ class DocumentViewportState extends State<DocumentViewport> {
   void _applyClampedTransform(Matrix4 matrix) {
     _transform.value = clampDocumentTransform(
       matrix: normalizeDocumentTransform(matrix),
-      viewportSize: _effectiveViewportSize,
+      viewportSize: widget.viewportSize,
       contentBounds: widget.contentBounds,
       fitCenterBounds: widget.fitCenterBounds,
     );
@@ -331,36 +323,31 @@ class DocumentViewportState extends State<DocumentViewport> {
       return widget.child;
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        _layoutViewportSize = Size(constraints.maxWidth, constraints.maxHeight);
-        return Listener(
-          onPointerDown: _onPointerDown,
-          onPointerUp: _onPointerUp,
-          onPointerCancel: _onPointerUp,
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onScaleStart: _onScaleStart,
-            onScaleUpdate: _onScaleUpdate,
-            onScaleEnd: _onScaleEnd,
-            onDoubleTap: _onDoubleTap,
-            child: AnimatedBuilder(
-              animation: _transform,
-              // Clip after transform so zoomed/panned content is not masked by
-              // the pre-transform viewport, then clip to the screen bounds.
-              builder: (context, child) => ClipRect(
-                child: Transform(
-                  alignment: Alignment.topLeft,
-                  transform: _transform.value,
-                  filterQuality: FilterQuality.low,
-                  child: child,
-                ),
-              ),
-              child: widget.child,
+    return Listener(
+      onPointerDown: _onPointerDown,
+      onPointerUp: _onPointerUp,
+      onPointerCancel: _onPointerUp,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onScaleStart: _onScaleStart,
+        onScaleUpdate: _onScaleUpdate,
+        onScaleEnd: _onScaleEnd,
+        onDoubleTap: _onDoubleTap,
+        child: AnimatedBuilder(
+          animation: _transform,
+          // Clip after transform so zoomed/panned content is not masked by
+          // the pre-transform viewport, then clip to the screen bounds.
+          builder: (context, child) => ClipRect(
+            child: Transform(
+              alignment: Alignment.topLeft,
+              transform: _transform.value,
+              filterQuality: FilterQuality.low,
+              child: child,
             ),
           ),
-        );
-      },
+          child: widget.child,
+        ),
+      ),
     );
   }
 }

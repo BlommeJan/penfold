@@ -1,4 +1,4 @@
-# Supervisor Log — Penfold overnight run
+﻿# Supervisor Log — Penfold overnight run
 
 **Started:** 2026-07-15  
 **Resumed:** overnight autonomous run  
@@ -79,6 +79,23 @@ GoodNotes-style pink rubber block + grey ferrule in `toolbar.dart` `_EraserIconP
 4. ~~Eraser icon polish (P2)~~ **done**
 
 Device re-verify on SM-X920 after install.
+
+## v0.2.76 backlog (2026-07-17, user going to work)
+
+**Context:** User going to work — no code fix this session. Investigate and fix in next session.
+
+### P0 — Text tool + keyboard viewport zoom — **DONE v0.2.76**
+
+| Symptom | Notes |
+|---------|-------|
+| Keyboard opens while using Text tool | Document viewport zoomed out fully; hard to see what you are typing |
+| Keyboard dismisses | Zoom sometimes restored, sometimes stayed zoomed out (inconsistent) |
+
+**Root cause:** `Scaffold.resizeToAvoidBottomInset` shrank the body `LayoutBuilder` when the keyboard opened. That changed `DocumentViewport` `viewportSize` / `contentBounds`, triggering `resetTransform()` at ~1× (or reclamping when zoomed). `DocumentViewport` also clamped against the shrunk layout height instead of the stable document viewport.
+
+**Fix (v0.2.76):** `keyboardStableViewportSize` adds `MediaQuery.viewInsets.bottom` back to layout constraints so page slot height and document bounds stay constant while typing. Scroll/page-index helpers use the same cached stable viewport. `DocumentViewport` clamps against `widget.viewportSize` (parent-provided stable size).
+
+**Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
 ## Opportunistic backlog (not blocking roadmap)
 
 ### Landscape pinch-zoom patch — **SHIPPED v0.2.41**

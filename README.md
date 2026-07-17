@@ -6,6 +6,7 @@
 
 <p align="center">
   <strong>A local-first handwriting notebook for Android.</strong><br/>
+  <em>(Samsung Galaxy tablets with S Pen — tested on Galaxy; may work on other Android devices)</em><br/>
   No accounts. No cloud. No telemetry.
 </p>
 

@@ -286,6 +286,27 @@ class _RemoveTextBlock extends _EditAction {
   Future<void> redo(_CanvasController c) => c.removeTextBlock(block.id);
 }
 
+class _ConvertInkToText extends _EditAction {
+  final List<Stroke> removedStrokes;
+  final TextBlock block;
+
+  _ConvertInkToText(this.removedStrokes, this.block);
+
+  @override
+  Future<void> undo(_CanvasController c) async {
+    for (final s in removedStrokes) {
+      await c.addStroke(s);
+    }
+    await c.removeTextBlock(block.id);
+  }
+
+  @override
+  Future<void> redo(_CanvasController c) async {
+    await c.removeStrokes(removedStrokes);
+    await c.addTextBlock(block.copy());
+  }
+}
+
 class _PasteAction extends _EditAction {
   final List<Stroke> strokes;
   final List<PageImage> images;
@@ -1242,7 +1263,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   bool get canConvertSelectionToText =>
       canConvertInkSelection(_selectedIds, _strokes);
 
-  /// OCR selected ink and insert a [TextBlock]; original strokes are kept.
+  /// OCR selected ink and insert a [TextBlock]; converted strokes are removed.
   Future<String?> convertSelectionToText() async {
     if (!canConvertSelectionToText) return null;
 
@@ -1272,9 +1293,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       measuredSize: measured,
     );
 
+    final removedStrokes = selected.map((s) => s.copy()).toList();
+    await _controller.removeStrokes(removedStrokes);
     await _controller.addTextBlock(block);
-    _controller.commit(_AddTextBlock(block.copy()));
+    _controller.commit(_ConvertInkToText(removedStrokes, block.copy()));
     _clearSelection();
+    _notifyStrokeCountChanged();
     _bump();
     return text;
   }
@@ -1428,6 +1452,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _trackPaperFinger(e);
     _syncSpenButton(e);
     if (_isStylus(e)) {
+      SpenButtonService.instance.notifyStylusPointerDown();
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
       _setStylusInProximity(true);

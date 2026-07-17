@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.74] — 2026
+
+### Fixed
+
+- **Convert to text** — successful OCR removes the selected ink strokes instead of leaving ink and text together; undo restores ink and removes the text block in one step
+- **S Pen barrel eraser** — releasing the barrel button mid-stroke keeps erasing until the stylus lifts, then restores the previous tool
+
 ## [0.2.73] — 2026
 
 ### Fixed

@@ -65,6 +65,26 @@ void main() {
       expect(SpenButtonService.instance.buttonPressed, isTrue);
       SpenButtonService.instance.releaseFromPointer(PointerDeviceKind.stylus);
       expect(SpenButtonService.instance.buttonPressed, isFalse);
+      expect(SpenButtonService.instance.overrideTool, isNull);
+    });
+
+    test('barrel release while stylus down latches until pointer up', () {
+      SpenButtonService.instance.notifyStylusPointerDownForTests();
+      SpenButtonService.instance.updateFromPointer(
+        PointerDeviceKind.stylus,
+        0x20,
+      );
+      expect(SpenButtonService.instance.overrideTool, ToolType.eraser);
+
+      SpenButtonService.instance.updateFromPointer(
+        PointerDeviceKind.stylus,
+        0,
+      );
+      expect(SpenButtonService.instance.buttonPressed, isFalse);
+      expect(SpenButtonService.instance.overrideTool, ToolType.eraser);
+
+      SpenButtonService.instance.releaseFromPointer(PointerDeviceKind.stylus);
+      expect(SpenButtonService.instance.overrideTool, isNull);
     });
 
     test('updateFromPointer ignores finger input', () {

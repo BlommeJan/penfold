@@ -49,6 +49,8 @@ class SpenButtonService extends ChangeNotifier {
 
   SpenBarrelAction _action = SpenBarrelAction.eraser;
   bool _buttonPressed = false;
+  bool _stylusDown = false;
+  ToolType? _latchedOverride;
   bool _loaded = false;
   StreamSubscription<dynamic>? _channelSub;
 
@@ -56,8 +58,12 @@ class SpenButtonService extends ChangeNotifier {
   bool get buttonPressed => _buttonPressed;
   bool get isLoaded => _loaded;
 
-  ToolType? get overrideTool =>
-      _buttonPressed ? _action.toolType : null;
+  /// Active while the barrel is held, or latched until stylus pointer-up after
+  /// barrel release mid-stroke.
+  ToolType? get overrideTool {
+    if (_latchedOverride != null) return _latchedOverride;
+    return _buttonPressed ? _action.toolType : null;
+  }
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -79,11 +85,7 @@ class SpenButtonService extends ChangeNotifier {
     const channel = EventChannel(channelName);
     _channelSub = channel.receiveBroadcastStream().listen(
       (event) {
-        final pressed = event == true;
-        if (_buttonPressed != pressed) {
-          _buttonPressed = pressed;
-          notifyListeners();
-        }
+        _applyButtonPressed(event == true);
       },
       onError: (_) {},
     );
@@ -92,8 +94,9 @@ class SpenButtonService extends ChangeNotifier {
   void stopListening() {
     unawaited(_channelSub?.cancel());
     _channelSub = null;
-    if (_buttonPressed) {
+    if (_buttonPressed || _latchedOverride != null) {
       _buttonPressed = false;
+      _latchedOverride = null;
       notifyListeners();
     }
   }
@@ -116,41 +119,54 @@ class SpenButtonService extends ChangeNotifier {
     if (_action == SpenBarrelAction.none) return;
     final pressed = stylusButtonsPressed(buttons);
     if (pressed) {
-      if (!_buttonPressed) {
-        _buttonPressed = true;
-        notifyListeners();
-      }
+      _applyButtonPressed(true);
       return;
     }
     // Non-Android / tests: pointer stream is the only source — allow release.
     if (!Platform.isAndroid || _channelSub == null) {
-      if (_buttonPressed) {
-        _buttonPressed = false;
-        notifyListeners();
-      }
+      _applyButtonPressed(false);
     }
   }
 
-  /// Clear press state when the stylus pointer lifts on platforms without a
-  /// native channel. On Android, [EventChannel] + `MotionEvent` button release
-  /// is authoritative — pointer-up must not clear while the barrel is held.
+  /// Stylus touched the screen — enables latch-until-lift after barrel release.
+  void notifyStylusPointerDown() {
+    _stylusDown = true;
+  }
+
+  /// Stylus lifted — clears barrel latch and pointer fallback press state.
   void releaseFromPointer(PointerDeviceKind kind, {int buttons = 0}) {
     if (kind != PointerDeviceKind.stylus) return;
-    if (stylusButtonsPressed(buttons)) return;
-    if (Platform.isAndroid && _channelSub != null) return;
-    if (_buttonPressed) {
-      _buttonPressed = false;
-      notifyListeners();
+    _stylusDown = false;
+    final hadLatch = _latchedOverride != null;
+    _latchedOverride = null;
+    if (stylusButtonsPressed(buttons)) {
+      if (hadLatch) notifyListeners();
+      return;
     }
+    if (Platform.isAndroid && _channelSub != null) {
+      if (hadLatch) notifyListeners();
+      return;
+    }
+    _applyButtonPressed(false);
+  }
+
+  void _applyButtonPressed(bool pressed) {
+    if (_buttonPressed == pressed) return;
+    _buttonPressed = pressed;
+    if (pressed) {
+      _latchedOverride = null;
+    } else if (_stylusDown && _action.toolType != null) {
+      _latchedOverride = _action.toolType;
+    } else {
+      _latchedOverride = null;
+    }
+    notifyListeners();
   }
 
   /// Native channel or tests: set press state explicitly.
   @visibleForTesting
   void setButtonPressedForTests(bool pressed) {
-    if (_buttonPressed != pressed) {
-      _buttonPressed = pressed;
-      notifyListeners();
-    }
+    _applyButtonPressed(pressed);
   }
 
   /// Test hook: reset in-memory state without touching disk.
@@ -158,7 +174,12 @@ class SpenButtonService extends ChangeNotifier {
   void resetForTests() {
     _action = SpenBarrelAction.eraser;
     _buttonPressed = false;
+    _stylusDown = false;
+    _latchedOverride = null;
     _loaded = false;
     stopListening();
   }
+
+  @visibleForTesting
+  void notifyStylusPointerDownForTests() => notifyStylusPointerDown();
 }

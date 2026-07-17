@@ -1229,7 +1229,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         tool == ToolType.tape;
     final paperPos = _paperLocal(e);
     if (manipulatesWithFinger &&
-        e.kind == PointerDeviceKind.touch &&
+        shouldAllowFingerToolManipulation(
+          stylusOnly: widget.toolState.stylusOnly,
+          kind: e.kind,
+        ) &&
         (Offset.zero & widget.displaySize).contains(paperPos)) {
       return true;
     }

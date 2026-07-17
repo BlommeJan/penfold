@@ -23,6 +23,62 @@
 - Prefer GoodNotes-style rubber/eraser shape; options: `Icons.cleaning_services_rounded`, custom SVG, or best Material match
 - Match v0.2.7 GoodNotes-style toolbar aesthetics
 
+## v0.2.69 device bug bash backlog (2026-07-17, user tablet test)
+
+**Context:** v0.2.68 on Samsung SM-X920. User going to sleep — fix in next session. Do **not** treat as shipped until verified on device.
+
+**Status:** **SHIPPED v0.2.69** (2026-07-17) — zoom clip/seam, OCR channel bridge, stylus-only finger scroll for all tools, eraser icon polish. Install `APKs/Penfold-v0.2.69.apk` and re-verify on SM-X920.
+
+### P0 — Document viewport / zoom — **DONE v0.2.69**
+
+| # | Symptom | Notes |
+|---|---------|-------|
+| 1 | **Zoom in → content disappears** | Fixed: removed scroll-fold-into-transform (lazy slivers blanked); expand paint when zoomed. |
+| 2 | **White seam / line while zoomed + two-finger pan** | Fixed: `Clip.none` + full `cacheExtent` on scroll body while zoomed; outer `ClipRect` after transform. |
+| 3 | **Partial reset on glitch** | Same root cause as (1)/(2); addressed by paint expansion + no fold. |
+
+**Acceptance:** Pinch on paper at any zoom; no white seams between pages; ink always visible; two-finger pan while zoomed does not reveal background artifacts.
+
+---
+
+### P0 — OCR / Convert to text — **DONE v0.2.69**
+
+| Symptom | Error |
+|---------|-------|
+| Select ink → Convert to text | `MissingPluginException`: No implementation found for method `vision#manageInkModels` on channel `google_mlkit_digital_ink_recognizer` |
+
+**Root cause:** Upstream `google_mlkit_digital_ink_recognition` 0.15.0 registers Android channel `…_recognition` but Dart calls `…_recognizer`. Bridged in `MainActivity`; ProGuard keep rules added.
+
+**Acceptance:** Convert to text works on physical tablet (model download + recognition).
+
+---
+
+### P1 — Finger scroll inconsistent across tools — **DONE v0.2.69**
+
+**Works (finger scroll on paper + margin):** Pen, Highlighter, Eraser, Lasso — user can scroll with finger on paper and beside it.
+
+**Was broken (cannot finger-scroll; bugs out):** Selection, Shape, Fill, Text
+
+**Fix:** DocumentViewport no longer claims single-finger paper gestures at 1× in stylus-only (scroll owns paper); `_mayDraw` / `shouldAllowFingerToolManipulation` blocks finger tool steal when `stylusOnly`.
+
+**Acceptance:** In stylus-only mode, finger scroll/pan on paper and margin works for **all** tools (same as pen/highlighter/eraser/lasso).
+
+---
+
+### P2 — Eraser icon — **DONE v0.2.69**
+
+GoodNotes-style pink rubber block + grey ferrule in `toolbar.dart` `_EraserIconPainter`.
+
+---
+
+### Next session order (suggested)
+
+1. ~~Viewport seam / zoom clip (P0)~~ **done**
+2. ~~OCR plugin on release build (P0)~~ **done**
+3. ~~Tool-specific finger scroll in stylus-only (P1)~~ **done**
+4. ~~Eraser icon polish (P2)~~ **done**
+
+Device re-verify on SM-X920 after install.
 ## Opportunistic backlog (not blocking roadmap)
 
 ### Landscape pinch-zoom patch — **SHIPPED v0.2.41**
@@ -132,6 +188,7 @@ After a push, note the range in supervisor notes (e.g. `6b5ce127..a20cfe3b`).
 | 0.2.41 | `APKs/Penfold-v0.2.41.apk` (arm64, local only — gitignored) |
 | 0.2.60 (bug-bash) | `APKs/Penfold-v0.2.60.apk` (not built — SDK mismatch) |
 | 0.2.61 (bug-bash) | `APKs/Penfold-v0.2.61.apk` (~462 MB universal, local only — gitignored) |
+| 0.2.69 (device bug bash) | `APKs/Penfold-v0.2.69.apk` (local only — gitignored) |
 
 ## Bug-bash overnight run (2026-07-16)
 

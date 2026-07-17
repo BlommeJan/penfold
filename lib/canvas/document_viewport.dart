@@ -19,6 +19,7 @@ class DocumentViewport extends StatefulWidget {
   final bool zoomEnabled;
   final bool Function(Offset viewportFocal) isFocalOnPaper;
   final ValueChanged<bool>? onTransformGestureActive;
+  final ValueChanged<bool>? onZoomChanged;
 
   const DocumentViewport({
     super.key,
@@ -31,6 +32,7 @@ class DocumentViewport extends StatefulWidget {
     this.scrollController,
     this.zoomEnabled = true,
     this.onTransformGestureActive,
+    this.onZoomChanged,
   });
 
   @override
@@ -46,11 +48,17 @@ class DocumentViewportState extends State<DocumentViewport> {
   Matrix4 _gestureStartMatrix = Matrix4.identity();
   bool _gestureActive = false;
   bool _pinchScrollLockHeld = false;
+  bool _lastReportedZoomed = false;
   Size _layoutViewportSize = Size.zero;
 
   Matrix4 get transform => _transform.value;
 
-  double get _currentScale => documentScale(_transform.value);
+  double get currentScale => documentScale(_transform.value);
+
+  double get _currentScale => currentScale;
+
+  /// True when scale is past the ~1× scroll handoff threshold.
+  bool get isZoomed => _currentScale > kDocumentZoomedPanThreshold;
 
   Size get _effectiveViewportSize {
     if (_layoutViewportSize.width > 0 && _layoutViewportSize.height > 0) {
@@ -93,7 +101,10 @@ class DocumentViewportState extends State<DocumentViewport> {
 
   void _onToolStateChanged() => setState(() {});
 
-  void resetTransform() => _transform.value = Matrix4.identity();
+  void resetTransform() {
+    _transform.value = Matrix4.identity();
+    _notifyZoomIfChanged();
+  }
 
   void resetPointerTracking() {
     _activePointers.clear();
@@ -113,33 +124,14 @@ class DocumentViewportState extends State<DocumentViewport> {
       contentBounds: widget.contentBounds,
       fitCenterBounds: widget.fitCenterBounds,
     );
+    _notifyZoomIfChanged();
   }
 
-  /// At ~1×, scroll offset and transform translation are mutually exclusive.
-  void _foldScrollIntoTransform() {
-    final controller = widget.scrollController;
-    if (controller == null || !controller.hasClients) return;
-    if (_currentScale > kDocumentUnitScaleMax) return;
-
-    final offset = controller.offset;
-    if (offset == 0) return;
-
-    final translation = documentTranslation(_transform.value);
-    _transform.value = documentMatrixFromScaleTranslation(
-      _currentScale,
-      Offset(translation.dx, translation.dy - offset),
-    );
-    controller.jumpTo(0);
-  }
-
-  void _unfoldScrollFromTransform() {
-    final controller = widget.scrollController;
-    if (controller == null || !controller.hasClients) return;
-
-    final translation = documentTranslation(_transform.value);
-    final scrollOffset =
-        (-translation.dy).clamp(0.0, controller.position.maxScrollExtent);
-    controller.jumpTo(scrollOffset);
+  void _notifyZoomIfChanged() {
+    final zoomed = isZoomed;
+    if (zoomed == _lastReportedZoomed) return;
+    _lastReportedZoomed = zoomed;
+    widget.onZoomChanged?.call(zoomed);
   }
 
   bool _isStylusKind(PointerDeviceKind k) =>
@@ -178,20 +170,30 @@ class DocumentViewportState extends State<DocumentViewport> {
 
     if (_hasStylusPointer()) return false;
 
-    if (widget.toolState.stylusOnly) {
-      return kind == PointerDeviceKind.touch ||
-          kind == PointerDeviceKind.trackpad ||
-          kind == PointerDeviceKind.mouse;
+    if (kind == PointerDeviceKind.stylus ||
+        kind == PointerDeviceKind.invertedStylus) {
+      return false;
     }
-    if (kind == PointerDeviceKind.mouse) return true;
+
+    // Stylus-only: finger/mouse/trackpad may pan/zoom, but at ~1× the scroll
+    // view owns paper navigation — never steal single-finger scroll on paper.
+    final stylusOnly = widget.toolState.stylusOnly;
+    if (!stylusOnly && kind == PointerDeviceKind.mouse) return true;
+    if (stylusOnly &&
+        kind != PointerDeviceKind.touch &&
+        kind != PointerDeviceKind.trackpad &&
+        kind != PointerDeviceKind.mouse) {
+      return false;
+    }
 
     // At ~1× vertical scroll owns navigation; single-finger pan only on margins.
     if (_currentScale <= kDocumentZoomedPanThreshold) {
       return !widget.isFocalOnPaper(focal);
     }
 
-    // Zoomed in: two-finger pan works everywhere; single-finger stays margin-only
-    // so finger-drawing on paper is preserved.
+    // Zoomed in: stylus-only allows single-finger pan everywhere; finger-drawing
+    // keeps paper free for ink (margin-only single-finger pan).
+    if (stylusOnly) return true;
     return !widget.isFocalOnPaper(focal);
   }
 
@@ -238,7 +240,6 @@ class DocumentViewportState extends State<DocumentViewport> {
     if (!_gestureActive && !_pinchScrollLockHeld) {
       widget.onTransformGestureActive?.call(true);
     }
-    _foldScrollIntoTransform();
     _gestureActive = true;
     _lastFocal = focal;
     _gestureStartFocal = focal;
@@ -299,7 +300,6 @@ class DocumentViewportState extends State<DocumentViewport> {
     // Snap to 1× when the pinch landed near identity so scroll resumes cleanly.
     if (_currentScale >= kDocumentFitCenterScaleMax &&
         _currentScale <= kDocumentSnapScaleMax) {
-      _unfoldScrollFromTransform();
       resetTransform();
     } else {
       _applyClampedTransform(_transform.value);
@@ -317,7 +317,6 @@ class DocumentViewportState extends State<DocumentViewport> {
   }
 
   void _onDoubleTap() {
-    _unfoldScrollFromTransform();
     resetTransform();
   }
 
@@ -342,10 +341,15 @@ class DocumentViewportState extends State<DocumentViewport> {
             onDoubleTap: _onDoubleTap,
             child: AnimatedBuilder(
               animation: _transform,
-              builder: (context, child) => Transform(
-                alignment: Alignment.topLeft,
-                transform: _transform.value,
-                child: child,
+              // Clip after transform so zoomed/panned content is not masked by
+              // the pre-transform viewport, then clip to the screen bounds.
+              builder: (context, child) => ClipRect(
+                child: Transform(
+                  alignment: Alignment.topLeft,
+                  transform: _transform.value,
+                  filterQuality: FilterQuality.low,
+                  child: child,
+                ),
               ),
               child: widget.child,
             ),

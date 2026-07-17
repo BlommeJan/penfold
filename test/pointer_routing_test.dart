@@ -51,6 +51,13 @@ void main() {
           isTrue,
         );
         expect(
+          shouldAllowFingerToolManipulation(
+            stylusOnly: stylusOnly,
+            kind: PointerDeviceKind.touch,
+          ),
+          isTrue,
+        );
+        expect(
           shouldLockScrollForPaperTouch(
             stylusOnly: stylusOnly,
             kind: PointerDeviceKind.touch,
@@ -147,6 +154,14 @@ void main() {
             paperSize: paper,
           ),
           isFalse,
+        );
+        expect(
+          shouldAllowFingerToolManipulation(
+            stylusOnly: stylusOnly,
+            kind: PointerDeviceKind.touch,
+          ),
+          isFalse,
+          reason: 'selection/shape/text must not steal finger scroll',
         );
         expect(
           shouldAllowPanZoom(

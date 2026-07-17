@@ -70,6 +70,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   int _visiblePageIndex = 0;
   int _pinchLockCount = 0;
   int _paperFingerLockCount = 0;
+  bool _documentZoomed = false;
   Timer? _sessionSaveTimer;
   final Set<String> _complexityWarnedOnOpen = {};
   bool _syncingFingerDrawing = false;
@@ -253,6 +254,9 @@ class _NotebookScreenState extends State<NotebookScreen>
     _documentViewportKey.currentState?.resetTransform();
     _documentViewportKey.currentState?.resetPointerTracking();
     _resetScrollAndPointerState();
+    if (_documentZoomed) {
+      setState(() => _documentZoomed = false);
+    }
   }
 
   /// Untransformed bounds of the scroll/page-turn body for pan clamping.
@@ -338,9 +342,19 @@ class _NotebookScreenState extends State<NotebookScreen>
       zoomEnabled: _zoomNavigationEnabled,
       isFocalOnPaper: _isFocalOnPaper,
       onTransformGestureActive: _onPageTransformGesture,
+      onZoomChanged: _onDocumentZoomChanged,
       child: child,
     );
   }
+
+  void _onDocumentZoomChanged(bool zoomed) {
+    if (_documentZoomed == zoomed) return;
+    setState(() => _documentZoomed = zoomed);
+  }
+
+  /// When zoomed, paint the full document (no lazy clip) so pan never shows seams.
+  bool get _expandDocumentPaint =>
+      _documentZoomed || _pinchLockCount > 0;
 
   Future<void> _syncStrokeSmoothing() async {
     if (!StrokeSmoothingService.instance.isLoaded) {
@@ -1087,11 +1101,17 @@ class _NotebookScreenState extends State<NotebookScreen>
   Widget _buildScrollBody(Size viewport) {
     final slotViewport = _pageSlotViewport(viewport);
     final pageHeight = slotViewport.height;
+    final contentHeight = _documentContentBounds(viewport).height;
+    final expandPaint = _expandDocumentPaint;
     return _wrapDocumentViewport(
       ScrollConfiguration(
         behavior: const PenfoldScrollBehavior(),
         child: CustomScrollView(
           controller: _scrollController,
+          // Avoid pre-transform viewport clipping that shows white seams when
+          // Transform scales/pans the scroll body.
+          clipBehavior: expandPaint ? Clip.none : Clip.hardEdge,
+          cacheExtent: expandPaint ? contentHeight : null,
           physics: _scrollLocked
               ? const NeverScrollableScrollPhysics()
               : const AlwaysScrollableScrollPhysics(),
@@ -1113,10 +1133,12 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   Widget _buildPageTurnBody(Size viewport) {
     final slotViewport = _pageSlotViewport(viewport);
+    final expandPaint = _expandDocumentPaint;
     return _wrapDocumentViewport(
       PageView.builder(
         controller: _pageController,
         scrollDirection: Axis.vertical,
+        clipBehavior: expandPaint ? Clip.none : Clip.hardEdge,
         physics: _scrollLocked
             ? const NeverScrollableScrollPhysics()
             : const PageScrollPhysics(),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' show Rect;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_digital_ink_recognition/google_mlkit_digital_ink_recognition.dart'
     as mlkit;
 import 'package:uuid/uuid.dart';
@@ -100,6 +101,12 @@ class InkOcrService {
           mlkit.DigitalInkRecognizer(languageCode: inkRecognitionLanguageModel);
       _setModelStatus(InkModelStatus.ready);
       return true;
+    } on MissingPluginException catch (e) {
+      modelError =
+          'Digital Ink plugin missing (${e.message}). Rebuild the release APK.';
+      _setModelStatus(InkModelStatus.error);
+      _modelEnsureFuture = null;
+      return false;
     } catch (e) {
       modelError = e.toString();
       _setModelStatus(InkModelStatus.error);

@@ -1080,46 +1080,58 @@ class _EraserIconPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
+
+    // GoodNotes-style: thick pink rubber block, short grey ferrule, slight tilt.
+    canvas.save();
+    canvas.translate(w * 0.50, h * 0.52);
+    canvas.rotate(-0.35);
+
+    final bodyW = w * 0.62;
+    final bodyH = h * 0.38;
+    final sleeveH = h * 0.22;
+    final r = Radius.circular(w * 0.08);
+
+    final bodyRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset(0, -sleeveH * 0.35), width: bodyW, height: bodyH),
+      r,
+    );
+    final sleeveRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(0, bodyH * 0.42),
+        width: bodyW * 0.92,
+        height: sleeveH,
+      ),
+      Radius.circular(w * 0.05),
+    );
+
+    canvas.drawRRect(
+      bodyRect,
+      Paint()..color = const Color(0xFFFF8A9A),
+    );
+    canvas.drawRRect(
+      sleeveRect,
+      Paint()..color = const Color(0xFFB0B6C0),
+    );
+
+    // Soft top bevel so the pink block reads at 22px.
+    canvas.drawLine(
+      Offset(-bodyW * 0.38, -bodyH * 0.55 - sleeveH * 0.35),
+      Offset(bodyW * 0.38, -bodyH * 0.55 - sleeveH * 0.35),
+      Paint()
+        ..color = const Color(0xFFFFCDD4)
+        ..strokeWidth = 1.6
+        ..strokeCap = StrokeCap.round,
+    );
+
     final outline = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4
+      ..strokeWidth = 1.35
       ..strokeJoin = StrokeJoin.round;
+    canvas.drawRRect(bodyRect, outline);
+    canvas.drawRRect(sleeveRect, outline);
 
-    // Pink eraser body (angled block).
-    final body = Path()
-      ..moveTo(w * 0.14, h * 0.30)
-      ..lineTo(w * 0.86, h * 0.18)
-      ..lineTo(w * 0.78, h * 0.58)
-      ..lineTo(w * 0.08, h * 0.66)
-      ..close();
-    canvas.drawPath(
-      body,
-      Paint()..color = const Color(0xFFF2A0A0).withOpacity(0.95),
-    );
-    canvas.drawPath(body, outline);
-
-    // Metal sleeve below the eraser.
-    final sleeve = Path()
-      ..moveTo(w * 0.08, h * 0.66)
-      ..lineTo(w * 0.78, h * 0.58)
-      ..lineTo(w * 0.82, h * 0.84)
-      ..lineTo(w * 0.06, h * 0.90)
-      ..close();
-    canvas.drawPath(
-      sleeve,
-      Paint()..color = color.withOpacity(0.35),
-    );
-    canvas.drawPath(sleeve, outline);
-
-    // Angled top edge highlight.
-    canvas.drawLine(
-      Offset(w * 0.14, h * 0.30),
-      Offset(w * 0.86, h * 0.18),
-      Paint()
-        ..color = Colors.white.withOpacity(0.55)
-        ..strokeWidth = 1.2,
-    );
+    canvas.restore();
   }
 
   @override

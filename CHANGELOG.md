@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.69] — 2026
+
+### Fixed
+
+- **Document zoom clip/seam** — stop folding scroll into transform (which blanked lazy slivers); when zoomed, `CustomScrollView` uses `Clip.none` + full-document `cacheExtent` so pinch/pan never hides ink or shows white seams
+- **OCR Convert to text** — bridge upstream ML Kit 0.15.0 channel mismatch (`recognizer` vs `recognition`) in `MainActivity`; ProGuard keep rules for ML Kit
+- **Stylus-only finger scroll** — document viewport no longer steals single-finger paper scroll at 1×; selection/text/lasso/tape respect `stylusOnly` so finger scroll works for all tools
+- **Eraser icon** — clearer GoodNotes-style pink rubber block + grey ferrule at toolbar size
+
 ## [0.2.68] — 2026
 
 ### Fixed

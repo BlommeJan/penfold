@@ -1,9 +1,11 @@
 package com.itsbryce.penfold
 
 import android.view.MotionEvent
+import com.google_mlkit_digital_ink_recognition.DigitalInkRecognizer
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val channelName = "com.itsbryce.penfold/spen_button"
@@ -12,6 +14,15 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // Upstream google_mlkit_digital_ink_recognition 0.15.0 registers
+        // "google_mlkit_digital_ink_recognition" but Dart invokes
+        // "google_mlkit_digital_ink_recognizer" — bridge the correct name.
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "google_mlkit_digital_ink_recognizer",
+        ).setMethodCallHandler(DigitalInkRecognizer())
+
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {

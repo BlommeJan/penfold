@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/models.dart';
+import '../services/page_orientation_remap.dart';
 
 enum _SearchBackend { none, fts4, fts5 }
 
@@ -1100,6 +1101,80 @@ class AppDatabase {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  /// Updates page orientation and uniformly scales + centers all page content
+  /// so it fits the new canonical bounds.
+  Future<void> updatePageOrientationAndRemapContent({
+    required NotePage page,
+    required PageOrientation to,
+  }) async {
+    final from = page.orientation;
+    final aspect = to.aspectOf(page.pageSize);
+    if (from == to) {
+      await updatePageOrientation(page.id, to, aspect);
+      return;
+    }
+
+    final strokes = await strokesOf(page.id);
+    final fills = await fillsOf(page.id);
+    final images = await imagesOf(page.id);
+    final texts = await textBlocksOf(page.id);
+    final remapped = remapPageContent(
+      pageSize: page.pageSize,
+      from: from,
+      to: to,
+      strokes: strokes,
+      fills: fills,
+      images: images,
+      texts: texts,
+    );
+
+    final database = await db;
+    await database.transaction((txn) async {
+      await txn.update(
+        'pages',
+        {'orientation': to.index, 'aspect': aspect},
+        where: 'id = ?',
+        whereArgs: [page.id],
+      );
+      if (remapped == null) return;
+      for (final s in remapped.strokes) {
+        await txn.insert(
+          'strokes',
+          s.toRow(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      for (final f in remapped.fills) {
+        await txn.insert(
+          'fills',
+          f.toRow(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      for (final img in remapped.images) {
+        await txn.insert(
+          'page_images',
+          img.toRow(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      for (final t in remapped.texts) {
+        await txn.update(
+          'text_blocks',
+          {
+            'x': t.x,
+            'y': t.y,
+            'w': t.w,
+            'h': t.h,
+            'font_size': t.fontSize,
+          },
+          where: 'id = ?',
+          whereArgs: [t.id],
+        );
+      }
+    });
   }
 
   Future<bool> pageHasInk(String pageId) async {

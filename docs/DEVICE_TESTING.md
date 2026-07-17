@@ -99,21 +99,25 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] Jump to previous / next bookmark from the toolbar
 - [ ] Change page template (blank, lined, grid, dotted, college ruled)
 - [ ] Change page size (A4, A5, Letter) — confirm dialog if page has ink
-- [ ] Set a page to portrait or landscape (non-PDF pages)
+- [ ] Set a page to portrait or landscape (non-PDF pages) — ink scales and centers to fit
 - [ ] Insert an image on a page
 - [ ] Open auto table of contents and jump to a heading
 - [ ] Heavy page warning appears around 500 strokes; try Split page
 - [ ] Switch pages, draw on each, switch back — undo history is still there
+- [ ] Rotate the device portrait↔landscape — ink stays on screen and centered
 
 ---
 
 ## Drawing & tools
 
 - [ ] Draw with pen (pressure feels natural on stylus)
+- [ ] Brush size outline appears under stylus/hover for pen, highlighter, and pixel eraser
 - [ ] Switch brush types: fountain, pencil, marker, calligraphy
 - [ ] Draw with highlighter (semi-transparent)
+- [ ] Ink stops at the paper edge (no drawing past the page)
 - [ ] Erase whole strokes with the eraser
 - [ ] Partial eraser: clip ink inside the eraser circle (toggle in eraser options)
+- [ ] Erase all on page from eraser options (confirm dialog; undo restores)
 - [ ] Draw shapes (line, rectangle, ellipse, arrow)
 - [ ] Tap inside a closed pen/shape loop to flood-fill
 - [ ] Add typed text; tap existing text to edit

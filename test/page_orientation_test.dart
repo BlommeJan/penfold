@@ -123,45 +123,40 @@ void main() {
     expect(back.aspect, closeTo(PageOrientation.landscape.aspectOf(PageSize.a5), 0.001));
   });
 
-  test('orientation change keeps canonical ink coords', () async {
+  test('orientation change remaps ink to fit new bounds', () async {
     final db = AppDatabase.instance;
     await db.insertNotebook(nb());
     await db.insertPage(pg());
+    // Near bottom of portrait A4 (height 2970) — would be off landscape page.
     await db.insertStroke(Stroke(
       id: 's1',
       pageId: 'pg1',
       tool: ToolType.pen,
       color: 0xFF000000,
       width: 3,
-      points: const [StrokePoint(150, 250, 0.5)],
+      points: const [
+        StrokePoint(200, 2800, 0.5),
+        StrokePoint(400, 2900, 0.5),
+      ],
       z: 0,
     ));
 
-    const viewport = Size(800, 600);
-    final portraitLayout =
-        PageCoords.pageDisplaySize(viewport, PageSize.a4);
-    final landscapeLayout = PageCoords.pageDisplaySize(
-      viewport,
-      PageSize.a4,
-      orientation: PageOrientation.landscape,
+    final page = (await db.pagesOf('nb1')).single;
+    await db.updatePageOrientationAndRemapContent(
+      page: page,
+      to: PageOrientation.landscape,
     );
 
-    await db.updatePageOrientation(
-      'pg1',
-      PageOrientation.landscape,
-      PageOrientation.landscape.aspectOf(PageSize.a4),
-    );
+    final back = (await db.pagesOf('nb1')).single;
+    expect(back.orientation, PageOrientation.landscape);
 
-    expect(portraitLayout.width / portraitLayout.height,
-        closeTo(PageSize.a4.aspect, 0.01));
-    expect(
-      landscapeLayout.width / landscapeLayout.height,
-      closeTo(PageSize.a4.height / PageSize.a4.width, 0.01),
-    );
-    expect(landscapeLayout.width, greaterThan(portraitLayout.width));
-
-    final back = (await db.strokesOf('pg1')).single;
-    expect(back.points.single.x, 150);
-    expect(back.points.single.y, 250);
+    final stroke = (await db.strokesOf('pg1')).single;
+    final landscape =
+        PageCoords.canonicalSize(PageSize.a4, orientation: PageOrientation.landscape);
+    for (final pt in stroke.points) {
+      expect(pt.x, inInclusiveRange(0, landscape.width));
+      expect(pt.y, inInclusiveRange(0, landscape.height));
+    }
+    expect(stroke.points.first.x, isNot(200));
   });
 }

@@ -937,8 +937,8 @@ class _NotebookScreenState extends State<NotebookScreen>
           builder: (ctx) => AlertDialog(
             title: const Text('Change orientation?'),
             content: const Text(
-              'This page has ink. Changing orientation re-layouts the page; '
-              'your ink stays in the same canonical position.',
+              'This page has ink. Changing orientation scales and centers '
+              'your content to fit the new page bounds.',
             ),
             actions: [
               TextButton(
@@ -955,11 +955,18 @@ class _NotebookScreenState extends State<NotebookScreen>
         if (ok != true || !mounted) return;
       }
       final aspect = chosen.aspectOf(_activePage.pageSize);
-      await _db.updatePageOrientation(_activePage.id, chosen, aspect);
+      await _db.updatePageOrientationAndRemapContent(
+        page: _activePage,
+        to: chosen,
+      );
       setState(() {
         _activePage.orientation = chosen;
         _activePage.aspect = aspect;
       });
+      await _pageKeys[_activePage.id]
+          ?.currentState
+          ?.canvasState
+          ?.reloadFromDatabase();
       _resetDocumentTransform();
       return;
     }

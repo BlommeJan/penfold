@@ -642,17 +642,33 @@ class _NotebookScreenState extends State<NotebookScreen>
           barrierDismissible: false,
           builder: (ctx) => AlertDialog(
             title: const Text('Handwriting model'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const LinearProgressIndicator(),
-                const SizedBox(height: 16),
-                Text(
-                  ocr.modelStatus == InkModelStatus.error
-                      ? 'Retrying download…'
-                      : 'Downloading English handwriting model (one-time, on-device)…',
-                ),
-              ],
+            content: ValueListenableBuilder<InkModelStatus>(
+              valueListenable: ocr.modelStatusNotifier,
+              builder: (context, status, _) {
+                final statusLine = switch (status) {
+                  InkModelStatus.error => 'Retrying download…',
+                  InkModelStatus.downloading ||
+                  InkModelStatus.notReady =>
+                    'Downloading English handwriting model (one-time, on-device)…',
+                  InkModelStatus.ready => 'Model ready.',
+                };
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const LinearProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(statusLine),
+                    const SizedBox(height: 12),
+                    Text(
+                      inkRecognitionModelDownloadHint,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.73] — 2026
+
+### Changed
+
+- **Handwriting model download** — convert-to-text progress dialog shows ~20 MB size estimate and notes that first-time download may take several minutes on slow Wi‑Fi
+
 ## [0.2.72] — 2026
 
 ### Fixed

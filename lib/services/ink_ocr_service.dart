@@ -18,6 +18,14 @@ const _uuid = Uuid();
 /// BCP-47 language tag for English handwriting (ML Kit base model).
 const inkRecognitionLanguageModel = 'en-US';
 
+/// Approximate on-device model size (Google ML Kit docs: ~20 MB per language).
+const inkRecognitionModelSizeEstimateMb = 20;
+
+/// Shown while the model downloads on first use (convert-to-text / background OCR).
+const inkRecognitionModelDownloadHint =
+    'First-time download (~$inkRecognitionModelSizeEstimateMb MB). '
+    'Wi‑Fi recommended; may take several minutes on slow connections.';
+
 /// Download / readiness state for the on-device handwriting model.
 enum InkModelStatus {
   notReady,

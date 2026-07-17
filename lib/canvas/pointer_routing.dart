@@ -43,6 +43,19 @@ bool _onPaper(Offset localPos, Size paperSize, Matrix4? contentTransform) {
   return (Offset.zero & paperSize).contains(paper);
 }
 
+/// Maps [paperPos] into the paper rectangle for ink tools (pen, highlighter, etc.).
+Offset clampToPaperBounds(Offset paperPos, Size paperSize) {
+  final rect = Offset.zero & paperSize;
+  return Offset(
+    paperPos.dx.clamp(rect.left, rect.right),
+    paperPos.dy.clamp(rect.top, rect.bottom),
+  );
+}
+
+/// True when [paperPos] lies on the paper (already in paper space).
+bool isOnPaperBounds(Offset paperPos, Size paperSize) =>
+    (Offset.zero & paperSize).contains(paperPos);
+
 /// Returns true when a pointer of [kind] at [localPos] on a paper of
 /// [paperSize] should be routed to drawing (unit-testable).
 ///

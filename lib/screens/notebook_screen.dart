@@ -1193,23 +1193,9 @@ class _NotebookScreenState extends State<NotebookScreen>
                     constraints.maxWidth,
                     constraints.maxHeight,
                   );
-                  return Stack(
-                    children: [
-                      _pageTurnEnabled
-                          ? _buildPageTurnBody(viewport)
-                          : _buildScrollBody(viewport),
-                      if (!_loading && _pages.isNotEmpty)
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: PageInfoChip(
-                            page: _activePage,
-                            isPdfPage: _isPdfPage(_activePage),
-                            onTap: _openPageTemplateSettings,
-                          ),
-                        ),
-                    ],
-                  );
+                  return _pageTurnEnabled
+                      ? _buildPageTurnBody(viewport)
+                      : _buildScrollBody(viewport);
                 },
               ),
       ),

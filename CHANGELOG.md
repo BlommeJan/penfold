@@ -2,6 +2,16 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.70] — 2026
+
+### Changed
+
+- **Page settings entry** — removed top-right page info chip; gear menu is the sole entry for template, size, orientation, and export
+
+### Fixed
+
+- **Ink bounds** — pen, highlighter, shape, tape, and fill strokes clamp to the paper rectangle so ink no longer continues off-page when dragging past the edge (eraser, lasso, and selection unchanged)
+
 ## [0.2.69] — 2026
 
 ### Fixed

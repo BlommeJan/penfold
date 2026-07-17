@@ -23,7 +23,7 @@ IconData pageTemplateIcon(PageTemplate template) => switch (template) {
       PageTemplate.collegeRuled => Icons.margin_rounded,
     };
 
-/// One-line summary for the top-right page info chip.
+/// One-line summary for page settings (gear menu / tests).
 String pageSettingsSummary(NotePage page, {required bool isPdfPage}) {
   if (isPdfPage) {
     return 'PDF · ${page.orientation.label}';
@@ -41,64 +41,6 @@ enum EditorPageMenuAction {
   audio,
   split,
   export,
-}
-
-/// Compact chip on the document canvas; tap opens page template picker.
-class PageInfoChip extends StatelessWidget {
-  final NotePage page;
-  final bool isPdfPage;
-  final VoidCallback onTap;
-
-  const PageInfoChip({
-    super.key,
-    required this.page,
-    required this.isPdfPage,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: scheme.surface.withOpacity(0.92),
-      elevation: 2,
-      shadowColor: Colors.black26,
-      borderRadius: BorderRadius.circular(20),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                isPdfPage
-                    ? Icons.picture_as_pdf_outlined
-                    : pageTemplateIcon(page.template),
-                size: 16,
-                color: scheme.primary,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                pageSettingsSummary(page, isPdfPage: isPdfPage),
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: scheme.onSurface,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(width: 2),
-              Icon(
-                Icons.expand_more_rounded,
-                size: 18,
-                color: scheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 /// Small popup menu anchored near the gear icon.

@@ -63,23 +63,4 @@ void main() {
     );
   });
 
-  testWidgets('PageInfoChip shows summary text', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PageInfoChip(
-            page: samplePage(
-              template: PageTemplate.grid,
-              pageSize: PageSize.letter,
-              orientation: PageOrientation.landscape,
-            ),
-            isPdfPage: false,
-            onTap: () {},
-          ),
-        ),
-      ),
-    );
-
-    expect(find.text('Grid · Letter · Landscape'), findsOneWidget);
-  });
 }

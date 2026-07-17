@@ -800,6 +800,13 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         widget.contentTransform ?? Matrix4.identity(),
       );
 
+  /// Clamp ink-tool positions to the paper rectangle.
+  Offset _clampInkPos(Offset paperPos) =>
+      clampToPaperBounds(paperPos, widget.displaySize);
+
+  bool _inkStartsOnPaper(Offset paperPos) =>
+      isOnPaperBounds(paperPos, widget.displaySize);
+
   @override
   void initState() {
     super.initState();
@@ -1320,8 +1327,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (!_loaded) return;
 
     final tool = widget.toolState.tool;
-    final pos = _paperLocal(e);
-    final cPos = _toCanonical(pos);
+    final rawPos = _paperLocal(e);
     _activePointer = e.pointer;
 
     final effectiveTool = _effectiveTool(e);
@@ -1331,6 +1337,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       case ToolType.pen:
       case ToolType.highlighter:
       case ToolType.shape:
+        if (!_inkStartsOnPaper(rawPos)) {
+          _activePointer = null;
+          return;
+        }
+        final inkPos = _clampInkPos(rawPos);
+        final inkCanon = _toCanonical(inkPos);
         _current = Stroke(
           id: _uuid.v4(),
           pageId: widget.page.id,
@@ -1340,40 +1352,50 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           brushStyle: widget.toolState.brushStyle,
           color: widget.toolState.activeColor.value,
           width: _toCanonicalLen(widget.toolState.activeWidth),
-          points: [StrokePoint(cPos.dx, cPos.dy, _pressure(e))],
+          points: [StrokePoint(inkCanon.dx, inkCanon.dy, _pressure(e))],
           z: _controller.nextZ(),
         );
         _lastInkMoveTime = DateTime.now();
-        _lastInkMoveCanon = cPos;
+        _lastInkMoveCanon = inkCanon;
         _bump();
       case ToolType.tape:
-        final hitTape = _hitTapeStrokeAt(pos);
+        if (!_inkStartsOnPaper(rawPos)) {
+          _activePointer = null;
+          return;
+        }
+        final tapePos = _clampInkPos(rawPos);
+        final hitTape = _hitTapeStrokeAt(tapePos);
         if (hitTape != null) {
           _activePointer = null;
           unawaited(_toggleTapeHidden(hitTape));
           return;
         }
+        final tapeCanon = _toCanonical(tapePos);
         _current = Stroke(
           id: _uuid.v4(),
           pageId: widget.page.id,
           tool: ToolType.tape,
           color: widget.toolState.tapeColor.value,
           width: _toCanonicalLen(widget.toolState.tapeWidth),
-          points: [StrokePoint(cPos.dx, cPos.dy, _pressure(e))],
+          points: [StrokePoint(tapeCanon.dx, tapeCanon.dy, _pressure(e))],
           z: _controller.nextZ(),
         );
         _lastInkMoveTime = DateTime.now();
-        _lastInkMoveCanon = cPos;
+        _lastInkMoveCanon = tapeCanon;
         _bump();
       case ToolType.fill:
-        _fillPath = [pos];
+        if (!_inkStartsOnPaper(rawPos)) {
+          _activePointer = null;
+          return;
+        }
+        _fillPath = [_clampInkPos(rawPos)];
         _bump();
       case ToolType.text:
-        final existing = _hitTextBlock(pos);
+        final existing = _hitTextBlock(rawPos);
         if (existing != null) {
           _startTextEdit(existing: existing);
         } else {
-          _startTextEdit(canonicalPos: cPos);
+          _startTextEdit(canonicalPos: _toCanonical(rawPos));
         }
         _activePointer = null;
         return;
@@ -1385,8 +1407,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _eraseSessionDeleteIds.clear();
         _eraseSessionInserts.clear();
         _coalescedErasePos = null;
-        _eraseAt(cPos);
+        _eraseAt(_toCanonical(rawPos));
       case ToolType.lasso:
+        final pos = rawPos;
         final selImg = _selectedImage();
         final displayRect = selImg != null
             ? PageCoords.canonicalRectToDisplay(
@@ -1453,7 +1476,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _lassoPath = [pos];
         _bump();
       case ToolType.selection:
-        _handleSelectionDown(pos);
+        _handleSelectionDown(rawPos);
     }
   }
 
@@ -1634,11 +1657,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _syncSpenButton(e);
     if (e.pointer != _activePointer) return;
     if (_isStylus(e)) _lastStylusSeen = DateTime.now();
-    final pos = _paperLocal(e);
-    final cPos = _toCanonical(pos);
+    final rawPos = _paperLocal(e);
     final tool = _gestureEffectiveTool ?? widget.toolState.tool;
 
     if (_current != null) {
+      final pos = _clampInkPos(rawPos);
+      final cPos = _toCanonical(pos);
       final last = _current!.points.last;
       final now = DateTime.now();
       final speed = _lastInkMoveCanon != null && _lastInkMoveTime != null
@@ -1662,12 +1686,13 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     switch (tool) {
       case ToolType.fill:
         if (_fillPath != null) {
-          _fillPath!.add(pos);
+          _fillPath!.add(_clampInkPos(rawPos));
           _bump();
         }
       case ToolType.eraser:
-        _eraseAt(cPos);
+        _eraseAt(_toCanonical(rawPos));
       case ToolType.lasso:
+        final pos = rawPos;
         final selImg = _selectedImage();
         if (_resizingImage && selImg != null && _lastDragPos != null) {
           final displayRect = PageCoords.canonicalRectToDisplay(
@@ -1692,7 +1717,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           _bump();
         }
       case ToolType.selection:
-        _handleSelectionMove(pos);
+        _handleSelectionMove(rawPos);
       default:
         break;
     }

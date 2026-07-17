@@ -49,7 +49,7 @@ void main() {
     PackageInfo.setMockInitialValues(
       appName: 'Penfold',
       packageName: 'com.itsbryce.penfold',
-      version: '0.2.69',
+      version: '0.2.70',
       buildNumber: '1',
       buildSignature: '',
     );
@@ -69,7 +69,7 @@ void main() {
     await settle(tester);
 
     expect(find.text('Penfold'), findsOneWidget);
-    expect(find.textContaining('v0.2.69'), findsOneWidget);
+    expect(find.textContaining('v0.2.70'), findsOneWidget);
     expect(find.text('No notebooks yet'), findsOneWidget);
     expect(find.text('New notebook'), findsOneWidget);
   });
@@ -96,7 +96,7 @@ void main() {
     await settle(tester);
     await settleUntil(tester, find.byTooltip('Pen'));
 
-    expect(find.textContaining('Lined'), findsOneWidget);
+    expect(find.byTooltip('Page menu'), findsOneWidget);
     expect(find.byTooltip('Pen'), findsOneWidget);
 
     // It's also persisted.

@@ -341,5 +341,46 @@ void main() {
         );
       });
     });
+
+    group('clampToPaperBounds', () {
+      const paper = Size(400, 600);
+
+      test('returns unchanged point inside paper', () {
+        expect(
+          clampToPaperBounds(const Offset(200, 300), paper),
+          const Offset(200, 300),
+        );
+      });
+
+      test('clamps point beyond right and bottom edges', () {
+        expect(
+          clampToPaperBounds(const Offset(500, 700), paper),
+          const Offset(400, 600),
+        );
+      });
+
+      test('clamps negative coordinates to origin', () {
+        expect(
+          clampToPaperBounds(const Offset(-20, -10), paper),
+          Offset.zero,
+        );
+      });
+    });
+
+    group('isOnPaperBounds', () {
+      test('inside paper returns true', () {
+        expect(
+          isOnPaperBounds(const Offset(10, 10), const Size(400, 600)),
+          isTrue,
+        );
+      });
+
+      test('outside paper returns false', () {
+        expect(
+          isOnPaperBounds(const Offset(401, 10), const Size(400, 600)),
+          isFalse,
+        );
+      });
+    });
   });
 }

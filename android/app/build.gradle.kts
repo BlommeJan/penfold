@@ -66,3 +66,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Required for PenfoldDigitalInkRecognizer (manageModel fix) compile classpath.
+    implementation("com.google.mlkit:digital-ink-recognition:19.0.0")
+}

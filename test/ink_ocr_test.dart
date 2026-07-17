@@ -119,4 +119,17 @@ void main() {
       expect(status.hasInk, isTrue);
     });
   });
+
+  group('model download helpers', () {
+    test('download timeout is 120 seconds', () {
+      expect(inkRecognitionModelDownloadTimeout.inSeconds, 120);
+    });
+
+    test('resetModelEnsure clears downloading state', () {
+      final ocr = InkOcrService.instance;
+      ocr.modelStatus = InkModelStatus.downloading;
+      ocr.resetModelEnsure();
+      expect(ocr.modelStatus, InkModelStatus.notReady);
+    });
+  });
 }

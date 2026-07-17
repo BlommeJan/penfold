@@ -1,7 +1,6 @@
 package com.itsbryce.penfold
 
 import android.view.MotionEvent
-import com.google_mlkit_digital_ink_recognition.DigitalInkRecognizer
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -17,11 +16,12 @@ class MainActivity : FlutterActivity() {
 
         // Upstream google_mlkit_digital_ink_recognition 0.15.0 registers
         // "google_mlkit_digital_ink_recognition" but Dart invokes
-        // "google_mlkit_digital_ink_recognizer" — bridge the correct name.
+        // "google_mlkit_digital_ink_recognizer". PenfoldDigitalInkRecognizer also
+        // fixes upstream manageModel (empty → hung download Future).
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             "google_mlkit_digital_ink_recognizer",
-        ).setMethodCallHandler(DigitalInkRecognizer())
+        ).setMethodCallHandler(PenfoldDigitalInkRecognizer())
 
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
             .setStreamHandler(object : EventChannel.StreamHandler {

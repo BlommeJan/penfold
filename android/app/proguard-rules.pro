@@ -4,6 +4,7 @@
 
 -keep class com.google_mlkit_digital_ink_recognition.** { *; }
 -keep class com.google_mlkit_commons.** { *; }
+-keep class com.itsbryce.penfold.PenfoldDigitalInkRecognizer { *; }
 
 -keep class io.flutter.plugin.** { *; }
 -keep class io.flutter.embedding.** { *; }

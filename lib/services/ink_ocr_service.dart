@@ -21,10 +21,13 @@ const inkRecognitionLanguageModel = 'en-US';
 /// Approximate on-device model size (Google ML Kit docs: ~20 MB per language).
 const inkRecognitionModelSizeEstimateMb = 20;
 
+/// Max wait for model check/download before surfacing timeout + retry.
+const inkRecognitionModelDownloadTimeout = Duration(seconds: 120);
+
 /// Shown while the model downloads on first use (convert-to-text / background OCR).
 const inkRecognitionModelDownloadHint =
     'First-time download (~$inkRecognitionModelSizeEstimateMb MB). '
-    'Wi‑Fi recommended; may take several minutes on slow connections.';
+    'Usually finishes in under two minutes on Wi‑Fi.';
 
 /// Download / readiness state for the on-device handwriting model.
 enum InkModelStatus {
@@ -88,17 +91,50 @@ class InkOcrService {
     return _modelEnsureFuture!;
   }
 
+  /// Clears a hung or failed ensure so [retryModelDownload] can run again.
+  void resetModelEnsure() {
+    _modelEnsureFuture = null;
+    if (modelStatus == InkModelStatus.downloading) {
+      _setModelStatus(InkModelStatus.notReady);
+    }
+  }
+
+  /// Retries model check/download after timeout or error.
+  Future<bool> retryModelDownload() {
+    resetModelEnsure();
+    modelError = null;
+    return ensureModelReady();
+  }
+
+  Future<T> _withDownloadTimeout<T>(
+    Future<T> future, {
+    required String operation,
+  }) {
+    return future.timeout(
+      inkRecognitionModelDownloadTimeout,
+      onTimeout: () => throw TimeoutException(
+        '$operation timed out after '
+        '${inkRecognitionModelDownloadTimeout.inSeconds}s',
+      ),
+    );
+  }
+
   Future<bool> _ensureModelOnce() async {
     try {
       _setModelStatus(InkModelStatus.downloading);
       modelError = null;
 
-      final alreadyDownloaded =
-          await _modelManager.isModelDownloaded(inkRecognitionLanguageModel);
+      final alreadyDownloaded = await _withDownloadTimeout(
+        _modelManager.isModelDownloaded(inkRecognitionLanguageModel),
+        operation: 'Handwriting model check',
+      );
       if (!alreadyDownloaded) {
-        final ok = await _modelManager.downloadModel(
-          inkRecognitionLanguageModel,
-          isWifiRequired: false,
+        final ok = await _withDownloadTimeout(
+          _modelManager.downloadModel(
+            inkRecognitionLanguageModel,
+            isWifiRequired: false,
+          ),
+          operation: 'Handwriting model download',
         );
         if (!ok) {
           throw StateError('Handwriting model download failed');

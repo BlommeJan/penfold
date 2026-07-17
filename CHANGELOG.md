@@ -4,9 +4,13 @@ All notable changes to Penfold are documented here. The format is based on [Keep
 
 ## [0.2.73] — 2026
 
+### Fixed
+
+- **Handwriting model download hang** — upstream `google_mlkit_digital_ink_recognition` 0.15.0 ships an empty `manageModel` handler, so `downloadModel` / `isModelDownloaded` never completed (appeared as a 5+ minute stall, not slow Wi‑Fi). Penfold now bridges the channel with `PenfoldDigitalInkRecognizer` that delegates to `GenericModelManager`.
+
 ### Changed
 
-- **Handwriting model download** — convert-to-text progress dialog shows ~20 MB size estimate and notes that first-time download may take several minutes on slow Wi‑Fi
+- **Handwriting model UX** — 120s timeout with Retry/Cancel, elapsed timer, and ~20 MB size in the convert-to-text dialog; background prefetch on library launch with a brief snackbar
 
 ## [0.2.72] — 2026
 

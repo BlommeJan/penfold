@@ -636,55 +636,18 @@ class _NotebookScreenState extends State<NotebookScreen>
         (Platform.isAndroid || Platform.isIOS) &&
         ocr.modelStatus != InkModelStatus.ready) {
       if (!mounted) return;
-      unawaited(
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (ctx) => AlertDialog(
-            title: const Text('Handwriting model'),
-            content: ValueListenableBuilder<InkModelStatus>(
-              valueListenable: ocr.modelStatusNotifier,
-              builder: (context, status, _) {
-                final statusLine = switch (status) {
-                  InkModelStatus.error => 'Retrying download…',
-                  InkModelStatus.downloading ||
-                  InkModelStatus.notReady =>
-                    'Downloading English handwriting model (one-time, on-device)…',
-                  InkModelStatus.ready => 'Model ready.',
-                };
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const LinearProgressIndicator(),
-                    const SizedBox(height: 16),
-                    Text(statusLine),
-                    const SizedBox(height: 12),
-                    Text(
-                      inkRecognitionModelDownloadHint,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
+      final ready = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => _InkModelDownloadDialog(ocr: ocr),
       );
-      final ready = await ocr.ensureModelReady();
-      if (mounted) Navigator.of(context, rootNavigator: true).pop();
       if (!mounted) return;
-      if (!ready) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              ocr.modelError ??
-                  'Handwriting model not ready. Check network and try again.',
-            ),
-          ),
-        );
+      if (ready != true) {
+        if (ocr.modelError != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(ocr.modelError!)),
+          );
+        }
         return;
       }
     }
@@ -1237,6 +1200,127 @@ class _NotebookScreenState extends State<NotebookScreen>
                 },
               ),
       ),
+    );
+  }
+}
+
+class _InkModelDownloadDialog extends StatefulWidget {
+  const _InkModelDownloadDialog({required this.ocr});
+
+  final InkOcrService ocr;
+
+  @override
+  State<_InkModelDownloadDialog> createState() => _InkModelDownloadDialogState();
+}
+
+class _InkModelDownloadDialogState extends State<_InkModelDownloadDialog> {
+  Timer? _elapsedTimer;
+  Duration _elapsed = Duration.zero;
+  bool _retrying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _elapsedTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() => _elapsed += const Duration(seconds: 1));
+    });
+    unawaited(_startDownload());
+  }
+
+  Future<void> _startDownload() async {
+    final ready = await widget.ocr.ensureModelReady();
+    if (!mounted) return;
+    if (ready) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+    setState(() => _retrying = false);
+  }
+
+  Future<void> _retry() async {
+    setState(() => _retrying = true);
+    final ready = await widget.ocr.retryModelDownload();
+    if (!mounted) return;
+    if (ready) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+    setState(() => _retrying = false);
+  }
+
+  String _formatElapsed(Duration d) {
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
+
+  @override
+  void dispose() {
+    _elapsedTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      title: const Text('Handwriting model'),
+      content: ValueListenableBuilder<InkModelStatus>(
+        valueListenable: widget.ocr.modelStatusNotifier,
+        builder: (context, status, _) {
+          final statusLine = switch (status) {
+            InkModelStatus.error =>
+              widget.ocr.modelError ?? 'Download failed. Check network and retry.',
+            InkModelStatus.downloading ||
+            InkModelStatus.notReady =>
+              'Downloading English handwriting model (~$inkRecognitionModelSizeEstimateMb MB)…',
+            InkModelStatus.ready => 'Model ready.',
+          };
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (status != InkModelStatus.error)
+                const LinearProgressIndicator(),
+              if (status == InkModelStatus.error)
+                Icon(
+                  Icons.error_outline,
+                  color: theme.colorScheme.error,
+                  size: 32,
+                ),
+              const SizedBox(height: 16),
+              Text(statusLine),
+              const SizedBox(height: 8),
+              Text(
+                'Elapsed: ${_formatElapsed(_elapsed)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                inkRecognitionModelDownloadHint,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        if (widget.ocr.modelStatus == InkModelStatus.error) ...[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: _retrying ? null : _retry,
+            child: Text(_retrying ? 'Retrying…' : 'Retry'),
+          ),
+        ],
+      ],
     );
   }
 }

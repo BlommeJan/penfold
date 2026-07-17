@@ -8,6 +8,7 @@ import '../db/app_database.dart';
 import '../models/models.dart';
 import '../services/app_info_service.dart';
 import '../services/backup_service.dart';
+import '../services/ink_ocr_service.dart';
 import '../services/page_complexity_service.dart';
 import '../services/page_export.dart';
 import '../services/pdf_import.dart';
@@ -63,6 +64,31 @@ class _LibraryScreenState extends State<LibraryScreen> {
     _searchCtrl.addListener(_onSearchChanged);
     _loadAppInfo();
     _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!InkOcrService.disableMlKit && (Platform.isAndroid || Platform.isIOS)) {
+        unawaited(_prefetchHandwritingModel());
+      }
+    });
+  }
+
+  Future<void> _prefetchHandwritingModel() async {
+    final ocr = InkOcrService.instance;
+    if (ocr.modelStatus == InkModelStatus.ready) return;
+
+    unawaited(ocr.ensureModelReady());
+
+    await Future<void>.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
+    if (ocr.modelStatus == InkModelStatus.downloading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Downloading handwriting model (~$inkRecognitionModelSizeEstimateMb MB) in background…',
+          ),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }
   }
 
   Future<void> _loadAppInfo() async {

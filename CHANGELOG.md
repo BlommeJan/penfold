@@ -2,6 +2,13 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.72] — 2026
+
+### Fixed
+
+- **Brush size preview** — circle stays visible while drawing with the stylus (not only hover); clears when the stylus leaves proximity; finger pan/scroll no longer moves the preview
+- **S Pen barrel hold-to-erase** — pointer fallback no longer clears native button-press state when Android omits `buttons` bits; mid-stroke barrel press switches to the configured override tool; preview reflects barrel eraser override
+
 ## [0.2.71] — 2026
 
 ### Added

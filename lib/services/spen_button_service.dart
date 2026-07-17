@@ -105,11 +105,48 @@ class SpenButtonService extends ChangeNotifier {
     return (buttons & primary) != 0 || (buttons & secondary) != 0;
   }
 
-  /// Pointer-event fallback when native channel is unavailable.
+  /// Pointer-event fallback when native channel is unavailable, and to detect
+  /// press from [PointerEvent.buttons] (0x20 primary, 0x40 secondary).
+  ///
+  /// On Android, Flutter often omits barrel-button bits while the button is
+  /// held — the native [EventChannel] keeps press state. Do not clear press
+  /// on `buttons == 0` when the channel is active; use [releaseFromPointer].
   void updateFromPointer(PointerDeviceKind kind, int buttons) {
     if (kind != PointerDeviceKind.stylus) return;
     if (_action == SpenBarrelAction.none) return;
     final pressed = stylusButtonsPressed(buttons);
+    if (pressed) {
+      if (!_buttonPressed) {
+        _buttonPressed = true;
+        notifyListeners();
+      }
+      return;
+    }
+    // Non-Android / tests: pointer stream is the only source — allow release.
+    if (!Platform.isAndroid || _channelSub == null) {
+      if (_buttonPressed) {
+        _buttonPressed = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Clear press state when the stylus pointer lifts on platforms without a
+  /// native channel. On Android, [EventChannel] + `MotionEvent` button release
+  /// is authoritative — pointer-up must not clear while the barrel is held.
+  void releaseFromPointer(PointerDeviceKind kind, {int buttons = 0}) {
+    if (kind != PointerDeviceKind.stylus) return;
+    if (stylusButtonsPressed(buttons)) return;
+    if (Platform.isAndroid && _channelSub != null) return;
+    if (_buttonPressed) {
+      _buttonPressed = false;
+      notifyListeners();
+    }
+  }
+
+  /// Native channel or tests: set press state explicitly.
+  @visibleForTesting
+  void setButtonPressedForTests(bool pressed) {
     if (_buttonPressed != pressed) {
       _buttonPressed = pressed;
       notifyListeners();

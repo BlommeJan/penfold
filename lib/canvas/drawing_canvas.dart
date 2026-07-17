@@ -729,7 +729,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   DateTime _lastStylusSeen = DateTime.fromMillisecondsSinceEpoch(0);
   bool _stylusActive = false;
+  bool _stylusInProximity = false;
   Offset? _hoverPos;
+  Timer? _stylusProximityTimer;
 
   TextEditingController? _textEditCtrl;
   Offset? _textEditPos;
@@ -808,9 +810,15 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   bool _inkStartsOnPaper(Offset paperPos) =>
       isOnPaperBounds(paperPos, widget.displaySize);
 
+  ToolType get _previewTool {
+    final override = SpenButtonService.instance.overrideTool;
+    if (override != null) return override;
+    return widget.toolState.tool;
+  }
+
   bool get _showBrushPreview {
-    if (_activePointer != null) return false;
-    return switch (widget.toolState.tool) {
+    if (!_stylusInProximity) return false;
+    return switch (_previewTool) {
       ToolType.pen || ToolType.highlighter || ToolType.shape => true,
       ToolType.eraser =>
         widget.toolState.eraserMode == EraserMode.partial,
@@ -819,24 +827,52 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   double get _brushPreviewRadius {
-    if (widget.toolState.tool == ToolType.eraser) {
+    if (_previewTool == ToolType.eraser) {
       return widget.toolState.eraserRadius;
     }
     return widget.toolState.activeWidth / 2;
   }
 
   Color get _brushPreviewColor {
-    if (widget.toolState.tool == ToolType.eraser) {
+    if (_previewTool == ToolType.eraser) {
       return const Color(0x99E879A6);
     }
-    if (widget.toolState.tool == ToolType.highlighter) {
+    if (_previewTool == ToolType.highlighter) {
       return widget.toolState.highlighterColor.withOpacity(0.45);
     }
     return widget.toolState.penColor.withOpacity(0.55);
   }
 
-  void _updateHoverPos(Offset paperPos) {
-    if (!_showBrushPreview) {
+  void _clearBrushPreview() {
+    _stylusProximityTimer?.cancel();
+    _stylusProximityTimer = null;
+    _stylusInProximity = false;
+    if (_hoverPos != null) {
+      _hoverPos = null;
+      _bump();
+    }
+  }
+
+  void _touchStylusProximity() {
+    _stylusInProximity = true;
+    _stylusProximityTimer?.cancel();
+    _stylusProximityTimer = Timer(const Duration(milliseconds: 200), () {
+      if (!mounted) return;
+      if (_activePointer != null) return;
+      _clearBrushPreview();
+    });
+  }
+
+  void _setStylusInProximity(bool inRange) {
+    if (inRange) {
+      _touchStylusProximity();
+      return;
+    }
+    _clearBrushPreview();
+  }
+
+  void _updateStylusPreviewPos(Offset paperPos) {
+    if (!_stylusInProximity || !_showBrushPreview) {
       if (_hoverPos != null) {
         _hoverPos = null;
         _bump();
@@ -863,6 +899,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         widget.page, _strokes, _images, _fills, _textBlocks, _bump);
     _load();
     widget.toolState.addListener(_onToolChanged);
+    SpenButtonService.instance.addListener(_onSpenButtonChanged);
   }
 
   @override
@@ -892,14 +929,18 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     }
     _activePointer = null;
     _stylusActive = false;
+    _stylusInProximity = false;
     _lastStylusSeen = DateTime.fromMillisecondsSinceEpoch(0);
     _gestureEffectiveTool = null;
+    _hoverPos = null;
   }
 
   @override
   void dispose() {
     _controller.captureUndoToStore();
     widget.toolState.removeListener(_onToolChanged);
+    SpenButtonService.instance.removeListener(_onSpenButtonChanged);
+    _stylusProximityTimer?.cancel();
     _textEditCtrl?.dispose();
     super.dispose();
   }
@@ -914,6 +955,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (tool != ToolType.text) {
       _commitTextEditIfNeeded();
     }
+    _bump();
+  }
+
+  void _onSpenButtonChanged() {
+    if (!mounted) return;
     _bump();
   }
 
@@ -1336,12 +1382,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   void _onPointerHover(PointerHoverEvent e) {
+    if (!_isStylus(e)) return;
     _syncSpenButton(e);
-    if (_isStylus(e)) {
-      _lastStylusSeen = DateTime.now();
-      _stylusActive = true;
-    }
-    _updateHoverPos(_paperLocal(e));
+    _lastStylusSeen = DateTime.now();
+    _stylusActive = true;
+    _setStylusInProximity(true);
+    _updateStylusPreviewPos(_paperLocal(e));
   }
 
   void _abortActiveGestureForPinch() {
@@ -1384,6 +1430,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (_isStylus(e)) {
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
+      _setStylusInProximity(true);
+      _updateStylusPreviewPos(_paperLocal(e));
     }
     if (e.kind == PointerDeviceKind.touch && _paperTouchPointers.length >= 2) {
       return;
@@ -1727,12 +1775,58 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _editingTextId = null;
   }
 
+  void _beginPartialEraseSession() {
+    _erasedThisPass.clear();
+    _partialEraseOriginals.clear();
+    _partialSegmentToRoot.clear();
+    _partialEraseAddedIds.clear();
+    _eraseSessionDeleteIds.clear();
+    _eraseSessionInserts.clear();
+    _coalescedErasePos = null;
+  }
+
+  void _applyMidGestureToolSwitch(
+    ToolType next,
+    Offset rawPos,
+    PointerEvent e,
+  ) {
+    final prev = _gestureEffectiveTool ?? widget.toolState.tool;
+    if (next == prev) return;
+    _gestureEffectiveTool = next;
+
+    if (_current != null &&
+        (prev == ToolType.pen ||
+            prev == ToolType.highlighter ||
+            prev == ToolType.shape ||
+            prev == ToolType.tape)) {
+      _current = null;
+      _lastInkMoveTime = null;
+      _lastInkMoveCanon = null;
+    }
+
+    if (next == ToolType.eraser) {
+      _beginPartialEraseSession();
+      if (widget.toolState.eraserMode == EraserMode.partial &&
+          _inkStartsOnPaper(rawPos)) {
+        _eraseAt(_toCanonical(_clampInkPos(rawPos)));
+      }
+    }
+  }
+
   void _onPointerMove(PointerMoveEvent e) {
     _syncSpenButton(e);
-    if (_isStylus(e)) _lastStylusSeen = DateTime.now();
+    if (_isStylus(e)) {
+      _lastStylusSeen = DateTime.now();
+    }
     final rawPos = _paperLocal(e);
+    if (e.pointer == _activePointer) {
+      _applyMidGestureToolSwitch(_effectiveTool(e), rawPos, e);
+      if (_isStylus(e)) {
+        _touchStylusProximity();
+        _updateStylusPreviewPos(rawPos);
+      }
+    }
     if (e.pointer != _activePointer) {
-      _updateHoverPos(rawPos);
       return;
     }
     final tool = _gestureEffectiveTool ?? widget.toolState.tool;
@@ -1855,14 +1949,19 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   Future<void> _onPointerUp(PointerEvent e) async {
     _untrackPaperFinger(e);
     _syncSpenButton(e);
+    if (_isStylus(e)) {
+      SpenButtonService.instance.releaseFromPointer(e.kind, buttons: e.buttons);
+    }
     if (e.pointer != _activePointer) {
-      _updateHoverPos(_paperLocal(e));
       return;
     }
     _activePointer = null;
-    if (!_isStylus(e)) {
+    if (_isStylus(e)) {
       _stylusActive = DateTime.now().difference(_lastStylusSeen) <
           const Duration(milliseconds: 300);
+      if (!_stylusActive) {
+        _clearBrushPreview();
+      }
     }
 
     final tool = _gestureEffectiveTool ?? widget.toolState.tool;
@@ -2014,7 +2113,9 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       }
     }
 
-    _updateHoverPos(_paperLocal(e));
+    if (_isStylus(e) && _stylusInProximity) {
+      _updateStylusPreviewPos(_paperLocal(e));
+    }
   }
 
   double _polylineLength(List<Offset> path) {

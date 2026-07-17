@@ -47,18 +47,24 @@ void main() {
       expect(SpenButtonService.instance.action, SpenBarrelAction.pen);
     });
 
-    test('overrideTool follows button state', () {
-      expect(SpenButtonService.instance.overrideTool, isNull);
+    test('updateFromPointer release via buttons==0 on non-Android', () {
       SpenButtonService.instance.updateFromPointer(
         PointerDeviceKind.stylus,
         0x20,
       );
-      expect(SpenButtonService.instance.overrideTool, ToolType.eraser);
+      expect(SpenButtonService.instance.buttonPressed, isTrue);
       SpenButtonService.instance.updateFromPointer(
         PointerDeviceKind.stylus,
         0,
       );
-      expect(SpenButtonService.instance.overrideTool, isNull);
+      expect(SpenButtonService.instance.buttonPressed, isFalse);
+    });
+
+    test('releaseFromPointer clears press state', () {
+      SpenButtonService.instance.setButtonPressedForTests(true);
+      expect(SpenButtonService.instance.buttonPressed, isTrue);
+      SpenButtonService.instance.releaseFromPointer(PointerDeviceKind.stylus);
+      expect(SpenButtonService.instance.buttonPressed, isFalse);
     });
 
     test('updateFromPointer ignores finger input', () {

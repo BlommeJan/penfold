@@ -567,7 +567,7 @@ class BrushPreviewPainter extends CustomPainter {
   final double radius;
   final Color color;
 
-  BrushPreviewPainter({
+  const BrushPreviewPainter({
     required this.center,
     required this.radius,
     this.color = const Color(0x992455C3),

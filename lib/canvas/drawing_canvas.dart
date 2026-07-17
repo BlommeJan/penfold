@@ -15,6 +15,7 @@ import '../services/hwr_convert.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
+import '../services/text_block_measure.dart';
 import 'gesture_ink_recognizer.dart';
 import 'ink_coalesce.dart';
 import 'page_coords.dart';
@@ -1286,11 +1287,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       id: _uuid.v4(),
       pageId: widget.page.id,
       text: text,
-      bounds: bounds,
+      inkBounds: bounds,
+      textSize: measured,
       fontSize: fontSize,
       color: widget.toolState.penColor.value,
       z: _controller.nextZ(),
-      measuredSize: measured,
     );
 
     final removedStrokes = selected.map((s) => s.copy()).toList();
@@ -1767,27 +1768,14 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   double _defaultTextFontSize() => _canonicalSize.width * 0.024;
 
-  Size _measureTextBlock(String text, double fontSize) {
-    final displayFont = PageCoords.canonicalToDisplayLength(
-        fontSize, widget.displaySize, _pageSize,
-        orientation: _orientation);
-    final tp = TextPainter(
-      text: TextSpan(
+  Size _measureTextBlock(String text, double fontSize) =>
+      measureTextBlockSize(
         text: text,
-        style: TextStyle(
-          fontSize: displayFont,
-          height: 1.25,
-          letterSpacing: 0.2,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: widget.displaySize.width * 0.85);
-    final pad = _toCanonicalLen(12);
-    return Size(
-      math.max(_toCanonicalLen(40), tp.size.width + pad),
-      math.max(_toCanonicalLen(24), tp.size.height + pad),
-    );
-  }
+        fontSize: fontSize,
+        pageSize: _pageSize,
+        displaySize: widget.displaySize,
+        orientation: _orientation,
+      );
 
   void _dismissTextEditor({bool commit = true}) {
     if (commit && _textEditCtrl != null) {

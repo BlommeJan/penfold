@@ -68,26 +68,24 @@ mlkit.Ink strokesToMlKitInk(List<Stroke> strokes, {int timeBaseMs = 0}) {
   return ink;
 }
 
-/// Build a [TextBlock] from OCR output at [bounds]; original ink is kept separately.
+/// Build a [TextBlock] from OCR output; position at ink top-left, size hugs glyphs.
 TextBlock buildHwrTextBlock({
   required String id,
   required String pageId,
   required String text,
-  required Rect bounds,
+  required Rect inkBounds,
+  required Size textSize,
   required double fontSize,
   required int color,
   required int z,
-  Size? measuredSize,
 }) {
-  final w = measuredSize?.width ?? bounds.width;
-  final h = measuredSize?.height ?? bounds.height;
   return TextBlock(
     id: id,
     pageId: pageId,
-    x: bounds.left,
-    y: bounds.top,
-    w: math.max(bounds.width, w),
-    h: math.max(bounds.height, h),
+    x: inkBounds.left,
+    y: inkBounds.top,
+    w: textSize.width,
+    h: textSize.height,
     text: text,
     fontSize: fontSize,
     color: color,

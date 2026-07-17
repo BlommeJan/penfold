@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
+import '../services/text_block_measure.dart';
 import 'page_coords.dart';
 
 /// Paints the page background: white paper + template pattern,
@@ -309,11 +310,9 @@ class InkPainter extends CustomPainter {
     final tp = TextPainter(
       text: TextSpan(
         text: tb.text,
-        style: TextStyle(
+        style: textBlockPaintStyle(
+          displayFontSize: fontSize,
           color: Color(tb.color),
-          fontSize: fontSize,
-          height: 1.25,
-          letterSpacing: 0.15,
         ),
       ),
       textDirection: TextDirection.ltr,

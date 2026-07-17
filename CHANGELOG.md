@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.75] — 2026
+
+### Fixed
+
+- **Text block bounds** — selection hitbox and resize handles hug rendered text (measured via TextPainter) instead of inheriting oversized ink/OCR selection bounds
+
 ## [0.2.74] — 2026
 
 ### Fixed

@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:penfold/canvas/page_coords.dart';
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/services/hwr_convert.dart';
 import 'package:penfold/services/ink_ocr_service.dart';
+import 'package:penfold/services/text_block_measure.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 Stroke _penStroke(
@@ -108,23 +110,47 @@ void main() {
   });
 
   group('buildHwrTextBlock', () {
-    test('places text at selection bounds', () {
-      const bounds = Rect.fromLTWH(100, 200, 180, 40);
+    test('uses tight text size at ink top-left, not ink hitbox', () {
+      const inkBounds = Rect.fromLTWH(100, 200, 480, 320);
+      const textSize = Size(72, 28);
       final block = buildHwrTextBlock(
         id: 'tb1',
         pageId: 'pg',
         text: 'Hello',
-        bounds: bounds,
+        inkBounds: inkBounds,
+        textSize: textSize,
         fontSize: 12,
         color: 0xFF000000,
         z: 3,
-        measuredSize: const Size(120, 30),
       );
       expect(block.x, 100);
       expect(block.y, 200);
-      expect(block.w, 180);
-      expect(block.h, 40);
+      expect(block.w, 72);
+      expect(block.h, 28);
+      expect(block.w, lessThan(inkBounds.width));
+      expect(block.h, lessThan(inkBounds.height));
       expect(block.text, 'Hello');
+    });
+  });
+
+  group('measureTextBlockSize', () {
+    test('returns tight bounds smaller than large ink selection', () {
+      const inkBounds = Rect.fromLTWH(50, 80, 500, 300);
+      const fontSize = 50.4;
+      final displaySize = PageCoords.pageDisplaySize(
+        const Size(800, 1200),
+        PageSize.a4,
+      );
+      final textSize = measureTextBlockSize(
+        text: 'hello',
+        fontSize: fontSize,
+        pageSize: PageSize.a4,
+        displaySize: displaySize,
+      );
+      expect(textSize.width, lessThan(inkBounds.width));
+      expect(textSize.height, lessThan(inkBounds.height));
+      expect(textSize.width, greaterThan(0));
+      expect(textSize.height, greaterThan(0));
     });
   });
 
@@ -291,7 +317,16 @@ void main() {
         id: 'tb-hwr',
         pageId: page.id,
         text: text!,
-        bounds: bounds,
+        inkBounds: bounds,
+        textSize: measureTextBlockSize(
+          text: text,
+          fontSize: 12,
+          pageSize: PageSize.a4,
+          displaySize: PageCoords.pageDisplaySize(
+            const Size(800, 1200),
+            PageSize.a4,
+          ),
+        ),
         fontSize: 12,
         color: 0xFF1A1A1A,
         z: 2,

@@ -96,6 +96,21 @@ Device re-verify on SM-X920 after install.
 **Fix (v0.2.76):** `keyboardStableViewportSize` adds `MediaQuery.viewInsets.bottom` back to layout constraints so page slot height and document bounds stay constant while typing. Scroll/page-index helpers use the same cached stable viewport. `DocumentViewport` clamps against `widget.viewportSize` (parent-provided stable size).
 
 **Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
+
+## v0.2.77 backlog (2026-07-18)
+
+### P0 — Text tool checkmark commit — **DONE v0.2.77**
+
+| Symptom | Notes |
+|---------|-------|
+| Type text, tap checkmark on text box | Opens new empty text block; typed content lost |
+| Type text, keyboard Done/Enter | Works correctly |
+
+**Root cause:** Canvas `Listener.onPointerDown` fired on checkmark tap before the button's `onPressed`, calling `_startTextEdit` → `_dismissTextEditor(commit: false)` which discarded the in-progress edit.
+
+**Fix (v0.2.77):** Ignore text-tool pointer-down while a text editor is open; move text overlay above the canvas listener so overlay taps are not routed as new placements.
+
+**Acceptance:** Type text, tap checkmark — content committed once; no blank replacement editor.
 ## Opportunistic backlog (not blocking roadmap)
 
 ### Landscape pinch-zoom patch — **SHIPPED v0.2.41**

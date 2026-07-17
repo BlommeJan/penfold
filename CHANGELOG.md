@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.77] — 2026
+
+### Fixed
+
+- **Text tool checkmark** — tapping the text box Done checkmark now commits typed text the same way as keyboard Done/Enter; canvas pointer handling no longer restarts editing and discards content
+
 ## [0.2.76] — 2026
 
 ### Fixed

@@ -1095,6 +1095,13 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   /// Test hook: stroke count on the loaded canvas.
   int get strokeCountForTests => _strokes.length;
 
+  /// Test hook: committed text blocks on the loaded canvas.
+  int get textBlockCountForTests => _textBlocks.length;
+
+  /// Test hook: text on the loaded canvas.
+  List<String> get textBlockTextsForTests =>
+      _textBlocks.map((t) => t.text).toList(growable: false);
+
   bool get hasStrokes => _strokes.isNotEmpty;
 
   Future<void> eraseAllStrokesOnPage() async {
@@ -1531,6 +1538,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _fillPath = [_clampInkPos(rawPos)];
         _bump();
       case ToolType.text:
+        // Text overlay sits above the canvas Listener; pointer-down on the
+        // checkmark still reaches here first and must not restart editing.
+        if (_textEditCtrl != null) {
+          _activePointer = null;
+          return;
+        }
         final existing = _hitTextBlock(rawPos);
         if (existing != null) {
           _startTextEdit(existing: existing);
@@ -2748,121 +2761,126 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    final canvas = Listener(
-      onPointerDown: _onPointerDown,
-      onPointerMove: _onPointerMove,
-      onPointerUp: _onPointerUp,
-      onPointerCancel: _onPointerUp,
-      onPointerHover: _onPointerHover,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: widget.displaySize.width,
-        height: widget.displaySize.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            RepaintBoundary(
-              child: CustomPaint(
-                painter: PagePainter(
-                  template: widget.page.template,
-                  pageSize: _pageSize,
-                  orientation: _orientation,
-                  pdfImage: widget.pdfImage,
-                ),
-              ),
-            ),
-            RepaintBoundary(
-              child: CustomPaint(
-                painter: InkPainter(
-                  strokes: _strokes,
-                  current: _current,
-                  selectedIds: _selectedIds,
-                  lassoPath: _lassoPath ?? _fillPath,
-                  selectionBounds: _selectionBounds,
-                  showTransformHandles: hasSelection &&
-                      (widget.toolState.tool == ToolType.selection ||
-                          widget.toolState.tool == ToolType.lasso),
-                  selectionRotation: _selectionRotation,
-                  marqueeRect: _marqueeRect,
-                  images: _images,
-                  decodedImages: _decodedImages,
-                  selectedImageId: _selectedImageId,
-                  fills: _fills,
-                  textBlocks: _textBlocks,
-                  pageSize: _pageSize,
-                  orientation: _orientation,
-                  displaySize: widget.displaySize,
-                  revision: _revision,
-                ),
-              ),
-            ),
-            if (_showBrushPreview && _hoverPos != null)
-              IgnorePointer(
-                child: CustomPaint(
-                  painter: BrushPreviewPainter(
-                    center: _hoverPos!,
-                    radius: _brushPreviewRadius,
-                    color: _brushPreviewColor,
+    final canvas = SizedBox(
+      width: widget.displaySize.width,
+      height: widget.displaySize.height,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Listener(
+            onPointerDown: _onPointerDown,
+            onPointerMove: _onPointerMove,
+            onPointerUp: _onPointerUp,
+            onPointerCancel: _onPointerUp,
+            onPointerHover: _onPointerHover,
+            behavior: HitTestBehavior.opaque,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: PagePainter(
+                      template: widget.page.template,
+                      pageSize: _pageSize,
+                      orientation: _orientation,
+                      pdfImage: widget.pdfImage,
+                    ),
                   ),
                 ),
-              ),
-            if (_textEditCtrl != null && _textEditPos != null)
-              Positioned(
-                left: _toDisplay(_textEditPos!).dx,
-                top: _toDisplay(_textEditPos!).dy,
-                width: PageCoords.canonicalToDisplayLength(
-                  _editingTextId != null
-                      ? (_textBlocks
-                              .where((t) => t.id == _editingTextId)
-                              .map((t) => t.w)
-                              .firstOrNull ??
-                          _canonicalSize.width * 0.4)
-                      : _canonicalSize.width * 0.4,
-                  widget.displaySize,
-                  _pageSize,
-                  orientation: _orientation,
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: InkPainter(
+                      strokes: _strokes,
+                      current: _current,
+                      selectedIds: _selectedIds,
+                      lassoPath: _lassoPath ?? _fillPath,
+                      selectionBounds: _selectionBounds,
+                      showTransformHandles: hasSelection &&
+                          (widget.toolState.tool == ToolType.selection ||
+                              widget.toolState.tool == ToolType.lasso),
+                      selectionRotation: _selectionRotation,
+                      marqueeRect: _marqueeRect,
+                      images: _images,
+                      decodedImages: _decodedImages,
+                      selectedImageId: _selectedImageId,
+                      fills: _fills,
+                      textBlocks: _textBlocks,
+                      pageSize: _pageSize,
+                      orientation: _orientation,
+                      displaySize: widget.displaySize,
+                      revision: _revision,
+                    ),
+                  ),
                 ),
-                child: Material(
-                  elevation: 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _textEditCtrl,
-                          autofocus: true,
-                          minLines: 1,
-                          maxLines: 6,
-                          style: TextStyle(
-                            fontSize: PageCoords.canonicalToDisplayLength(
-                              _defaultTextFontSize(),
-                              widget.displaySize,
-                              _pageSize,
-                              orientation: _orientation,
-                            ),
-                            height: 1.25,
+                if (_showBrushPreview && _hoverPos != null)
+                  IgnorePointer(
+                    child: CustomPaint(
+                      painter: BrushPreviewPainter(
+                        center: _hoverPos!,
+                        radius: _brushPreviewRadius,
+                        color: _brushPreviewColor,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (_textEditCtrl != null && _textEditPos != null)
+            Positioned(
+              left: _toDisplay(_textEditPos!).dx,
+              top: _toDisplay(_textEditPos!).dy,
+              width: PageCoords.canonicalToDisplayLength(
+                _editingTextId != null
+                    ? (_textBlocks
+                            .where((t) => t.id == _editingTextId)
+                            .map((t) => t.w)
+                            .firstOrNull ??
+                        _canonicalSize.width * 0.4)
+                    : _canonicalSize.width * 0.4,
+                widget.displaySize,
+                _pageSize,
+                orientation: _orientation,
+              ),
+              child: Material(
+                elevation: 2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _textEditCtrl,
+                        autofocus: true,
+                        minLines: 1,
+                        maxLines: 6,
+                        style: TextStyle(
+                          fontSize: PageCoords.canonicalToDisplayLength(
+                            _defaultTextFontSize(),
+                            widget.displaySize,
+                            _pageSize,
+                            orientation: _orientation,
                           ),
-                          textInputAction: TextInputAction.done,
-                          decoration: const InputDecoration(
-                            hintText: 'Type here…',
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.all(8),
-                            isDense: true,
-                          ),
-                          onSubmitted: (_) => _commitTextEdit(),
+                          height: 1.25,
                         ),
+                        textInputAction: TextInputAction.done,
+                        decoration: const InputDecoration(
+                          hintText: 'Type here…',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.all(8),
+                          isDense: true,
+                        ),
+                        onSubmitted: (_) => _commitTextEdit(),
                       ),
-                      IconButton(
-                        tooltip: 'Done',
-                        icon: const Icon(Icons.check_rounded),
-                        onPressed: _commitTextEdit,
-                      ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      tooltip: 'Done',
+                      icon: const Icon(Icons.check_rounded),
+                      onPressed: _commitTextEdit,
+                    ),
+                  ],
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
 

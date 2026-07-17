@@ -1,0 +1,11 @@
+---
+description: Git commits use repository author only
+alwaysApply: true
+---
+
+# Git commit attribution (Penfold)
+
+- Commits must use only the repository author identity: **BlommeJan** `<jan.blomme@student.howest.be>`.
+- Do not add co-author trailers or secondary attribution lines to commit messages.
+- Do not change global git config.
+

@@ -67,6 +67,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   bool _canUndo = false;
   bool _canRedo = false;
   bool _hasSelection = false;
+  bool _activePageHasStrokes = false;
   int _visiblePageIndex = 0;
   int _pinchLockCount = 0;
   int _paperFingerLockCount = 0;
@@ -106,6 +107,10 @@ class _NotebookScreenState extends State<NotebookScreen>
     if (_lastDeviceOrientation != null &&
         _lastDeviceOrientation != orientation) {
       _resetDocumentTransform();
+      for (final key in _pageKeys.values) {
+        key.currentState?.resetViewportTransform();
+      }
+      setState(() {});
     }
     _lastDeviceOrientation = orientation;
   }
@@ -460,8 +465,15 @@ class _NotebookScreenState extends State<NotebookScreen>
   }
 
   void _onActivePageStrokeCount(int count) {
+    if (_activePageHasStrokes != (count > 0)) {
+      setState(() => _activePageHasStrokes = count > 0);
+    }
     if (!PageComplexityService.shouldWarn(count)) return;
     _showComplexitySnackBar(count);
+  }
+
+  Future<void> _eraseAllOnActivePage() async {
+    await _activeCanvas?.eraseAllStrokesOnPage();
   }
 
   void _showComplexitySnackBar(int count) {
@@ -614,6 +626,7 @@ class _NotebookScreenState extends State<NotebookScreen>
       _canUndo = state.canUndo;
       _canRedo = state.canRedo;
       _hasSelection = state.hasSelection;
+      _activePageHasStrokes = state.hasStrokes;
     });
   }
 
@@ -1184,6 +1197,8 @@ class _NotebookScreenState extends State<NotebookScreen>
           onPrevBookmark: _jumpToPrevBookmark,
           onNextBookmark: _jumpToNextBookmark,
           onBack: _popToLibrary,
+          hasPageStrokes: _activePageHasStrokes,
+          onEraseAllOnPage: _eraseAllOnActivePage,
         ),
         body: _loading
             ? const Center(child: CircularProgressIndicator())

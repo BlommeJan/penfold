@@ -729,6 +729,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   DateTime _lastStylusSeen = DateTime.fromMillisecondsSinceEpoch(0);
   bool _stylusActive = false;
+  Offset? _hoverPos;
 
   TextEditingController? _textEditCtrl;
   Offset? _textEditPos;
@@ -807,6 +808,54 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   bool _inkStartsOnPaper(Offset paperPos) =>
       isOnPaperBounds(paperPos, widget.displaySize);
 
+  bool get _showBrushPreview {
+    if (_activePointer != null) return false;
+    return switch (widget.toolState.tool) {
+      ToolType.pen || ToolType.highlighter || ToolType.shape => true,
+      ToolType.eraser =>
+        widget.toolState.eraserMode == EraserMode.partial,
+      _ => false,
+    };
+  }
+
+  double get _brushPreviewRadius {
+    if (widget.toolState.tool == ToolType.eraser) {
+      return widget.toolState.eraserRadius;
+    }
+    return widget.toolState.activeWidth / 2;
+  }
+
+  Color get _brushPreviewColor {
+    if (widget.toolState.tool == ToolType.eraser) {
+      return const Color(0x99E879A6);
+    }
+    if (widget.toolState.tool == ToolType.highlighter) {
+      return widget.toolState.highlighterColor.withOpacity(0.45);
+    }
+    return widget.toolState.penColor.withOpacity(0.55);
+  }
+
+  void _updateHoverPos(Offset paperPos) {
+    if (!_showBrushPreview) {
+      if (_hoverPos != null) {
+        _hoverPos = null;
+        _bump();
+      }
+      return;
+    }
+    final clamped = _clampInkPos(paperPos);
+    if (!isOnPaperBounds(clamped, widget.displaySize)) {
+      if (_hoverPos != null) {
+        _hoverPos = null;
+        _bump();
+      }
+      return;
+    }
+    if (_hoverPos == clamped) return;
+    _hoverPos = clamped;
+    _bump();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -830,6 +879,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _load();
     } else if (old.toolState.stylusOnly != widget.toolState.stylusOnly) {
       resetPointerSession();
+    } else if (old.displaySize != widget.displaySize) {
+      _hoverPos = null;
     }
   }
 
@@ -898,6 +949,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     _controller = _CanvasController(
         widget.page, _strokes, _images, _fills, _textBlocks, _bump);
     _loaded = true;
+    _notifyStrokeCountChanged();
     _bump();
   }
 
@@ -974,6 +1026,19 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   /// Test hook: stroke count on the loaded canvas.
   int get strokeCountForTests => _strokes.length;
+
+  bool get hasStrokes => _strokes.isNotEmpty;
+
+  Future<void> eraseAllStrokesOnPage() async {
+    if (_strokes.isEmpty) return;
+    final doomed = _strokes.map((s) => s.copy()).toList();
+    await _controller.removeStrokes(List<Stroke>.from(_strokes));
+    _controller.commit(_RemoveStrokes(doomed));
+    _clearSelection();
+    widget.onHistoryChanged?.call(_controller.canUndo, _controller.canRedo);
+    _notifyStrokeCountChanged();
+    _bump();
+  }
 
   Future<void> deleteSelection() async {
     if (_selectedImageId != null) {
@@ -1276,6 +1341,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       _lastStylusSeen = DateTime.now();
       _stylusActive = true;
     }
+    _updateHoverPos(_paperLocal(e));
   }
 
   void _abortActiveGestureForPinch() {
@@ -1407,7 +1473,15 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _eraseSessionDeleteIds.clear();
         _eraseSessionInserts.clear();
         _coalescedErasePos = null;
-        _eraseAt(_toCanonical(rawPos));
+        if (widget.toolState.eraserMode == EraserMode.partial &&
+            !_inkStartsOnPaper(rawPos)) {
+          _activePointer = null;
+          return;
+        }
+        final erasePos = widget.toolState.eraserMode == EraserMode.partial
+            ? _clampInkPos(rawPos)
+            : rawPos;
+        _eraseAt(_toCanonical(erasePos));
       case ToolType.lasso:
         final pos = rawPos;
         final selImg = _selectedImage();
@@ -1655,9 +1729,12 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   void _onPointerMove(PointerMoveEvent e) {
     _syncSpenButton(e);
-    if (e.pointer != _activePointer) return;
     if (_isStylus(e)) _lastStylusSeen = DateTime.now();
     final rawPos = _paperLocal(e);
+    if (e.pointer != _activePointer) {
+      _updateHoverPos(rawPos);
+      return;
+    }
     final tool = _gestureEffectiveTool ?? widget.toolState.tool;
 
     if (_current != null) {
@@ -1690,7 +1767,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           _bump();
         }
       case ToolType.eraser:
-        _eraseAt(_toCanonical(rawPos));
+        final erasePos = widget.toolState.eraserMode == EraserMode.partial
+            ? _clampInkPos(rawPos)
+            : rawPos;
+        _eraseAt(_toCanonical(erasePos));
       case ToolType.lasso:
         final pos = rawPos;
         final selImg = _selectedImage();
@@ -1775,7 +1855,10 @@ class DrawingCanvasState extends State<DrawingCanvas> {
   Future<void> _onPointerUp(PointerEvent e) async {
     _untrackPaperFinger(e);
     _syncSpenButton(e);
-    if (e.pointer != _activePointer) return;
+    if (e.pointer != _activePointer) {
+      _updateHoverPos(_paperLocal(e));
+      return;
+    }
     _activePointer = null;
     if (!_isStylus(e)) {
       _stylusActive = DateTime.now().difference(_lastStylusSeen) <
@@ -1930,6 +2013,8 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _dragAccum = Offset.zero;
       }
     }
+
+    _updateHoverPos(_paperLocal(e));
   }
 
   double _polylineLength(List<Offset> path) {
@@ -2597,6 +2682,16 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                 ),
               ),
             ),
+            if (_showBrushPreview && _hoverPos != null)
+              IgnorePointer(
+                child: CustomPaint(
+                  painter: BrushPreviewPainter(
+                    center: _hoverPos!,
+                    radius: _brushPreviewRadius,
+                    color: _brushPreviewColor,
+                  ),
+                ),
+              ),
             if (_textEditCtrl != null && _textEditPos != null)
               Positioned(
                 left: _toDisplay(_textEditPos!).dx,

@@ -85,6 +85,8 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onPrevBookmark;
   final VoidCallback? onNextBookmark;
   final VoidCallback? onBack;
+  final bool hasPageStrokes;
+  final VoidCallback? onEraseAllOnPage;
 
   const EditorToolbar({
     super.key,
@@ -110,6 +112,8 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     this.onPrevBookmark,
     this.onNextBookmark,
     this.onBack,
+    this.hasPageStrokes = false,
+    this.onEraseAllOnPage,
   });
 
   @override
@@ -703,6 +707,43 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   : 'Erases whole strokes it touches',
               style: Theme.of(ctx).textTheme.bodySmall,
             ),
+            if (onEraseAllOnPage != null) ...[
+              const SizedBox(height: 20),
+              OutlinedButton.icon(
+                onPressed: hasPageStrokes
+                    ? () async {
+                        final confirmed = await showDialog<bool>(
+                          context: ctx,
+                          builder: (dialogCtx) => AlertDialog(
+                            title: const Text('Erase all on page?'),
+                            content: const Text(
+                              'This removes every stroke on the current page. '
+                              'You can undo this action.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogCtx, false),
+                                child: const Text('Cancel'),
+                              ),
+                              FilledButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogCtx, true),
+                                child: const Text('Erase all'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true && ctx.mounted) {
+                          Navigator.pop(ctx);
+                          onEraseAllOnPage!();
+                        }
+                      }
+                    : null,
+                icon: const Icon(Icons.delete_sweep_outlined),
+                label: const Text('Erase all on page'),
+              ),
+            ],
           ],
         ),
       ),

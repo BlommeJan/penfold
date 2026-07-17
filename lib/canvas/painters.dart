@@ -146,6 +146,11 @@ class InkPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Keep ink visually inside the paper even when stroke caps or legacy
+    // points sit slightly outside the clamped centerline.
+    canvas.save();
+    canvas.clipRect(Offset.zero & size);
+
     for (final fill in fills) {
       _drawFill(canvas, fill);
     }
@@ -183,6 +188,8 @@ class InkPainter extends CustomPainter {
     if (current != null && current!.tool == ToolType.tape) {
       _drawTapeStroke(canvas, current!);
     }
+
+    canvas.restore();
 
     if (selectedIds.isNotEmpty) {
       for (final s in strokes.where((s) => selectedIds.contains(s.id))) {
@@ -552,6 +559,38 @@ class InkPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(InkPainter old) => old._revision != _revision;
+}
+
+/// Circle outline at the stylus cursor showing brush or eraser radius.
+class BrushPreviewPainter extends CustomPainter {
+  final Offset center;
+  final double radius;
+  final Color color;
+
+  BrushPreviewPainter({
+    required this.center,
+    required this.radius,
+    this.color = const Color(0x992455C3),
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (radius <= 0) return;
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+  }
+
+  @override
+  bool shouldRepaint(BrushPreviewPainter old) =>
+      old.center != center ||
+      old.radius != radius ||
+      old.color != color;
 }
 
 /// Lightweight thumbnail painter for page overview grid.

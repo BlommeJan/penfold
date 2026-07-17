@@ -88,7 +88,12 @@ class DocumentViewportState extends State<DocumentViewport> {
     } else if (widget.zoomEnabled &&
         (oldWidget.viewportSize != widget.viewportSize ||
             oldWidget.contentBounds != widget.contentBounds)) {
-      _applyClampedTransform(_transform.value);
+      // At ~1×, refit to the new viewport (device rotation / layout change).
+      if (_currentScale <= kDocumentSnapScaleMax) {
+        resetTransform();
+      } else {
+        _applyClampedTransform(_transform.value);
+      }
     }
   }
 

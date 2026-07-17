@@ -2,6 +2,18 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.71] — 2026
+
+### Added
+
+- **Brush size preview** — pen, highlighter, and pixel eraser show a circle outline at the stylus cursor on paper (radius from [ToolState](lib/canvas/drawing_canvas.dart) widths / `eraserRadius`)
+- **Erase all on page** — eraser options sheet includes “Erase all on page” with a confirm dialog; clears every stroke on the current page (undoable)
+
+### Fixed
+
+- **Ink bounds** — strokes no longer continue off paper when dragging past the edge; partial eraser also clamps to the paper rectangle
+- **Device rotation layout** — portrait↔landscape resets document/page transforms at ~1× so ink stays on paper, scales to fit new bounds, and stays centered
+
 ## [0.2.70] — 2026
 
 ### Changed

@@ -1,3 +1,5 @@
+<p align="center"><sub><span style="color:red">This project was developed with assistance from AI tools.</span></sub></p>
+
 <p align="center">
   <img src="assets/icon/app_icon.png" alt="Penfold" width="96" height="96" />
 </p>

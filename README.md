@@ -1,5 +1,3 @@
-<p align="center"><sub><span style="color:red">This project was developed with assistance from AI tools.</span></sub></p>
-
 <p align="center">
   <img src="assets/icon/app_icon.png" alt="Penfold" width="96" height="96" />
 </p>
@@ -17,6 +15,8 @@
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
 </p>
+
+<p align="center"><sub><span style="color:red">This project was developed with assistance from AI tools.</span></sub></p>
 
 ---
 

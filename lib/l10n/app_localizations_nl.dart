@@ -147,11 +147,11 @@ class AppLocalizationsNl extends AppLocalizations {
   String get folderRename => 'Map hernoemen';
 
   @override
-  String get folderMoveToTrash => 'Naar prullenbak';
+  String get folderMoveToTrash => 'Naar de prullenbak';
 
   @override
   String folderMoveToTrashTitle(String name) {
-    return '\"$name\" naar prullenbak verplaatsen?';
+    return '\"$name\" naar de prullenbak verplaatsen?';
   }
 
   @override
@@ -186,17 +186,17 @@ class AppLocalizationsNl extends AppLocalizations {
   String get notebookEditTags => 'Labels bewerken';
 
   @override
-  String get notebookExportWorkbook => 'Werkboek exporteren';
+  String get notebookExportWorkbook => 'Notitieboek exporteren';
 
   @override
   String get notebookExportWorkbookSubtitle => 'Deel alle pagina\'s als PDF';
 
   @override
-  String get notebookMoveToTrash => 'Naar prullenbak';
+  String get notebookMoveToTrash => 'Naar de prullenbak';
 
   @override
   String notebookMoveToTrashTitle(String title) {
-    return '\"$title\" naar prullenbak verplaatsen?';
+    return '\"$title\" naar de prullenbak verplaatsen?';
   }
 
   @override
@@ -320,7 +320,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsAppearanceDarkModeSubtitle =>
-      'Kies licht, donker of volg je apparaat (standaard systeem)';
+      'Kies licht, donker of volg het systeem (standaard)';
 
   @override
   String get themeSystem => 'Systeem';
@@ -335,7 +335,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get settingsSectionPreferences => 'Voorkeuren';
 
   @override
-  String get settingsLanguageLabel => 'Apptaal';
+  String get settingsLanguageLabel => 'Taal van de app';
 
   @override
   String get languageEnglish => 'Engels';
@@ -399,7 +399,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Teken met je vinger op papier; uitgeschakeld tekent alleen de stylus (standaard uit)';
+      'Teken met je vinger op het papier; als dit uit staat, tekent alleen de stylus (standaard uit)';
 
   @override
   String get settingsGestureInkEditing => 'Gebaren-inktbewerking';
@@ -503,7 +503,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Lokaal handschriftnotitieboek — geen accounts, geen cloud.';
+      'Lokaal notitieboek voor handschrift — geen accounts, geen cloud.';
 
   @override
   String settingsVersion(String version) {
@@ -595,7 +595,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get toolbarAddPage => 'Pagina toevoegen';
 
   @override
-  String get toolbarStylusOnly => 'Alleen stylus (handpalmafwijzing)';
+  String get toolbarStylusOnly => 'Alleen stylus (handpalm-afwijzing)';
 
   @override
   String get toolbarFingerDrawing => 'Tekenen met vinger';
@@ -866,11 +866,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String trashFailedToLoad(String error) {
-    return 'Prullenbak kon niet worden geladen: $error';
+    return 'De prullenbak kon niet worden geladen: $error';
   }
 
   @override
-  String get trashEmpty => 'Prullenbak is leeg';
+  String get trashEmpty => 'De prullenbak is leeg';
 
   @override
   String get trashSectionFolders => 'Mappen';

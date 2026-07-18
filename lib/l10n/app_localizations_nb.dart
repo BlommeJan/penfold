@@ -42,7 +42,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get actionRecover => 'Gjenopprett';
 
   @override
-  String get actionRestore => 'Gjenopprett';
+  String get actionRestore => 'Tilbakestill';
 
   @override
   String get actionExport => 'Eksporter';
@@ -57,7 +57,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get actionExportFirst => 'Eksporter først';
 
   @override
-  String get actionEraseAll => 'Viske ut alt';
+  String get actionEraseAll => 'Vis ut alt';
 
   @override
   String get actionChangeSize => 'Endre størrelse';
@@ -96,7 +96,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get libraryBreadcrumb => 'Bibliotek';
 
   @override
-  String get librarySearchHint => 'Søk i notatbøker og skrevet tekst…';
+  String get librarySearchHint => 'Søk i notatbøker og inntastet tekst…';
 
   @override
   String get libraryNoMatches => 'Ingen treff';
@@ -186,7 +186,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get notebookEditTags => 'Rediger tagger';
 
   @override
-  String get notebookExportWorkbook => 'Eksporter arbeidsbok';
+  String get notebookExportWorkbook => 'Eksporter notatbok';
 
   @override
   String get notebookExportWorkbookSubtitle => 'Del alle sider som PDF';
@@ -201,7 +201,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Notatboken skjules fra biblioteket i 30 dager. Blekk og sider blir på enheten til papirkurven tømmes. Eksporter en sikkerhetskopi først hvis du vil ha en ekstra kopi.';
+      'Notatboken skjules fra biblioteket i 30 dager. Blekk og sider blir på denne enheten til papirkurven tømmes. Eksporter en sikkerhetskopi først hvis du vil ha en ekstra kopi.';
 
   @override
   String notebookTagsFor(String title) {
@@ -228,11 +228,11 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get notebookBackupExportedReady =>
-      'Sikkerhetskopi eksportert. Du kan flytte til papirkurv når du er klar.';
+      'Sikkerhetskopi eksportert. Du kan flytte den til papirkurv når du er klar.';
 
   @override
   String get importPdfSnack =>
-      'Importerer PDF… sidene rendres én gang, deretter er de tilgjengelig offline.';
+      'Importerer PDF… sidene gjengis én gang, deretter er de tilgjengelig offline.';
 
   @override
   String importFailed(String error) {
@@ -256,7 +256,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String restoreFailed(String error) {
-    return 'Gjenoppretting mislyktes: $error';
+    return 'Tilbakestilling mislyktes: $error';
   }
 
   @override
@@ -358,7 +358,8 @@ class AppLocalizationsNb extends AppLocalizations {
       'Dra for å endre rekkefølge på tegneverktøy. Angre og gjør om forblir fast til høyre.';
 
   @override
-  String get settingsResetToolbarOrder => 'Tilbakestill verktøylinje';
+  String get settingsResetToolbarOrder =>
+      'Tilbakestill rekkefølgen på verktøylinjen';
 
   @override
   String get settingsSectionNotebook => 'Notatbok';
@@ -385,7 +386,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Glatte blekkstreker med Chaikin-hjørnebeskjæring (standard: på)';
+      'Glatte blekkstreker med Chaikin-algoritmen (standard: på)';
 
   @override
   String get settingsStrokeSmoothingStrength => 'Glattingsstyrke';
@@ -400,14 +401,14 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Tegn med finger på papiret; når av, tegner kun stylus (standard: av)';
+      'Tegn med finger på papiret; når av, kan bare stylus tegne (standard: av)';
 
   @override
-  String get settingsGestureInkEditing => 'Gestredigering av blekk';
+  String get settingsGestureInkEditing => 'Blekkredigering med gest';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Skrap over OCR-indeksert blekk for å viske det ut (standard: på)';
+      'Stryk over OCR-indeksert blekk for å viske det ut (standard: på)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -424,7 +425,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Fagtermer for håndskrift-OCR. Nære treff korrigeres når blekk indekseres, og termer forsterker søk i notatbøker.';
+      'Fagtermer for håndskrift-OCR. Nære treff korrigeres når blekk indekseres, og termer forbedrer søk i notatbøker.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Ingen egendefinerte termer ennå.';
@@ -477,7 +478,7 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get settingsRestoreBackup => 'Gjenopprett sikkerhetskopi';
+  String get settingsRestoreBackup => 'Tilbakestill sikkerhetskopi';
 
   @override
   String get settingsRestoreBackupSubtitle =>
@@ -493,7 +494,7 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get settingsRestoreBackupTitle => 'Gjenopprette sikkerhetskopi?';
+  String get settingsRestoreBackupTitle => 'Tilbakestille sikkerhetskopi?';
 
   @override
   String get settingsRestoreBackupBody =>
@@ -504,7 +505,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Lokal-først håndskriftsnotatbok — ingen kontoer, ingen sky.';
+      'Notatbok for håndskrift — alt lagres lokalt, ingen kontoer, ingen sky.';
 
   @override
   String settingsVersion(String version) {
@@ -530,13 +531,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get toolHighlighter => 'Markeringspenn';
 
   @override
-  String get toolTape => 'Tape';
+  String get toolTape => 'Teip';
 
   @override
   String get toolEraser => 'Viskelær';
 
   @override
-  String get toolSelection => 'Utvalg';
+  String get toolSelection => 'Markering';
 
   @override
   String get toolLasso => 'Lasso';
@@ -617,7 +618,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get highlighterOptionsTitle => 'Markeringspenn';
 
   @override
-  String get brushLabel => 'Pensel';
+  String get brushLabel => 'Pennetype';
 
   @override
   String get colorLabel => 'Farge';
@@ -635,11 +636,11 @@ class AppLocalizationsNb extends AppLocalizations {
   String get brightnessLabel => 'Lysstyrke';
 
   @override
-  String get tapeOptionsTitle => 'Tape';
+  String get tapeOptionsTitle => 'Teip';
 
   @override
   String get tapeOptionsHint =>
-      'Tegn for å dekke notater; trykk på tape for å vise eller skjule igjen';
+      'Tegn for å dekke notater; trykk på teip for å vise eller skjule igjen';
 
   @override
   String get fillColorTitle => 'Fyllfarge';
@@ -662,20 +663,20 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get eraserModePartialHint =>
-      'Visker bare blekk under viskelær-sirkelen';
+      'Visker bare blekk under viskelærsirkelen';
 
   @override
   String get eraserModeWholeStrokeHint => 'Visker hele streker den berører';
 
   @override
-  String get eraseAllOnPageTitle => 'Vise ut alt på siden?';
+  String get eraseAllOnPageTitle => 'Vis ut alt på siden?';
 
   @override
   String get eraseAllOnPageBody =>
       'Dette fjerner alle streker på gjeldende side. Du kan angre denne handlingen.';
 
   @override
-  String get eraseAllOnPageButton => 'Vise ut alt på siden';
+  String get eraseAllOnPageButton => 'Vis ut alt på siden';
 
   @override
   String get pageSettingsTitle => 'Sideinnstillinger';
@@ -761,7 +762,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get exportPageAsPdf => 'Eksporter side som PDF';
 
   @override
-  String get exportPageAsPdfSubtitle => 'Vektorblekk, del via systemark';
+  String get exportPageAsPdfSubtitle => 'Vektorblekk, del via delingsmenyen';
 
   @override
   String get exportNotebookAsPdf => 'Eksporter notatbok som PDF';
@@ -785,7 +786,7 @@ class AppLocalizationsNb extends AppLocalizations {
       'MP3, M4A, WAV og andre lokale formater';
 
   @override
-  String get pageAudioAttachedToPage => 'Vedlagt denne siden';
+  String get pageAudioAttachedToPage => 'Vedlagt til denne siden';
 
   @override
   String get pageAudioReplace => 'Erstatt lydfil';
@@ -804,11 +805,11 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Overskrifter fra skrevet tekst og OCR-indeksert blekk';
+      'Overskrifter fra inntastet tekst og OCR-indeksert blekk';
 
   @override
   String get contentsEmpty =>
-      'Ingen overskrifter funnet ennå.\nLegg til store eller korte skrevne overskrifter, eller OCR-indekserte blekkoverskrifter.';
+      'Ingen overskrifter funnet ennå.\nLegg til store eller korte inntastede overskrifter, eller OCR-indekserte blekkoverskrifter.';
 
   @override
   String contentsPageNumber(int number) {
@@ -856,7 +857,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get ocrIndexing => 'OCR-indeksering…';
 
   @override
-  String get ocrHandwritingSearchable => 'Håndskrift søkbar';
+  String get ocrHandwritingSearchable => 'Håndskrift er søkbar';
 
   @override
   String get ocrPartial => 'OCR delvis';
@@ -921,7 +922,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String splitPageBody(int count) {
-    return 'Opprett en ny side med samme mal og flytt omtrent halvparten av $count streker dit.';
+    return 'Opprett en ny side med samme mal og flytt omtrent halvparten av de $count strekene dit.';
   }
 
   @override
@@ -976,11 +977,11 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get handwritingModelReady => 'Modell klar.';
+  String get handwritingModelReady => 'Modellen er klar.';
 
   @override
   String handwritingModelElapsed(String elapsed) {
-    return 'Forløpt: $elapsed';
+    return 'Medgått tid: $elapsed';
   }
 
   @override
@@ -1044,7 +1045,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get languageSwedish => 'Svensk';
 
   @override
-  String get languageNorwegian => 'Norsk';
+  String get languageNorwegian => 'Norsk bokmål';
 
   @override
   String get languageFinnish => 'Finsk';

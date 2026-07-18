@@ -11,7 +11,7 @@
   "actionDone": "Færdig",
   "actionSplit": "Opdel",
   "actionRecover": "Gendan",
-  "actionRestore": "Gendan",
+  "actionRestore": "Indlæs",
   "actionExport": "Eksporter",
   "actionRetry": "Prøv igen",
   "actionRetrying": "Prøver igen…",
@@ -29,7 +29,7 @@
   "libraryAll": "Alle",
   "libraryUncategorized": "Uden kategori",
   "libraryBreadcrumb": "Bibliotek",
-  "librarySearchHint": "Søg i notesbøger og indtastet tekst…",
+  "librarySearchHint": "Søg i notesbøger og skrevet tekst…",
   "libraryNoMatches": "Ingen resultater",
   "libraryFolderEmpty": "Denne mappe er tom",
   "libraryNoNotebooksWithTag": "Ingen notesbøger med dette tag",
@@ -52,8 +52,8 @@
   "folderNew": "Ny mappe",
   "folderNewSubfolder": "Ny undermappe",
   "folderRename": "Omdøb mappe",
-  "folderMoveToTrash": "Flyt til papirkurv",
-  "folderMoveToTrashTitle": "Flyt \"{name}\" til papirkurv?",
+  "folderMoveToTrash": "Flyt til papirkurven",
+  "folderMoveToTrashTitle": "Flyt \"{name}\" til papirkurven?",
   "@folderMoveToTrashTitle": {
     "placeholders": {
       "name": {
@@ -67,14 +67,14 @@
   "notebookTitleLabel": "Titel",
   "notebookSizeLabel": "Størrelse",
   "notebookPaperLabel": "Papir",
-  "notebookCoverLabel": "Cover",
+  "notebookCoverLabel": "Omslag",
   "notebookRename": "Omdøb notesbog",
   "notebookMoveToFolder": "Flyt til mappe",
   "notebookEditTags": "Rediger tags",
   "notebookExportWorkbook": "Eksporter notesbog",
   "notebookExportWorkbookSubtitle": "Del alle sider som PDF",
-  "notebookMoveToTrash": "Flyt til papirkurv",
-  "notebookMoveToTrashTitle": "Flyt \"{title}\" til papirkurv?",
+  "notebookMoveToTrash": "Flyt til papirkurven",
+  "notebookMoveToTrashTitle": "Flyt \"{title}\" til papirkurven?",
   "@notebookMoveToTrashTitle": {
     "placeholders": {
       "title": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Sikkerhedskopi eksporteret. Du kan flytte til papirkurv, når du er klar.",
+  "notebookBackupExportedReady": "Sikkerhedskopi eksporteret. Du kan flytte notesbogen til papirkurven, når du er klar.",
   "importPdfSnack": "Importerer PDF… sider gengives én gang og forbliver derefter offline.",
   "importFailed": "Import mislykkedes: {error}",
   "@importFailed": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "restoreFailed": "Gendannelse mislykkedes: {error}",
+  "restoreFailed": "Indlæsning mislykkedes: {error}",
   "@restoreFailed": {
     "placeholders": {
       "error": {
@@ -153,7 +153,7 @@
       }
     }
   },
-  "templateBlank": "Tom",
+  "templateBlank": "Blankt",
   "templateLined": "Linjeret",
   "templateGrid": "Gitter",
   "templateDotted": "Prikket",
@@ -171,7 +171,7 @@
   "settingsSectionAppearanceAndPreferences": "Udseende og præferencer",
   "settingsSectionAppearance": "Udseende",
   "settingsAppearanceDarkMode": "Mørk tilstand",
-  "settingsAppearanceDarkModeSubtitle": "Vælg lys, mørk eller følg enheden (standard: system)",
+  "settingsAppearanceDarkModeSubtitle": "Vælg lys, mørk eller match enheden (standard: system)",
   "themeSystem": "System",
   "themeLight": "Lys",
   "themeDark": "Mørk",
@@ -182,16 +182,16 @@
   "languageFrench": "Fransk",
   "languageDutch": "Hollandsk",
   "settingsSectionToolbar": "Værktøjslinje",
-  "settingsToolbarReorderHint": "Træk for at omarrangere tegneværktøjer. Fortryd og gendan forbliver fast til højre.",
+  "settingsToolbarReorderHint": "Træk for at omarrangere tegneværktøjer. Fortryd og omgør forbliver fast til højre.",
   "settingsResetToolbarOrder": "Nulstil rækkefølge på værktøjslinje",
   "settingsSectionNotebook": "Notesbog",
-  "settingsPageTurnMode": "Sidevendningstilstand",
-  "settingsPageTurnModeSubtitle": "Stryg én side ad gangen i stedet for løbende rulning (standard: fra)",
-  "settingsZoomNavigation": "Zoomnavigation",
-  "settingsZoomNavigationSubtitle": "Knib for at zoome og panorere på sider (standard: til)",
+  "settingsPageTurnMode": "Bladretilstand",
+  "settingsPageTurnModeSubtitle": "Stryg én side ad gangen i stedet for løbende rulning (standard: slået fra)",
+  "settingsZoomNavigation": "Zoom og panorering",
+  "settingsZoomNavigationSubtitle": "Knib for at zoome og panorere på sider (standard: slået til)",
   "settingsSectionDrawing": "Tegning",
   "settingsStrokeSmoothing": "Strøgudjævning",
-  "settingsStrokeSmoothingSubtitle": "Gør blækstrøg glattere med Chaikin-hjørneskæring (standard: til)",
+  "settingsStrokeSmoothingSubtitle": "Gør blækstrøg glattere med Chaikin-hjørneskæring (standard: slået til)",
   "settingsStrokeSmoothingStrength": "Udjævningsstyrke",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — lavere bevarer finere detaljer; anbefalet {recommended} %",
   "@settingsStrokeSmoothingStrengthSubtitle": {
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Tegning med finger",
-  "settingsFingerDrawingSubtitle": "Tegn med finger på papiret; når fra, tegner kun stylus (standard: fra)",
-  "settingsGestureInkEditing": "Gestusblækredigering",
-  "settingsGestureInkEditingSubtitle": "Skrab over OCR-indekseret blæk for at slette det (standard: til)",
+  "settingsFingerDrawingSubtitle": "Tegn med finger på papiret; når slået fra, tegner kun stylus (standard: slået fra)",
+  "settingsGestureInkEditing": "Blækredigering med gestus",
+  "settingsGestureInkEditingSubtitle": "Skrab over OCR-indekseret blæk for at slette det (standard: slået til)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Hold S Pen-sideknappen nede for midlertidigt at skifte værktøj. Slip for at gendanne dit forrige værktøj. Virker på Samsung-enheder med sideknap-understøttelse.",
   "settingsSpenBarrelAction": "Sideknap-handling",
   "settingsSectionOcrDictionary": "OCR-ordliste",
-  "settingsOcrDictionaryHint": "Fagtermer til håndskrift-OCR. Tætte matches rettes, når blæk indekseres, og termer booster notesbogssøgning.",
+  "settingsOcrDictionaryHint": "Fagtermer til håndskrift-OCR. Tætte matches rettes, når blæk indekseres, og termer forbedrer søgning i notesbøger.",
   "settingsNoCustomOcrTerms": "Ingen brugerdefinerede termer endnu.",
   "settingsRemoveOcrTerm": "Fjern term",
   "settingsAddOcrTerm": "Tilføj term",
@@ -220,10 +220,10 @@
   "settingsOcrTermLabel": "Term",
   "settingsOcrTermHint": "f.eks. egenværdi, mitokondrie",
   "settingsSectionYourData": "Dine data",
-  "settingsYourDataHint": "Penfold gemmer alt på denne enhed i én SQLite-database og aktivmapper — ingen cloudsynkronisering. Se docs/ARCHITECTURE.md for det fulde lokale fillayout.",
+  "settingsYourDataHint": "Penfold gemmer alt på denne enhed i én SQLite-database og ressourcemapper — ingen synkronisering i skyen. Se docs/ARCHITECTURE.md for det fulde lokale fillayout.",
   "settingsDatabase": "Database",
   "settingsSectionBackupRestore": "Sikkerhedskopi og gendannelse",
-  "settingsBackupRestoreHint": "Eksporter en zip med penfold.db og aktivmapper, eller gendan fra en tidligere sikkerhedskopi. Din nuværende database gemmes i backups/ før gendannelse.",
+  "settingsBackupRestoreHint": "Eksporter en zip med penfold.db og ressourcemapper, eller gendan fra en tidligere sikkerhedskopi. Din nuværende database gemmes i backups/ før gendannelse.",
   "settingsExportBackup": "Eksporter sikkerhedskopi",
   "settingsExportBackupSubtitle": "Zip penfold.db, PDF-kilder, billeder og ældre PDF-sider",
   "settingsRecoverFromBackup": "Gendan fra sikkerhedskopi",
@@ -238,7 +238,7 @@
       }
     }
   },
-  "settingsRestoreBackup": "Gendan sikkerhedskopi",
+  "settingsRestoreBackup": "Indlæs sikkerhedskopi",
   "settingsRestoreBackupSubtitle": "Erstat lokale data fra en Penfold-sikkerhedskopi-zip",
   "settingsRecoverAutoBackupTitle": "Gendan fra autosikkerhedskopi?",
   "settingsRecoverAutoBackupBody": "Dette erstatter dine nuværende notesbøger og filer med sikkerhedskopien fra {timestamp}. Din nuværende database gemmes i backups/ før gendannelse.",
@@ -249,10 +249,10 @@
       }
     }
   },
-  "settingsRestoreBackupTitle": "Gendan sikkerhedskopi?",
-  "settingsRestoreBackupBody": "Dette erstatter dine nuværende notesbøger og filer. Din nuværende database gemmes i backups/ før gendannelse.",
+  "settingsRestoreBackupTitle": "Indlæs sikkerhedskopi?",
+  "settingsRestoreBackupBody": "Dette erstatter dine nuværende notesbøger og filer. Din nuværende database gemmes i backups/ før indlæsning.",
   "settingsSectionAbout": "Om",
-  "settingsAboutSubtitle": "Lokal-først håndskriftsnotesbog — ingen konti, ingen cloud.",
+  "settingsAboutSubtitle": "Håndskriftsnotesbog med lokal lagring — ingen konti, ingen cloud.",
   "settingsVersion": "Version {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -287,7 +287,7 @@
   "toolbarDelete": "Slet",
   "toolbarPaste": "Indsæt",
   "toolbarUndo": "Fortryd",
-  "toolbarRedo": "Gentag",
+  "toolbarRedo": "Omgør",
   "toolbarAddPage": "Tilføj side",
   "toolbarStylusOnly": "Kun stylus (håndfladeafvisning)",
   "toolbarFingerDrawing": "Tegning med finger",
@@ -299,11 +299,11 @@
   "brushLabel": "Pensel",
   "colorLabel": "Farve",
   "customColorTitle": "Brugerdefineret farve",
-  "hueLabel": "Nuance",
+  "hueLabel": "Farvetone",
   "saturationLabel": "Mætning",
   "brightnessLabel": "Lysstyrke",
   "tapeOptionsTitle": "Tape",
-  "tapeOptionsHint": "Tegn for at dække noter; tryk på tape for at vise eller skjule igen",
+  "tapeOptionsHint": "Tegn for at dække noter; tryk på tapen for at vise eller skjule igen",
   "fillColorTitle": "Fyldfarve",
   "fillOptionsHint": "Tegn en lukket løkke, eller tryk inde i en form for at fylde",
   "eraserSizeTitle": "Viskelæderstørrelse",
@@ -311,7 +311,7 @@
   "eraserModePixel": "Pixel",
   "eraserModeStroke": "Strøg",
   "eraserModePartialHint": "Sletter kun blæk under viskelædercirklen",
-  "eraserModeWholeStrokeHint": "Sletter hele strøg, den rører",
+  "eraserModeWholeStrokeHint": "Sletter hele strøg, den berører",
   "eraseAllOnPageTitle": "Slet alt på siden?",
   "eraseAllOnPageBody": "Dette fjerner alle strøg på den nuværende side. Du kan fortryde denne handling.",
   "eraseAllOnPageButton": "Slet alt på siden",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Eksporter side som PNG",
   "exportPageAsPngSubtitle": "Del billede af denne side",
   "exportPageAsPdf": "Eksporter side som PDF",
-  "exportPageAsPdfSubtitle": "Vektorblæk, del via systemark",
+  "exportPageAsPdfSubtitle": "Vektorblæk — del via delingsmenu",
   "exportNotebookAsPdf": "Eksporter notesbog som PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 side} other{{count} sider}}",
   "@exportNotebookPageCount": {
@@ -360,8 +360,8 @@
   "pageAudioPlay": "Afspil",
   "pageAudioPause": "Pause",
   "contentsTitle": "Indhold",
-  "contentsSubtitle": "Overskrifter fra indtastet tekst og OCR-indekseret blæk",
-  "contentsEmpty": "Ingen overskrifter fundet endnu.\nTilføj stor eller kort indtastet tekst, eller OCR-indekserede blækoverskrifter.",
+  "contentsSubtitle": "Overskrifter fra skrevet tekst og OCR-indekseret blæk",
+  "contentsEmpty": "Ingen overskrifter fundet endnu.\nTilføj overskrifter som skrevet tekst i stor eller lille skrift, eller OCR-indekserede blækoverskrifter.",
   "contentsPageNumber": "Side {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -395,7 +395,7 @@
   "pageOverviewBookmarked": "Bogmærket",
   "ocrIndexing": "OCR-indekserer…",
   "ocrHandwritingSearchable": "Håndskrift kan søges",
-  "ocrPartial": "OCR delvis",
+  "ocrPartial": "Delvis OCR",
   "trashTitle": "Papirkurv",
   "trashFailedToLoad": "Kunne ikke indlæse papirkurv: {error}",
   "@trashFailedToLoad": {
@@ -408,7 +408,7 @@
   "trashEmpty": "Papirkurven er tom",
   "trashSectionFolders": "Mapper",
   "trashSectionNotebooks": "Notesbøger",
-  "trashDeletionDateUnavailable": "Sletningsdato utilgængelig",
+  "trashDeletionDateUnavailable": "Sletningsdato ikke tilgængelig",
   "trashExpiresToday": "Udløber i dag",
   "trashDaysRemaining": "{count, plural, =1{1 dag tilbage} other{{count} dage tilbage}}",
   "@trashDaysRemaining": {
@@ -468,7 +468,7 @@
   },
   "splitPageAction": "Opdel side",
   "changePageSizeTitle": "Skift sidestørrelse?",
-  "changePageSizeBody": "Denne side har blæk. Ændring af størrelsen omarrangerer siden; dit blæk forbliver på samme position på siden.",
+  "changePageSizeBody": "Denne side har blæk. Ændring af størrelsen ændrer sidens layout; dit blæk forbliver på samme position på siden.",
   "changeOrientationTitle": "Skift retning?",
   "changeOrientationBody": "Denne side har blæk. Ændring af retning skalerer og centrerer dit indhold, så det passer til de nye sidegrænser.",
   "convertedToText": "Konverteret til tekst: {preview}",
@@ -491,7 +491,7 @@
     }
   },
   "handwritingModelReady": "Model klar.",
-  "handwritingModelElapsed": "Forløbet: {elapsed}",
+  "handwritingModelElapsed": "Forløbet tid: {elapsed}",
   "@handwritingModelElapsed": {
     "placeholders": {
       "elapsed": {

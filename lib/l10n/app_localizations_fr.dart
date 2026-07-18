@@ -155,7 +155,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get folderMoveToTrashBody =>
-      'Le dossier et ses carnets seront conservés dans la corbeille pendant 30 jours.';
+      'Le dossier et ses carnets sont déplacés dans la corbeille pendant 30 jours.';
 
   @override
   String get notebookNew => 'Nouveau carnet';
@@ -201,7 +201,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Le carnet est masqué de la bibliothèque pendant 30 jours. L\'encre et les pages restent sur cet appareil jusqu\'à vidage de la corbeille. Exportez une sauvegarde au préalable si vous souhaitez une copie supplémentaire.';
+      'Le carnet est masqué de la bibliothèque pendant 30 jours. L\'encre et les pages restent sur cet appareil jusqu\'à ce que la corbeille soit vidée. Exportez une sauvegarde au préalable si vous souhaitez une copie supplémentaire.';
 
   @override
   String notebookTagsFor(String title) {
@@ -228,7 +228,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notebookBackupExportedReady =>
-      'Sauvegarde exportée. Vous pouvez le mettre à la corbeille quand vous le souhaitez.';
+      'Sauvegarde exportée. Vous pouvez déplacer le carnet vers la corbeille quand vous le souhaitez.';
 
   @override
   String get importPdfSnack =>
@@ -274,7 +274,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get templateGrid => 'Quadrillé';
 
   @override
-  String get templateDotted => 'Pointillé';
+  String get templateDotted => 'Points';
 
   @override
   String get templateCollegeRuled => 'Ligné universitaire';
@@ -369,14 +369,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsPageTurnModeSubtitle =>
-      'Balayer une page à la fois au lieu du défilement continu (désactivé par défaut)';
+      'Glisser une page à la fois au lieu du défilement continu (désactivé par défaut)';
 
   @override
   String get settingsZoomNavigation => 'Navigation par zoom';
 
   @override
   String get settingsZoomNavigationSubtitle =>
-      'Pincer pour zoomer et faire défiler les pages (activé par défaut)';
+      'Pincer pour zoomer et déplacer les pages (activé par défaut)';
 
   @override
   String get settingsSectionDrawing => 'Dessin';
@@ -408,7 +408,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Gratter l\'encre indexée par OCR pour l\'effacer (activé par défaut)';
+      'Griffoner sur l\'encre indexée par OCR pour l\'effacer (activé par défaut)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -468,7 +468,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsExportBackupSubtitle =>
-      'Compresser penfold.db, les sources PDF, images et pages PDF héritées';
+      'Créer une archive zip de penfold.db, des sources PDF, images et pages PDF héritées';
 
   @override
   String get settingsRecoverFromBackup => 'Récupérer depuis une sauvegarde';
@@ -483,7 +483,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsRestoreBackupSubtitle =>
-      'Remplacer les données locales par une archive Penfold';
+      'Remplacer les données locales par une archive zip Penfold';
 
   @override
   String get settingsRecoverAutoBackupTitle =>
@@ -598,7 +598,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get toolbarAddPage => 'Ajouter une page';
 
   @override
-  String get toolbarStylusOnly => 'Stylet uniquement (rejet de la paume)';
+  String get toolbarStylusOnly => 'Stylet uniquement (détection de la paume)';
 
   @override
   String get toolbarFingerDrawing => 'Dessin au doigt';
@@ -619,7 +619,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get highlighterOptionsTitle => 'Surligneur';
 
   @override
-  String get brushLabel => 'Style';
+  String get brushLabel => 'Style de trait';
 
   @override
   String get colorLabel => 'Couleur';
@@ -767,7 +767,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Encre vectorielle, partage via la feuille système';
+      'Encre vectorielle, partage via le menu de partage';
 
   @override
   String get exportNotebookAsPdf => 'Exporter le carnet en PDF';
@@ -800,7 +800,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pageAudioRemove => 'Supprimer l\'audio';
 
   @override
-  String get pageAudioPlay => 'Lecture';
+  String get pageAudioPlay => 'Lire';
 
   @override
   String get pageAudioPause => 'Pause';
@@ -826,7 +826,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String pageOverviewSelected(int count) {
-    return '$count sélectionnée(s)';
+    return 'Sélection : $count';
   }
 
   @override
@@ -856,7 +856,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pageOverviewDragToReorder => 'Faites glisser pour réorganiser';
 
   @override
-  String get pageOverviewBookmarked => 'Signet ajouté';
+  String get pageOverviewBookmarked => 'Avec signet';
 
   @override
   String get ocrIndexing => 'Indexation OCR…';

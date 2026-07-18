@@ -29,7 +29,7 @@
   "libraryAll": "전체",
   "libraryUncategorized": "미분류",
   "libraryBreadcrumb": "라이브러리",
-  "librarySearchHint": "노트 및 입력 텍스트 검색…",
+  "librarySearchHint": "노트 및 입력한 텍스트 검색…",
   "libraryNoMatches": "일치하는 항목이 없습니다",
   "libraryFolderEmpty": "이 폴더가 비어 있습니다",
   "libraryNoNotebooksWithTag": "이 태그가 지정된 노트가 없습니다",
@@ -61,7 +61,7 @@
       }
     }
   },
-  "folderMoveToTrashBody": "폴더와 포함된 노트가 30일 동안 휴지통에 보관됩니다.",
+  "folderMoveToTrashBody": "폴더와 포함된 노트는 30일 동안 휴지통에 보관됩니다.",
   "notebookNew": "새 노트",
   "notebookUntitled": "제목 없음",
   "notebookTitleLabel": "제목",
@@ -71,7 +71,7 @@
   "notebookRename": "노트 이름 변경",
   "notebookMoveToFolder": "폴더로 이동",
   "notebookEditTags": "태그 편집",
-  "notebookExportWorkbook": "워크북 내보내기",
+  "notebookExportWorkbook": "노트 내보내기",
   "notebookExportWorkbookSubtitle": "모든 페이지를 PDF로 공유",
   "notebookMoveToTrash": "휴지통으로 이동",
   "notebookMoveToTrashTitle": "\"{title}\"을(를) 휴지통으로 이동하시겠습니까?",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "노트가 30일 동안 라이브러리에서 숨겨집니다. 잉크와 페이지는 휴지통을 비우기 전까지 이 기기에 유지됩니다. 추가 사본이 필요하면 먼저 백업을 내보내세요.",
+  "notebookMoveToTrashBody": "노트가 30일 동안 라이브러리에서 숨겨집니다. 잉크와 페이지는 휴지통을 비울 때까지 이 기기에 유지됩니다. 추가 사본이 필요하면 먼저 백업을 내보냅니다.",
   "notebookTagsFor": "\"{title}\" 태그",
   "@notebookTagsFor": {
     "placeholders": {
@@ -91,10 +91,10 @@
       }
     }
   },
-  "notebookNoTagsYet": "태그가 없습니다. 아래에서 새 태그를 만드세요.",
+  "notebookNoTagsYet": "태그가 없습니다. 아래에서 새 태그를 추가할 수 있습니다.",
   "notebookNewTag": "새 태그",
   "notebookAddTag": "태그 추가",
-  "notebookNoPagesToExport": "내보낼 페이지가 없습니다",
+  "notebookNoPagesToExport": "이 노트에는 내보낼 페이지가 없습니다",
   "notebookExportedAsPdf": "\"{title}\"을(를) PDF로 내보냈습니다",
   "@notebookExportedAsPdf": {
     "placeholders": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "handwritingModelDownloadingBackground": "필기 모델(~{sizeMb} MB)을(를) 백그라운드에서 다운로드하는 중…",
+  "handwritingModelDownloadingBackground": "손글씨 모델(~{sizeMb} MB)을(를) 백그라운드에서 다운로드하는 중…",
   "@handwritingModelDownloadingBackground": {
     "placeholders": {
       "sizeMb": {
@@ -182,7 +182,7 @@
   "languageFrench": "프랑스어",
   "languageDutch": "네덜란드어",
   "settingsSectionToolbar": "도구 모음",
-  "settingsToolbarReorderHint": "드래그하여 그리기 도구 순서를 변경하세요. 실행 취소와 다시 실행은 오른쪽에 고정됩니다.",
+  "settingsToolbarReorderHint": "드래그하여 그리기 도구 순서를 변경합니다. 실행 취소와 다시 실행은 오른쪽에 고정됩니다.",
   "settingsResetToolbarOrder": "도구 모음 순서 초기화",
   "settingsSectionNotebook": "노트",
   "settingsPageTurnMode": "페이지 넘김 모드",
@@ -205,22 +205,22 @@
     }
   },
   "settingsFingerDrawing": "손가락 그리기",
-  "settingsFingerDrawingSubtitle": "손가락으로 종이에 그리기; 끄면 스타일러스만 그립니다(기본: 끔)",
+  "settingsFingerDrawingSubtitle": "손가락으로 종이에 그립니다. 끄면 스타일러스로만 그릴 수 있습니다(기본: 끔)",
   "settingsGestureInkEditing": "제스처 잉크 편집",
-  "settingsGestureInkEditingSubtitle": "OCR 색인된 잉크 위를 긁어 지우기(기본: 켬)",
+  "settingsGestureInkEditingSubtitle": "OCR로 색인된 잉크 위를 긁어 지웁니다(기본: 켬)",
   "settingsSectionSpen": "S Pen",
-  "settingsSpenHint": "S Pen 측면 버튼을 누르고 있으면 도구가 일시적으로 전환됩니다. 버튼을 놓으면 이전 도구로 돌아갑니다. 측면 버튼을 지원하는 Samsung 기기에서 사용할 수 있습니다.",
-  "settingsSpenBarrelAction": "측면 버튼 동작",
-  "settingsSectionOcrDictionary": "OCR 사전",
-  "settingsOcrDictionaryHint": "필기 OCR용 전문 용어입니다. 유사한 단어는 잉크 색인 시 교정되며, 용어는 노트 검색에도 반영됩니다.",
-  "settingsNoCustomOcrTerms": "사용자 정의 용어가 없습니다.",
+  "settingsSpenHint": "S Pen 버튼을 길게 누르면 도구가 일시적으로 전환됩니다. 버튼에서 손을 떼면 이전 도구로 돌아갑니다. S Pen 버튼을 지원하는 Samsung 기기에서 사용할 수 있습니다.",
+  "settingsSpenBarrelAction": "S Pen 버튼 동작",
+  "settingsSectionOcrDictionary": "OCR 용어 사전",
+  "settingsOcrDictionaryHint": "손글씨 OCR에 사용할 전문 용어입니다. 유사한 단어는 잉크 색인 시 교정되며, 용어는 노트 검색에도 반영됩니다.",
+  "settingsNoCustomOcrTerms": "사용자 지정 용어가 없습니다.",
   "settingsRemoveOcrTerm": "용어 제거",
   "settingsAddOcrTerm": "용어 추가",
   "settingsAddOcrTermTitle": "OCR 용어 추가",
   "settingsOcrTermLabel": "용어",
   "settingsOcrTermHint": "예: eigenvalue, mitochondria",
   "settingsSectionYourData": "내 데이터",
-  "settingsYourDataHint": "Penfold는 모든 데이터를 단일 SQLite 데이터베이스와 에셋 폴더에 이 기기에 저장합니다 — 클라우드 동기화 없음. 전체 온디바이스 파일 구조는 docs/ARCHITECTURE.md를 참조하세요.",
+  "settingsYourDataHint": "Penfold는 모든 데이터를 단일 SQLite 데이터베이스와 에셋 폴더에 이 기기에 저장합니다 — 클라우드 동기화 없음. 전체 온디바이스 파일 구조는 docs/ARCHITECTURE.md를 참조합니다.",
   "settingsDatabase": "데이터베이스",
   "settingsSectionBackupRestore": "백업 및 복원",
   "settingsBackupRestoreHint": "penfold.db와 에셋 폴더를 zip으로 내보내거나 이전 백업에서 복원합니다. 복원 전 현재 데이터베이스는 backups/에 저장됩니다.",
@@ -289,7 +289,7 @@
   "toolbarUndo": "실행 취소",
   "toolbarRedo": "다시 실행",
   "toolbarAddPage": "페이지 추가",
-  "toolbarStylusOnly": "스타일러스 전용(손바닥 인식 방지)",
+  "toolbarStylusOnly": "스타일러스 전용(손바닥 거부)",
   "toolbarFingerDrawing": "손가락 그리기",
   "toolbarPageOverview": "페이지 개요",
   "toolbarTableOfContents": "목차",
@@ -303,9 +303,9 @@
   "saturationLabel": "채도",
   "brightnessLabel": "밝기",
   "tapeOptionsTitle": "테이프",
-  "tapeOptionsHint": "그려서 메모를 가리고, 테이프를 탭하여 다시 표시하거나 숨기세요",
+  "tapeOptionsHint": "그려서 메모를 가리고, 테이프를 탭하여 다시 표시하거나 숨깁니다",
   "fillColorTitle": "채우기 색상",
-  "fillOptionsHint": "닫힌 루프를 그리거나 도형 안쪽을 탭하여 채우세요",
+  "fillOptionsHint": "닫힌 루프를 그리거나 도형 안쪽을 탭하여 채웁니다",
   "eraserSizeTitle": "지우개 크기",
   "eraserModeTitle": "지우개 모드",
   "eraserModePixel": "픽셀",
@@ -360,8 +360,8 @@
   "pageAudioPlay": "재생",
   "pageAudioPause": "일시 정지",
   "contentsTitle": "목차",
-  "contentsSubtitle": "입력 텍스트 및 OCR 색인 잉크의 제목",
-  "contentsEmpty": "제목을 찾을 수 없습니다.\n큰 또는 짧은 입력 텍스트, 또는 OCR 색인 잉크 제목을 추가하세요.",
+  "contentsSubtitle": "입력한 텍스트 및 OCR로 색인된 잉크의 제목",
+  "contentsEmpty": "제목을 찾을 수 없습니다.\n큰 또는 짧은 입력한 텍스트, 또는 OCR로 색인된 잉크 제목을 추가합니다.",
   "contentsPageNumber": "{number}페이지",
   "@contentsPageNumber": {
     "placeholders": {
@@ -381,7 +381,7 @@
   },
   "pageOverviewDeleteSelected": "선택 항목 삭제",
   "pageOverviewSelectPages": "페이지 선택",
-  "pageOverviewKeepOnePage": "페이지를 하나 이상 유지하세요",
+  "pageOverviewKeepOnePage": "페이지를 하나 이상 유지해야 합니다",
   "pageOverviewDeleteTitle": "{count, plural, =1{1페이지} other{{count}페이지}}를 삭제하시겠습니까?",
   "@pageOverviewDeleteTitle": {
     "placeholders": {
@@ -393,9 +393,9 @@
   "pageOverviewDeleteBody": "이 작업은 실행 취소할 수 없습니다.",
   "pageOverviewDragToReorder": "드래그하여 순서 변경",
   "pageOverviewBookmarked": "책갈피됨",
-  "ocrIndexing": "OCR 색인 중…",
-  "ocrHandwritingSearchable": "필기 검색 가능",
-  "ocrPartial": "OCR 부분 완료",
+  "ocrIndexing": "OCR 색인 생성 중…",
+  "ocrHandwritingSearchable": "손글씨 검색 가능",
+  "ocrPartial": "OCR 일부 완료",
   "trashTitle": "휴지통",
   "trashFailedToLoad": "휴지통을 불러올 수 없습니다: {error}",
   "@trashFailedToLoad": {
@@ -408,7 +408,7 @@
   "trashEmpty": "휴지통이 비어 있습니다",
   "trashSectionFolders": "폴더",
   "trashSectionNotebooks": "노트",
-  "trashDeletionDateUnavailable": "삭제 날짜를 확인할 수 없음",
+  "trashDeletionDateUnavailable": "삭제 날짜를 확인할 수 없습니다",
   "trashExpiresToday": "오늘 만료",
   "trashDaysRemaining": "{count, plural, =1{1일 남음} other{{count}일 남음}}",
   "@trashDaysRemaining": {
@@ -479,10 +479,10 @@
       }
     }
   },
-  "couldNotRecognizeHandwriting": "필기를 인식할 수 없습니다",
-  "handwritingModelTitle": "필기 모델",
-  "handwritingModelDownloadFailed": "다운로드에 실패했습니다. 네트워크를 확인하고 다시 시도하세요.",
-  "handwritingModelDownloading": "영어 필기 모델(~{sizeMb} MB) 다운로드 중…",
+  "couldNotRecognizeHandwriting": "손글씨를 인식할 수 없습니다",
+  "handwritingModelTitle": "손글씨 모델",
+  "handwritingModelDownloadFailed": "다운로드에 실패했습니다. 네트워크를 확인한 후 다시 시도할 수 있습니다.",
+  "handwritingModelDownloading": "영어 손글씨 모델(~{sizeMb} MB) 다운로드 중…",
   "@handwritingModelDownloading": {
     "placeholders": {
       "sizeMb": {
@@ -522,7 +522,7 @@
       }
     }
   },
-  "pageComplexityWarning": "이 페이지에 획이 {count}개 있어 느려질 수 있습니다. 성능 향상을 위해 분할을 고려하세요.",
+  "pageComplexityWarning": "이 페이지에 획이 {count}개 있어 느려질 수 있습니다. 성능 향상을 위해 분할을 권장합니다.",
   "@pageComplexityWarning": {
     "placeholders": {
       "count": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "pageComplexityExportBlocked": "내보내기 차단: 페이지에 획이 {count}개 있습니다(한도 {limit}). 먼저 무거운 페이지를 분할하세요.",
+  "pageComplexityExportBlocked": "내보내기 차단: 페이지에 획이 {count}개 있습니다(한도 {limit}). 먼저 무거운 페이지를 분할해야 합니다.",
   "@pageComplexityExportBlocked": {
     "placeholders": {
       "count": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "restoreComplete": "복원이 완료되었습니다. 복원된 데이터를 불러오려면 앱을 다시 시작하세요.",
+  "restoreComplete": "복원이 완료되었습니다. 복원된 데이터를 불러오려면 앱을 다시 시작해야 합니다.",
   "textToolHint": "여기에 입력…",
   "textToolDone": "완료",
   "languageKorean": "한국어",

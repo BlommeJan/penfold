@@ -29,7 +29,7 @@
   "libraryAll": "Todos",
   "libraryUncategorized": "Sin categoría",
   "libraryBreadcrumb": "Biblioteca",
-  "librarySearchHint": "Buscar cuadernos y texto escrito…",
+  "librarySearchHint": "Buscar cuadernos y texto tecleado…",
   "libraryNoMatches": "Sin resultados",
   "libraryFolderEmpty": "Esta carpeta está vacía",
   "libraryNoNotebooksWithTag": "No hay cuadernos con esta etiqueta",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "El cuaderno se ocultará de la biblioteca durante 30 días. La tinta y las páginas permanecen en este dispositivo hasta vaciar la papelera. Exporta una copia de seguridad primero si quieres una copia extra.",
+  "notebookMoveToTrashBody": "El cuaderno se ocultará de la biblioteca durante 30 días. La tinta y las páginas permanecen en este dispositivo hasta que vacíes la papelera. Exporta primero una copia de seguridad si quieres una copia extra.",
   "notebookTagsFor": "Etiquetas de «{title}»",
   "@notebookTagsFor": {
     "placeholders": {
@@ -95,7 +95,7 @@
   "notebookNewTag": "Nueva etiqueta",
   "notebookAddTag": "Añadir etiqueta",
   "notebookNoPagesToExport": "Este cuaderno no tiene páginas para exportar",
-  "notebookExportedAsPdf": "«{title}» exportado como PDF",
+  "notebookExportedAsPdf": "«{title}» exportado en PDF",
   "@notebookExportedAsPdf": {
     "placeholders": {
       "title": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Copia de seguridad exportada. Puedes moverlo a la papelera cuando quieras.",
+  "notebookBackupExportedReady": "Copia de seguridad exportada. Puedes mover el cuaderno a la papelera cuando quieras.",
   "importPdfSnack": "Importando PDF… las páginas se renderizan una vez y luego quedan sin conexión.",
   "importFailed": "Error al importar: {error}",
   "@importFailed": {
@@ -205,7 +205,7 @@
     }
   },
   "settingsFingerDrawing": "Dibujo con el dedo",
-  "settingsFingerDrawingSubtitle": "Dibujar con el dedo en el papel; si está desactivado, solo el lápiz dibuja (desactivado por defecto)",
+  "settingsFingerDrawingSubtitle": "Dibujar con el dedo en el papel; si está desactivado, solo el lápiz óptico dibuja (desactivado por defecto)",
   "settingsGestureInkEditing": "Edición de tinta por gestos",
   "settingsGestureInkEditingSubtitle": "Pasa sobre la tinta indexada por OCR para borrarla (activado por defecto)",
   "settingsSectionSpen": "S Pen",
@@ -225,7 +225,7 @@
   "settingsSectionBackupRestore": "Copia de seguridad y restauración",
   "settingsBackupRestoreHint": "Exporta un zip de penfold.db y las carpetas de recursos, o restaura desde una copia anterior. Tu base de datos actual se guarda en backups/ antes de restaurar.",
   "settingsExportBackup": "Exportar copia de seguridad",
-  "settingsExportBackupSubtitle": "Comprime penfold.db, fuentes PDF, imágenes y páginas PDF heredadas",
+  "settingsExportBackupSubtitle": "Crea un archivo zip con penfold.db, fuentes PDF, imágenes y páginas PDF heredadas",
   "settingsRecoverFromBackup": "Recuperar desde copia de seguridad",
   "settingsLatestAutoBackup": "Última copia automática: {timestamp} ({size})",
   "@settingsLatestAutoBackup": {
@@ -252,7 +252,7 @@
   "settingsRestoreBackupTitle": "¿Restaurar copia de seguridad?",
   "settingsRestoreBackupBody": "Esto reemplazará tus cuadernos y archivos actuales. Tu base de datos actual se guardará en backups/ antes de restaurar.",
   "settingsSectionAbout": "Acerca de",
-  "settingsAboutSubtitle": "Cuaderno de escritura a mano local — sin cuentas, sin nube.",
+  "settingsAboutSubtitle": "App de notas manuscritas con almacenamiento local — sin cuentas, sin nube.",
   "settingsVersion": "Versión {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -289,7 +289,7 @@
   "toolbarUndo": "Deshacer",
   "toolbarRedo": "Rehacer",
   "toolbarAddPage": "Añadir página",
-  "toolbarStylusOnly": "Solo lápiz (rechazo de palma)",
+  "toolbarStylusOnly": "Solo stylus (rechazo de palma)",
   "toolbarFingerDrawing": "Dibujo con el dedo",
   "toolbarPageOverview": "Vista de páginas",
   "toolbarTableOfContents": "Índice",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Exportar página como PNG",
   "exportPageAsPngSubtitle": "Compartir imagen de esta página",
   "exportPageAsPdf": "Exportar página como PDF",
-  "exportPageAsPdfSubtitle": "Tinta vectorial, compartir mediante el panel del sistema",
+  "exportPageAsPdfSubtitle": "Tinta vectorial; compartir mediante el menú de compartir del sistema",
   "exportNotebookAsPdf": "Exportar cuaderno como PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 página} other{{count} páginas}}",
   "@exportNotebookPageCount": {
@@ -360,8 +360,8 @@
   "pageAudioPlay": "Reproducir",
   "pageAudioPause": "Pausar",
   "contentsTitle": "Índice",
-  "contentsSubtitle": "Encabezados del texto escrito y la tinta indexada por OCR",
-  "contentsEmpty": "Aún no se encontraron encabezados.\nAñade texto escrito grande o breve, o encabezados de tinta indexados por OCR.",
+  "contentsSubtitle": "Encabezados del texto tecleado y la tinta indexada por OCR",
+  "contentsEmpty": "Aún no se encontraron encabezados.\nAñade texto tecleado grande o breve, o encabezados de tinta indexados por OCR.",
   "contentsPageNumber": "Página {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -409,8 +409,8 @@
   "trashSectionFolders": "Carpetas",
   "trashSectionNotebooks": "Cuadernos",
   "trashDeletionDateUnavailable": "Fecha de eliminación no disponible",
-  "trashExpiresToday": "Caduca hoy",
-  "trashDaysRemaining": "{count, plural, =1{1 día restante} other{{count} días restantes}}",
+  "trashExpiresToday": "Se elimina hoy",
+  "trashDaysRemaining": "{count, plural, =1{Queda 1 día} other{Quedan {count} días}}",
   "@trashDaysRemaining": {
     "placeholders": {
       "count": {
@@ -508,8 +508,8 @@
     }
   },
   "pageExportedAsPng": "Página exportada como PNG",
-  "pageExportedAsPdf": "Página exportada como PDF",
-  "notebookExportedAsPdfSnack": "Cuaderno exportado como PDF",
+  "pageExportedAsPdf": "Página exportada en PDF",
+  "notebookExportedAsPdfSnack": "Cuaderno exportado en PDF",
   "exportPreparing": "Preparando exportación…",
   "exportProgress": "Exportando página {current} de {total}…",
   "@exportProgress": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "pageComplexityExportBlocked": "Exportación bloqueada: una página tiene {count} trazos (límite {limit}). Divide primero las páginas pesadas.",
+  "pageComplexityExportBlocked": "No se puede exportar: una página tiene {count} trazos (límite {limit}). Divide primero las páginas pesadas.",
   "@pageComplexityExportBlocked": {
     "placeholders": {
       "count": {

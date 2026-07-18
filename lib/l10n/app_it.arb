@@ -25,7 +25,7 @@
   "libraryTrash": "Cestino",
   "librarySettings": "Impostazioni",
   "libraryFolders": "Cartelle",
-  "libraryNoFoldersYet": "Nessuna cartella",
+  "libraryNoFoldersYet": "Nessuna cartella ancora",
   "libraryAll": "Tutti",
   "libraryUncategorized": "Senza categoria",
   "libraryBreadcrumb": "Libreria",
@@ -34,7 +34,7 @@
   "libraryFolderEmpty": "Questa cartella è vuota",
   "libraryNoNotebooksWithTag": "Nessun quaderno con questo tag",
   "libraryNoUncategorizedNotebooks": "Nessun quaderno senza categoria",
-  "libraryNoNotebooksYet": "Nessun quaderno",
+  "libraryNoNotebooksYet": "Nessun quaderno ancora",
   "libraryCouldNotLoad": "Impossibile caricare la libreria: {error}",
   "@libraryCouldNotLoad": {
     "placeholders": {
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Il quaderno viene nascosto dalla libreria per 30 giorni. Inchiostro e pagine restano su questo dispositivo finché il cestino non viene svuotato. Esporta un backup se vuoi una copia aggiuntiva.",
+  "notebookMoveToTrashBody": "Il quaderno viene nascosto dalla libreria per 30 giorni. Inchiostro e pagine restano su questo dispositivo finché il cestino non viene svuotato. Esporta prima un backup se vuoi una copia aggiuntiva.",
   "notebookTagsFor": "Tag per \"{title}\"",
   "@notebookTagsFor": {
     "placeholders": {
@@ -103,8 +103,8 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Backup esportato. Puoi spostare il quaderno nel cestino quando vuoi.",
-  "importPdfSnack": "Importazione PDF… le pagine vengono renderizzate una volta, poi restano offline.",
+  "notebookBackupExportedReady": "Backup esportato. Puoi spostarlo nel cestino quando sei pronto.",
+  "importPdfSnack": "Importazione PDF… le pagine vengono generate una volta, poi restano offline.",
   "importFailed": "Importazione non riuscita: {error}",
   "@importFailed": {
     "placeholders": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "handwritingModelDownloadingBackground": "Download del modello di scrittura (~{sizeMb} MB) in background…",
+  "handwritingModelDownloadingBackground": "Download del modello di scrittura (~{sizeMb} MB) in secondo piano…",
   "@handwritingModelDownloadingBackground": {
     "placeholders": {
       "sizeMb": {
@@ -171,7 +171,7 @@
   "settingsSectionAppearanceAndPreferences": "Aspetto e preferenze",
   "settingsSectionAppearance": "Aspetto",
   "settingsAppearanceDarkMode": "Modalità scura",
-  "settingsAppearanceDarkModeSubtitle": "Scegli chiaro, scuro o segui il dispositivo (impostazione predefinita di sistema)",
+  "settingsAppearanceDarkModeSubtitle": "Scegli chiaro, scuro o segui il dispositivo (predefinito: sistema)",
   "themeSystem": "Sistema",
   "themeLight": "Chiaro",
   "themeDark": "Scuro",
@@ -186,13 +186,13 @@
   "settingsResetToolbarOrder": "Ripristina ordine barra strumenti",
   "settingsSectionNotebook": "Quaderno",
   "settingsPageTurnMode": "Modalità cambio pagina",
-  "settingsPageTurnModeSubtitle": "Scorri una pagina alla volta invece dello scorrimento continuo (predefinito disattivato)",
+  "settingsPageTurnModeSubtitle": "Scorri una pagina alla volta invece dello scorrimento continuo (disattivato di default)",
   "settingsZoomNavigation": "Navigazione con zoom",
-  "settingsZoomNavigationSubtitle": "Pizzica per ingrandire e spostarti sulle pagine (predefinito attivato)",
+  "settingsZoomNavigationSubtitle": "Pizzica per ingrandire e spostarti sulle pagine (attivato di default)",
   "settingsSectionDrawing": "Disegno",
-  "settingsStrokeSmoothing": "Levigatura tratti",
-  "settingsStrokeSmoothingSubtitle": "Leviga i tratti d'inchiostro con l'algoritmo Chaikin (predefinito attivato)",
-  "settingsStrokeSmoothingStrength": "Intensità levigatura",
+  "settingsStrokeSmoothing": "Levigatura dei tratti",
+  "settingsStrokeSmoothingSubtitle": "Leviga i tratti d'inchiostro con l'algoritmo di Chaikin (attivato di default)",
+  "settingsStrokeSmoothingStrength": "Intensità di levigatura",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — valori più bassi mantengono più dettaglio; consigliato {recommended}%",
   "@settingsStrokeSmoothingStrengthSubtitle": {
     "placeholders": {
@@ -205,9 +205,9 @@
     }
   },
   "settingsFingerDrawing": "Disegno con dito",
-  "settingsFingerDrawingSubtitle": "Disegna con il dito sulla pagina; se disattivato, solo lo stilo disegna (predefinito disattivato)",
+  "settingsFingerDrawingSubtitle": "Disegna con il dito sul foglio; se disattivato, solo lo stilo disegna (disattivato di default)",
   "settingsGestureInkEditing": "Modifica inchiostro con gesti",
-  "settingsGestureInkEditingSubtitle": "Gratta sull'inchiostro indicizzato con OCR per cancellarlo (predefinito attivato)",
+  "settingsGestureInkEditingSubtitle": "Passa sopra l'inchiostro indicizzato con OCR per cancellarlo (attivato di default)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Tieni premuto il pulsante laterale della S Pen per cambiare temporaneamente strumento. Rilascia per ripristinare lo strumento precedente. Funziona sui dispositivi Samsung con supporto del pulsante laterale.",
   "settingsSpenBarrelAction": "Azione pulsante laterale",
@@ -225,7 +225,7 @@
   "settingsSectionBackupRestore": "Backup e ripristino",
   "settingsBackupRestoreHint": "Esporta uno zip di penfold.db e delle cartelle di risorse, oppure ripristina da un backup precedente. Il database attuale viene salvato in backups/ prima del ripristino.",
   "settingsExportBackup": "Esporta backup",
-  "settingsExportBackupSubtitle": "Comprimi penfold.db, PDF sorgente, immagini e pagine PDF legacy",
+  "settingsExportBackupSubtitle": "Crea uno zip con penfold.db, PDF sorgente, immagini e pagine PDF legacy",
   "settingsRecoverFromBackup": "Recupera da backup",
   "settingsLatestAutoBackup": "Ultimo backup automatico: {timestamp} ({size})",
   "@settingsLatestAutoBackup": {
@@ -252,7 +252,7 @@
   "settingsRestoreBackupTitle": "Ripristinare il backup?",
   "settingsRestoreBackupBody": "Questo sostituisce quaderni e file attuali. Il database attuale verrà salvato in backups/ prima del ripristino.",
   "settingsSectionAbout": "Informazioni",
-  "settingsAboutSubtitle": "Quaderno per scrittura a mano locale — nessun account, nessun cloud.",
+  "settingsAboutSubtitle": "Quaderno digitale per scrittura a mano, tutto in locale — senza account né cloud.",
   "settingsVersion": "Versione {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -262,15 +262,15 @@
     }
   },
   "spenActionEraser": "Gomma",
-  "spenActionLasso": "Lazo",
+  "spenActionLasso": "Lasso",
   "spenActionPen": "Penna",
   "spenActionNone": "Nessuna",
   "toolPen": "Penna",
   "toolHighlighter": "Evidenziatore",
-  "toolTape": "Nastro",
+  "toolTape": "Nastro coprente",
   "toolEraser": "Gomma",
   "toolSelection": "Selezione",
-  "toolLasso": "Lazo",
+  "toolLasso": "Lasso",
   "toolShape": "Forma",
   "toolFill": "Riempimento",
   "toolText": "Testo",
@@ -289,21 +289,21 @@
   "toolbarUndo": "Annulla",
   "toolbarRedo": "Ripeti",
   "toolbarAddPage": "Aggiungi pagina",
-  "toolbarStylusOnly": "Solo stilo (rifiuto palmo)",
+  "toolbarStylusOnly": "Solo stilo (rifiuto del palmo)",
   "toolbarFingerDrawing": "Disegno con dito",
   "toolbarPageOverview": "Panoramica pagine",
   "toolbarTableOfContents": "Sommario",
   "toolbarPageMenu": "Menu pagina",
   "penOptionsTitle": "Penna",
   "highlighterOptionsTitle": "Evidenziatore",
-  "brushLabel": "Pennello",
+  "brushLabel": "Stile",
   "colorLabel": "Colore",
   "customColorTitle": "Colore personalizzato",
   "hueLabel": "Tonalità",
   "saturationLabel": "Saturazione",
   "brightnessLabel": "Luminosità",
-  "tapeOptionsTitle": "Nastro",
-  "tapeOptionsHint": "Disegna per coprire le note; tocca il nastro per mostrare o nascondere di nuovo",
+  "tapeOptionsTitle": "Nastro coprente",
+  "tapeOptionsHint": "Disegna per coprire le note; tocca il nastro coprente per mostrarle o nasconderle di nuovo",
   "fillColorTitle": "Colore di riempimento",
   "fillOptionsHint": "Disegna un contorno chiuso oppure tocca l'interno di una forma per riempirla",
   "eraserSizeTitle": "Dimensione gomma",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Esporta pagina come PNG",
   "exportPageAsPngSubtitle": "Condividi l'immagine di questa pagina",
   "exportPageAsPdf": "Esporta pagina come PDF",
-  "exportPageAsPdfSubtitle": "Inchiostro vettoriale, condividi con il menu di condivisione",
+  "exportPageAsPdfSubtitle": "Inchiostro vettoriale, condividi dal menu Condividi di sistema",
   "exportNotebookAsPdf": "Esporta quaderno come PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 pagina} other{{count} pagine}}",
   "@exportNotebookPageCount": {
@@ -392,7 +392,7 @@
   },
   "pageOverviewDeleteBody": "Questa azione non può essere annullata.",
   "pageOverviewDragToReorder": "Trascina per riordinare",
-  "pageOverviewBookmarked": "Con segnalibro",
+  "pageOverviewBookmarked": "Segnalibro impostato",
   "ocrIndexing": "Indicizzazione OCR…",
   "ocrHandwritingSearchable": "Scrittura ricercabile",
   "ocrPartial": "OCR parziale",
@@ -410,7 +410,7 @@
   "trashSectionNotebooks": "Quaderni",
   "trashDeletionDateUnavailable": "Data eliminazione non disponibile",
   "trashExpiresToday": "Scade oggi",
-  "trashDaysRemaining": "{count, plural, =1{1 giorno rimanente} other{{count} giorni rimanenti}}",
+  "trashDaysRemaining": "{count, plural, =1{Resta 1 giorno} other{Restano {count} giorni}}",
   "@trashDaysRemaining": {
     "placeholders": {
       "count": {
@@ -438,7 +438,7 @@
   },
   "trashDeleteFolderBody": "Questo rimuove la cartella e i suoi quaderni da questo dispositivo.",
   "splitPageTitle": "Dividere la pagina?",
-  "splitPageBody": "Crea una nuova pagina con lo stesso modello e sposta circa metà dei {count} tratti su di essa.",
+  "splitPageBody": "Crea una nuova pagina con lo stesso modello e sposta circa metà dei {count} tratti nella nuova pagina.",
   "@splitPageBody": {
     "placeholders": {
       "count": {
@@ -468,9 +468,9 @@
   },
   "splitPageAction": "Dividi pagina",
   "changePageSizeTitle": "Cambiare dimensione pagina?",
-  "changePageSizeBody": "Questa pagina ha inchiostro. Cambiare la dimensione riorganizza la pagina; l'inchiostro resta nella stessa posizione sulla pagina.",
+  "changePageSizeBody": "Questa pagina contiene inchiostro. Cambiare la dimensione ricalcola il layout della pagina; l'inchiostro resta nella stessa posizione.",
   "changeOrientationTitle": "Cambiare orientamento?",
-  "changeOrientationBody": "Questa pagina ha inchiostro. Cambiare l'orientamento ridimensiona e centra il contenuto per adattarlo ai nuovi limiti della pagina.",
+  "changeOrientationBody": "Questa pagina contiene inchiostro. Cambiare l'orientamento ridimensiona e centra il contenuto per adattarlo ai nuovi margini della pagina.",
   "convertedToText": "Convertito in testo: {preview}",
   "@convertedToText": {
     "placeholders": {
@@ -491,7 +491,7 @@
     }
   },
   "handwritingModelReady": "Modello pronto.",
-  "handwritingModelElapsed": "Trascorso: {elapsed}",
+  "handwritingModelElapsed": "Tempo trascorso: {elapsed}",
   "@handwritingModelElapsed": {
     "placeholders": {
       "elapsed": {

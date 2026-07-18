@@ -39,10 +39,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get actionSplit => 'Jaa';
 
   @override
-  String get actionRecover => 'Palauta';
+  String get actionRecover => 'Palauta kopio';
 
   @override
-  String get actionRestore => 'Palauta';
+  String get actionRestore => 'Palauta tiedot';
 
   @override
   String get actionExport => 'Vie';
@@ -96,7 +96,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get libraryBreadcrumb => 'Kirjasto';
 
   @override
-  String get librarySearchHint => 'Hae muistikirjoja ja kirjoitettua tekstiä…';
+  String get librarySearchHint =>
+      'Hae muistikirjoista ja kirjoitetusta tekstistä…';
 
   @override
   String get libraryNoMatches => 'Ei tuloksia';
@@ -201,7 +202,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Muistikirja piilotetaan kirjastosta 30 päiväksi. Piirrot ja sivut säilyvät laitteella, kunnes roskakori tyhjennetään. Vie varmuuskopio ensin, jos haluat ylimääräisen kopion.';
+      'Muistikirja piilotetaan kirjastosta 30 päiväksi. Muste ja sivut säilyvät laitteella, kunnes roskakori tyhjennetään. Vie varmuuskopio ensin, jos haluat ylimääräisen kopion.';
 
   @override
   String notebookTagsFor(String title) {
@@ -251,12 +252,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String recoveryFailed(String error) {
-    return 'Palautus epäonnistui: $error';
+    return 'Automaattinen palautus epäonnistui: $error';
   }
 
   @override
   String restoreFailed(String error) {
-    return 'Palautus epäonnistui: $error';
+    return 'Varmuuskopion palautus epäonnistui: $error';
   }
 
   @override
@@ -277,10 +278,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get templateDotted => 'Pisteviivallinen';
 
   @override
-  String get templateCollegeRuled => 'Yliopistoviivallinen';
+  String get templateCollegeRuled => 'College-viivallinen';
 
   @override
-  String get templateCollegeShort => 'Yliopisto';
+  String get templateCollegeShort => 'College';
 
   @override
   String get pageSizeA4 => 'A4';
@@ -310,8 +311,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get settingsSectionLanguage => 'Kieli';
 
   @override
-  String get settingsSectionAppearanceAndPreferences =>
-      'Ulkoasu ja preferenssit';
+  String get settingsSectionAppearanceAndPreferences => 'Ulkoasu ja asetukset';
 
   @override
   String get settingsSectionAppearance => 'Ulkoasu';
@@ -333,7 +333,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get themeDark => 'Tumma';
 
   @override
-  String get settingsSectionPreferences => 'Preferenssit';
+  String get settingsSectionPreferences => 'Valinnat';
 
   @override
   String get settingsLanguageLabel => 'Sovelluksen kieli';
@@ -385,7 +385,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Tasoita mustevedot Chaikinin kulmien leikkausmenetelmällä (oletus päällä)';
+      'Pehmentää piirtojen kulmia automaattisesti (oletus päällä)';
 
   @override
   String get settingsStrokeSmoothingStrength => 'Tasoituksen voimakkuus';
@@ -400,14 +400,14 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Piirrä sormella paperilla; pois päältä piirtää vain kynä (oletus pois päältä)';
+      'Piirrä sormella; kun pois päältä, vain kynä piirtää (oletus pois päältä)';
 
   @override
-  String get settingsGestureInkEditing => 'Eleet musteen muokkaukseen';
+  String get settingsGestureInkEditing => 'Musteen muokkaus eleillä';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Pyyhi OCR-indeksoitua mustetta raaputtamalla (oletus päällä)';
+      'Raaputa OCR-indeksoidun musteen päällä pyyhkiäksesi sen (oletus päällä)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -424,7 +424,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Alakohtaiset termit käsialan OCR:lle. Lähellä olevat osumat korjataan, kun muste indeksoidaan, ja termit parantavat muistikirjahakua.';
+      'OCR:iin erikoistuneet termit käsialan tunnistukseen. Lähellä olevat osumat korjataan musteen indeksoinnissa, ja termit parantavat muistikirjahakua.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Ei mukautettuja termejä vielä.';
@@ -512,16 +512,16 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String get spenActionEraser => 'Pyyhin';
+  String get spenActionEraser => 'Pyyhekumi';
 
   @override
-  String get spenActionLasso => 'Nuolalla valinta';
+  String get spenActionLasso => 'Lasso';
 
   @override
   String get spenActionPen => 'Kynä';
 
   @override
-  String get spenActionNone => 'Ei mitään';
+  String get spenActionNone => 'Ei toimintoa';
 
   @override
   String get toolPen => 'Kynä';
@@ -533,13 +533,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get toolTape => 'Teippi';
 
   @override
-  String get toolEraser => 'Pyyhin';
+  String get toolEraser => 'Pyyhekumi';
 
   @override
-  String get toolSelection => 'Valinta';
+  String get toolSelection => 'Aluevalinta';
 
   @override
-  String get toolLasso => 'Nuolalla valinta';
+  String get toolLasso => 'Lasso';
 
   @override
   String get toolShape => 'Muoto';
@@ -617,7 +617,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get highlighterOptionsTitle => 'Korostuskynä';
 
   @override
-  String get brushLabel => 'Sivellin';
+  String get brushLabel => 'Kynätyyli';
 
   @override
   String get colorLabel => 'Väri';
@@ -639,20 +639,20 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get tapeOptionsHint =>
-      'Piirrä peittääksesi muistiinpanot; napauta teippiä näyttääksesi tai piilottaaksesi uudelleen';
+      'Piirrä peittääksesi muistiinpanot; napauta teippiä paljastaaksesi tai piilottaaksesi ne uudelleen';
 
   @override
   String get fillColorTitle => 'Täyttöväri';
 
   @override
   String get fillOptionsHint =>
-      'Piirrä suljettu silmukka tai napauta muodon sisällä täyttääksesi';
+      'Piirrä suljettu muoto tai napauta muodon sisällä täyttääksesi';
 
   @override
-  String get eraserSizeTitle => 'Pyyhtimen koko';
+  String get eraserSizeTitle => 'Pyyhekumin koko';
 
   @override
-  String get eraserModeTitle => 'Pyyhintatila';
+  String get eraserModeTitle => 'Pyyhekumitila';
 
   @override
   String get eraserModePixel => 'Pikseli';
@@ -661,12 +661,11 @@ class AppLocalizationsFi extends AppLocalizations {
   String get eraserModeStroke => 'Piirto';
 
   @override
-  String get eraserModePartialHint =>
-      'Pyyhkii vain musteen pyyhtimen ympyrän alla';
+  String get eraserModePartialHint => 'Pyyhkii vain musteen pyyhtimen alla';
 
   @override
   String get eraserModeWholeStrokeHint =>
-      'Pyyhkii kokonaiset piirrot, joita se koskettaa';
+      'Pyyhkii kokonaiset piirrot, joihin se osuu';
 
   @override
   String get eraseAllOnPageTitle => 'Pyyhitäänkö kaikki sivulta?';
@@ -710,13 +709,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get pageThemeSepia => 'Seepia';
 
   @override
-  String get pageThemePastelPink => 'Pastellin vaaleanpunainen';
+  String get pageThemePastelPink => 'Pastellinen vaaleanpunainen';
 
   @override
-  String get pageThemePastelBlue => 'Pastellinsininen';
+  String get pageThemePastelBlue => 'Pastellinen sininen';
 
   @override
-  String get pageThemePastelMint => 'Pastellin minttu';
+  String get pageThemePastelMint => 'Pastellinen minttu';
 
   @override
   String get pageSizeTitle => 'Sivun koko';
@@ -764,7 +763,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Vektorimuste, jaa järjestelmän jakopainikkeella';
+      'Vektorimuste; jaa järjestelmän jakoikkunan kautta';
 
   @override
   String get exportNotebookAsPdf => 'Vie muistikirja PDF:nä';
@@ -807,11 +806,11 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Otsikot kirjoitetusta tekstistä ja OCR-indeksoidusta musteesta';
+      'Otsikot kirjoitetusta tekstistä ja OCR-indeksoidusta käsialasta';
 
   @override
   String get contentsEmpty =>
-      'Otsikoita ei löytynyt vielä.\nLisää suurta tai lyhyttä kirjoitettua tekstiä tai OCR-indeksoituja musteotsikoita.';
+      'Otsikoita ei löytynyt vielä.\nLisää suurta tai lyhyttä kirjoitettua tekstiä tai OCR-indeksoituja käsialan otsikoita.';
 
   @override
   String contentsPageNumber(int number) {
@@ -823,7 +822,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String pageOverviewSelected(int count) {
-    return '$count valittu';
+    return 'Valittu: $count';
   }
 
   @override
@@ -859,10 +858,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get ocrIndexing => 'OCR-indeksointi…';
 
   @override
-  String get ocrHandwritingSearchable => 'Käsiala haettavissa';
+  String get ocrHandwritingSearchable => 'Käsialahaku käytössä';
 
   @override
-  String get ocrPartial => 'OCR osittainen';
+  String get ocrPartial => 'OCR osittain valmis';
 
   @override
   String get trashTitle => 'Roskakori';
@@ -949,14 +948,14 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get changePageSizeBody =>
-      'Tällä sivulla on mustetta. Koon vaihto järjestää sivun uudelleen; musteesi pysyy samassa kohdassa sivulla.';
+      'Tällä sivulla on mustetta. Koon vaihtaminen järjestää sivun uudelleen; muste pysyy samassa kohdassa.';
 
   @override
   String get changeOrientationTitle => 'Vaihdetaanko suuntaa?';
 
   @override
   String get changeOrientationBody =>
-      'Tällä sivulla on mustetta. Suunnan vaihto skaalaa ja keskittää sisällön uusiin sivurajoihin.';
+      'Tällä sivulla on mustetta. Suunnan vaihtaminen skaalaa ja keskittää sisällön uusiin sivurajoihin.';
 
   @override
   String convertedToText(String preview) {

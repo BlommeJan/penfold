@@ -10,7 +10,7 @@
   "actionBack": "Wstecz",
   "actionDone": "Gotowe",
   "actionSplit": "Podziel",
-  "actionRecover": "Odtwórz",
+  "actionRecover": "Odzyskaj",
   "actionRestore": "Przywróć",
   "actionExport": "Eksportuj",
   "actionRetry": "Ponów",
@@ -71,7 +71,7 @@
   "notebookRename": "Zmień nazwę notatnika",
   "notebookMoveToFolder": "Przenieś do folderu",
   "notebookEditTags": "Edytuj etykiety",
-  "notebookExportWorkbook": "Eksportuj zeszyt",
+  "notebookExportWorkbook": "Eksportuj notatnik",
   "notebookExportWorkbookSubtitle": "Udostępnij wszystkie strony jako PDF",
   "notebookMoveToTrash": "Przenieś do kosza",
   "notebookMoveToTrashTitle": "Przenieść „{title}” do kosza?",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Notatnik zniknie z biblioteki na 30 dni. Pismo i strony pozostaną na tym urządzeniu, dopóki nie opróżnisz kosza. Wyeksportuj kopię zapasową, jeśli chcesz dodatkową kopię.",
+  "notebookMoveToTrashBody": "Notatnik zostanie ukryty w bibliotece na 30 dni. Atrament i strony pozostaną na tym urządzeniu, dopóki nie opróżnisz kosza. Wyeksportuj kopię zapasową, jeśli chcesz dodatkową kopię.",
   "notebookTagsFor": "Etykiety dla „{title}”",
   "@notebookTagsFor": {
     "placeholders": {
@@ -129,7 +129,7 @@
       }
     }
   },
-  "recoveryFailed": "Odtwarzanie nie powiodło się: {error}",
+  "recoveryFailed": "Odzyskiwanie nie powiodło się: {error}",
   "@recoveryFailed": {
     "placeholders": {
       "error": {
@@ -153,7 +153,7 @@
       }
     }
   },
-  "templateBlank": "Pusty",
+  "templateBlank": "Pusta",
   "templateLined": "W linie",
   "templateGrid": "W kratkę",
   "templateDotted": "W kropki",
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Rysowanie palcem",
-  "settingsFingerDrawingSubtitle": "Rysuj palcem na papierze; gdy wył., tylko rysik rysuje (domyślnie wył.)",
-  "settingsGestureInkEditing": "Edycja pisma gestem",
-  "settingsGestureInkEditingSubtitle": "Przekreśl pismo zindeksowane OCR, aby je wymazać (domyślnie wł.)",
+  "settingsFingerDrawingSubtitle": "Rysuj palcem na stronie; gdy wył., tylko rysik rysuje (domyślnie wył.)",
+  "settingsGestureInkEditing": "Edycja atramentu gestem",
+  "settingsGestureInkEditingSubtitle": "Przekreśl atrament zindeksowany przez OCR, aby go wymazać (domyślnie wł.)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Przytrzymaj boczny przycisk S Pen, aby tymczasowo przełączyć narzędzie. Puść, aby przywrócić poprzednie. Działa na urządzeniach Samsung z obsługą przycisku bocznego.",
   "settingsSpenBarrelAction": "Akcja przycisku bocznego",
   "settingsSectionOcrDictionary": "Słownik OCR",
-  "settingsOcrDictionaryHint": "Terminy branżowe dla OCR pisma odręcznego. Podobne dopasowania są korygowane przy indeksowaniu pisma, a terminy wzmacniają wyszukiwanie w notatniku.",
+  "settingsOcrDictionaryHint": "Terminy branżowe dla OCR pisma odręcznego. Podobne dopasowania są korygowane przy indeksowaniu atramentu, a terminy wzmacniają wyszukiwanie w notatniku.",
   "settingsNoCustomOcrTerms": "Brak własnych terminów.",
   "settingsRemoveOcrTerm": "Usuń termin",
   "settingsAddOcrTerm": "Dodaj termin",
@@ -226,7 +226,7 @@
   "settingsBackupRestoreHint": "Eksportuj zip z penfold.db i folderami zasobów lub przywróć z wcześniejszej kopii. Obecna baza zostanie zapisana w backups/ przed przywróceniem.",
   "settingsExportBackup": "Eksportuj kopię zapasową",
   "settingsExportBackupSubtitle": "Spakuj penfold.db, źródła PDF, obrazy i starsze strony PDF",
-  "settingsRecoverFromBackup": "Odtwórz z kopii zapasowej",
+  "settingsRecoverFromBackup": "Odzyskaj z kopii zapasowej",
   "settingsLatestAutoBackup": "Ostatnia automatyczna kopia: {timestamp} ({size})",
   "@settingsLatestAutoBackup": {
     "placeholders": {
@@ -240,8 +240,8 @@
   },
   "settingsRestoreBackup": "Przywróć kopię zapasową",
   "settingsRestoreBackupSubtitle": "Zastąp lokalne dane plikiem zip kopii Penfold",
-  "settingsRecoverAutoBackupTitle": "Odtworzyć z automatycznej kopii?",
-  "settingsRecoverAutoBackupBody": "To zastąpi bieżące notatniki i pliki kopią z {timestamp}. Obecna baza zostanie zapisana w backups/ przed przywróceniem.",
+  "settingsRecoverAutoBackupTitle": "Odzyskać z automatycznej kopii?",
+  "settingsRecoverAutoBackupBody": "To zastąpi bieżące notatniki i pliki kopią z {timestamp}. Obecna baza zostanie zapisana w backups/ przed odzyskaniem.",
   "@settingsRecoverAutoBackupBody": {
     "placeholders": {
       "timestamp": {
@@ -296,7 +296,7 @@
   "toolbarPageMenu": "Menu strony",
   "penOptionsTitle": "Pióro",
   "highlighterOptionsTitle": "Zakreślacz",
-  "brushLabel": "Pędzel",
+  "brushLabel": "Typ pióra",
   "colorLabel": "Kolor",
   "customColorTitle": "Kolor własny",
   "hueLabel": "Odcień",
@@ -308,7 +308,7 @@
   "fillOptionsHint": "Narysuj zamkniętą pętlę lub dotknij wnętrza kształtu, aby wypełnić",
   "eraserSizeTitle": "Rozmiar gumki",
   "eraserModeTitle": "Tryb gumki",
-  "eraserModePixel": "Piksel",
+  "eraserModePixel": "Częściowa",
   "eraserModeStroke": "Pociągnięcie",
   "eraserModePartialHint": "Wymazuje tylko atrament pod kołem gumki",
   "eraserModeWholeStrokeHint": "Wymazuje całe pociągnięcia, których dotknie",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Eksportuj stronę jako PNG",
   "exportPageAsPngSubtitle": "Udostępnij obraz tej strony",
   "exportPageAsPdf": "Eksportuj stronę jako PDF",
-  "exportPageAsPdfSubtitle": "Atrament wektorowy, udostępnij przez arkusz systemowy",
+  "exportPageAsPdfSubtitle": "Atrament wektorowy, udostępnij przez menu udostępniania systemowego",
   "exportNotebookAsPdf": "Eksportuj notatnik jako PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 strona} few{{count} strony} many{{count} stron} other{{count} stron}}",
   "@exportNotebookPageCount": {
@@ -357,11 +357,11 @@
   "pageAudioAttachedToPage": "Dołączono do tej strony",
   "pageAudioReplace": "Zastąp plik audio",
   "pageAudioRemove": "Usuń audio",
-  "pageAudioPlay": "Odtwórz",
+  "pageAudioPlay": "Odtwaj",
   "pageAudioPause": "Wstrzymaj",
   "contentsTitle": "Spis treści",
-  "contentsSubtitle": "Nagłówki z wpisanego tekstu i pisma zindeksowanego OCR",
-  "contentsEmpty": "Nie znaleziono jeszcze nagłówków.\nDodaj duży lub krótki wpisany tekst albo nagłówki pisma zindeksowanego OCR.",
+  "contentsSubtitle": "Nagłówki z wpisanego tekstu i atramentu zindeksowanego przez OCR",
+  "contentsEmpty": "Nie znaleziono jeszcze nagłówków.\nDodaj duży lub krótki wpisany tekst albo nagłówki z atramentu zindeksowanego przez OCR.",
   "contentsPageNumber": "Strona {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -371,7 +371,7 @@
     }
   },
   "pageOverviewPagesSuffix": " — Strony",
-  "pageOverviewSelected": "Zaznaczono: {count}",
+  "pageOverviewSelected": "{count, plural, =1{1 zaznaczona} few{{count} zaznaczone} many{{count} zaznaczonych} other{{count} zaznaczonych}}",
   "@pageOverviewSelected": {
     "placeholders": {
       "count": {
@@ -392,9 +392,9 @@
   },
   "pageOverviewDeleteBody": "Tej operacji nie można cofnąć.",
   "pageOverviewDragToReorder": "Przeciągnij, aby zmienić kolejność",
-  "pageOverviewBookmarked": "Ma zakładkę",
+  "pageOverviewBookmarked": "Z zakładką",
   "ocrIndexing": "Indeksowanie OCR…",
-  "ocrHandwritingSearchable": "Pismo odręczne przeszukiwalne",
+  "ocrHandwritingSearchable": "Przeszukiwalne pismo odręczne",
   "ocrPartial": "OCR częściowe",
   "trashTitle": "Kosz",
   "trashFailedToLoad": "Nie udało się wczytać kosza: {error}",
@@ -438,7 +438,7 @@
   },
   "trashDeleteFolderBody": "To usunie folder i jego notatniki z tego urządzenia.",
   "splitPageTitle": "Podzielić stronę?",
-  "splitPageBody": "Utwórz nową stronę z tym samym szablonem i przenieś około połowę z {count} pociągnięć na nią.",
+  "splitPageBody": "Utwórz nową stronę z tym samym szablonem i przenieś na nią około połowę pociągnięć (łącznie {count}).",
   "@splitPageBody": {
     "placeholders": {
       "count": {
@@ -446,8 +446,8 @@
       }
     }
   },
-  "splitPageNeedStrokes": "Potrzeba co najmniej 2 pociągnięć, aby podzielić tę stronę",
-  "splitPageSuccess": "Strona podzielona: przeniesiono {moved} pociągnięć, pozostało {remaining}",
+  "splitPageNeedStrokes": "Do podziału strony potrzeba co najmniej dwóch pociągnięć",
+  "splitPageSuccess": "Strona podzielona: przeniesiono {moved}, pozostało {remaining}",
   "@splitPageSuccess": {
     "placeholders": {
       "moved": {
@@ -522,7 +522,7 @@
       }
     }
   },
-  "pageComplexityWarning": "Ta strona ma {count} pociągnięć i może działać wolno. Rozważ podział dla lepszej wydajności.",
+  "pageComplexityWarning": "Dużo pociągnięć ({count}) — ta strona może działać wolno. Rozważ podział dla lepszej wydajności.",
   "@pageComplexityWarning": {
     "placeholders": {
       "count": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "pageComplexityExportBlocked": "Eksport zablokowany: strona ma {count} pociągnięć (limit {limit}). Najpierw podziel obciążone strony.",
+  "pageComplexityExportBlocked": "Eksport zablokowany: liczba pociągnięć ({count}) przekracza limit ({limit}). Najpierw podziel obciążone strony.",
   "@pageComplexityExportBlocked": {
     "placeholders": {
       "count": {

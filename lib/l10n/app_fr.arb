@@ -61,7 +61,7 @@
       }
     }
   },
-  "folderMoveToTrashBody": "Le dossier et ses carnets seront conservés dans la corbeille pendant 30 jours.",
+  "folderMoveToTrashBody": "Le dossier et ses carnets sont déplacés dans la corbeille pendant 30 jours.",
   "notebookNew": "Nouveau carnet",
   "notebookUntitled": "Sans titre",
   "notebookTitleLabel": "Titre",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Le carnet est masqué de la bibliothèque pendant 30 jours. L'encre et les pages restent sur cet appareil jusqu'à vidage de la corbeille. Exportez une sauvegarde au préalable si vous souhaitez une copie supplémentaire.",
+  "notebookMoveToTrashBody": "Le carnet est masqué de la bibliothèque pendant 30 jours. L'encre et les pages restent sur cet appareil jusqu'à ce que la corbeille soit vidée. Exportez une sauvegarde au préalable si vous souhaitez une copie supplémentaire.",
   "notebookTagsFor": "Étiquettes pour « {title} »",
   "@notebookTagsFor": {
     "placeholders": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Sauvegarde exportée. Vous pouvez le mettre à la corbeille quand vous le souhaitez.",
+  "notebookBackupExportedReady": "Sauvegarde exportée. Vous pouvez déplacer le carnet vers la corbeille quand vous le souhaitez.",
   "importPdfSnack": "Importation du PDF… les pages sont rendues une fois, puis restent hors ligne.",
   "importFailed": "Échec de l'importation : {error}",
   "@importFailed": {
@@ -156,7 +156,7 @@
   "templateBlank": "Vierge",
   "templateLined": "Ligné",
   "templateGrid": "Quadrillé",
-  "templateDotted": "Pointillé",
+  "templateDotted": "Points",
   "templateCollegeRuled": "Ligné universitaire",
   "templateCollegeShort": "Universitaire",
   "pageSizeA4": "A4",
@@ -186,9 +186,9 @@
   "settingsResetToolbarOrder": "Réinitialiser l'ordre de la barre d'outils",
   "settingsSectionNotebook": "Carnet",
   "settingsPageTurnMode": "Mode de changement de page",
-  "settingsPageTurnModeSubtitle": "Balayer une page à la fois au lieu du défilement continu (désactivé par défaut)",
+  "settingsPageTurnModeSubtitle": "Glisser une page à la fois au lieu du défilement continu (désactivé par défaut)",
   "settingsZoomNavigation": "Navigation par zoom",
-  "settingsZoomNavigationSubtitle": "Pincer pour zoomer et faire défiler les pages (activé par défaut)",
+  "settingsZoomNavigationSubtitle": "Pincer pour zoomer et déplacer les pages (activé par défaut)",
   "settingsSectionDrawing": "Dessin",
   "settingsStrokeSmoothing": "Lissage des traits",
   "settingsStrokeSmoothingSubtitle": "Lisser les traits d'encre avec l'algorithme de Chaikin (activé par défaut)",
@@ -207,7 +207,7 @@
   "settingsFingerDrawing": "Dessin au doigt",
   "settingsFingerDrawingSubtitle": "Dessiner au doigt sur le papier ; si désactivé, seul le stylet dessine (désactivé par défaut)",
   "settingsGestureInkEditing": "Édition gestuelle de l'encre",
-  "settingsGestureInkEditingSubtitle": "Gratter l'encre indexée par OCR pour l'effacer (activé par défaut)",
+  "settingsGestureInkEditingSubtitle": "Griffoner sur l'encre indexée par OCR pour l'effacer (activé par défaut)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Maintenez le bouton latéral du S Pen pour changer d'outil temporairement. Relâchez pour revenir à l'outil précédent. Fonctionne sur les appareils Samsung avec bouton latéral.",
   "settingsSpenBarrelAction": "Action du bouton latéral",
@@ -225,7 +225,7 @@
   "settingsSectionBackupRestore": "Sauvegarde et restauration",
   "settingsBackupRestoreHint": "Exporter une archive zip de penfold.db et des dossiers de ressources, ou restaurer à partir d'une sauvegarde précédente. Votre base actuelle est enregistrée dans backups/ avant la restauration.",
   "settingsExportBackup": "Exporter la sauvegarde",
-  "settingsExportBackupSubtitle": "Compresser penfold.db, les sources PDF, images et pages PDF héritées",
+  "settingsExportBackupSubtitle": "Créer une archive zip de penfold.db, des sources PDF, images et pages PDF héritées",
   "settingsRecoverFromBackup": "Récupérer depuis une sauvegarde",
   "settingsLatestAutoBackup": "Dernière sauvegarde automatique : {timestamp} ({size})",
   "@settingsLatestAutoBackup": {
@@ -239,7 +239,7 @@
     }
   },
   "settingsRestoreBackup": "Restaurer une sauvegarde",
-  "settingsRestoreBackupSubtitle": "Remplacer les données locales par une archive Penfold",
+  "settingsRestoreBackupSubtitle": "Remplacer les données locales par une archive zip Penfold",
   "settingsRecoverAutoBackupTitle": "Récupérer depuis la sauvegarde automatique ?",
   "settingsRecoverAutoBackupBody": "Cela remplace vos carnets et fichiers actuels par la sauvegarde de {timestamp}. Votre base actuelle sera enregistrée dans backups/ avant la restauration.",
   "@settingsRecoverAutoBackupBody": {
@@ -289,14 +289,14 @@
   "toolbarUndo": "Annuler",
   "toolbarRedo": "Rétablir",
   "toolbarAddPage": "Ajouter une page",
-  "toolbarStylusOnly": "Stylet uniquement (rejet de la paume)",
+  "toolbarStylusOnly": "Stylet uniquement (détection de la paume)",
   "toolbarFingerDrawing": "Dessin au doigt",
   "toolbarPageOverview": "Aperçu des pages",
   "toolbarTableOfContents": "Table des matières",
   "toolbarPageMenu": "Menu de la page",
   "penOptionsTitle": "Stylo",
   "highlighterOptionsTitle": "Surligneur",
-  "brushLabel": "Style",
+  "brushLabel": "Style de trait",
   "colorLabel": "Couleur",
   "customColorTitle": "Couleur personnalisée",
   "hueLabel": "Teinte",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Exporter la page en PNG",
   "exportPageAsPngSubtitle": "Partager l'image de cette page",
   "exportPageAsPdf": "Exporter la page en PDF",
-  "exportPageAsPdfSubtitle": "Encre vectorielle, partage via la feuille système",
+  "exportPageAsPdfSubtitle": "Encre vectorielle, partage via le menu de partage",
   "exportNotebookAsPdf": "Exporter le carnet en PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 page} other{{count} pages}}",
   "@exportNotebookPageCount": {
@@ -357,7 +357,7 @@
   "pageAudioAttachedToPage": "Joint à cette page",
   "pageAudioReplace": "Remplacer le fichier audio",
   "pageAudioRemove": "Supprimer l'audio",
-  "pageAudioPlay": "Lecture",
+  "pageAudioPlay": "Lire",
   "pageAudioPause": "Pause",
   "contentsTitle": "Sommaire",
   "contentsSubtitle": "Titres du texte saisi et de l'encre indexée par OCR",
@@ -371,7 +371,7 @@
     }
   },
   "pageOverviewPagesSuffix": " — Pages",
-  "pageOverviewSelected": "{count} sélectionnée(s)",
+  "pageOverviewSelected": "Sélection : {count}",
   "@pageOverviewSelected": {
     "placeholders": {
       "count": {
@@ -392,7 +392,7 @@
   },
   "pageOverviewDeleteBody": "Cette action est irréversible.",
   "pageOverviewDragToReorder": "Faites glisser pour réorganiser",
-  "pageOverviewBookmarked": "Signet ajouté",
+  "pageOverviewBookmarked": "Avec signet",
   "ocrIndexing": "Indexation OCR…",
   "ocrHandwritingSearchable": "Écriture manuscrite recherchable",
   "ocrPartial": "OCR partiel",

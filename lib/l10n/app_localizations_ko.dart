@@ -96,7 +96,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get libraryBreadcrumb => '라이브러리';
 
   @override
-  String get librarySearchHint => '노트 및 입력 텍스트 검색…';
+  String get librarySearchHint => '노트 및 입력한 텍스트 검색…';
 
   @override
   String get libraryNoMatches => '일치하는 항목이 없습니다';
@@ -154,7 +154,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get folderMoveToTrashBody => '폴더와 포함된 노트가 30일 동안 휴지통에 보관됩니다.';
+  String get folderMoveToTrashBody => '폴더와 포함된 노트는 30일 동안 휴지통에 보관됩니다.';
 
   @override
   String get notebookNew => '새 노트';
@@ -184,7 +184,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notebookEditTags => '태그 편집';
 
   @override
-  String get notebookExportWorkbook => '워크북 내보내기';
+  String get notebookExportWorkbook => '노트 내보내기';
 
   @override
   String get notebookExportWorkbookSubtitle => '모든 페이지를 PDF로 공유';
@@ -199,7 +199,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      '노트가 30일 동안 라이브러리에서 숨겨집니다. 잉크와 페이지는 휴지통을 비우기 전까지 이 기기에 유지됩니다. 추가 사본이 필요하면 먼저 백업을 내보내세요.';
+      '노트가 30일 동안 라이브러리에서 숨겨집니다. 잉크와 페이지는 휴지통을 비울 때까지 이 기기에 유지됩니다. 추가 사본이 필요하면 먼저 백업을 내보냅니다.';
 
   @override
   String notebookTagsFor(String title) {
@@ -207,7 +207,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get notebookNoTagsYet => '태그가 없습니다. 아래에서 새 태그를 만드세요.';
+  String get notebookNoTagsYet => '태그가 없습니다. 아래에서 새 태그를 추가할 수 있습니다.';
 
   @override
   String get notebookNewTag => '새 태그';
@@ -216,7 +216,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notebookAddTag => '태그 추가';
 
   @override
-  String get notebookNoPagesToExport => '내보낼 페이지가 없습니다';
+  String get notebookNoPagesToExport => '이 노트에는 내보낼 페이지가 없습니다';
 
   @override
   String notebookExportedAsPdf(String title) {
@@ -257,7 +257,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String handwritingModelDownloadingBackground(int sizeMb) {
-    return '필기 모델(~$sizeMb MB)을(를) 백그라운드에서 다운로드하는 중…';
+    return '손글씨 모델(~$sizeMb MB)을(를) 백그라운드에서 다운로드하는 중…';
   }
 
   @override
@@ -350,7 +350,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsToolbarReorderHint =>
-      '드래그하여 그리기 도구 순서를 변경하세요. 실행 취소와 다시 실행은 오른쪽에 고정됩니다.';
+      '드래그하여 그리기 도구 순서를 변경합니다. 실행 취소와 다시 실행은 오른쪽에 고정됩니다.';
 
   @override
   String get settingsResetToolbarOrder => '도구 모음 순서 초기화';
@@ -393,33 +393,34 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      '손가락으로 종이에 그리기; 끄면 스타일러스만 그립니다(기본: 끔)';
+      '손가락으로 종이에 그립니다. 끄면 스타일러스로만 그릴 수 있습니다(기본: 끔)';
 
   @override
   String get settingsGestureInkEditing => '제스처 잉크 편집';
 
   @override
-  String get settingsGestureInkEditingSubtitle => 'OCR 색인된 잉크 위를 긁어 지우기(기본: 켬)';
+  String get settingsGestureInkEditingSubtitle =>
+      'OCR로 색인된 잉크 위를 긁어 지웁니다(기본: 켬)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
 
   @override
   String get settingsSpenHint =>
-      'S Pen 측면 버튼을 누르고 있으면 도구가 일시적으로 전환됩니다. 버튼을 놓으면 이전 도구로 돌아갑니다. 측면 버튼을 지원하는 Samsung 기기에서 사용할 수 있습니다.';
+      'S Pen 버튼을 길게 누르면 도구가 일시적으로 전환됩니다. 버튼에서 손을 떼면 이전 도구로 돌아갑니다. S Pen 버튼을 지원하는 Samsung 기기에서 사용할 수 있습니다.';
 
   @override
-  String get settingsSpenBarrelAction => '측면 버튼 동작';
+  String get settingsSpenBarrelAction => 'S Pen 버튼 동작';
 
   @override
-  String get settingsSectionOcrDictionary => 'OCR 사전';
+  String get settingsSectionOcrDictionary => 'OCR 용어 사전';
 
   @override
   String get settingsOcrDictionaryHint =>
-      '필기 OCR용 전문 용어입니다. 유사한 단어는 잉크 색인 시 교정되며, 용어는 노트 검색에도 반영됩니다.';
+      '손글씨 OCR에 사용할 전문 용어입니다. 유사한 단어는 잉크 색인 시 교정되며, 용어는 노트 검색에도 반영됩니다.';
 
   @override
-  String get settingsNoCustomOcrTerms => '사용자 정의 용어가 없습니다.';
+  String get settingsNoCustomOcrTerms => '사용자 지정 용어가 없습니다.';
 
   @override
   String get settingsRemoveOcrTerm => '용어 제거';
@@ -441,7 +442,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsYourDataHint =>
-      'Penfold는 모든 데이터를 단일 SQLite 데이터베이스와 에셋 폴더에 이 기기에 저장합니다 — 클라우드 동기화 없음. 전체 온디바이스 파일 구조는 docs/ARCHITECTURE.md를 참조하세요.';
+      'Penfold는 모든 데이터를 단일 SQLite 데이터베이스와 에셋 폴더에 이 기기에 저장합니다 — 클라우드 동기화 없음. 전체 온디바이스 파일 구조는 docs/ARCHITECTURE.md를 참조합니다.';
 
   @override
   String get settingsDatabase => '데이터베이스';
@@ -585,7 +586,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get toolbarAddPage => '페이지 추가';
 
   @override
-  String get toolbarStylusOnly => '스타일러스 전용(손바닥 인식 방지)';
+  String get toolbarStylusOnly => '스타일러스 전용(손바닥 거부)';
 
   @override
   String get toolbarFingerDrawing => '손가락 그리기';
@@ -627,13 +628,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tapeOptionsTitle => '테이프';
 
   @override
-  String get tapeOptionsHint => '그려서 메모를 가리고, 테이프를 탭하여 다시 표시하거나 숨기세요';
+  String get tapeOptionsHint => '그려서 메모를 가리고, 테이프를 탭하여 다시 표시하거나 숨깁니다';
 
   @override
   String get fillColorTitle => '채우기 색상';
 
   @override
-  String get fillOptionsHint => '닫힌 루프를 그리거나 도형 안쪽을 탭하여 채우세요';
+  String get fillOptionsHint => '닫힌 루프를 그리거나 도형 안쪽을 탭하여 채웁니다';
 
   @override
   String get eraserSizeTitle => '지우개 크기';
@@ -785,11 +786,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get contentsTitle => '목차';
 
   @override
-  String get contentsSubtitle => '입력 텍스트 및 OCR 색인 잉크의 제목';
+  String get contentsSubtitle => '입력한 텍스트 및 OCR로 색인된 잉크의 제목';
 
   @override
   String get contentsEmpty =>
-      '제목을 찾을 수 없습니다.\n큰 또는 짧은 입력 텍스트, 또는 OCR 색인 잉크 제목을 추가하세요.';
+      '제목을 찾을 수 없습니다.\n큰 또는 짧은 입력한 텍스트, 또는 OCR로 색인된 잉크 제목을 추가합니다.';
 
   @override
   String contentsPageNumber(int number) {
@@ -811,7 +812,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pageOverviewSelectPages => '페이지 선택';
 
   @override
-  String get pageOverviewKeepOnePage => '페이지를 하나 이상 유지하세요';
+  String get pageOverviewKeepOnePage => '페이지를 하나 이상 유지해야 합니다';
 
   @override
   String pageOverviewDeleteTitle(int count) {
@@ -834,13 +835,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pageOverviewBookmarked => '책갈피됨';
 
   @override
-  String get ocrIndexing => 'OCR 색인 중…';
+  String get ocrIndexing => 'OCR 색인 생성 중…';
 
   @override
-  String get ocrHandwritingSearchable => '필기 검색 가능';
+  String get ocrHandwritingSearchable => '손글씨 검색 가능';
 
   @override
-  String get ocrPartial => 'OCR 부분 완료';
+  String get ocrPartial => 'OCR 일부 완료';
 
   @override
   String get trashTitle => '휴지통';
@@ -860,7 +861,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get trashSectionNotebooks => '노트';
 
   @override
-  String get trashDeletionDateUnavailable => '삭제 날짜를 확인할 수 없음';
+  String get trashDeletionDateUnavailable => '삭제 날짜를 확인할 수 없습니다';
 
   @override
   String get trashExpiresToday => '오늘 만료';
@@ -939,18 +940,18 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get couldNotRecognizeHandwriting => '필기를 인식할 수 없습니다';
+  String get couldNotRecognizeHandwriting => '손글씨를 인식할 수 없습니다';
 
   @override
-  String get handwritingModelTitle => '필기 모델';
+  String get handwritingModelTitle => '손글씨 모델';
 
   @override
   String get handwritingModelDownloadFailed =>
-      '다운로드에 실패했습니다. 네트워크를 확인하고 다시 시도하세요.';
+      '다운로드에 실패했습니다. 네트워크를 확인한 후 다시 시도할 수 있습니다.';
 
   @override
   String handwritingModelDownloading(int sizeMb) {
-    return '영어 필기 모델(~$sizeMb MB) 다운로드 중…';
+    return '영어 손글씨 모델(~$sizeMb MB) 다운로드 중…';
   }
 
   @override
@@ -985,16 +986,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String pageComplexityWarning(int count) {
-    return '이 페이지에 획이 $count개 있어 느려질 수 있습니다. 성능 향상을 위해 분할을 고려하세요.';
+    return '이 페이지에 획이 $count개 있어 느려질 수 있습니다. 성능 향상을 위해 분할을 권장합니다.';
   }
 
   @override
   String pageComplexityExportBlocked(int count, int limit) {
-    return '내보내기 차단: 페이지에 획이 $count개 있습니다(한도 $limit). 먼저 무거운 페이지를 분할하세요.';
+    return '내보내기 차단: 페이지에 획이 $count개 있습니다(한도 $limit). 먼저 무거운 페이지를 분할해야 합니다.';
   }
 
   @override
-  String get restoreComplete => '복원이 완료되었습니다. 복원된 데이터를 불러오려면 앱을 다시 시작하세요.';
+  String get restoreComplete => '복원이 완료되었습니다. 복원된 데이터를 불러오려면 앱을 다시 시작해야 합니다.';
 
   @override
   String get textToolHint => '여기에 입력…';

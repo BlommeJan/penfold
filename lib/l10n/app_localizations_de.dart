@@ -36,13 +36,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get actionDone => 'Fertig';
 
   @override
-  String get actionSplit => 'Teilen';
+  String get actionSplit => 'Aufteilen';
 
   @override
   String get actionRecover => 'Wiederherstellen';
 
   @override
-  String get actionRestore => 'Zurücksetzen';
+  String get actionRestore => 'Wiederherstellen';
 
   @override
   String get actionExport => 'Exportieren';
@@ -186,7 +186,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notebookEditTags => 'Tags bearbeiten';
 
   @override
-  String get notebookExportWorkbook => 'Arbeitsmappe exportieren';
+  String get notebookExportWorkbook => 'Gesamtes Notizbuch exportieren';
 
   @override
   String get notebookExportWorkbookSubtitle => 'Alle Seiten als PDF teilen';
@@ -228,7 +228,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get notebookBackupExportedReady =>
-      'Sicherung exportiert. Sie können das Notizbuch verschieben, wenn Sie bereit sind.';
+      'Sicherung exportiert. Sie können es in den Papierkorb verschieben, wenn Sie bereit sind.';
 
   @override
   String get importPdfSnack =>
@@ -256,7 +256,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String restoreFailed(String error) {
-    return 'Zurücksetzen fehlgeschlagen: $error';
+    return 'Wiederherstellung fehlgeschlagen: $error';
   }
 
   @override
@@ -311,7 +311,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsSectionAppearanceAndPreferences =>
-      'Erscheinungsbild & Einstellungen';
+      'Erscheinungsbild & Präferenzen';
 
   @override
   String get settingsSectionAppearance => 'Erscheinungsbild';
@@ -401,14 +401,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Mit dem Finger auf dem Papier zeichnen; ausgeschaltet zeichnet nur der Stift (Standard: aus)';
+      'Mit dem Finger auf dem Papier zeichnen; wenn aus, zeichnet nur der Stift (Standard: aus)';
 
   @override
-  String get settingsGestureInkEditing => 'Gesten-Tintenbearbeitung';
+  String get settingsGestureInkEditing => 'Tinte per Geste löschen';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'OCR-indizierte Tinte durchstreichen, um sie zu löschen (Standard: an)';
+      'OCR-indizierte Tinte durch Kritzeln löschen (Standard: an)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -460,7 +460,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsBackupRestoreHint =>
-      'Exportieren Sie ein Zip mit penfold.db und Asset-Ordnern oder stellen Sie aus einer früheren Sicherung wieder her. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.';
+      'Exportieren Sie ein Zip mit penfold.db und Asset-Ordnern oder stellen Sie aus einer früheren Sicherung wieder her. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.';
 
   @override
   String get settingsExportBackup => 'Sicherung exportieren';
@@ -478,7 +478,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get settingsRestoreBackup => 'Sicherung zurücksetzen';
+  String get settingsRestoreBackup => 'Sicherung wiederherstellen';
 
   @override
   String get settingsRestoreBackupSubtitle =>
@@ -490,15 +490,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String settingsRecoverAutoBackupBody(String timestamp) {
-    return 'Dies ersetzt Ihre aktuellen Notizbücher und Dateien durch die Sicherung vom $timestamp. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.';
+    return 'Dies ersetzt Ihre aktuellen Notizbücher und Dateien durch die Sicherung vom $timestamp. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.';
   }
 
   @override
-  String get settingsRestoreBackupTitle => 'Sicherung zurücksetzen?';
+  String get settingsRestoreBackupTitle => 'Sicherung wiederherstellen?';
 
   @override
   String get settingsRestoreBackupBody =>
-      'Dies ersetzt Ihre aktuellen Notizbücher und Dateien. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.';
+      'Dies ersetzt Ihre aktuellen Notizbücher und Dateien. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.';
 
   @override
   String get settingsSectionAbout => 'Über';
@@ -513,7 +513,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get spenActionEraser => 'Radierer';
+  String get spenActionEraser => 'Radiergummi';
 
   @override
   String get spenActionLasso => 'Lasso';
@@ -531,10 +531,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get toolHighlighter => 'Textmarker';
 
   @override
-  String get toolTape => 'Abdeckband';
+  String get toolTape => 'Klebeband';
 
   @override
-  String get toolEraser => 'Radierer';
+  String get toolEraser => 'Radiergummi';
 
   @override
   String get toolSelection => 'Auswahl';
@@ -636,11 +636,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get brightnessLabel => 'Helligkeit';
 
   @override
-  String get tapeOptionsTitle => 'Abdeckband';
+  String get tapeOptionsTitle => 'Klebeband';
 
   @override
   String get tapeOptionsHint =>
-      'Ziehen, um Notizen zu verdecken; auf das Band tippen, um wieder anzuzeigen oder zu verbergen';
+      'Ziehen, um Notizen zu verdecken; auf das Klebeband tippen, um wieder anzuzeigen oder zu verbergen';
 
   @override
   String get fillColorTitle => 'Füllfarbe';
@@ -650,10 +650,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eine geschlossene Form zeichnen oder in eine Form tippen, um sie zu füllen';
 
   @override
-  String get eraserSizeTitle => 'Radierergröße';
+  String get eraserSizeTitle => 'Radiergummigröße';
 
   @override
-  String get eraserModeTitle => 'Radierermodus';
+  String get eraserModeTitle => 'Radiergummi-Modus';
 
   @override
   String get eraserModePixel => 'Pixel';
@@ -662,8 +662,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eraserModeStroke => 'Strich';
 
   @override
-  String get eraserModePartialHint =>
-      'Löscht nur Tinte unter dem Radiererkreis';
+  String get eraserModePartialHint => 'Löscht nur Tinte unter dem Radiergummi';
 
   @override
   String get eraserModeWholeStrokeHint =>
@@ -738,10 +737,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pageAudioTitle => 'Audio';
 
   @override
-  String get pageSplit => 'Teilen';
+  String get pageSplit => 'Aufteilen';
 
   @override
-  String get pageExportTitle => 'Exportieren';
+  String get pageExportTitle => 'Export';
 
   @override
   String get pdfPagesKeepBackground =>
@@ -804,7 +803,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pageAudioPause => 'Pausieren';
 
   @override
-  String get contentsTitle => 'Inhalt';
+  String get contentsTitle => 'Inhaltsverzeichnis';
 
   @override
   String get contentsSubtitle =>
@@ -852,7 +851,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dies kann nicht rückgängig gemacht werden.';
 
   @override
-  String get pageOverviewDragToReorder => 'Zum Sortieren ziehen';
+  String get pageOverviewDragToReorder => 'Zum Umsortieren ziehen';
 
   @override
   String get pageOverviewBookmarked => 'Mit Lesezeichen';
@@ -922,7 +921,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dies entfernt den Ordner und seine Notizbücher von diesem Gerät.';
 
   @override
-  String get splitPageTitle => 'Seite teilen?';
+  String get splitPageTitle => 'Seite aufteilen?';
 
   @override
   String splitPageBody(int count) {
@@ -931,7 +930,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get splitPageNeedStrokes =>
-      'Mindestens 2 Striche nötig, um diese Seite zu teilen';
+      'Mindestens 2 Striche nötig, um diese Seite aufzuteilen';
 
   @override
   String splitPageSuccess(int moved, int remaining) {
@@ -940,11 +939,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String splitPageFailed(String error) {
-    return 'Teilen fehlgeschlagen: $error';
+    return 'Aufteilen fehlgeschlagen: $error';
   }
 
   @override
-  String get splitPageAction => 'Seite teilen';
+  String get splitPageAction => 'Seite aufteilen';
 
   @override
   String get changePageSizeTitle => 'Seitengröße ändern?';
@@ -1013,17 +1012,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String pageComplexityWarning(int count) {
-    return 'Diese Seite hat $count Striche und kann langsam wirken. Teilen Sie die Seite für bessere Leistung.';
+    return 'Diese Seite hat $count Striche und kann langsam wirken. Teilen Sie die Seite auf für bessere Leistung.';
   }
 
   @override
   String pageComplexityExportBlocked(int count, int limit) {
-    return 'Export blockiert: Eine Seite hat $count Striche (Limit $limit). Teilen Sie zuerst schwere Seiten.';
+    return 'Export blockiert: Eine Seite hat $count Striche (Limit $limit). Teilen Sie schwere Seiten zuerst auf.';
   }
 
   @override
   String get restoreComplete =>
-      'Zurücksetzen abgeschlossen. Bitte starten Sie die App neu, um die wiederhergestellten Daten zu laden.';
+      'Wiederherstellung abgeschlossen. Bitte starten Sie die App neu, um die wiederhergestellten Daten zu laden.';
 
   @override
   String get textToolHint => 'Hier tippen…';

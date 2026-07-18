@@ -200,7 +200,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Зошит буде приховано з бібліотеки на 30 днів. Чернетки та сторінки залишаться на цьому пристрої, доки кошик не буде очищено. Експортуйте резервну копію, якщо потрібна додаткова копія.';
+      'Зошит буде приховано з бібліотеки на 30 днів. Чорнило та сторінки залишаться на цьому пристрої, доки кошик не буде очищено. Експортуйте резервну копію, якщо потрібна додаткова копія.';
 
   @override
   String notebookTagsFor(String title) {
@@ -264,7 +264,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get templateBlank => 'Порожній';
+  String get templateBlank => 'Чистий';
 
   @override
   String get templateLined => 'Лінований';
@@ -332,7 +332,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get themeDark => 'Темна';
 
   @override
-  String get settingsSectionPreferences => 'Налаштування';
+  String get settingsSectionPreferences => 'Уподобання';
 
   @override
   String get settingsLanguageLabel => 'Мова застосунку';
@@ -384,7 +384,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Згладжувати штрихи методом Chaikin (за замовчуванням увімкнено)';
+      'Згладжувати штрихи чорнила методом Chaikin (за замовчуванням увімкнено)';
 
   @override
   String get settingsStrokeSmoothingStrength => 'Сила згладжування';
@@ -399,14 +399,14 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Малювати пальцем на папері; якщо вимкнено, малює лише стилус (за замовчуванням вимкнено)';
+      'Малювати пальцем на сторінці; якщо вимкнено, малює лише стилус (за замовчуванням вимкнено)';
 
   @override
-  String get settingsGestureInkEditing => 'Редагування чернеток жестами';
+  String get settingsGestureInkEditing => 'Редагування чорнила жестами';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Проведіть по OCR-індексованих чернетках, щоб їх стерти (за замовчуванням увімкнено)';
+      'Проведіть по OCR-індексованому чорнилу, щоб стерти його (за замовчуванням увімкнено)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -423,7 +423,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Спеціальні терміни для OCR почерку. Схожі збіги виправляються під час індексації, а терміни покращують пошук у зошитах.';
+      'Спеціальні терміни для OCR почерку. Схожі збіги виправляються під час індексації чорнила, а терміни покращують пошук у зошитах.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Власних термінів ще немає.';
@@ -525,7 +525,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get toolPen => 'Перо';
 
   @override
-  String get toolHighlighter => 'Маркер';
+  String get toolHighlighter => 'Текст-маркер';
 
   @override
   String get toolTape => 'Стрічка';
@@ -612,10 +612,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get penOptionsTitle => 'Перо';
 
   @override
-  String get highlighterOptionsTitle => 'Маркер';
+  String get highlighterOptionsTitle => 'Текст-маркер';
 
   @override
-  String get brushLabel => 'Пензель';
+  String get brushLabel => 'Тип пера';
 
   @override
   String get colorLabel => 'Колір';
@@ -659,7 +659,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get eraserModeStroke => 'Штрих';
 
   @override
-  String get eraserModePartialHint => 'Стирає лише чернетки під колом гумки';
+  String get eraserModePartialHint => 'Стирає лише чорнило під колом гумки';
 
   @override
   String get eraserModeWholeStrokeHint => 'Стирає цілі штрихи, яких торкається';
@@ -760,7 +760,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Векторні чернетки, надіслати через системне меню';
+      'Векторне чорнило, надіслати через системне меню';
 
   @override
   String get exportNotebookAsPdf => 'Експорт зошита як PDF';
@@ -805,11 +805,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Заголовки з набраного тексту та OCR-індексованих чернеток';
+      'Заголовки з набраного тексту та OCR-індексованого чорнила';
 
   @override
   String get contentsEmpty =>
-      'Заголовків ще не знайдено.\nДодайте великий або короткий набраний текст або OCR-індексовані заголовки.';
+      'Заголовків ще не знайдено.\nДодайте великий або короткий набраний текст або заголовки з OCR-індексованого чорнила.';
 
   @override
   String contentsPageNumber(int number) {
@@ -853,7 +853,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get pageOverviewDragToReorder => 'Перетягніть, щоб змінити порядок';
 
   @override
-  String get pageOverviewBookmarked => 'З закладкою';
+  String get pageOverviewBookmarked => 'Закладена';
 
   @override
   String get ocrIndexing => 'Індексація OCR…';
@@ -862,7 +862,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ocrHandwritingSearchable => 'Пошук по почерку доступний';
 
   @override
-  String get ocrPartial => 'OCR частково';
+  String get ocrPartial => 'Часткове OCR';
 
   @override
   String get trashTitle => 'Кошик';
@@ -885,7 +885,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trashDeletionDateUnavailable => 'Дата видалення недоступна';
 
   @override
-  String get trashExpiresToday => 'Термін дії сьогодні';
+  String get trashExpiresToday => 'Зникне сьогодні';
 
   @override
   String trashDaysRemaining(int count) {
@@ -951,14 +951,14 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get changePageSizeBody =>
-      'На цій сторінці є чернетки. Зміна розміру перекомпонує сторінку; чернетки залишаться на тих самих позиціях.';
+      'На цій сторінці є чорнило. Зміна розміру перекомпонує сторінку; чорнило залишиться на тих самих позиціях.';
 
   @override
   String get changeOrientationTitle => 'Змінити орієнтацію?';
 
   @override
   String get changeOrientationBody =>
-      'На цій сторінці є чернетки. Зміна орієнтації масштабує та центрує вміст під нові межі сторінки.';
+      'На цій сторінці є чорнило. Зміна орієнтації масштабує та центрує вміст під нові межі сторінки.';
 
   @override
   String convertedToText(String preview) {

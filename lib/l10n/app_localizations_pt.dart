@@ -75,7 +75,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get libraryOverview => 'Visão geral';
 
   @override
-  String get libraryTrash => 'Reciclagem';
+  String get libraryTrash => 'Lixo';
 
   @override
   String get librarySettings => 'Definições';
@@ -122,7 +122,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tooltipBackupRestore => 'Cópia de segurança e restauro';
 
   @override
-  String get tooltipTrash => 'Reciclagem';
+  String get tooltipTrash => 'Lixo';
 
   @override
   String get tooltipNewNotebook => 'Novo caderno';
@@ -146,16 +146,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get folderRename => 'Mudar o nome da pasta';
 
   @override
-  String get folderMoveToTrash => 'Mover para a Reciclagem';
+  String get folderMoveToTrash => 'Mover para o lixo';
 
   @override
   String folderMoveToTrashTitle(String name) {
-    return 'Mover \"$name\" para a Reciclagem?';
+    return 'Mover \"$name\" para o lixo?';
   }
 
   @override
   String get folderMoveToTrashBody =>
-      'A pasta e os seus cadernos vão para a Reciclagem durante 30 dias.';
+      'A pasta e os seus cadernos vão para o lixo durante 30 dias.';
 
   @override
   String get notebookNew => 'Novo caderno';
@@ -179,29 +179,29 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notebookRename => 'Mudar o nome do caderno';
 
   @override
-  String get notebookMoveToFolder => 'Mover para pasta';
+  String get notebookMoveToFolder => 'Mover para a pasta';
 
   @override
   String get notebookEditTags => 'Editar etiquetas';
 
   @override
-  String get notebookExportWorkbook => 'Exportar caderno';
+  String get notebookExportWorkbook => 'Exportar o caderno';
 
   @override
   String get notebookExportWorkbookSubtitle =>
-      'Partilhar todas as páginas como PDF';
+      'Partilhar todas as páginas em PDF';
 
   @override
-  String get notebookMoveToTrash => 'Mover para a Reciclagem';
+  String get notebookMoveToTrash => 'Mover para o lixo';
 
   @override
   String notebookMoveToTrashTitle(String title) {
-    return 'Mover \"$title\" para a Reciclagem?';
+    return 'Mover \"$title\" para o lixo?';
   }
 
   @override
   String get notebookMoveToTrashBody =>
-      'O caderno fica oculto na biblioteca durante 30 dias. A tinta e as páginas permanecem neste dispositivo até esvaziar a Reciclagem. Exporte uma cópia de segurança primeiro se quiser uma cópia extra.';
+      'O caderno fica oculto na biblioteca durante 30 dias. A tinta e as páginas permanecem neste dispositivo até esvaziar o lixo. Exporte primeiro uma cópia de segurança se quiser uma cópia extra.';
 
   @override
   String notebookTagsFor(String title) {
@@ -223,12 +223,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String notebookExportedAsPdf(String title) {
-    return '\"$title\" exportado como PDF';
+    return '\"$title\" exportado em PDF';
   }
 
   @override
   String get notebookBackupExportedReady =>
-      'Cópia de segurança exportada. Pode mover para a Reciclagem quando quiser.';
+      'Cópia de segurança exportada. Pode mover para o lixo quando quiser.';
 
   @override
   String get importPdfSnack =>
@@ -504,7 +504,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Caderno de escrita manual local — sem contas, sem nuvem.';
+      'Caderno de notas manuscritas local — sem contas, sem nuvem.';
 
   @override
   String settingsVersion(String version) {
@@ -764,10 +764,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Tinta vetorial, partilhar via folha do sistema';
+      'Tinta vetorial; partilhar através do menu de partilha do sistema';
 
   @override
-  String get exportNotebookAsPdf => 'Exportar caderno como PDF';
+  String get exportNotebookAsPdf => 'Exportar o caderno em PDF';
 
   @override
   String exportNotebookPageCount(int count) {
@@ -871,15 +871,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ocrPartial => 'OCR parcial';
 
   @override
-  String get trashTitle => 'Reciclagem';
+  String get trashTitle => 'Lixo';
 
   @override
   String trashFailedToLoad(String error) {
-    return 'Falha ao carregar a Reciclagem: $error';
+    return 'Falha ao carregar o lixo: $error';
   }
 
   @override
-  String get trashEmpty => 'A Reciclagem está vazia';
+  String get trashEmpty => 'O lixo está vazio';
 
   @override
   String get trashSectionFolders => 'Pastas';
@@ -999,16 +999,16 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get pageExportedAsPng => 'Página exportada como PNG';
+  String get pageExportedAsPng => 'Página exportada em PNG';
 
   @override
-  String get pageExportedAsPdf => 'Página exportada como PDF';
+  String get pageExportedAsPdf => 'Página exportada em PDF';
 
   @override
-  String get notebookExportedAsPdfSnack => 'Caderno exportado como PDF';
+  String get notebookExportedAsPdfSnack => 'Caderno exportado em PDF';
 
   @override
-  String get exportPreparing => 'A preparar exportação…';
+  String get exportPreparing => 'A preparar a exportação…';
 
   @override
   String exportProgress(int current, int total) {

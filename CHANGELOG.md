@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.83] — 2026
+
+### Fixed
+
+- **Contextual localization review** — Native review pass for all 13 non-English locales (de, fr, nl, ko, pl, es, it, uk, sv, nb, fi, da, pt): notebook vs laptop terminology, ink/stylus/trash/export phrasing, and recover-vs-restore distinctions
+
 ## [0.2.82] — 2026
 
 ### Added

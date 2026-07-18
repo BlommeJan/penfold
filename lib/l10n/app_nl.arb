@@ -52,8 +52,8 @@
   "folderNew": "Nieuwe map",
   "folderNewSubfolder": "Nieuwe submap",
   "folderRename": "Map hernoemen",
-  "folderMoveToTrash": "Naar prullenbak",
-  "folderMoveToTrashTitle": "\"{name}\" naar prullenbak verplaatsen?",
+  "folderMoveToTrash": "Naar de prullenbak",
+  "folderMoveToTrashTitle": "\"{name}\" naar de prullenbak verplaatsen?",
   "@folderMoveToTrashTitle": {
     "placeholders": {
       "name": {
@@ -71,10 +71,10 @@
   "notebookRename": "Notitieboek hernoemen",
   "notebookMoveToFolder": "Naar map verplaatsen",
   "notebookEditTags": "Labels bewerken",
-  "notebookExportWorkbook": "Werkboek exporteren",
+  "notebookExportWorkbook": "Notitieboek exporteren",
   "notebookExportWorkbookSubtitle": "Deel alle pagina's als PDF",
-  "notebookMoveToTrash": "Naar prullenbak",
-  "notebookMoveToTrashTitle": "\"{title}\" naar prullenbak verplaatsen?",
+  "notebookMoveToTrash": "Naar de prullenbak",
+  "notebookMoveToTrashTitle": "\"{title}\" naar de prullenbak verplaatsen?",
   "@notebookMoveToTrashTitle": {
     "placeholders": {
       "title": {
@@ -171,12 +171,12 @@
   "settingsSectionAppearanceAndPreferences": "Weergave & voorkeuren",
   "settingsSectionAppearance": "Weergave",
   "settingsAppearanceDarkMode": "Donkere modus",
-  "settingsAppearanceDarkModeSubtitle": "Kies licht, donker of volg je apparaat (standaard systeem)",
+  "settingsAppearanceDarkModeSubtitle": "Kies licht, donker of volg het systeem (standaard)",
   "themeSystem": "Systeem",
   "themeLight": "Licht",
   "themeDark": "Donker",
   "settingsSectionPreferences": "Voorkeuren",
-  "settingsLanguageLabel": "Apptaal",
+  "settingsLanguageLabel": "Taal van de app",
   "languageEnglish": "Engels",
   "languageGerman": "Duits",
   "languageFrench": "Frans",
@@ -205,7 +205,7 @@
     }
   },
   "settingsFingerDrawing": "Tekenen met vinger",
-  "settingsFingerDrawingSubtitle": "Teken met je vinger op papier; uitgeschakeld tekent alleen de stylus (standaard uit)",
+  "settingsFingerDrawingSubtitle": "Teken met je vinger op het papier; als dit uit staat, tekent alleen de stylus (standaard uit)",
   "settingsGestureInkEditing": "Gebaren-inktbewerking",
   "settingsGestureInkEditingSubtitle": "Streep over OCR-geïndexeerde inkt om die te wissen (standaard aan)",
   "settingsSectionSpen": "S Pen",
@@ -252,7 +252,7 @@
   "settingsRestoreBackupTitle": "Back-up terugzetten?",
   "settingsRestoreBackupBody": "Dit vervangt je huidige notitieboeken en bestanden. Je huidige database wordt vóór het herstel opgeslagen in backups/.",
   "settingsSectionAbout": "Over",
-  "settingsAboutSubtitle": "Lokaal handschriftnotitieboek — geen accounts, geen cloud.",
+  "settingsAboutSubtitle": "Lokaal notitieboek voor handschrift — geen accounts, geen cloud.",
   "settingsVersion": "Versie {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -289,7 +289,7 @@
   "toolbarUndo": "Ongedaan maken",
   "toolbarRedo": "Opnieuw",
   "toolbarAddPage": "Pagina toevoegen",
-  "toolbarStylusOnly": "Alleen stylus (handpalmafwijzing)",
+  "toolbarStylusOnly": "Alleen stylus (handpalm-afwijzing)",
   "toolbarFingerDrawing": "Tekenen met vinger",
   "toolbarPageOverview": "Pagina-overzicht",
   "toolbarTableOfContents": "Inhoudsopgave",
@@ -397,7 +397,7 @@
   "ocrHandwritingSearchable": "Handschift doorzoekbaar",
   "ocrPartial": "OCR gedeeltelijk",
   "trashTitle": "Prullenbak",
-  "trashFailedToLoad": "Prullenbak kon niet worden geladen: {error}",
+  "trashFailedToLoad": "De prullenbak kon niet worden geladen: {error}",
   "@trashFailedToLoad": {
     "placeholders": {
       "error": {
@@ -405,7 +405,7 @@
       }
     }
   },
-  "trashEmpty": "Prullenbak is leeg",
+  "trashEmpty": "De prullenbak is leeg",
   "trashSectionFolders": "Mappen",
   "trashSectionNotebooks": "Notitieboeken",
   "trashDeletionDateUnavailable": "Verwijderingsdatum niet beschikbaar",

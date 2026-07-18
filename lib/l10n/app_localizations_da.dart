@@ -42,7 +42,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get actionRecover => 'Gendan';
 
   @override
-  String get actionRestore => 'Gendan';
+  String get actionRestore => 'Indlæs';
 
   @override
   String get actionExport => 'Eksporter';
@@ -96,7 +96,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get libraryBreadcrumb => 'Bibliotek';
 
   @override
-  String get librarySearchHint => 'Søg i notesbøger og indtastet tekst…';
+  String get librarySearchHint => 'Søg i notesbøger og skrevet tekst…';
 
   @override
   String get libraryNoMatches => 'Ingen resultater';
@@ -147,11 +147,11 @@ class AppLocalizationsDa extends AppLocalizations {
   String get folderRename => 'Omdøb mappe';
 
   @override
-  String get folderMoveToTrash => 'Flyt til papirkurv';
+  String get folderMoveToTrash => 'Flyt til papirkurven';
 
   @override
   String folderMoveToTrashTitle(String name) {
-    return 'Flyt \"$name\" til papirkurv?';
+    return 'Flyt \"$name\" til papirkurven?';
   }
 
   @override
@@ -174,7 +174,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get notebookPaperLabel => 'Papir';
 
   @override
-  String get notebookCoverLabel => 'Cover';
+  String get notebookCoverLabel => 'Omslag';
 
   @override
   String get notebookRename => 'Omdøb notesbog';
@@ -192,11 +192,11 @@ class AppLocalizationsDa extends AppLocalizations {
   String get notebookExportWorkbookSubtitle => 'Del alle sider som PDF';
 
   @override
-  String get notebookMoveToTrash => 'Flyt til papirkurv';
+  String get notebookMoveToTrash => 'Flyt til papirkurven';
 
   @override
   String notebookMoveToTrashTitle(String title) {
-    return 'Flyt \"$title\" til papirkurv?';
+    return 'Flyt \"$title\" til papirkurven?';
   }
 
   @override
@@ -228,7 +228,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get notebookBackupExportedReady =>
-      'Sikkerhedskopi eksporteret. Du kan flytte til papirkurv, når du er klar.';
+      'Sikkerhedskopi eksporteret. Du kan flytte notesbogen til papirkurven, når du er klar.';
 
   @override
   String get importPdfSnack =>
@@ -256,7 +256,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String restoreFailed(String error) {
-    return 'Gendannelse mislykkedes: $error';
+    return 'Indlæsning mislykkedes: $error';
   }
 
   @override
@@ -265,7 +265,7 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String get templateBlank => 'Tom';
+  String get templateBlank => 'Blankt';
 
   @override
   String get templateLined => 'Linjeret';
@@ -321,7 +321,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsAppearanceDarkModeSubtitle =>
-      'Vælg lys, mørk eller følg enheden (standard: system)';
+      'Vælg lys, mørk eller match enheden (standard: system)';
 
   @override
   String get themeSystem => 'System';
@@ -355,7 +355,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsToolbarReorderHint =>
-      'Træk for at omarrangere tegneværktøjer. Fortryd og gendan forbliver fast til højre.';
+      'Træk for at omarrangere tegneværktøjer. Fortryd og omgør forbliver fast til højre.';
 
   @override
   String get settingsResetToolbarOrder => 'Nulstil rækkefølge på værktøjslinje';
@@ -364,18 +364,18 @@ class AppLocalizationsDa extends AppLocalizations {
   String get settingsSectionNotebook => 'Notesbog';
 
   @override
-  String get settingsPageTurnMode => 'Sidevendningstilstand';
+  String get settingsPageTurnMode => 'Bladretilstand';
 
   @override
   String get settingsPageTurnModeSubtitle =>
-      'Stryg én side ad gangen i stedet for løbende rulning (standard: fra)';
+      'Stryg én side ad gangen i stedet for løbende rulning (standard: slået fra)';
 
   @override
-  String get settingsZoomNavigation => 'Zoomnavigation';
+  String get settingsZoomNavigation => 'Zoom og panorering';
 
   @override
   String get settingsZoomNavigationSubtitle =>
-      'Knib for at zoome og panorere på sider (standard: til)';
+      'Knib for at zoome og panorere på sider (standard: slået til)';
 
   @override
   String get settingsSectionDrawing => 'Tegning';
@@ -385,7 +385,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Gør blækstrøg glattere med Chaikin-hjørneskæring (standard: til)';
+      'Gør blækstrøg glattere med Chaikin-hjørneskæring (standard: slået til)';
 
   @override
   String get settingsStrokeSmoothingStrength => 'Udjævningsstyrke';
@@ -400,14 +400,14 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Tegn med finger på papiret; når fra, tegner kun stylus (standard: fra)';
+      'Tegn med finger på papiret; når slået fra, tegner kun stylus (standard: slået fra)';
 
   @override
-  String get settingsGestureInkEditing => 'Gestusblækredigering';
+  String get settingsGestureInkEditing => 'Blækredigering med gestus';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Skrab over OCR-indekseret blæk for at slette det (standard: til)';
+      'Skrab over OCR-indekseret blæk for at slette det (standard: slået til)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -424,7 +424,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Fagtermer til håndskrift-OCR. Tætte matches rettes, når blæk indekseres, og termer booster notesbogssøgning.';
+      'Fagtermer til håndskrift-OCR. Tætte matches rettes, når blæk indekseres, og termer forbedrer søgning i notesbøger.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Ingen brugerdefinerede termer endnu.';
@@ -449,7 +449,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsYourDataHint =>
-      'Penfold gemmer alt på denne enhed i én SQLite-database og aktivmapper — ingen cloudsynkronisering. Se docs/ARCHITECTURE.md for det fulde lokale fillayout.';
+      'Penfold gemmer alt på denne enhed i én SQLite-database og ressourcemapper — ingen synkronisering i skyen. Se docs/ARCHITECTURE.md for det fulde lokale fillayout.';
 
   @override
   String get settingsDatabase => 'Database';
@@ -459,7 +459,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsBackupRestoreHint =>
-      'Eksporter en zip med penfold.db og aktivmapper, eller gendan fra en tidligere sikkerhedskopi. Din nuværende database gemmes i backups/ før gendannelse.';
+      'Eksporter en zip med penfold.db og ressourcemapper, eller gendan fra en tidligere sikkerhedskopi. Din nuværende database gemmes i backups/ før gendannelse.';
 
   @override
   String get settingsExportBackup => 'Eksporter sikkerhedskopi';
@@ -477,7 +477,7 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String get settingsRestoreBackup => 'Gendan sikkerhedskopi';
+  String get settingsRestoreBackup => 'Indlæs sikkerhedskopi';
 
   @override
   String get settingsRestoreBackupSubtitle =>
@@ -492,18 +492,18 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String get settingsRestoreBackupTitle => 'Gendan sikkerhedskopi?';
+  String get settingsRestoreBackupTitle => 'Indlæs sikkerhedskopi?';
 
   @override
   String get settingsRestoreBackupBody =>
-      'Dette erstatter dine nuværende notesbøger og filer. Din nuværende database gemmes i backups/ før gendannelse.';
+      'Dette erstatter dine nuværende notesbøger og filer. Din nuværende database gemmes i backups/ før indlæsning.';
 
   @override
   String get settingsSectionAbout => 'Om';
 
   @override
   String get settingsAboutSubtitle =>
-      'Lokal-først håndskriftsnotesbog — ingen konti, ingen cloud.';
+      'Håndskriftsnotesbog med lokal lagring — ingen konti, ingen cloud.';
 
   @override
   String settingsVersion(String version) {
@@ -589,7 +589,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get toolbarUndo => 'Fortryd';
 
   @override
-  String get toolbarRedo => 'Gentag';
+  String get toolbarRedo => 'Omgør';
 
   @override
   String get toolbarAddPage => 'Tilføj side';
@@ -625,7 +625,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get customColorTitle => 'Brugerdefineret farve';
 
   @override
-  String get hueLabel => 'Nuance';
+  String get hueLabel => 'Farvetone';
 
   @override
   String get saturationLabel => 'Mætning';
@@ -638,7 +638,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get tapeOptionsHint =>
-      'Tegn for at dække noter; tryk på tape for at vise eller skjule igen';
+      'Tegn for at dække noter; tryk på tapen for at vise eller skjule igen';
 
   @override
   String get fillColorTitle => 'Fyldfarve';
@@ -664,7 +664,7 @@ class AppLocalizationsDa extends AppLocalizations {
       'Sletter kun blæk under viskelædercirklen';
 
   @override
-  String get eraserModeWholeStrokeHint => 'Sletter hele strøg, den rører';
+  String get eraserModeWholeStrokeHint => 'Sletter hele strøg, den berører';
 
   @override
   String get eraseAllOnPageTitle => 'Slet alt på siden?';
@@ -762,7 +762,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get exportPageAsPdf => 'Eksporter side som PDF';
 
   @override
-  String get exportPageAsPdfSubtitle => 'Vektorblæk, del via systemark';
+  String get exportPageAsPdfSubtitle => 'Vektorblæk — del via delingsmenu';
 
   @override
   String get exportNotebookAsPdf => 'Eksporter notesbog som PDF';
@@ -805,11 +805,11 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Overskrifter fra indtastet tekst og OCR-indekseret blæk';
+      'Overskrifter fra skrevet tekst og OCR-indekseret blæk';
 
   @override
   String get contentsEmpty =>
-      'Ingen overskrifter fundet endnu.\nTilføj stor eller kort indtastet tekst, eller OCR-indekserede blækoverskrifter.';
+      'Ingen overskrifter fundet endnu.\nTilføj overskrifter som skrevet tekst i stor eller lille skrift, eller OCR-indekserede blækoverskrifter.';
 
   @override
   String contentsPageNumber(int number) {
@@ -860,7 +860,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get ocrHandwritingSearchable => 'Håndskrift kan søges';
 
   @override
-  String get ocrPartial => 'OCR delvis';
+  String get ocrPartial => 'Delvis OCR';
 
   @override
   String get trashTitle => 'Papirkurv';
@@ -880,7 +880,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get trashSectionNotebooks => 'Notesbøger';
 
   @override
-  String get trashDeletionDateUnavailable => 'Sletningsdato utilgængelig';
+  String get trashDeletionDateUnavailable => 'Sletningsdato ikke tilgængelig';
 
   @override
   String get trashExpiresToday => 'Udløber i dag';
@@ -947,7 +947,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get changePageSizeBody =>
-      'Denne side har blæk. Ændring af størrelsen omarrangerer siden; dit blæk forbliver på samme position på siden.';
+      'Denne side har blæk. Ændring af størrelsen ændrer sidens layout; dit blæk forbliver på samme position på siden.';
 
   @override
   String get changeOrientationTitle => 'Skift retning?';
@@ -981,7 +981,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String handwritingModelElapsed(String elapsed) {
-    return 'Forløbet: $elapsed';
+    return 'Forløbet tid: $elapsed';
   }
 
   @override

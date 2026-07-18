@@ -10,7 +10,7 @@
   "actionBack": "Tillbaka",
   "actionDone": "Klar",
   "actionSplit": "Dela",
-  "actionRecover": "Återställ",
+  "actionRecover": "Återhämta",
   "actionRestore": "Återställ",
   "actionExport": "Exportera",
   "actionRetry": "Försök igen",
@@ -29,7 +29,7 @@
   "libraryAll": "Alla",
   "libraryUncategorized": "Okategoriserade",
   "libraryBreadcrumb": "Bibliotek",
-  "librarySearchHint": "Sök i anteckningsböcker och skriven text…",
+  "librarySearchHint": "Sök i anteckningsböcker och inmatad text…",
   "libraryNoMatches": "Inga träffar",
   "libraryFolderEmpty": "Den här mappen är tom",
   "libraryNoNotebooksWithTag": "Inga anteckningsböcker med den här taggen",
@@ -71,7 +71,7 @@
   "notebookRename": "Byt namn på anteckningsbok",
   "notebookMoveToFolder": "Flytta till mapp",
   "notebookEditTags": "Redigera taggar",
-  "notebookExportWorkbook": "Exportera arbetsbok",
+  "notebookExportWorkbook": "Exportera anteckningsbok",
   "notebookExportWorkbookSubtitle": "Dela alla sidor som PDF",
   "notebookMoveToTrash": "Flytta till papperskorgen",
   "notebookMoveToTrashTitle": "Flytta \"{title}\" till papperskorgen?",
@@ -129,7 +129,7 @@
       }
     }
   },
-  "recoveryFailed": "Återställning misslyckades: {error}",
+  "recoveryFailed": "Återhämtning misslyckades: {error}",
   "@recoveryFailed": {
     "placeholders": {
       "error": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "handwritingModelDownloadingBackground": "Laddar ner handstilsmodell (~{sizeMb} MB) i bakgrunden…",
+  "handwritingModelDownloadingBackground": "Laddar ner handskriftsmodell (~{sizeMb} MB) i bakgrunden…",
   "@handwritingModelDownloadingBackground": {
     "placeholders": {
       "sizeMb": {
@@ -168,7 +168,7 @@
   "settingsSummarySeparator": " · ",
   "settingsTitle": "Inställningar",
   "settingsSectionLanguage": "Språk",
-  "settingsSectionAppearanceAndPreferences": "Utseende och inställningar",
+  "settingsSectionAppearanceAndPreferences": "Utseende och preferenser",
   "settingsSectionAppearance": "Utseende",
   "settingsAppearanceDarkMode": "Mörkt läge",
   "settingsAppearanceDarkModeSubtitle": "Välj ljust, mörkt eller följ enheten (systemstandard)",
@@ -189,9 +189,9 @@
   "settingsPageTurnModeSubtitle": "Svep en sida i taget i stället för kontinuerlig rullning (av som standard)",
   "settingsZoomNavigation": "Zoomnavigering",
   "settingsZoomNavigationSubtitle": "Nyp för att zooma och panorera på sidor (på som standard)",
-  "settingsSectionDrawing": "Ritning",
+  "settingsSectionDrawing": "Ritande",
   "settingsStrokeSmoothing": "Streckutjämning",
-  "settingsStrokeSmoothingSubtitle": "Utjämna bläckstreck med Chaikins hörnavskärning (på som standard)",
+  "settingsStrokeSmoothingSubtitle": "Utjämna bläckstreck med Chaikin-utjämning (på som standard)",
   "settingsStrokeSmoothingStrength": "Utjämningsstyrka",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — lägre behåller mer detalj; rekommenderat {recommended} %",
   "@settingsStrokeSmoothingStrengthSubtitle": {
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Rita med fingret",
-  "settingsFingerDrawingSubtitle": "Rita med fingret på papperet; när av är det bara stylus som ritar (av som standard)",
-  "settingsGestureInkEditing": "Gestbläckredigering",
-  "settingsGestureInkEditingSubtitle": "Stryk över OCR-indexerat bläck för att radera det (på som standard)",
+  "settingsFingerDrawingSubtitle": "Rita med fingret på papperet; när av ritar bara pennan (av som standard)",
+  "settingsGestureInkEditing": "Gestredigering av bläck",
+  "settingsGestureInkEditingSubtitle": "Stryk över OCR-indexerat bläck för att sudda ut det (på som standard)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Håll ned sidoknappen på S Pen för att tillfälligt byta verktyg. Släpp för att återgå till föregående verktyg. Fungerar på Samsung-enheter med stöd för sidoknapp.",
   "settingsSpenBarrelAction": "Sidoknappsåtgärd",
   "settingsSectionOcrDictionary": "OCR-ordlista",
-  "settingsOcrDictionaryHint": "Domäntermer för handstils-OCR. Nära matchningar korrigeras när bläck indexeras, och termer förbättrar sökning i anteckningsböcker.",
+  "settingsOcrDictionaryHint": "Domäntermer för handskrifts-OCR. Nära matchningar korrigeras när bläck indexeras, och termer förbättrar sökning i anteckningsböcker.",
   "settingsNoCustomOcrTerms": "Inga anpassade termer ännu.",
   "settingsRemoveOcrTerm": "Ta bort term",
   "settingsAddOcrTerm": "Lägg till term",
@@ -252,7 +252,7 @@
   "settingsRestoreBackupTitle": "Återställ säkerhetskopia?",
   "settingsRestoreBackupBody": "Detta ersätter dina nuvarande anteckningsböcker och filer. Din nuvarande databas sparas i backups/ före återställning.",
   "settingsSectionAbout": "Om",
-  "settingsAboutSubtitle": "Lokal handstilsanteckningsbok — inga konton, inget moln.",
+  "settingsAboutSubtitle": "Handskriftsanteckningsbok — lokalt lagrad, inga konton, inget moln.",
   "settingsVersion": "Version {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -289,14 +289,14 @@
   "toolbarUndo": "Ångra",
   "toolbarRedo": "Gör om",
   "toolbarAddPage": "Lägg till sida",
-  "toolbarStylusOnly": "Endast stylus (handavvisning)",
+  "toolbarStylusOnly": "Endast penna (handloavsvisning)",
   "toolbarFingerDrawing": "Rita med fingret",
   "toolbarPageOverview": "Sidöversikt",
   "toolbarTableOfContents": "Innehållsförteckning",
   "toolbarPageMenu": "Sidmeny",
   "penOptionsTitle": "Penna",
   "highlighterOptionsTitle": "Överstrykningspenna",
-  "brushLabel": "Pensel",
+  "brushLabel": "Pennstil",
   "colorLabel": "Färg",
   "customColorTitle": "Anpassad färg",
   "hueLabel": "Nyans",
@@ -305,12 +305,12 @@
   "tapeOptionsTitle": "Tejp",
   "tapeOptionsHint": "Rita för att täcka anteckningar; tryck på tejpen för att visa eller dölja igen",
   "fillColorTitle": "Fyllningsfärg",
-  "fillOptionsHint": "Rita en sluten loop, eller tryck inuti en form för att fylla",
+  "fillOptionsHint": "Rita en sluten form, eller tryck inuti en form för att fylla",
   "eraserSizeTitle": "Suddgummistolek",
   "eraserModeTitle": "Suddgummiläge",
   "eraserModePixel": "Pixel",
   "eraserModeStroke": "Streck",
-  "eraserModePartialHint": "Raderar bara bläck under suddgummiets cirkel",
+  "eraserModePartialHint": "Raderar bara bläck under suddgummiets yta",
   "eraserModeWholeStrokeHint": "Raderar hela streck som den berör",
   "eraseAllOnPageTitle": "Radera allt på sidan?",
   "eraseAllOnPageBody": "Detta tar bort alla streck på den aktuella sidan. Du kan ångra den här åtgärden.",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Exportera sida som PNG",
   "exportPageAsPngSubtitle": "Dela bild av den här sidan",
   "exportPageAsPdf": "Exportera sida som PDF",
-  "exportPageAsPdfSubtitle": "Vektorbläck, dela via systemark",
+  "exportPageAsPdfSubtitle": "Vektorbläck, dela via enhetens delningsmeny",
   "exportNotebookAsPdf": "Exportera anteckningsbok som PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 sida} other{{count} sidor}}",
   "@exportNotebookPageCount": {
@@ -360,8 +360,8 @@
   "pageAudioPlay": "Spela",
   "pageAudioPause": "Pausa",
   "contentsTitle": "Innehåll",
-  "contentsSubtitle": "Rubriker från skriven text och OCR-indexerat bläck",
-  "contentsEmpty": "Inga rubriker hittades ännu.\nLägg till stor eller kort skriven text, eller OCR-indexerade rubriker i bläck.",
+  "contentsSubtitle": "Rubriker från inmatad text och OCR-indexerat bläck",
+  "contentsEmpty": "Inga rubriker hittades ännu.\nLägg till stor eller kort inmatad text, eller OCR-indexerade bläckrubriker.",
   "contentsPageNumber": "Sida {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -394,8 +394,8 @@
   "pageOverviewDragToReorder": "Dra för att ordna om",
   "pageOverviewBookmarked": "Bokmärkt",
   "ocrIndexing": "OCR-indexerar…",
-  "ocrHandwritingSearchable": "Handstil sökbar",
-  "ocrPartial": "OCR delvis",
+  "ocrHandwritingSearchable": "Handskrift sökbar",
+  "ocrPartial": "OCR ofullständig",
   "trashTitle": "Papperskorg",
   "trashFailedToLoad": "Kunde inte ladda papperskorgen: {error}",
   "@trashFailedToLoad": {
@@ -479,10 +479,10 @@
       }
     }
   },
-  "couldNotRecognizeHandwriting": "Kunde inte känna igen handstil",
-  "handwritingModelTitle": "Handstilsmodell",
+  "couldNotRecognizeHandwriting": "Kunde inte känna igen handskrift",
+  "handwritingModelTitle": "Handskriftsmodell",
   "handwritingModelDownloadFailed": "Nedladdning misslyckades. Kontrollera nätverket och försök igen.",
-  "handwritingModelDownloading": "Laddar ner engelsk handstilsmodell (~{sizeMb} MB)…",
+  "handwritingModelDownloading": "Laddar ner engelsk handskriftsmodell (~{sizeMb} MB)…",
   "@handwritingModelDownloading": {
     "placeholders": {
       "sizeMb": {

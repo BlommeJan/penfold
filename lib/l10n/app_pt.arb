@@ -22,7 +22,7 @@
   "actionUseColor": "Usar cor",
   "libraryTitle": "Penfold",
   "libraryOverview": "Visão geral",
-  "libraryTrash": "Reciclagem",
+  "libraryTrash": "Lixo",
   "librarySettings": "Definições",
   "libraryFolders": "Pastas",
   "libraryNoFoldersYet": "Ainda não há pastas",
@@ -44,7 +44,7 @@
     }
   },
   "tooltipBackupRestore": "Cópia de segurança e restauro",
-  "tooltipTrash": "Reciclagem",
+  "tooltipTrash": "Lixo",
   "tooltipNewNotebook": "Novo caderno",
   "tooltipNewFolder": "Nova pasta",
   "tooltipNewSubfolder": "Nova subpasta",
@@ -52,8 +52,8 @@
   "folderNew": "Nova pasta",
   "folderNewSubfolder": "Nova subpasta",
   "folderRename": "Mudar o nome da pasta",
-  "folderMoveToTrash": "Mover para a Reciclagem",
-  "folderMoveToTrashTitle": "Mover \"{name}\" para a Reciclagem?",
+  "folderMoveToTrash": "Mover para o lixo",
+  "folderMoveToTrashTitle": "Mover \"{name}\" para o lixo?",
   "@folderMoveToTrashTitle": {
     "placeholders": {
       "name": {
@@ -61,7 +61,7 @@
       }
     }
   },
-  "folderMoveToTrashBody": "A pasta e os seus cadernos vão para a Reciclagem durante 30 dias.",
+  "folderMoveToTrashBody": "A pasta e os seus cadernos vão para o lixo durante 30 dias.",
   "notebookNew": "Novo caderno",
   "notebookUntitled": "Sem título",
   "notebookTitleLabel": "Título",
@@ -69,12 +69,12 @@
   "notebookPaperLabel": "Papel",
   "notebookCoverLabel": "Capa",
   "notebookRename": "Mudar o nome do caderno",
-  "notebookMoveToFolder": "Mover para pasta",
+  "notebookMoveToFolder": "Mover para a pasta",
   "notebookEditTags": "Editar etiquetas",
-  "notebookExportWorkbook": "Exportar caderno",
-  "notebookExportWorkbookSubtitle": "Partilhar todas as páginas como PDF",
-  "notebookMoveToTrash": "Mover para a Reciclagem",
-  "notebookMoveToTrashTitle": "Mover \"{title}\" para a Reciclagem?",
+  "notebookExportWorkbook": "Exportar o caderno",
+  "notebookExportWorkbookSubtitle": "Partilhar todas as páginas em PDF",
+  "notebookMoveToTrash": "Mover para o lixo",
+  "notebookMoveToTrashTitle": "Mover \"{title}\" para o lixo?",
   "@notebookMoveToTrashTitle": {
     "placeholders": {
       "title": {
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "O caderno fica oculto na biblioteca durante 30 dias. A tinta e as páginas permanecem neste dispositivo até esvaziar a Reciclagem. Exporte uma cópia de segurança primeiro se quiser uma cópia extra.",
+  "notebookMoveToTrashBody": "O caderno fica oculto na biblioteca durante 30 dias. A tinta e as páginas permanecem neste dispositivo até esvaziar o lixo. Exporte primeiro uma cópia de segurança se quiser uma cópia extra.",
   "notebookTagsFor": "Etiquetas de \"{title}\"",
   "@notebookTagsFor": {
     "placeholders": {
@@ -95,7 +95,7 @@
   "notebookNewTag": "Nova etiqueta",
   "notebookAddTag": "Adicionar etiqueta",
   "notebookNoPagesToExport": "Este caderno não tem páginas para exportar",
-  "notebookExportedAsPdf": "\"{title}\" exportado como PDF",
+  "notebookExportedAsPdf": "\"{title}\" exportado em PDF",
   "@notebookExportedAsPdf": {
     "placeholders": {
       "title": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Cópia de segurança exportada. Pode mover para a Reciclagem quando quiser.",
+  "notebookBackupExportedReady": "Cópia de segurança exportada. Pode mover para o lixo quando quiser.",
   "importPdfSnack": "A importar PDF… as páginas são renderizadas uma vez e depois ficam offline.",
   "importFailed": "Falha na importação: {error}",
   "@importFailed": {
@@ -252,7 +252,7 @@
   "settingsRestoreBackupTitle": "Restaurar cópia de segurança?",
   "settingsRestoreBackupBody": "Isto substitui os seus cadernos e ficheiros atuais. A base de dados atual será guardada em backups/ antes do restauro.",
   "settingsSectionAbout": "Acerca de",
-  "settingsAboutSubtitle": "Caderno de escrita manual local — sem contas, sem nuvem.",
+  "settingsAboutSubtitle": "Caderno de notas manuscritas local — sem contas, sem nuvem.",
   "settingsVersion": "Versão {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -342,8 +342,8 @@
   "exportPageAsPng": "Exportar página como PNG",
   "exportPageAsPngSubtitle": "Partilhar imagem desta página",
   "exportPageAsPdf": "Exportar página como PDF",
-  "exportPageAsPdfSubtitle": "Tinta vetorial, partilhar via folha do sistema",
-  "exportNotebookAsPdf": "Exportar caderno como PDF",
+  "exportPageAsPdfSubtitle": "Tinta vetorial; partilhar através do menu de partilha do sistema",
+  "exportNotebookAsPdf": "Exportar o caderno em PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 página} other{{count} páginas}}",
   "@exportNotebookPageCount": {
     "placeholders": {
@@ -396,8 +396,8 @@
   "ocrIndexing": "A indexar OCR…",
   "ocrHandwritingSearchable": "Escrita manual pesquisável",
   "ocrPartial": "OCR parcial",
-  "trashTitle": "Reciclagem",
-  "trashFailedToLoad": "Falha ao carregar a Reciclagem: {error}",
+  "trashTitle": "Lixo",
+  "trashFailedToLoad": "Falha ao carregar o lixo: {error}",
   "@trashFailedToLoad": {
     "placeholders": {
       "error": {
@@ -405,7 +405,7 @@
       }
     }
   },
-  "trashEmpty": "A Reciclagem está vazia",
+  "trashEmpty": "O lixo está vazio",
   "trashSectionFolders": "Pastas",
   "trashSectionNotebooks": "Cadernos",
   "trashDeletionDateUnavailable": "Data de eliminação indisponível",
@@ -507,10 +507,10 @@
       }
     }
   },
-  "pageExportedAsPng": "Página exportada como PNG",
-  "pageExportedAsPdf": "Página exportada como PDF",
-  "notebookExportedAsPdfSnack": "Caderno exportado como PDF",
-  "exportPreparing": "A preparar exportação…",
+  "pageExportedAsPng": "Página exportada em PNG",
+  "pageExportedAsPdf": "Página exportada em PDF",
+  "notebookExportedAsPdfSnack": "Caderno exportado em PDF",
+  "exportPreparing": "A preparar a exportação…",
   "exportProgress": "A exportar página {current} de {total}…",
   "@exportProgress": {
     "placeholders": {

@@ -84,7 +84,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get libraryFolders => 'Cartelle';
 
   @override
-  String get libraryNoFoldersYet => 'Nessuna cartella';
+  String get libraryNoFoldersYet => 'Nessuna cartella ancora';
 
   @override
   String get libraryAll => 'Tutti';
@@ -112,7 +112,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessun quaderno senza categoria';
 
   @override
-  String get libraryNoNotebooksYet => 'Nessun quaderno';
+  String get libraryNoNotebooksYet => 'Nessun quaderno ancora';
 
   @override
   String libraryCouldNotLoad(String error) {
@@ -202,7 +202,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Il quaderno viene nascosto dalla libreria per 30 giorni. Inchiostro e pagine restano su questo dispositivo finché il cestino non viene svuotato. Esporta un backup se vuoi una copia aggiuntiva.';
+      'Il quaderno viene nascosto dalla libreria per 30 giorni. Inchiostro e pagine restano su questo dispositivo finché il cestino non viene svuotato. Esporta prima un backup se vuoi una copia aggiuntiva.';
 
   @override
   String notebookTagsFor(String title) {
@@ -229,11 +229,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notebookBackupExportedReady =>
-      'Backup esportato. Puoi spostare il quaderno nel cestino quando vuoi.';
+      'Backup esportato. Puoi spostarlo nel cestino quando sei pronto.';
 
   @override
   String get importPdfSnack =>
-      'Importazione PDF… le pagine vengono renderizzate una volta, poi restano offline.';
+      'Importazione PDF… le pagine vengono generate una volta, poi restano offline.';
 
   @override
   String importFailed(String error) {
@@ -262,7 +262,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String handwritingModelDownloadingBackground(int sizeMb) {
-    return 'Download del modello di scrittura (~$sizeMb MB) in background…';
+    return 'Download del modello di scrittura (~$sizeMb MB) in secondo piano…';
   }
 
   @override
@@ -321,7 +321,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsAppearanceDarkModeSubtitle =>
-      'Scegli chiaro, scuro o segui il dispositivo (impostazione predefinita di sistema)';
+      'Scegli chiaro, scuro o segui il dispositivo (predefinito: sistema)';
 
   @override
   String get themeSystem => 'Sistema';
@@ -368,27 +368,27 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsPageTurnModeSubtitle =>
-      'Scorri una pagina alla volta invece dello scorrimento continuo (predefinito disattivato)';
+      'Scorri una pagina alla volta invece dello scorrimento continuo (disattivato di default)';
 
   @override
   String get settingsZoomNavigation => 'Navigazione con zoom';
 
   @override
   String get settingsZoomNavigationSubtitle =>
-      'Pizzica per ingrandire e spostarti sulle pagine (predefinito attivato)';
+      'Pizzica per ingrandire e spostarti sulle pagine (attivato di default)';
 
   @override
   String get settingsSectionDrawing => 'Disegno';
 
   @override
-  String get settingsStrokeSmoothing => 'Levigatura tratti';
+  String get settingsStrokeSmoothing => 'Levigatura dei tratti';
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Leviga i tratti d\'inchiostro con l\'algoritmo Chaikin (predefinito attivato)';
+      'Leviga i tratti d\'inchiostro con l\'algoritmo di Chaikin (attivato di default)';
 
   @override
-  String get settingsStrokeSmoothingStrength => 'Intensità levigatura';
+  String get settingsStrokeSmoothingStrength => 'Intensità di levigatura';
 
   @override
   String settingsStrokeSmoothingStrengthSubtitle(int percent, int recommended) {
@@ -400,14 +400,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Disegna con il dito sulla pagina; se disattivato, solo lo stilo disegna (predefinito disattivato)';
+      'Disegna con il dito sul foglio; se disattivato, solo lo stilo disegna (disattivato di default)';
 
   @override
   String get settingsGestureInkEditing => 'Modifica inchiostro con gesti';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Gratta sull\'inchiostro indicizzato con OCR per cancellarlo (predefinito attivato)';
+      'Passa sopra l\'inchiostro indicizzato con OCR per cancellarlo (attivato di default)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -466,7 +466,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsExportBackupSubtitle =>
-      'Comprimi penfold.db, PDF sorgente, immagini e pagine PDF legacy';
+      'Crea uno zip con penfold.db, PDF sorgente, immagini e pagine PDF legacy';
 
   @override
   String get settingsRecoverFromBackup => 'Recupera da backup';
@@ -504,7 +504,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Quaderno per scrittura a mano locale — nessun account, nessun cloud.';
+      'Quaderno digitale per scrittura a mano, tutto in locale — senza account né cloud.';
 
   @override
   String settingsVersion(String version) {
@@ -515,7 +515,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get spenActionEraser => 'Gomma';
 
   @override
-  String get spenActionLasso => 'Lazo';
+  String get spenActionLasso => 'Lasso';
 
   @override
   String get spenActionPen => 'Penna';
@@ -530,7 +530,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get toolHighlighter => 'Evidenziatore';
 
   @override
-  String get toolTape => 'Nastro';
+  String get toolTape => 'Nastro coprente';
 
   @override
   String get toolEraser => 'Gomma';
@@ -539,7 +539,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get toolSelection => 'Selezione';
 
   @override
-  String get toolLasso => 'Lazo';
+  String get toolLasso => 'Lasso';
 
   @override
   String get toolShape => 'Forma';
@@ -596,7 +596,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get toolbarAddPage => 'Aggiungi pagina';
 
   @override
-  String get toolbarStylusOnly => 'Solo stilo (rifiuto palmo)';
+  String get toolbarStylusOnly => 'Solo stilo (rifiuto del palmo)';
 
   @override
   String get toolbarFingerDrawing => 'Disegno con dito';
@@ -617,7 +617,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get highlighterOptionsTitle => 'Evidenziatore';
 
   @override
-  String get brushLabel => 'Pennello';
+  String get brushLabel => 'Stile';
 
   @override
   String get colorLabel => 'Colore';
@@ -635,11 +635,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get brightnessLabel => 'Luminosità';
 
   @override
-  String get tapeOptionsTitle => 'Nastro';
+  String get tapeOptionsTitle => 'Nastro coprente';
 
   @override
   String get tapeOptionsHint =>
-      'Disegna per coprire le note; tocca il nastro per mostrare o nascondere di nuovo';
+      'Disegna per coprire le note; tocca il nastro coprente per mostrarle o nasconderle di nuovo';
 
   @override
   String get fillColorTitle => 'Colore di riempimento';
@@ -765,7 +765,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Inchiostro vettoriale, condividi con il menu di condivisione';
+      'Inchiostro vettoriale, condividi dal menu Condividi di sistema';
 
   @override
   String get exportNotebookAsPdf => 'Esporta quaderno come PDF';
@@ -854,7 +854,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pageOverviewDragToReorder => 'Trascina per riordinare';
 
   @override
-  String get pageOverviewBookmarked => 'Con segnalibro';
+  String get pageOverviewBookmarked => 'Segnalibro impostato';
 
   @override
   String get ocrIndexing => 'Indicizzazione OCR…';
@@ -894,8 +894,8 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count giorni rimanenti',
-      one: '1 giorno rimanente',
+      other: 'Restano $count giorni',
+      one: 'Resta 1 giorno',
     );
     return '$_temp0';
   }
@@ -926,7 +926,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String splitPageBody(int count) {
-    return 'Crea una nuova pagina con lo stesso modello e sposta circa metà dei $count tratti su di essa.';
+    return 'Crea una nuova pagina con lo stesso modello e sposta circa metà dei $count tratti nella nuova pagina.';
   }
 
   @override
@@ -951,14 +951,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get changePageSizeBody =>
-      'Questa pagina ha inchiostro. Cambiare la dimensione riorganizza la pagina; l\'inchiostro resta nella stessa posizione sulla pagina.';
+      'Questa pagina contiene inchiostro. Cambiare la dimensione ricalcola il layout della pagina; l\'inchiostro resta nella stessa posizione.';
 
   @override
   String get changeOrientationTitle => 'Cambiare orientamento?';
 
   @override
   String get changeOrientationBody =>
-      'Questa pagina ha inchiostro. Cambiare l\'orientamento ridimensiona e centra il contenuto per adattarlo ai nuovi limiti della pagina.';
+      'Questa pagina contiene inchiostro. Cambiare l\'orientamento ridimensiona e centra il contenuto per adattarlo ai nuovi margini della pagina.';
 
   @override
   String convertedToText(String preview) {
@@ -986,7 +986,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String handwritingModelElapsed(String elapsed) {
-    return 'Trascorso: $elapsed';
+    return 'Tempo trascorso: $elapsed';
   }
 
   @override

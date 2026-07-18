@@ -9,9 +9,9 @@
   "actionAdd": "Hinzufügen",
   "actionBack": "Zurück",
   "actionDone": "Fertig",
-  "actionSplit": "Teilen",
+  "actionSplit": "Aufteilen",
   "actionRecover": "Wiederherstellen",
-  "actionRestore": "Zurücksetzen",
+  "actionRestore": "Wiederherstellen",
   "actionExport": "Exportieren",
   "actionRetry": "Erneut versuchen",
   "actionRetrying": "Wird wiederholt…",
@@ -71,7 +71,7 @@
   "notebookRename": "Notizbuch umbenennen",
   "notebookMoveToFolder": "In Ordner verschieben",
   "notebookEditTags": "Tags bearbeiten",
-  "notebookExportWorkbook": "Arbeitsmappe exportieren",
+  "notebookExportWorkbook": "Gesamtes Notizbuch exportieren",
   "notebookExportWorkbookSubtitle": "Alle Seiten als PDF teilen",
   "notebookMoveToTrash": "In Papierkorb verschieben",
   "notebookMoveToTrashTitle": "„{title}“ in Papierkorb verschieben?",
@@ -103,7 +103,7 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Sicherung exportiert. Sie können das Notizbuch verschieben, wenn Sie bereit sind.",
+  "notebookBackupExportedReady": "Sicherung exportiert. Sie können es in den Papierkorb verschieben, wenn Sie bereit sind.",
   "importPdfSnack": "PDF wird importiert… Seiten werden einmal gerendert und bleiben dann offline.",
   "importFailed": "Import fehlgeschlagen: {error}",
   "@importFailed": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "restoreFailed": "Zurücksetzen fehlgeschlagen: {error}",
+  "restoreFailed": "Wiederherstellung fehlgeschlagen: {error}",
   "@restoreFailed": {
     "placeholders": {
       "error": {
@@ -168,7 +168,7 @@
   "settingsSummarySeparator": " · ",
   "settingsTitle": "Einstellungen",
   "settingsSectionLanguage": "Sprache",
-  "settingsSectionAppearanceAndPreferences": "Erscheinungsbild & Einstellungen",
+  "settingsSectionAppearanceAndPreferences": "Erscheinungsbild & Präferenzen",
   "settingsSectionAppearance": "Erscheinungsbild",
   "settingsAppearanceDarkMode": "Dunkelmodus",
   "settingsAppearanceDarkModeSubtitle": "Hell, dunkel oder Systemeinstellung verwenden (Standard: System)",
@@ -205,9 +205,9 @@
     }
   },
   "settingsFingerDrawing": "Zeichnen mit dem Finger",
-  "settingsFingerDrawingSubtitle": "Mit dem Finger auf dem Papier zeichnen; ausgeschaltet zeichnet nur der Stift (Standard: aus)",
-  "settingsGestureInkEditing": "Gesten-Tintenbearbeitung",
-  "settingsGestureInkEditingSubtitle": "OCR-indizierte Tinte durchstreichen, um sie zu löschen (Standard: an)",
+  "settingsFingerDrawingSubtitle": "Mit dem Finger auf dem Papier zeichnen; wenn aus, zeichnet nur der Stift (Standard: aus)",
+  "settingsGestureInkEditing": "Tinte per Geste löschen",
+  "settingsGestureInkEditingSubtitle": "OCR-indizierte Tinte durch Kritzeln löschen (Standard: an)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Halten Sie die S-Pen-Seitentaste, um vorübergehend das Werkzeug zu wechseln. Loslassen stellt das vorherige Werkzeug wieder her. Funktioniert auf Samsung-Geräten mit Seitentasten-Unterstützung.",
   "settingsSpenBarrelAction": "Seitentasten-Aktion",
@@ -223,7 +223,7 @@
   "settingsYourDataHint": "Penfold speichert alles auf diesem Gerät in einer SQLite-Datenbank und Asset-Ordnern — ohne Cloud-Synchronisation. Siehe docs/ARCHITECTURE.md für die vollständige lokale Dateistruktur.",
   "settingsDatabase": "Datenbank",
   "settingsSectionBackupRestore": "Sicherung & Wiederherstellung",
-  "settingsBackupRestoreHint": "Exportieren Sie ein Zip mit penfold.db und Asset-Ordnern oder stellen Sie aus einer früheren Sicherung wieder her. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "settingsBackupRestoreHint": "Exportieren Sie ein Zip mit penfold.db und Asset-Ordnern oder stellen Sie aus einer früheren Sicherung wieder her. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.",
   "settingsExportBackup": "Sicherung exportieren",
   "settingsExportBackupSubtitle": "penfold.db, PDF-Quellen, Bilder und ältere PDF-Seiten als Zip",
   "settingsRecoverFromBackup": "Aus Sicherung wiederherstellen",
@@ -238,10 +238,10 @@
       }
     }
   },
-  "settingsRestoreBackup": "Sicherung zurücksetzen",
+  "settingsRestoreBackup": "Sicherung wiederherstellen",
   "settingsRestoreBackupSubtitle": "Lokale Daten aus einer Penfold-Sicherungs-Zip ersetzen",
   "settingsRecoverAutoBackupTitle": "Aus Auto-Sicherung wiederherstellen?",
-  "settingsRecoverAutoBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien durch die Sicherung vom {timestamp}. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "settingsRecoverAutoBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien durch die Sicherung vom {timestamp}. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.",
   "@settingsRecoverAutoBackupBody": {
     "placeholders": {
       "timestamp": {
@@ -249,8 +249,8 @@
       }
     }
   },
-  "settingsRestoreBackupTitle": "Sicherung zurücksetzen?",
-  "settingsRestoreBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "settingsRestoreBackupTitle": "Sicherung wiederherstellen?",
+  "settingsRestoreBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien. Ihre aktuelle Datenbank wird vor der Wiederherstellung in backups/ gesichert.",
   "settingsSectionAbout": "Über",
   "settingsAboutSubtitle": "Lokales Handschrift-Notizbuch — ohne Konten, ohne Cloud.",
   "settingsVersion": "Version {version}",
@@ -261,14 +261,14 @@
       }
     }
   },
-  "spenActionEraser": "Radierer",
+  "spenActionEraser": "Radiergummi",
   "spenActionLasso": "Lasso",
   "spenActionPen": "Stift",
   "spenActionNone": "Keine",
   "toolPen": "Stift",
   "toolHighlighter": "Textmarker",
-  "toolTape": "Abdeckband",
-  "toolEraser": "Radierer",
+  "toolTape": "Klebeband",
+  "toolEraser": "Radiergummi",
   "toolSelection": "Auswahl",
   "toolLasso": "Lasso",
   "toolShape": "Form",
@@ -302,15 +302,15 @@
   "hueLabel": "Farbton",
   "saturationLabel": "Sättigung",
   "brightnessLabel": "Helligkeit",
-  "tapeOptionsTitle": "Abdeckband",
-  "tapeOptionsHint": "Ziehen, um Notizen zu verdecken; auf das Band tippen, um wieder anzuzeigen oder zu verbergen",
+  "tapeOptionsTitle": "Klebeband",
+  "tapeOptionsHint": "Ziehen, um Notizen zu verdecken; auf das Klebeband tippen, um wieder anzuzeigen oder zu verbergen",
   "fillColorTitle": "Füllfarbe",
   "fillOptionsHint": "Eine geschlossene Form zeichnen oder in eine Form tippen, um sie zu füllen",
-  "eraserSizeTitle": "Radierergröße",
-  "eraserModeTitle": "Radierermodus",
+  "eraserSizeTitle": "Radiergummigröße",
+  "eraserModeTitle": "Radiergummi-Modus",
   "eraserModePixel": "Pixel",
   "eraserModeStroke": "Strich",
-  "eraserModePartialHint": "Löscht nur Tinte unter dem Radiererkreis",
+  "eraserModePartialHint": "Löscht nur Tinte unter dem Radiergummi",
   "eraserModeWholeStrokeHint": "Löscht ganze Striche, die berührt werden",
   "eraseAllOnPageTitle": "Alles auf der Seite löschen?",
   "eraseAllOnPageBody": "Dies entfernt jeden Strich auf der aktuellen Seite. Sie können diese Aktion rückgängig machen.",
@@ -334,8 +334,8 @@
   "pageBookmark": "Lesezeichen",
   "pageRemoveBookmark": "Lesezeichen entfernen",
   "pageAudioTitle": "Audio",
-  "pageSplit": "Teilen",
-  "pageExportTitle": "Exportieren",
+  "pageSplit": "Aufteilen",
+  "pageExportTitle": "Export",
   "pdfPagesKeepBackground": "PDF-Seiten behalten ihren Dokumenthintergrund",
   "pdfPagesKeepDimensions": "PDF-Seiten behalten ihre Dokumentmaße",
   "pdfPagesKeepOrientation": "PDF-Seiten behalten ihre Dokumentausrichtung",
@@ -359,7 +359,7 @@
   "pageAudioRemove": "Audio entfernen",
   "pageAudioPlay": "Abspielen",
   "pageAudioPause": "Pausieren",
-  "contentsTitle": "Inhalt",
+  "contentsTitle": "Inhaltsverzeichnis",
   "contentsSubtitle": "Überschriften aus getipptem Text und OCR-indizierter Tinte",
   "contentsEmpty": "Noch keine Überschriften gefunden.\nFügen Sie großen oder kleinen getippten Text oder OCR-indizierte Tintenüberschriften hinzu.",
   "contentsPageNumber": "Seite {number}",
@@ -391,7 +391,7 @@
     }
   },
   "pageOverviewDeleteBody": "Dies kann nicht rückgängig gemacht werden.",
-  "pageOverviewDragToReorder": "Zum Sortieren ziehen",
+  "pageOverviewDragToReorder": "Zum Umsortieren ziehen",
   "pageOverviewBookmarked": "Mit Lesezeichen",
   "ocrIndexing": "OCR-Indizierung…",
   "ocrHandwritingSearchable": "Handschrift durchsuchbar",
@@ -437,7 +437,7 @@
     }
   },
   "trashDeleteFolderBody": "Dies entfernt den Ordner und seine Notizbücher von diesem Gerät.",
-  "splitPageTitle": "Seite teilen?",
+  "splitPageTitle": "Seite aufteilen?",
   "splitPageBody": "Eine neue Seite mit derselben Vorlage erstellen und etwa die Hälfte der {count} Striche darauf verschieben.",
   "@splitPageBody": {
     "placeholders": {
@@ -446,7 +446,7 @@
       }
     }
   },
-  "splitPageNeedStrokes": "Mindestens 2 Striche nötig, um diese Seite zu teilen",
+  "splitPageNeedStrokes": "Mindestens 2 Striche nötig, um diese Seite aufzuteilen",
   "splitPageSuccess": "Seite geteilt: {moved} Striche verschoben, {remaining} verbleiben",
   "@splitPageSuccess": {
     "placeholders": {
@@ -458,7 +458,7 @@
       }
     }
   },
-  "splitPageFailed": "Teilen fehlgeschlagen: {error}",
+  "splitPageFailed": "Aufteilen fehlgeschlagen: {error}",
   "@splitPageFailed": {
     "placeholders": {
       "error": {
@@ -466,7 +466,7 @@
       }
     }
   },
-  "splitPageAction": "Seite teilen",
+  "splitPageAction": "Seite aufteilen",
   "changePageSizeTitle": "Seitengröße ändern?",
   "changePageSizeBody": "Diese Seite enthält Tinte. Beim Ändern der Größe wird das Layout neu berechnet; Ihre Tinte bleibt an derselben Position auf der Seite.",
   "changeOrientationTitle": "Ausrichtung ändern?",
@@ -522,7 +522,7 @@
       }
     }
   },
-  "pageComplexityWarning": "Diese Seite hat {count} Striche und kann langsam wirken. Teilen Sie die Seite für bessere Leistung.",
+  "pageComplexityWarning": "Diese Seite hat {count} Striche und kann langsam wirken. Teilen Sie die Seite auf für bessere Leistung.",
   "@pageComplexityWarning": {
     "placeholders": {
       "count": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "pageComplexityExportBlocked": "Export blockiert: Eine Seite hat {count} Striche (Limit {limit}). Teilen Sie zuerst schwere Seiten.",
+  "pageComplexityExportBlocked": "Export blockiert: Eine Seite hat {count} Striche (Limit {limit}). Teilen Sie schwere Seiten zuerst auf.",
   "@pageComplexityExportBlocked": {
     "placeholders": {
       "count": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "restoreComplete": "Zurücksetzen abgeschlossen. Bitte starten Sie die App neu, um die wiederhergestellten Daten zu laden.",
+  "restoreComplete": "Wiederherstellung abgeschlossen. Bitte starten Sie die App neu, um die wiederhergestellten Daten zu laden.",
   "textToolHint": "Hier tippen…",
   "textToolDone": "Fertig",
   "languageKorean": "Koreanisch",

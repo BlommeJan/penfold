@@ -10,8 +10,8 @@
   "actionBack": "Takaisin",
   "actionDone": "Valmis",
   "actionSplit": "Jaa",
-  "actionRecover": "Palauta",
-  "actionRestore": "Palauta",
+  "actionRecover": "Palauta kopio",
+  "actionRestore": "Palauta tiedot",
   "actionExport": "Vie",
   "actionRetry": "Yritä uudelleen",
   "actionRetrying": "Yritetään uudelleen…",
@@ -29,7 +29,7 @@
   "libraryAll": "Kaikki",
   "libraryUncategorized": "Luokittelemattomat",
   "libraryBreadcrumb": "Kirjasto",
-  "librarySearchHint": "Hae muistikirjoja ja kirjoitettua tekstiä…",
+  "librarySearchHint": "Hae muistikirjoista ja kirjoitetusta tekstistä…",
   "libraryNoMatches": "Ei tuloksia",
   "libraryFolderEmpty": "Tämä kansio on tyhjä",
   "libraryNoNotebooksWithTag": "Ei muistikirjoja tällä tunnisteella",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Muistikirja piilotetaan kirjastosta 30 päiväksi. Piirrot ja sivut säilyvät laitteella, kunnes roskakori tyhjennetään. Vie varmuuskopio ensin, jos haluat ylimääräisen kopion.",
+  "notebookMoveToTrashBody": "Muistikirja piilotetaan kirjastosta 30 päiväksi. Muste ja sivut säilyvät laitteella, kunnes roskakori tyhjennetään. Vie varmuuskopio ensin, jos haluat ylimääräisen kopion.",
   "notebookTagsFor": "Tunnisteet kohteelle \"{title}\"",
   "@notebookTagsFor": {
     "placeholders": {
@@ -129,7 +129,7 @@
       }
     }
   },
-  "recoveryFailed": "Palautus epäonnistui: {error}",
+  "recoveryFailed": "Automaattinen palautus epäonnistui: {error}",
   "@recoveryFailed": {
     "placeholders": {
       "error": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "restoreFailed": "Palautus epäonnistui: {error}",
+  "restoreFailed": "Varmuuskopion palautus epäonnistui: {error}",
   "@restoreFailed": {
     "placeholders": {
       "error": {
@@ -157,8 +157,8 @@
   "templateLined": "Viivallinen",
   "templateGrid": "Ruudukko",
   "templateDotted": "Pisteviivallinen",
-  "templateCollegeRuled": "Yliopistoviivallinen",
-  "templateCollegeShort": "Yliopisto",
+  "templateCollegeRuled": "College-viivallinen",
+  "templateCollegeShort": "College",
   "pageSizeA4": "A4",
   "pageSizeA5": "A5",
   "pageSizeLetter": "Letter",
@@ -168,14 +168,14 @@
   "settingsSummarySeparator": " · ",
   "settingsTitle": "Asetukset",
   "settingsSectionLanguage": "Kieli",
-  "settingsSectionAppearanceAndPreferences": "Ulkoasu ja preferenssit",
+  "settingsSectionAppearanceAndPreferences": "Ulkoasu ja asetukset",
   "settingsSectionAppearance": "Ulkoasu",
   "settingsAppearanceDarkMode": "Tumma tila",
   "settingsAppearanceDarkModeSubtitle": "Valitse vaalea, tumma tai seuraa laitetta (järjestelmäoletus)",
   "themeSystem": "Järjestelmä",
   "themeLight": "Vaalea",
   "themeDark": "Tumma",
-  "settingsSectionPreferences": "Preferenssit",
+  "settingsSectionPreferences": "Valinnat",
   "settingsLanguageLabel": "Sovelluksen kieli",
   "languageEnglish": "Englanti",
   "languageGerman": "Saksa",
@@ -191,7 +191,7 @@
   "settingsZoomNavigationSubtitle": "Zoomaa ja panoroi sivuja nipistämällä (oletus päällä)",
   "settingsSectionDrawing": "Piirtäminen",
   "settingsStrokeSmoothing": "Piirron tasoitus",
-  "settingsStrokeSmoothingSubtitle": "Tasoita mustevedot Chaikinin kulmien leikkausmenetelmällä (oletus päällä)",
+  "settingsStrokeSmoothingSubtitle": "Pehmentää piirtojen kulmia automaattisesti (oletus päällä)",
   "settingsStrokeSmoothingStrength": "Tasoituksen voimakkuus",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — alempi säilyttää hienommat yksityiskohdat; suositus {recommended} %",
   "@settingsStrokeSmoothingStrengthSubtitle": {
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Piirtäminen sormella",
-  "settingsFingerDrawingSubtitle": "Piirrä sormella paperilla; pois päältä piirtää vain kynä (oletus pois päältä)",
-  "settingsGestureInkEditing": "Eleet musteen muokkaukseen",
-  "settingsGestureInkEditingSubtitle": "Pyyhi OCR-indeksoitua mustetta raaputtamalla (oletus päällä)",
+  "settingsFingerDrawingSubtitle": "Piirrä sormella; kun pois päältä, vain kynä piirtää (oletus pois päältä)",
+  "settingsGestureInkEditing": "Musteen muokkaus eleillä",
+  "settingsGestureInkEditingSubtitle": "Raaputa OCR-indeksoidun musteen päällä pyyhkiäksesi sen (oletus päällä)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Pidä S Penin sivupainiketta pohjassa vaihtaaksesi työkalua tilapäisesti. Päästä irti palauttaaksesi edellisen työkalun. Toimii Samsung-laitteilla, joissa on sivupainiketuki.",
   "settingsSpenBarrelAction": "Sivupainikkeen toiminto",
   "settingsSectionOcrDictionary": "OCR-sanasto",
-  "settingsOcrDictionaryHint": "Alakohtaiset termit käsialan OCR:lle. Lähellä olevat osumat korjataan, kun muste indeksoidaan, ja termit parantavat muistikirjahakua.",
+  "settingsOcrDictionaryHint": "OCR:iin erikoistuneet termit käsialan tunnistukseen. Lähellä olevat osumat korjataan musteen indeksoinnissa, ja termit parantavat muistikirjahakua.",
   "settingsNoCustomOcrTerms": "Ei mukautettuja termejä vielä.",
   "settingsRemoveOcrTerm": "Poista termi",
   "settingsAddOcrTerm": "Lisää termi",
@@ -261,16 +261,16 @@
       }
     }
   },
-  "spenActionEraser": "Pyyhin",
-  "spenActionLasso": "Nuolalla valinta",
+  "spenActionEraser": "Pyyhekumi",
+  "spenActionLasso": "Lasso",
   "spenActionPen": "Kynä",
-  "spenActionNone": "Ei mitään",
+  "spenActionNone": "Ei toimintoa",
   "toolPen": "Kynä",
   "toolHighlighter": "Korostuskynä",
   "toolTape": "Teippi",
-  "toolEraser": "Pyyhin",
-  "toolSelection": "Valinta",
-  "toolLasso": "Nuolalla valinta",
+  "toolEraser": "Pyyhekumi",
+  "toolSelection": "Aluevalinta",
+  "toolLasso": "Lasso",
   "toolShape": "Muoto",
   "toolFill": "Täytä",
   "toolText": "Teksti",
@@ -296,22 +296,22 @@
   "toolbarPageMenu": "Sivuvalikko",
   "penOptionsTitle": "Kynä",
   "highlighterOptionsTitle": "Korostuskynä",
-  "brushLabel": "Sivellin",
+  "brushLabel": "Kynätyyli",
   "colorLabel": "Väri",
   "customColorTitle": "Mukautettu väri",
   "hueLabel": "Sävy",
   "saturationLabel": "Kylläisyys",
   "brightnessLabel": "Kirkkaus",
   "tapeOptionsTitle": "Teippi",
-  "tapeOptionsHint": "Piirrä peittääksesi muistiinpanot; napauta teippiä näyttääksesi tai piilottaaksesi uudelleen",
+  "tapeOptionsHint": "Piirrä peittääksesi muistiinpanot; napauta teippiä paljastaaksesi tai piilottaaksesi ne uudelleen",
   "fillColorTitle": "Täyttöväri",
-  "fillOptionsHint": "Piirrä suljettu silmukka tai napauta muodon sisällä täyttääksesi",
-  "eraserSizeTitle": "Pyyhtimen koko",
-  "eraserModeTitle": "Pyyhintatila",
+  "fillOptionsHint": "Piirrä suljettu muoto tai napauta muodon sisällä täyttääksesi",
+  "eraserSizeTitle": "Pyyhekumin koko",
+  "eraserModeTitle": "Pyyhekumitila",
   "eraserModePixel": "Pikseli",
   "eraserModeStroke": "Piirto",
-  "eraserModePartialHint": "Pyyhkii vain musteen pyyhtimen ympyrän alla",
-  "eraserModeWholeStrokeHint": "Pyyhkii kokonaiset piirrot, joita se koskettaa",
+  "eraserModePartialHint": "Pyyhkii vain musteen pyyhtimen alla",
+  "eraserModeWholeStrokeHint": "Pyyhkii kokonaiset piirrot, joihin se osuu",
   "eraseAllOnPageTitle": "Pyyhitäänkö kaikki sivulta?",
   "eraseAllOnPageBody": "Tämä poistaa kaikki piirrot nykyiseltä sivulta. Voit kumota tämän toiminnon.",
   "eraseAllOnPageButton": "Pyyhi kaikki sivulta",
@@ -325,9 +325,9 @@
   "pageThemeLight": "Vaalea",
   "pageThemeDark": "Tumma",
   "pageThemeSepia": "Seepia",
-  "pageThemePastelPink": "Pastellin vaaleanpunainen",
-  "pageThemePastelBlue": "Pastellinsininen",
-  "pageThemePastelMint": "Pastellin minttu",
+  "pageThemePastelPink": "Pastellinen vaaleanpunainen",
+  "pageThemePastelBlue": "Pastellinen sininen",
+  "pageThemePastelMint": "Pastellinen minttu",
   "pageSizeTitle": "Sivun koko",
   "pageOrientationTitle": "Suunta",
   "pageTemplateTitle": "Sivupohja",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Vie sivu PNG:nä",
   "exportPageAsPngSubtitle": "Jaa kuva tästä sivusta",
   "exportPageAsPdf": "Vie sivu PDF:nä",
-  "exportPageAsPdfSubtitle": "Vektorimuste, jaa järjestelmän jakopainikkeella",
+  "exportPageAsPdfSubtitle": "Vektorimuste; jaa järjestelmän jakoikkunan kautta",
   "exportNotebookAsPdf": "Vie muistikirja PDF:nä",
   "exportNotebookPageCount": "{count, plural, =1{1 sivu} other{{count} sivua}}",
   "@exportNotebookPageCount": {
@@ -360,8 +360,8 @@
   "pageAudioPlay": "Toista",
   "pageAudioPause": "Tauko",
   "contentsTitle": "Sisällys",
-  "contentsSubtitle": "Otsikot kirjoitetusta tekstistä ja OCR-indeksoidusta musteesta",
-  "contentsEmpty": "Otsikoita ei löytynyt vielä.\nLisää suurta tai lyhyttä kirjoitettua tekstiä tai OCR-indeksoituja musteotsikoita.",
+  "contentsSubtitle": "Otsikot kirjoitetusta tekstistä ja OCR-indeksoidusta käsialasta",
+  "contentsEmpty": "Otsikoita ei löytynyt vielä.\nLisää suurta tai lyhyttä kirjoitettua tekstiä tai OCR-indeksoituja käsialan otsikoita.",
   "contentsPageNumber": "Sivu {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -371,7 +371,7 @@
     }
   },
   "pageOverviewPagesSuffix": " — Sivut",
-  "pageOverviewSelected": "{count} valittu",
+  "pageOverviewSelected": "Valittu: {count}",
   "@pageOverviewSelected": {
     "placeholders": {
       "count": {
@@ -394,8 +394,8 @@
   "pageOverviewDragToReorder": "Järjestä uudelleen vetämällä",
   "pageOverviewBookmarked": "Kirjanmerkitty",
   "ocrIndexing": "OCR-indeksointi…",
-  "ocrHandwritingSearchable": "Käsiala haettavissa",
-  "ocrPartial": "OCR osittainen",
+  "ocrHandwritingSearchable": "Käsialahaku käytössä",
+  "ocrPartial": "OCR osittain valmis",
   "trashTitle": "Roskakori",
   "trashFailedToLoad": "Roskakorin lataus epäonnistui: {error}",
   "@trashFailedToLoad": {
@@ -468,9 +468,9 @@
   },
   "splitPageAction": "Jaa sivu",
   "changePageSizeTitle": "Vaihdetaanko sivun kokoa?",
-  "changePageSizeBody": "Tällä sivulla on mustetta. Koon vaihto järjestää sivun uudelleen; musteesi pysyy samassa kohdassa sivulla.",
+  "changePageSizeBody": "Tällä sivulla on mustetta. Koon vaihtaminen järjestää sivun uudelleen; muste pysyy samassa kohdassa.",
   "changeOrientationTitle": "Vaihdetaanko suuntaa?",
-  "changeOrientationBody": "Tällä sivulla on mustetta. Suunnan vaihto skaalaa ja keskittää sisällön uusiin sivurajoihin.",
+  "changeOrientationBody": "Tällä sivulla on mustetta. Suunnan vaihtaminen skaalaa ja keskittää sisällön uusiin sivurajoihin.",
   "convertedToText": "Muunnettu tekstiksi: {preview}",
   "@convertedToText": {
     "placeholders": {

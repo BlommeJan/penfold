@@ -11,12 +11,12 @@
   "actionDone": "Ferdig",
   "actionSplit": "Del",
   "actionRecover": "Gjenopprett",
-  "actionRestore": "Gjenopprett",
+  "actionRestore": "Tilbakestill",
   "actionExport": "Eksporter",
   "actionRetry": "Prøv igjen",
   "actionRetrying": "Prøver igjen…",
   "actionExportFirst": "Eksporter først",
-  "actionEraseAll": "Viske ut alt",
+  "actionEraseAll": "Vis ut alt",
   "actionChangeSize": "Endre størrelse",
   "actionChangeOrientation": "Endre retning",
   "actionUseColor": "Bruk farge",
@@ -29,7 +29,7 @@
   "libraryAll": "Alle",
   "libraryUncategorized": "Ukategorisert",
   "libraryBreadcrumb": "Bibliotek",
-  "librarySearchHint": "Søk i notatbøker og skrevet tekst…",
+  "librarySearchHint": "Søk i notatbøker og inntastet tekst…",
   "libraryNoMatches": "Ingen treff",
   "libraryFolderEmpty": "Denne mappen er tom",
   "libraryNoNotebooksWithTag": "Ingen notatbøker med denne taggen",
@@ -71,7 +71,7 @@
   "notebookRename": "Gi notatbok nytt navn",
   "notebookMoveToFolder": "Flytt til mappe",
   "notebookEditTags": "Rediger tagger",
-  "notebookExportWorkbook": "Eksporter arbeidsbok",
+  "notebookExportWorkbook": "Eksporter notatbok",
   "notebookExportWorkbookSubtitle": "Del alle sider som PDF",
   "notebookMoveToTrash": "Flytt til papirkurv",
   "notebookMoveToTrashTitle": "Flytte «{title}» til papirkurv?",
@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Notatboken skjules fra biblioteket i 30 dager. Blekk og sider blir på enheten til papirkurven tømmes. Eksporter en sikkerhetskopi først hvis du vil ha en ekstra kopi.",
+  "notebookMoveToTrashBody": "Notatboken skjules fra biblioteket i 30 dager. Blekk og sider blir på denne enheten til papirkurven tømmes. Eksporter en sikkerhetskopi først hvis du vil ha en ekstra kopi.",
   "notebookTagsFor": "Tagger for «{title}»",
   "@notebookTagsFor": {
     "placeholders": {
@@ -103,8 +103,8 @@
       }
     }
   },
-  "notebookBackupExportedReady": "Sikkerhetskopi eksportert. Du kan flytte til papirkurv når du er klar.",
-  "importPdfSnack": "Importerer PDF… sidene rendres én gang, deretter er de tilgjengelig offline.",
+  "notebookBackupExportedReady": "Sikkerhetskopi eksportert. Du kan flytte den til papirkurv når du er klar.",
+  "importPdfSnack": "Importerer PDF… sidene gjengis én gang, deretter er de tilgjengelig offline.",
   "importFailed": "Import mislyktes: {error}",
   "@importFailed": {
     "placeholders": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "restoreFailed": "Gjenoppretting mislyktes: {error}",
+  "restoreFailed": "Tilbakestilling mislyktes: {error}",
   "@restoreFailed": {
     "placeholders": {
       "error": {
@@ -183,7 +183,7 @@
   "languageDutch": "Nederlandsk",
   "settingsSectionToolbar": "Verktøylinje",
   "settingsToolbarReorderHint": "Dra for å endre rekkefølge på tegneverktøy. Angre og gjør om forblir fast til høyre.",
-  "settingsResetToolbarOrder": "Tilbakestill verktøylinje",
+  "settingsResetToolbarOrder": "Tilbakestill rekkefølgen på verktøylinjen",
   "settingsSectionNotebook": "Notatbok",
   "settingsPageTurnMode": "Sidevendingsmodus",
   "settingsPageTurnModeSubtitle": "Sveip én side om gangen i stedet for kontinuerlig rulling (standard: av)",
@@ -191,7 +191,7 @@
   "settingsZoomNavigationSubtitle": "Knip for å zoome og panorere på sider (standard: på)",
   "settingsSectionDrawing": "Tegning",
   "settingsStrokeSmoothing": "Strekglatting",
-  "settingsStrokeSmoothingSubtitle": "Glatte blekkstreker med Chaikin-hjørnebeskjæring (standard: på)",
+  "settingsStrokeSmoothingSubtitle": "Glatte blekkstreker med Chaikin-algoritmen (standard: på)",
   "settingsStrokeSmoothingStrength": "Glattingsstyrke",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — lavere beholder finere detaljer; anbefalt {recommended}%",
   "@settingsStrokeSmoothingStrengthSubtitle": {
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Tegning med finger",
-  "settingsFingerDrawingSubtitle": "Tegn med finger på papiret; når av, tegner kun stylus (standard: av)",
-  "settingsGestureInkEditing": "Gestredigering av blekk",
-  "settingsGestureInkEditingSubtitle": "Skrap over OCR-indeksert blekk for å viske det ut (standard: på)",
+  "settingsFingerDrawingSubtitle": "Tegn med finger på papiret; når av, kan bare stylus tegne (standard: av)",
+  "settingsGestureInkEditing": "Blekkredigering med gest",
+  "settingsGestureInkEditingSubtitle": "Stryk over OCR-indeksert blekk for å viske det ut (standard: på)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Hold sideknappen på S Pen for å bytte verktøy midlertidig. Slipp for å gjenopprette forrige verktøy. Fungerer på Samsung-enheter med støtte for sideknapp.",
   "settingsSpenBarrelAction": "Sideknapp-handling",
   "settingsSectionOcrDictionary": "OCR-ordliste",
-  "settingsOcrDictionaryHint": "Fagtermer for håndskrift-OCR. Nære treff korrigeres når blekk indekseres, og termer forsterker søk i notatbøker.",
+  "settingsOcrDictionaryHint": "Fagtermer for håndskrift-OCR. Nære treff korrigeres når blekk indekseres, og termer forbedrer søk i notatbøker.",
   "settingsNoCustomOcrTerms": "Ingen egendefinerte termer ennå.",
   "settingsRemoveOcrTerm": "Fjern term",
   "settingsAddOcrTerm": "Legg til term",
@@ -238,7 +238,7 @@
       }
     }
   },
-  "settingsRestoreBackup": "Gjenopprett sikkerhetskopi",
+  "settingsRestoreBackup": "Tilbakestill sikkerhetskopi",
   "settingsRestoreBackupSubtitle": "Erstatt lokale data fra en Penfold-sikkerhetskopi (zip)",
   "settingsRecoverAutoBackupTitle": "Gjenopprette fra autosikkerhetskopi?",
   "settingsRecoverAutoBackupBody": "Dette erstatter notatbøkene og filene dine med sikkerhetskopi fra {timestamp}. Nåværende database lagres i backups/ før gjenoppretting.",
@@ -249,10 +249,10 @@
       }
     }
   },
-  "settingsRestoreBackupTitle": "Gjenopprette sikkerhetskopi?",
+  "settingsRestoreBackupTitle": "Tilbakestille sikkerhetskopi?",
   "settingsRestoreBackupBody": "Dette erstatter notatbøkene og filene dine. Nåværende database lagres i backups/ før gjenoppretting.",
   "settingsSectionAbout": "Om",
-  "settingsAboutSubtitle": "Lokal-først håndskriftsnotatbok — ingen kontoer, ingen sky.",
+  "settingsAboutSubtitle": "Notatbok for håndskrift — alt lagres lokalt, ingen kontoer, ingen sky.",
   "settingsVersion": "Versjon {version}",
   "@settingsVersion": {
     "placeholders": {
@@ -267,9 +267,9 @@
   "spenActionNone": "Ingen",
   "toolPen": "Penn",
   "toolHighlighter": "Markeringspenn",
-  "toolTape": "Tape",
+  "toolTape": "Teip",
   "toolEraser": "Viskelær",
-  "toolSelection": "Utvalg",
+  "toolSelection": "Markering",
   "toolLasso": "Lasso",
   "toolShape": "Form",
   "toolFill": "Fyll",
@@ -296,25 +296,25 @@
   "toolbarPageMenu": "Sidemeny",
   "penOptionsTitle": "Penn",
   "highlighterOptionsTitle": "Markeringspenn",
-  "brushLabel": "Pensel",
+  "brushLabel": "Pennetype",
   "colorLabel": "Farge",
   "customColorTitle": "Egendefinert farge",
   "hueLabel": "Nyanse",
   "saturationLabel": "Metning",
   "brightnessLabel": "Lysstyrke",
-  "tapeOptionsTitle": "Tape",
-  "tapeOptionsHint": "Tegn for å dekke notater; trykk på tape for å vise eller skjule igjen",
+  "tapeOptionsTitle": "Teip",
+  "tapeOptionsHint": "Tegn for å dekke notater; trykk på teip for å vise eller skjule igjen",
   "fillColorTitle": "Fyllfarge",
   "fillOptionsHint": "Tegn en lukket løkke, eller trykk inni en form for å fylle",
   "eraserSizeTitle": "Viskelærstørrelse",
   "eraserModeTitle": "Viskelærmodus",
   "eraserModePixel": "Piksel",
   "eraserModeStroke": "Strek",
-  "eraserModePartialHint": "Visker bare blekk under viskelær-sirkelen",
+  "eraserModePartialHint": "Visker bare blekk under viskelærsirkelen",
   "eraserModeWholeStrokeHint": "Visker hele streker den berører",
-  "eraseAllOnPageTitle": "Vise ut alt på siden?",
+  "eraseAllOnPageTitle": "Vis ut alt på siden?",
   "eraseAllOnPageBody": "Dette fjerner alle streker på gjeldende side. Du kan angre denne handlingen.",
-  "eraseAllOnPageButton": "Vise ut alt på siden",
+  "eraseAllOnPageButton": "Vis ut alt på siden",
   "pageSettingsTitle": "Sideinnstillinger",
   "pageColorTitle": "Sidefarge",
   "pageThemeTitle": "Sidetema",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Eksporter side som PNG",
   "exportPageAsPngSubtitle": "Del bilde av denne siden",
   "exportPageAsPdf": "Eksporter side som PDF",
-  "exportPageAsPdfSubtitle": "Vektorblekk, del via systemark",
+  "exportPageAsPdfSubtitle": "Vektorblekk, del via delingsmenyen",
   "exportNotebookAsPdf": "Eksporter notatbok som PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 side} other{{count} sider}}",
   "@exportNotebookPageCount": {
@@ -354,14 +354,14 @@
   },
   "pageAudioAttach": "Legg ved lydfil",
   "pageAudioAttachSubtitle": "MP3, M4A, WAV og andre lokale formater",
-  "pageAudioAttachedToPage": "Vedlagt denne siden",
+  "pageAudioAttachedToPage": "Vedlagt til denne siden",
   "pageAudioReplace": "Erstatt lydfil",
   "pageAudioRemove": "Fjern lyd",
   "pageAudioPlay": "Spill av",
   "pageAudioPause": "Pause",
   "contentsTitle": "Innhold",
-  "contentsSubtitle": "Overskrifter fra skrevet tekst og OCR-indeksert blekk",
-  "contentsEmpty": "Ingen overskrifter funnet ennå.\nLegg til store eller korte skrevne overskrifter, eller OCR-indekserte blekkoverskrifter.",
+  "contentsSubtitle": "Overskrifter fra inntastet tekst og OCR-indeksert blekk",
+  "contentsEmpty": "Ingen overskrifter funnet ennå.\nLegg til store eller korte inntastede overskrifter, eller OCR-indekserte blekkoverskrifter.",
   "contentsPageNumber": "Side {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -394,7 +394,7 @@
   "pageOverviewDragToReorder": "Dra for å endre rekkefølge",
   "pageOverviewBookmarked": "Bokmerket",
   "ocrIndexing": "OCR-indeksering…",
-  "ocrHandwritingSearchable": "Håndskrift søkbar",
+  "ocrHandwritingSearchable": "Håndskrift er søkbar",
   "ocrPartial": "OCR delvis",
   "trashTitle": "Papirkurv",
   "trashFailedToLoad": "Kunne ikke laste papirkurv: {error}",
@@ -438,7 +438,7 @@
   },
   "trashDeleteFolderBody": "Dette fjerner mappen og notatbøkene i den fra denne enheten.",
   "splitPageTitle": "Dele side?",
-  "splitPageBody": "Opprett en ny side med samme mal og flytt omtrent halvparten av {count} streker dit.",
+  "splitPageBody": "Opprett en ny side med samme mal og flytt omtrent halvparten av de {count} strekene dit.",
   "@splitPageBody": {
     "placeholders": {
       "count": {
@@ -490,8 +490,8 @@
       }
     }
   },
-  "handwritingModelReady": "Modell klar.",
-  "handwritingModelElapsed": "Forløpt: {elapsed}",
+  "handwritingModelReady": "Modellen er klar.",
+  "handwritingModelElapsed": "Medgått tid: {elapsed}",
   "@handwritingModelElapsed": {
     "placeholders": {
       "elapsed": {
@@ -550,7 +550,7 @@
   "languageItalian": "Italiensk",
   "languageUkrainian": "Ukrainsk",
   "languageSwedish": "Svensk",
-  "languageNorwegian": "Norsk",
+  "languageNorwegian": "Norsk bokmål",
   "languageFinnish": "Finsk",
   "languageDanish": "Dansk",
   "languagePortuguese": "Portugisisk"

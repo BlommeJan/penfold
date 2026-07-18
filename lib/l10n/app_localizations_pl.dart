@@ -39,7 +39,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get actionSplit => 'Podziel';
 
   @override
-  String get actionRecover => 'Odtwórz';
+  String get actionRecover => 'Odzyskaj';
 
   @override
   String get actionRestore => 'Przywróć';
@@ -185,7 +185,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get notebookEditTags => 'Edytuj etykiety';
 
   @override
-  String get notebookExportWorkbook => 'Eksportuj zeszyt';
+  String get notebookExportWorkbook => 'Eksportuj notatnik';
 
   @override
   String get notebookExportWorkbookSubtitle =>
@@ -201,7 +201,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'Notatnik zniknie z biblioteki na 30 dni. Pismo i strony pozostaną na tym urządzeniu, dopóki nie opróżnisz kosza. Wyeksportuj kopię zapasową, jeśli chcesz dodatkową kopię.';
+      'Notatnik zostanie ukryty w bibliotece na 30 dni. Atrament i strony pozostaną na tym urządzeniu, dopóki nie opróżnisz kosza. Wyeksportuj kopię zapasową, jeśli chcesz dodatkową kopię.';
 
   @override
   String notebookTagsFor(String title) {
@@ -250,7 +250,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String recoveryFailed(String error) {
-    return 'Odtwarzanie nie powiodło się: $error';
+    return 'Odzyskiwanie nie powiodło się: $error';
   }
 
   @override
@@ -264,7 +264,7 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get templateBlank => 'Pusty';
+  String get templateBlank => 'Pusta';
 
   @override
   String get templateLined => 'W linie';
@@ -398,14 +398,14 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Rysuj palcem na papierze; gdy wył., tylko rysik rysuje (domyślnie wył.)';
+      'Rysuj palcem na stronie; gdy wył., tylko rysik rysuje (domyślnie wył.)';
 
   @override
-  String get settingsGestureInkEditing => 'Edycja pisma gestem';
+  String get settingsGestureInkEditing => 'Edycja atramentu gestem';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Przekreśl pismo zindeksowane OCR, aby je wymazać (domyślnie wł.)';
+      'Przekreśl atrament zindeksowany przez OCR, aby go wymazać (domyślnie wł.)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -422,7 +422,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Terminy branżowe dla OCR pisma odręcznego. Podobne dopasowania są korygowane przy indeksowaniu pisma, a terminy wzmacniają wyszukiwanie w notatniku.';
+      'Terminy branżowe dla OCR pisma odręcznego. Podobne dopasowania są korygowane przy indeksowaniu atramentu, a terminy wzmacniają wyszukiwanie w notatniku.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Brak własnych terminów.';
@@ -467,7 +467,7 @@ class AppLocalizationsPl extends AppLocalizations {
       'Spakuj penfold.db, źródła PDF, obrazy i starsze strony PDF';
 
   @override
-  String get settingsRecoverFromBackup => 'Odtwórz z kopii zapasowej';
+  String get settingsRecoverFromBackup => 'Odzyskaj z kopii zapasowej';
 
   @override
   String settingsLatestAutoBackup(String timestamp, String size) {
@@ -483,11 +483,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get settingsRecoverAutoBackupTitle =>
-      'Odtworzyć z automatycznej kopii?';
+      'Odzyskać z automatycznej kopii?';
 
   @override
   String settingsRecoverAutoBackupBody(String timestamp) {
-    return 'To zastąpi bieżące notatniki i pliki kopią z $timestamp. Obecna baza zostanie zapisana w backups/ przed przywróceniem.';
+    return 'To zastąpi bieżące notatniki i pliki kopią z $timestamp. Obecna baza zostanie zapisana w backups/ przed odzyskaniem.';
   }
 
   @override
@@ -615,7 +615,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get highlighterOptionsTitle => 'Zakreślacz';
 
   @override
-  String get brushLabel => 'Pędzel';
+  String get brushLabel => 'Typ pióra';
 
   @override
   String get colorLabel => 'Kolor';
@@ -653,7 +653,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get eraserModeTitle => 'Tryb gumki';
 
   @override
-  String get eraserModePixel => 'Piksel';
+  String get eraserModePixel => 'Częściowa';
 
   @override
   String get eraserModeStroke => 'Pociągnięcie';
@@ -760,7 +760,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Atrament wektorowy, udostępnij przez arkusz systemowy';
+      'Atrament wektorowy, udostępnij przez menu udostępniania systemowego';
 
   @override
   String get exportNotebookAsPdf => 'Eksportuj notatnik jako PDF';
@@ -794,7 +794,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get pageAudioRemove => 'Usuń audio';
 
   @override
-  String get pageAudioPlay => 'Odtwórz';
+  String get pageAudioPlay => 'Odtwaj';
 
   @override
   String get pageAudioPause => 'Wstrzymaj';
@@ -804,11 +804,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Nagłówki z wpisanego tekstu i pisma zindeksowanego OCR';
+      'Nagłówki z wpisanego tekstu i atramentu zindeksowanego przez OCR';
 
   @override
   String get contentsEmpty =>
-      'Nie znaleziono jeszcze nagłówków.\nDodaj duży lub krótki wpisany tekst albo nagłówki pisma zindeksowanego OCR.';
+      'Nie znaleziono jeszcze nagłówków.\nDodaj duży lub krótki wpisany tekst albo nagłówki z atramentu zindeksowanego przez OCR.';
 
   @override
   String contentsPageNumber(int number) {
@@ -820,7 +820,15 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String pageOverviewSelected(int count) {
-    return 'Zaznaczono: $count';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zaznaczonych',
+      many: '$count zaznaczonych',
+      few: '$count zaznaczone',
+      one: '1 zaznaczona',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -852,13 +860,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get pageOverviewDragToReorder => 'Przeciągnij, aby zmienić kolejność';
 
   @override
-  String get pageOverviewBookmarked => 'Ma zakładkę';
+  String get pageOverviewBookmarked => 'Z zakładką';
 
   @override
   String get ocrIndexing => 'Indeksowanie OCR…';
 
   @override
-  String get ocrHandwritingSearchable => 'Pismo odręczne przeszukiwalne';
+  String get ocrHandwritingSearchable => 'Przeszukiwalne pismo odręczne';
 
   @override
   String get ocrPartial => 'OCR częściowe';
@@ -925,16 +933,16 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String splitPageBody(int count) {
-    return 'Utwórz nową stronę z tym samym szablonem i przenieś około połowę z $count pociągnięć na nią.';
+    return 'Utwórz nową stronę z tym samym szablonem i przenieś na nią około połowę pociągnięć (łącznie $count).';
   }
 
   @override
   String get splitPageNeedStrokes =>
-      'Potrzeba co najmniej 2 pociągnięć, aby podzielić tę stronę';
+      'Do podziału strony potrzeba co najmniej dwóch pociągnięć';
 
   @override
   String splitPageSuccess(int moved, int remaining) {
-    return 'Strona podzielona: przeniesiono $moved pociągnięć, pozostało $remaining';
+    return 'Strona podzielona: przeniesiono $moved, pozostało $remaining';
   }
 
   @override
@@ -1012,12 +1020,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String pageComplexityWarning(int count) {
-    return 'Ta strona ma $count pociągnięć i może działać wolno. Rozważ podział dla lepszej wydajności.';
+    return 'Dużo pociągnięć ($count) — ta strona może działać wolno. Rozważ podział dla lepszej wydajności.';
   }
 
   @override
   String pageComplexityExportBlocked(int count, int limit) {
-    return 'Eksport zablokowany: strona ma $count pociągnięć (limit $limit). Najpierw podziel obciążone strony.';
+    return 'Eksport zablokowany: liczba pociągnięć ($count) przekracza limit ($limit). Najpierw podziel obciążone strony.';
   }
 
   @override

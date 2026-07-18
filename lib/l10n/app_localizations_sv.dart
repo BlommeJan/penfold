@@ -39,7 +39,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get actionSplit => 'Dela';
 
   @override
-  String get actionRecover => 'Återställ';
+  String get actionRecover => 'Återhämta';
 
   @override
   String get actionRestore => 'Återställ';
@@ -96,7 +96,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get libraryBreadcrumb => 'Bibliotek';
 
   @override
-  String get librarySearchHint => 'Sök i anteckningsböcker och skriven text…';
+  String get librarySearchHint => 'Sök i anteckningsböcker och inmatad text…';
 
   @override
   String get libraryNoMatches => 'Inga träffar';
@@ -187,7 +187,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get notebookEditTags => 'Redigera taggar';
 
   @override
-  String get notebookExportWorkbook => 'Exportera arbetsbok';
+  String get notebookExportWorkbook => 'Exportera anteckningsbok';
 
   @override
   String get notebookExportWorkbookSubtitle => 'Dela alla sidor som PDF';
@@ -252,7 +252,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String recoveryFailed(String error) {
-    return 'Återställning misslyckades: $error';
+    return 'Återhämtning misslyckades: $error';
   }
 
   @override
@@ -262,7 +262,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String handwritingModelDownloadingBackground(int sizeMb) {
-    return 'Laddar ner handstilsmodell (~$sizeMb MB) i bakgrunden…';
+    return 'Laddar ner handskriftsmodell (~$sizeMb MB) i bakgrunden…';
   }
 
   @override
@@ -312,7 +312,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settingsSectionAppearanceAndPreferences =>
-      'Utseende och inställningar';
+      'Utseende och preferenser';
 
   @override
   String get settingsSectionAppearance => 'Utseende';
@@ -379,14 +379,14 @@ class AppLocalizationsSv extends AppLocalizations {
       'Nyp för att zooma och panorera på sidor (på som standard)';
 
   @override
-  String get settingsSectionDrawing => 'Ritning';
+  String get settingsSectionDrawing => 'Ritande';
 
   @override
   String get settingsStrokeSmoothing => 'Streckutjämning';
 
   @override
   String get settingsStrokeSmoothingSubtitle =>
-      'Utjämna bläckstreck med Chaikins hörnavskärning (på som standard)';
+      'Utjämna bläckstreck med Chaikin-utjämning (på som standard)';
 
   @override
   String get settingsStrokeSmoothingStrength => 'Utjämningsstyrka';
@@ -401,14 +401,14 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Rita med fingret på papperet; när av är det bara stylus som ritar (av som standard)';
+      'Rita med fingret på papperet; när av ritar bara pennan (av som standard)';
 
   @override
-  String get settingsGestureInkEditing => 'Gestbläckredigering';
+  String get settingsGestureInkEditing => 'Gestredigering av bläck';
 
   @override
   String get settingsGestureInkEditingSubtitle =>
-      'Stryk över OCR-indexerat bläck för att radera det (på som standard)';
+      'Stryk över OCR-indexerat bläck för att sudda ut det (på som standard)';
 
   @override
   String get settingsSectionSpen => 'S Pen';
@@ -425,7 +425,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settingsOcrDictionaryHint =>
-      'Domäntermer för handstils-OCR. Nära matchningar korrigeras när bläck indexeras, och termer förbättrar sökning i anteckningsböcker.';
+      'Domäntermer för handskrifts-OCR. Nära matchningar korrigeras när bläck indexeras, och termer förbättrar sökning i anteckningsböcker.';
 
   @override
   String get settingsNoCustomOcrTerms => 'Inga anpassade termer ännu.';
@@ -505,7 +505,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Lokal handstilsanteckningsbok — inga konton, inget moln.';
+      'Handskriftsanteckningsbok — lokalt lagrad, inga konton, inget moln.';
 
   @override
   String settingsVersion(String version) {
@@ -597,7 +597,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get toolbarAddPage => 'Lägg till sida';
 
   @override
-  String get toolbarStylusOnly => 'Endast stylus (handavvisning)';
+  String get toolbarStylusOnly => 'Endast penna (handloavsvisning)';
 
   @override
   String get toolbarFingerDrawing => 'Rita med fingret';
@@ -618,7 +618,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get highlighterOptionsTitle => 'Överstrykningspenna';
 
   @override
-  String get brushLabel => 'Pensel';
+  String get brushLabel => 'Pennstil';
 
   @override
   String get colorLabel => 'Färg';
@@ -647,7 +647,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get fillOptionsHint =>
-      'Rita en sluten loop, eller tryck inuti en form för att fylla';
+      'Rita en sluten form, eller tryck inuti en form för att fylla';
 
   @override
   String get eraserSizeTitle => 'Suddgummistolek';
@@ -663,7 +663,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get eraserModePartialHint =>
-      'Raderar bara bläck under suddgummiets cirkel';
+      'Raderar bara bläck under suddgummiets yta';
 
   @override
   String get eraserModeWholeStrokeHint => 'Raderar hela streck som den berör';
@@ -764,7 +764,8 @@ class AppLocalizationsSv extends AppLocalizations {
   String get exportPageAsPdf => 'Exportera sida som PDF';
 
   @override
-  String get exportPageAsPdfSubtitle => 'Vektorbläck, dela via systemark';
+  String get exportPageAsPdfSubtitle =>
+      'Vektorbläck, dela via enhetens delningsmeny';
 
   @override
   String get exportNotebookAsPdf => 'Exportera anteckningsbok som PDF';
@@ -806,11 +807,11 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Rubriker från skriven text och OCR-indexerat bläck';
+      'Rubriker från inmatad text och OCR-indexerat bläck';
 
   @override
   String get contentsEmpty =>
-      'Inga rubriker hittades ännu.\nLägg till stor eller kort skriven text, eller OCR-indexerade rubriker i bläck.';
+      'Inga rubriker hittades ännu.\nLägg till stor eller kort inmatad text, eller OCR-indexerade bläckrubriker.';
 
   @override
   String contentsPageNumber(int number) {
@@ -864,10 +865,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get ocrIndexing => 'OCR-indexerar…';
 
   @override
-  String get ocrHandwritingSearchable => 'Handstil sökbar';
+  String get ocrHandwritingSearchable => 'Handskrift sökbar';
 
   @override
-  String get ocrPartial => 'OCR delvis';
+  String get ocrPartial => 'OCR ofullständig';
 
   @override
   String get trashTitle => 'Papperskorg';
@@ -968,10 +969,10 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get couldNotRecognizeHandwriting => 'Kunde inte känna igen handstil';
+  String get couldNotRecognizeHandwriting => 'Kunde inte känna igen handskrift';
 
   @override
-  String get handwritingModelTitle => 'Handstilsmodell';
+  String get handwritingModelTitle => 'Handskriftsmodell';
 
   @override
   String get handwritingModelDownloadFailed =>
@@ -979,7 +980,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String handwritingModelDownloading(int sizeMb) {
-    return 'Laddar ner engelsk handstilsmodell (~$sizeMb MB)…';
+    return 'Laddar ner engelsk handskriftsmodell (~$sizeMb MB)…';
   }
 
   @override

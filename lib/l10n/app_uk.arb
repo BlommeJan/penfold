@@ -82,7 +82,7 @@
       }
     }
   },
-  "notebookMoveToTrashBody": "Зошит буде приховано з бібліотеки на 30 днів. Чернетки та сторінки залишаться на цьому пристрої, доки кошик не буде очищено. Експортуйте резервну копію, якщо потрібна додаткова копія.",
+  "notebookMoveToTrashBody": "Зошит буде приховано з бібліотеки на 30 днів. Чорнило та сторінки залишаться на цьому пристрої, доки кошик не буде очищено. Експортуйте резервну копію, якщо потрібна додаткова копія.",
   "notebookTagsFor": "Теги для «{title}»",
   "@notebookTagsFor": {
     "placeholders": {
@@ -153,7 +153,7 @@
       }
     }
   },
-  "templateBlank": "Порожній",
+  "templateBlank": "Чистий",
   "templateLined": "Лінований",
   "templateGrid": "Клітинка",
   "templateDotted": "Крапки",
@@ -175,7 +175,7 @@
   "themeSystem": "Системна",
   "themeLight": "Світла",
   "themeDark": "Темна",
-  "settingsSectionPreferences": "Налаштування",
+  "settingsSectionPreferences": "Уподобання",
   "settingsLanguageLabel": "Мова застосунку",
   "languageEnglish": "Англійська",
   "languageGerman": "Німецька",
@@ -191,7 +191,7 @@
   "settingsZoomNavigationSubtitle": "Масштабування та переміщення сторінок жестами (за замовчуванням увімкнено)",
   "settingsSectionDrawing": "Малювання",
   "settingsStrokeSmoothing": "Згладжування штрихів",
-  "settingsStrokeSmoothingSubtitle": "Згладжувати штрихи методом Chaikin (за замовчуванням увімкнено)",
+  "settingsStrokeSmoothingSubtitle": "Згладжувати штрихи чорнила методом Chaikin (за замовчуванням увімкнено)",
   "settingsStrokeSmoothingStrength": "Сила згладжування",
   "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — менше значення зберігає більше деталей; рекомендовано {recommended}%",
   "@settingsStrokeSmoothingStrengthSubtitle": {
@@ -205,14 +205,14 @@
     }
   },
   "settingsFingerDrawing": "Малювання пальцем",
-  "settingsFingerDrawingSubtitle": "Малювати пальцем на папері; якщо вимкнено, малює лише стилус (за замовчуванням вимкнено)",
-  "settingsGestureInkEditing": "Редагування чернеток жестами",
-  "settingsGestureInkEditingSubtitle": "Проведіть по OCR-індексованих чернетках, щоб їх стерти (за замовчуванням увімкнено)",
+  "settingsFingerDrawingSubtitle": "Малювати пальцем на сторінці; якщо вимкнено, малює лише стилус (за замовчуванням вимкнено)",
+  "settingsGestureInkEditing": "Редагування чорнила жестами",
+  "settingsGestureInkEditingSubtitle": "Проведіть по OCR-індексованому чорнилу, щоб стерти його (за замовчуванням увімкнено)",
   "settingsSectionSpen": "S Pen",
   "settingsSpenHint": "Утримуйте бокову кнопку S Pen, щоб тимчасово перемкнути інструмент. Відпустіть, щоб повернути попередній інструмент. Працює на пристроях Samsung із підтримкою бокової кнопки.",
   "settingsSpenBarrelAction": "Дія бокової кнопки",
   "settingsSectionOcrDictionary": "Словник OCR",
-  "settingsOcrDictionaryHint": "Спеціальні терміни для OCR почерку. Схожі збіги виправляються під час індексації, а терміни покращують пошук у зошитах.",
+  "settingsOcrDictionaryHint": "Спеціальні терміни для OCR почерку. Схожі збіги виправляються під час індексації чорнила, а терміни покращують пошук у зошитах.",
   "settingsNoCustomOcrTerms": "Власних термінів ще немає.",
   "settingsRemoveOcrTerm": "Видалити термін",
   "settingsAddOcrTerm": "Додати термін",
@@ -266,7 +266,7 @@
   "spenActionPen": "Перо",
   "spenActionNone": "Немає",
   "toolPen": "Перо",
-  "toolHighlighter": "Маркер",
+  "toolHighlighter": "Текст-маркер",
   "toolTape": "Стрічка",
   "toolEraser": "Гумка",
   "toolSelection": "Виділення",
@@ -295,8 +295,8 @@
   "toolbarTableOfContents": "Зміст",
   "toolbarPageMenu": "Меню сторінки",
   "penOptionsTitle": "Перо",
-  "highlighterOptionsTitle": "Маркер",
-  "brushLabel": "Пензель",
+  "highlighterOptionsTitle": "Текст-маркер",
+  "brushLabel": "Тип пера",
   "colorLabel": "Колір",
   "customColorTitle": "Власний колір",
   "hueLabel": "Відтінок",
@@ -310,7 +310,7 @@
   "eraserModeTitle": "Режим гумки",
   "eraserModePixel": "Піксельна",
   "eraserModeStroke": "Штрих",
-  "eraserModePartialHint": "Стирає лише чернетки під колом гумки",
+  "eraserModePartialHint": "Стирає лише чорнило під колом гумки",
   "eraserModeWholeStrokeHint": "Стирає цілі штрихи, яких торкається",
   "eraseAllOnPageTitle": "Стерти все на сторінці?",
   "eraseAllOnPageBody": "Це видалить усі штрихи на поточній сторінці. Дію можна скасувати.",
@@ -342,7 +342,7 @@
   "exportPageAsPng": "Експорт сторінки як PNG",
   "exportPageAsPngSubtitle": "Надіслати зображення цієї сторінки",
   "exportPageAsPdf": "Експорт сторінки як PDF",
-  "exportPageAsPdfSubtitle": "Векторні чернетки, надіслати через системне меню",
+  "exportPageAsPdfSubtitle": "Векторне чорнило, надіслати через системне меню",
   "exportNotebookAsPdf": "Експорт зошита як PDF",
   "exportNotebookPageCount": "{count, plural, =1{1 сторінка} few{{count} сторінки} many{{count} сторінок} other{{count} сторінок}}",
   "@exportNotebookPageCount": {
@@ -360,8 +360,8 @@
   "pageAudioPlay": "Відтворити",
   "pageAudioPause": "Пауза",
   "contentsTitle": "Зміст",
-  "contentsSubtitle": "Заголовки з набраного тексту та OCR-індексованих чернеток",
-  "contentsEmpty": "Заголовків ще не знайдено.\nДодайте великий або короткий набраний текст або OCR-індексовані заголовки.",
+  "contentsSubtitle": "Заголовки з набраного тексту та OCR-індексованого чорнила",
+  "contentsEmpty": "Заголовків ще не знайдено.\nДодайте великий або короткий набраний текст або заголовки з OCR-індексованого чорнила.",
   "contentsPageNumber": "Сторінка {number}",
   "@contentsPageNumber": {
     "placeholders": {
@@ -392,10 +392,10 @@
   },
   "pageOverviewDeleteBody": "Цю дію не можна скасувати.",
   "pageOverviewDragToReorder": "Перетягніть, щоб змінити порядок",
-  "pageOverviewBookmarked": "З закладкою",
+  "pageOverviewBookmarked": "Закладена",
   "ocrIndexing": "Індексація OCR…",
   "ocrHandwritingSearchable": "Пошук по почерку доступний",
-  "ocrPartial": "OCR частково",
+  "ocrPartial": "Часткове OCR",
   "trashTitle": "Кошик",
   "trashFailedToLoad": "Не вдалося завантажити кошик: {error}",
   "@trashFailedToLoad": {
@@ -409,7 +409,7 @@
   "trashSectionFolders": "Папки",
   "trashSectionNotebooks": "Зошити",
   "trashDeletionDateUnavailable": "Дата видалення недоступна",
-  "trashExpiresToday": "Термін дії сьогодні",
+  "trashExpiresToday": "Зникне сьогодні",
   "trashDaysRemaining": "{count, plural, =1{Залишився 1 день} few{Залишилося {count} дні} many{Залишилося {count} днів} other{Залишилося {count} днів}}",
   "@trashDaysRemaining": {
     "placeholders": {
@@ -468,9 +468,9 @@
   },
   "splitPageAction": "Розділити сторінку",
   "changePageSizeTitle": "Змінити розмір сторінки?",
-  "changePageSizeBody": "На цій сторінці є чернетки. Зміна розміру перекомпонує сторінку; чернетки залишаться на тих самих позиціях.",
+  "changePageSizeBody": "На цій сторінці є чорнило. Зміна розміру перекомпонує сторінку; чорнило залишиться на тих самих позиціях.",
   "changeOrientationTitle": "Змінити орієнтацію?",
-  "changeOrientationBody": "На цій сторінці є чернетки. Зміна орієнтації масштабує та центрує вміст під нові межі сторінки.",
+  "changeOrientationBody": "На цій сторінці є чорнило. Зміна орієнтації масштабує та центрує вміст під нові межі сторінки.",
   "convertedToText": "Перетворено на текст: {preview}",
   "@convertedToText": {
     "placeholders": {

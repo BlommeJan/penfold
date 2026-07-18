@@ -96,7 +96,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get libraryBreadcrumb => 'Biblioteca';
 
   @override
-  String get librarySearchHint => 'Buscar cuadernos y texto escrito…';
+  String get librarySearchHint => 'Buscar cuadernos y texto tecleado…';
 
   @override
   String get libraryNoMatches => 'Sin resultados';
@@ -202,7 +202,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get notebookMoveToTrashBody =>
-      'El cuaderno se ocultará de la biblioteca durante 30 días. La tinta y las páginas permanecen en este dispositivo hasta vaciar la papelera. Exporta una copia de seguridad primero si quieres una copia extra.';
+      'El cuaderno se ocultará de la biblioteca durante 30 días. La tinta y las páginas permanecen en este dispositivo hasta que vacíes la papelera. Exporta primero una copia de seguridad si quieres una copia extra.';
 
   @override
   String notebookTagsFor(String title) {
@@ -224,12 +224,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String notebookExportedAsPdf(String title) {
-    return '«$title» exportado como PDF';
+    return '«$title» exportado en PDF';
   }
 
   @override
   String get notebookBackupExportedReady =>
-      'Copia de seguridad exportada. Puedes moverlo a la papelera cuando quieras.';
+      'Copia de seguridad exportada. Puedes mover el cuaderno a la papelera cuando quieras.';
 
   @override
   String get importPdfSnack =>
@@ -401,7 +401,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsFingerDrawingSubtitle =>
-      'Dibujar con el dedo en el papel; si está desactivado, solo el lápiz dibuja (desactivado por defecto)';
+      'Dibujar con el dedo en el papel; si está desactivado, solo el lápiz óptico dibuja (desactivado por defecto)';
 
   @override
   String get settingsGestureInkEditing => 'Edición de tinta por gestos';
@@ -468,7 +468,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsExportBackupSubtitle =>
-      'Comprime penfold.db, fuentes PDF, imágenes y páginas PDF heredadas';
+      'Crea un archivo zip con penfold.db, fuentes PDF, imágenes y páginas PDF heredadas';
 
   @override
   String get settingsRecoverFromBackup => 'Recuperar desde copia de seguridad';
@@ -506,7 +506,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Cuaderno de escritura a mano local — sin cuentas, sin nube.';
+      'App de notas manuscritas con almacenamiento local — sin cuentas, sin nube.';
 
   @override
   String settingsVersion(String version) {
@@ -598,7 +598,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get toolbarAddPage => 'Añadir página';
 
   @override
-  String get toolbarStylusOnly => 'Solo lápiz (rechazo de palma)';
+  String get toolbarStylusOnly => 'Solo stylus (rechazo de palma)';
 
   @override
   String get toolbarFingerDrawing => 'Dibujo con el dedo';
@@ -767,7 +767,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exportPageAsPdfSubtitle =>
-      'Tinta vectorial, compartir mediante el panel del sistema';
+      'Tinta vectorial; compartir mediante el menú de compartir del sistema';
 
   @override
   String get exportNotebookAsPdf => 'Exportar cuaderno como PDF';
@@ -810,11 +810,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get contentsSubtitle =>
-      'Encabezados del texto escrito y la tinta indexada por OCR';
+      'Encabezados del texto tecleado y la tinta indexada por OCR';
 
   @override
   String get contentsEmpty =>
-      'Aún no se encontraron encabezados.\nAñade texto escrito grande o breve, o encabezados de tinta indexados por OCR.';
+      'Aún no se encontraron encabezados.\nAñade texto tecleado grande o breve, o encabezados de tinta indexados por OCR.';
 
   @override
   String contentsPageNumber(int number) {
@@ -889,15 +889,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Fecha de eliminación no disponible';
 
   @override
-  String get trashExpiresToday => 'Caduca hoy';
+  String get trashExpiresToday => 'Se elimina hoy';
 
   @override
   String trashDaysRemaining(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count días restantes',
-      one: '1 día restante',
+      other: 'Quedan $count días',
+      one: 'Queda 1 día',
     );
     return '$_temp0';
   }
@@ -1000,10 +1000,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pageExportedAsPng => 'Página exportada como PNG';
 
   @override
-  String get pageExportedAsPdf => 'Página exportada como PDF';
+  String get pageExportedAsPdf => 'Página exportada en PDF';
 
   @override
-  String get notebookExportedAsPdfSnack => 'Cuaderno exportado como PDF';
+  String get notebookExportedAsPdfSnack => 'Cuaderno exportado en PDF';
 
   @override
   String get exportPreparing => 'Preparando exportación…';
@@ -1020,7 +1020,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String pageComplexityExportBlocked(int count, int limit) {
-    return 'Exportación bloqueada: una página tiene $count trazos (límite $limit). Divide primero las páginas pesadas.';
+    return 'No se puede exportar: una página tiene $count trazos (límite $limit). Divide primero las páginas pesadas.';
   }
 
   @override

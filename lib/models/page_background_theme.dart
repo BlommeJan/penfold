@@ -16,7 +16,7 @@ enum PageBackgroundTheme {
 
   /// Paper fill color.
   Color get paperColor => switch (this) {
-        light => const Color(0xFFFFFBF5),
+        light => const Color(0xFFFFFFFF),
         dark => const Color(0xFF2A2A2A),
         sepia => const Color(0xFFF4ECD8),
         pastelPink => const Color(0xFFFFF0F3),

@@ -208,9 +208,11 @@ class PageEditorState extends State<PageEditor> {
                   if (_pdfLinks.isNotEmpty)
                     PdfLinkOverlay(links: _pdfLinks, displaySize: size),
                   if (_pdfLoading && _pdfImage == null && _hasPdfBackground)
-                    const ColoredBox(
-                      color: Color(0xFFF4F6F9),
-                      child: Center(
+                    ColoredBox(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                      child: const Center(
                         child: SizedBox(
                           width: 28,
                           height: 28,

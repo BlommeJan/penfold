@@ -320,32 +320,38 @@ class DocumentViewportState extends State<DocumentViewport> {
   @override
   Widget build(BuildContext context) {
     if (!widget.zoomEnabled) {
-      return widget.child;
+      return ColoredBox(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        child: widget.child,
+      );
     }
 
-    return Listener(
-      onPointerDown: _onPointerDown,
-      onPointerUp: _onPointerUp,
-      onPointerCancel: _onPointerUp,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onScaleStart: _onScaleStart,
-        onScaleUpdate: _onScaleUpdate,
-        onScaleEnd: _onScaleEnd,
-        onDoubleTap: _onDoubleTap,
-        child: AnimatedBuilder(
-          animation: _transform,
-          // Clip after transform so zoomed/panned content is not masked by
-          // the pre-transform viewport, then clip to the screen bounds.
-          builder: (context, child) => ClipRect(
-            child: Transform(
-              alignment: Alignment.topLeft,
-              transform: _transform.value,
-              filterQuality: FilterQuality.low,
-              child: child,
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      child: Listener(
+        onPointerDown: _onPointerDown,
+        onPointerUp: _onPointerUp,
+        onPointerCancel: _onPointerUp,
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onScaleStart: _onScaleStart,
+          onScaleUpdate: _onScaleUpdate,
+          onScaleEnd: _onScaleEnd,
+          onDoubleTap: _onDoubleTap,
+          child: AnimatedBuilder(
+            animation: _transform,
+            // Clip after transform so zoomed/panned content is not masked by
+            // the pre-transform viewport, then clip to the screen bounds.
+            builder: (context, child) => ClipRect(
+              child: Transform(
+                alignment: Alignment.topLeft,
+                transform: _transform.value,
+                filterQuality: FilterQuality.low,
+                child: child,
+              ),
             ),
+            child: widget.child,
           ),
-          child: widget.child,
         ),
       ),
     );

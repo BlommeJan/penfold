@@ -49,7 +49,9 @@ class LibraryDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final folderTiles = _folderTiles(null, 0);
+    final scheme = Theme.of(context).colorScheme;
     return Drawer(
+      backgroundColor: scheme.surface,
       child: SafeArea(
         child: ListView(
           children: [

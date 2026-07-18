@@ -209,7 +209,6 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
         if (!didPop) _popWithResult();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFEDF0F4),
         appBar: AppBar(
           leading: BackButton(onPressed: _popWithResult),
           title: Text(_selectMode
@@ -312,6 +311,8 @@ class _PageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final overlaySurface = scheme.surface.withOpacity(0.92);
     final hasPdf =
         page.pdfImagePath != null || page.pdfSourcePath != null;
     final ps = hasPdf
@@ -329,7 +330,7 @@ class _PageTile extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: page.backgroundTheme.paperColor,
                 borderRadius: BorderRadius.circular(6),
                 border: selected
                     ? Border.all(color: const Color(0xFF2455C3), width: 2)
@@ -417,13 +418,13 @@ class _PageTile extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(3),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.92),
+                                color: overlaySurface,
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.drag_handle_rounded,
                                 size: 16,
-                                color: Color(0xFF5D6D7E),
+                                color: scheme.onSurfaceVariant,
                               ),
                             ),
                           ),
@@ -506,16 +507,19 @@ class _SelectCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onChanged,
       child: Container(
         width: 22,
         height: 22,
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF2455C3) : Colors.white.withOpacity(0.92),
+          color: selected
+              ? scheme.primary
+              : scheme.surface.withOpacity(0.92),
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: selected ? const Color(0xFF2455C3) : const Color(0xFF95A5A6),
+            color: selected ? scheme.primary : scheme.outline,
             width: 1.5,
           ),
         ),
@@ -532,12 +536,14 @@ class _BookmarkBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final overlaySurface =
+        Theme.of(context).colorScheme.surface.withOpacity(0.92);
     return Tooltip(
       message: context.l10n.pageOverviewBookmarked,
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.92),
+          color: overlaySurface,
           borderRadius: BorderRadius.circular(4),
         ),
         child: const Icon(
@@ -575,12 +581,14 @@ class _OcrBadge extends StatelessWidget {
       tip = l10n.ocrPartial;
     }
 
+    final overlaySurface =
+        Theme.of(context).colorScheme.surface.withOpacity(0.92);
     return Tooltip(
       message: tip,
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.92),
+          color: overlaySurface,
           borderRadius: BorderRadius.circular(4),
         ),
         child: Icon(icon, size: 14, color: color),

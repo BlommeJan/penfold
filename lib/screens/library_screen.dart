@@ -19,6 +19,7 @@ import 'notebook_screen.dart';
 import 'settings_screen.dart';
 import 'trash_screen.dart';
 import '../widgets/library_drawer.dart';
+import '../widgets/themed_choice_chip.dart';
 
 const _uuid = Uuid();
 
@@ -401,7 +402,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
     for (final folder in folders) {
       tiles.add(
         ListTile(
-          leading: Icon(Icons.folder_outlined, color: Colors.grey.shade700),
+          leading: Icon(
+            Icons.folder_outlined,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           title: Text('${'  ' * depth}${folder.name}'),
           onTap: () => Navigator.pop(context, folder.id),
         ),
@@ -469,7 +473,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   spacing: 8,
                   children: [
                     for (final s in PageSize.values)
-                      _themedChoiceChip(
+                      ThemedChoiceChip(
                         label: l10n.pageSizeLabel(s),
                         selected: pageSize == s,
                         onSelected: () => setDialog(() => pageSize = s),
@@ -484,7 +488,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   runSpacing: 8,
                   children: [
                     for (final t in PageTemplate.values)
-                      _themedChoiceChip(
+                      ThemedChoiceChip(
                         label: l10n.pageTemplateShortLabel(t),
                         selected: template == t,
                         onSelected: () => setDialog(() => template = t),
@@ -872,48 +876,29 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
-  Widget _themedChoiceChip({
-    required String label,
-    required bool selected,
-    required VoidCallback onSelected,
-  }) {
-    final scheme = Theme.of(context).colorScheme;
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      selectedColor: scheme.primaryContainer,
-      backgroundColor: scheme.surfaceContainerHighest,
-      labelStyle: TextStyle(
-        color: selected ? scheme.onPrimaryContainer : scheme.onSurface,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-      ),
-      side: BorderSide(
-        color: selected ? scheme.primary : scheme.outline.withOpacity(0.35),
-      ),
-    );
-  }
-
   Widget _filterChip({
     required String label,
     required bool selected,
     required VoidCallback onTap,
   }) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final materialTheme = Theme.of(context);
+    final scheme = materialTheme.colorScheme;
+    final primary = scheme.primary;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: FilterChip(
+        key: ValueKey('filter-$label-$selected-${materialTheme.brightness}'),
         label: Text(label),
         selected: selected,
         showCheckmark: false,
         labelStyle: TextStyle(
           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          color: selected ? primary : const Color(0xFF4A4A4A),
+          color: selected ? primary : scheme.onSurface,
         ),
         selectedColor: primary.withOpacity(0.16),
-        backgroundColor: Colors.white,
+        backgroundColor: scheme.surface,
         side: BorderSide(
-          color: selected ? primary : const Color(0xFFE0E4EA),
+          color: selected ? primary : scheme.outline,
           width: selected ? 1.5 : 1,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -936,7 +921,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: thumbPath != null ? Colors.white : null,
+                color: thumbPath != null ? scheme.surface : null,
                 gradient: thumbPath == null
                     ? LinearGradient(
                         begin: Alignment.topLeft,
@@ -1007,6 +992,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget _folderCard(Folder folder) {
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => _openFolder(folder.id),
       onLongPress: () => _folderMenu(folder),
@@ -1017,13 +1003,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8ECF2),
+                color: scheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFD5DCE6)),
+                border: Border.all(color: scheme.outline),
               ),
-              child: const Center(
+              child: Center(
                 child: Icon(Icons.folder_rounded,
-                    size: 56, color: Color(0xFF2455C3)),
+                    size: 56, color: scheme.primary),
               ),
             ),
           ),
@@ -1041,23 +1027,24 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget _searchField() {
     final l10n = context.l10n;
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: scheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE0E4EA)),
+        border: Border.all(color: scheme.outline),
       ),
       child: TextField(
         controller: _searchCtrl,
-        style: const TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: 15, color: scheme.onSurface),
         decoration: InputDecoration(
           hintText: l10n.librarySearchHint,
-          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+          hintStyle: TextStyle(color: scheme.onSurfaceVariant, fontSize: 15),
           prefixIcon:
-              Icon(Icons.search_rounded, color: Colors.grey.shade600, size: 22),
+              Icon(Icons.search_rounded, color: scheme.onSurfaceVariant, size: 22),
           suffixIcon: _searchCtrl.text.isNotEmpty
               ? IconButton(
-                  icon: Icon(Icons.clear_rounded, color: Colors.grey.shade600),
+                  icon: Icon(Icons.clear_rounded, color: scheme.onSurfaceVariant),
                   onPressed: () => _searchCtrl.clear(),
                 )
               : null,
@@ -1107,7 +1094,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 icon: const Icon(Icons.arrow_back_rounded, size: 18),
                 label: Text(l10n.actionBack),
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF2455C3),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                 ),
               ),
@@ -1143,6 +1129,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget _breadcrumbBar() {
     final l10n = context.l10n;
+    final scheme = Theme.of(context).colorScheme;
     final crumbs = _breadcrumb();
     if (crumbs.isEmpty) return const SizedBox.shrink();
 
@@ -1160,7 +1147,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               child: Text(
                 l10n.libraryBreadcrumb,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF2455C3),
+                      color: scheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -1168,7 +1155,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ),
           for (var i = 0; i < crumbs.length; i++) ...[
             Icon(Icons.chevron_right_rounded,
-                size: 18, color: Colors.grey.shade500),
+                size: 18, color: scheme.onSurfaceVariant),
             InkWell(
               onTap: () => _goToFolder(crumbs[i].id),
               borderRadius: BorderRadius.circular(4),
@@ -1178,8 +1165,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   crumbs[i].name,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: i == crumbs.length - 1
-                            ? const Color(0xFF1A1A1A)
-                            : const Color(0xFF2455C3),
+                            ? scheme.onSurface
+                            : scheme.primary,
                         fontWeight: i == crumbs.length - 1
                             ? FontWeight.w600
                             : FontWeight.w500,
@@ -1239,9 +1226,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           _openFolder(id);
         },
       ),
-      backgroundColor: const Color(0xFFF6F7F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -1319,7 +1304,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                   ? Icons.search_off_rounded
                                   : Icons.menu_book_rounded,
                               size: 56,
-                              color: Colors.grey.shade400,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant
+                                  .withOpacity(0.65),
                             ),
                             const SizedBox(height: 12),
                             Text(emptyMessage,

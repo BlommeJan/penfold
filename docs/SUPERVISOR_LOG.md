@@ -97,6 +97,14 @@ Device re-verify on SM-X920 after install.
 
 **Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
 
+## v0.2.80 — dark mode UI polish (2026-07-18)
+
+- Document viewport gutter uses `surfaceContainerLow` instead of white bleed around pages
+- Library screen cards, search field, and drawer use theme surface/outline colors
+- Notebook toolbar uses `colorScheme.surface`; settings dropdowns/menus themed in `PenfoldTheme`
+- `ThemedChoiceChip` fixes choice chips going dead after theme switch; notebook defaults section migrated
+- Page overview scaffold and tile overlays follow app theme
+
 ## v0.2.79 — settings appearance (2026-07-18)
 
 - Settings restructure: language picker, dark mode (system/light/dark), notebook defaults (paper size, type, page theme); `PenfoldTheme` light/dark wired in `MaterialApp`.

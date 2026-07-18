@@ -555,7 +555,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                     child: DropdownButtonFormField<SpenBarrelAction>(
+                      key: ValueKey('spen-${Theme.of(context).brightness}'),
                       value: _spenAction,
+                      dropdownColor: Theme.of(context).colorScheme.surface,
                       decoration: InputDecoration(
                         labelText: l10n.settingsSpenBarrelAction,
                         border: const OutlineInputBorder(),

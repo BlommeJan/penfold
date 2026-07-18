@@ -57,7 +57,9 @@ class LanguageSelector extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: DropdownButtonFormField<Locale>(
+            key: ValueKey('language-${Theme.of(context).brightness}'),
             value: current,
+            dropdownColor: Theme.of(context).colorScheme.surface,
             decoration: InputDecoration(
               labelText: l10n.settingsLanguageLabel,
               border: const OutlineInputBorder(),

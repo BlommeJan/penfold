@@ -1186,7 +1186,7 @@ class _NotebookScreenState extends State<NotebookScreen>
         _popToLibrary();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFE8ECF3),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
         appBar: EditorToolbar(
           toolState: _toolState,
           canUndo: _canUndo,

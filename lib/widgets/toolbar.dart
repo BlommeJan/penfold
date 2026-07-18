@@ -5,6 +5,7 @@ import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/stroke_eraser.dart';
 import '../services/toolbar_order_service.dart';
+import 'themed_choice_chip.dart';
 
 const _kToolbarIconSize = 22.0;
 const _kToolButtonRadius = 12.0;
@@ -133,7 +134,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             t.tool == ToolType.fill;
         final centerTools = _buildCenterTools(context, t, penFamily, l10n);
         return Material(
-          color: Colors.white,
+          color: scheme.surface,
           elevation: 0.5,
           shadowColor: scheme.primary.withOpacity(0.08),
           child: SafeArea(
@@ -322,7 +323,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                 size: _kToolbarIconSize,
                 color: t.tool == ToolType.eraser
                     ? Theme.of(context).colorScheme.primary
-                    : const Color(0xFF6B7280),
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               selected: t.tool == ToolType.eraser,
               tooltip: l10n.toolEraser,
@@ -441,7 +442,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       runSpacing: 8,
                       children: [
                         for (final b in _penBrushStyles)
-                          _ThemedChoiceChip(
+                          ThemedChoiceChip(
                             label: l10n.brushStyleLabel(b),
                             selected: t.brushStyle == b,
                             onSelected: () => t.set((s) => s.brushStyle = b),
@@ -761,12 +762,13 @@ class _ToolbarDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final outline = Theme.of(context).colorScheme.outline;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Container(
         width: 1,
         height: 28,
-        color: const Color(0xFFE0E4EA),
+        color: outline.withOpacity(0.45),
       ),
     );
   }
@@ -788,7 +790,8 @@ class _ActionIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final scheme = Theme.of(context).colorScheme;
+    final primary = scheme.primary;
     final enabled = onPressed != null;
     return Tooltip(
       message: tooltip,
@@ -797,8 +800,8 @@ class _ActionIconButton extends StatelessWidget {
         color: active
             ? primary
             : enabled
-                ? const Color(0xFF4A4A4A)
-                : const Color(0xFFB8BEC8),
+                ? scheme.onSurface
+                : scheme.onSurface.withOpacity(0.38),
         style: active
             ? IconButton.styleFrom(
                 backgroundColor: primary.withOpacity(0.10),
@@ -815,38 +818,6 @@ class _ActionIconButton extends StatelessWidget {
 
 
 bool _colorsMatch(Color a, Color b) => a.value == b.value;
-
-/// Choice chip with theme-aware contrast (fixes white-on-white in light theme).
-class _ThemedChoiceChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onSelected;
-
-  const _ThemedChoiceChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      selectedColor: scheme.primaryContainer,
-      backgroundColor: scheme.surfaceContainerHighest,
-      labelStyle: TextStyle(
-        color: selected ? scheme.onPrimaryContainer : scheme.onSurface,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-      ),
-      side: BorderSide(
-        color: selected ? scheme.primary : scheme.outline.withOpacity(0.35),
-      ),
-    );
-  }
-}
 
 class _ColorSwatch extends StatelessWidget {
   final Color color;
@@ -876,7 +847,7 @@ class _ColorSwatch extends StatelessWidget {
             color: selected
                 ? primary
                 : needsBorder
-                    ? const Color(0xFFD0D4DC)
+                    ? Theme.of(context).colorScheme.outline
                     : Colors.transparent,
           ),
         ),
@@ -1039,7 +1010,8 @@ class _ToolButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final scheme = Theme.of(context).colorScheme;
+    final primary = scheme.primary;
     return Tooltip(
       message: tooltip,
       child: Padding(
@@ -1069,7 +1041,7 @@ class _ToolButton extends StatelessWidget {
                       Icon(
                         icon,
                         size: _kToolbarIconSize,
-                        color: selected ? primary : const Color(0xFF6B7280),
+                        color: selected ? primary : scheme.onSurfaceVariant,
                       ),
                   const SizedBox(height: 3),
                   Container(

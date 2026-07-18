@@ -37,6 +37,7 @@ class DarkModeSwitch extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
               child: SegmentedButton<ThemeMode>(
+                key: ValueKey(Theme.of(context).brightness),
                 segments: [
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.system,

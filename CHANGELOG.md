@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.80] — 2026
+
+### Fixed
+
+- **Dark mode UI polish** — Library, notebook toolbar, page overview, document viewport gutter, and settings dropdowns/chips use theme colors instead of hardcoded white; choice chips stay tappable after theme switch
+
 ## [0.2.79] — 2026
 
 ### Added

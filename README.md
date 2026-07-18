@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.79&color=blue" alt="Version 0.2.79" /></a>
+  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.80&color=blue" alt="Version 0.2.80" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter 3.x" /></a>
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
@@ -32,6 +32,8 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 | **Organized library** | Nested folders, tags, full-text search, colored notebook covers |
 | **Rich ink tools** | Pen, pencil, highlighter, tape (hide-reveal), shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
+
+**v0.2.80** — Dark mode polish: library, notebook toolbar, page overview, document viewport, and settings dropdowns/chips use theme colors instead of hardcoded white.
 
 **v0.2.79** — Settings restructure with language picker, dark mode (system/light/dark), and notebook defaults (paper size, type, page theme); per-page background themes with pastel palette.
 
@@ -88,7 +90,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.79) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.80) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -120,5 +122,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.79</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.80</strong> — write freely, keep it local.
 </p>

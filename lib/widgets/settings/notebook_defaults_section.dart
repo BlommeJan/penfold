@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/l10n.dart';
 import '../../models/models.dart';
 import '../../services/notebook_defaults_service.dart';
+import '../themed_choice_chip.dart';
 import 'settings_section.dart';
 
 /// Preferences pickers for default notebook paper size, type, and page theme.
@@ -37,8 +38,10 @@ class _NotebookDefaultsSectionState extends State<NotebookDefaultsSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final defaults = _service.defaults;
+    final brightness = Theme.of(context).brightness;
 
     return Column(
+      key: ValueKey('notebook-defaults-$brightness'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SettingsSubsection(title: l10n.settingsSectionPreferences),
@@ -57,7 +60,7 @@ class _NotebookDefaultsSectionState extends State<NotebookDefaultsSection> {
             runSpacing: 8,
             children: [
               for (final size in PageSize.values)
-                _ChoiceChip(
+                ThemedChoiceChip(
                   label: l10n.pageSizeLabel(size),
                   selected: defaults.pageSize == size,
                   onSelected: () => _service.setPageSize(size),
@@ -73,7 +76,7 @@ class _NotebookDefaultsSectionState extends State<NotebookDefaultsSection> {
             runSpacing: 8,
             children: [
               for (final template in PageTemplate.values)
-                _ChoiceChip(
+                ThemedChoiceChip(
                   label: l10n.pageTemplateShortLabel(template),
                   selected: defaults.template == template,
                   onSelected: () => _service.setTemplate(template),
@@ -103,27 +106,6 @@ class _NotebookDefaultsSectionState extends State<NotebookDefaultsSection> {
   }
 }
 
-class _ChoiceChip extends StatelessWidget {
-  const _ChoiceChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-    );
-  }
-}
-
 class _ThemeSwatch extends StatelessWidget {
   const _ThemeSwatch({
     required this.theme,
@@ -139,8 +121,12 @@ class _ThemeSwatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final materialTheme = Theme.of(context);
+    final scheme = materialTheme.colorScheme;
     return Semantics(
+      key: ValueKey(
+        'theme-swatch-${theme.name}-$selected-${materialTheme.brightness}',
+      ),
       label: label,
       button: true,
       selected: selected,

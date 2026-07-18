@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:penfold/l10n/app_localizations_en.dart';
+import 'package:penfold/l10n/labels.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/services/page_complexity_service.dart';
 import 'package:penfold/widgets/page_settings_popup.dart';
 
 void main() {
+  final l10n = AppLocalizationsEn('en');
+
   NotePage samplePage({
     PageTemplate template = PageTemplate.lined,
     PageSize pageSize = PageSize.a4,
@@ -24,7 +28,7 @@ void main() {
   test('pageSettingsSummary includes template size orientation', () {
     final page = samplePage();
     expect(
-      pageSettingsSummary(page, isPdfPage: false),
+      l10n.pageSettingsSummary(page, isPdfPage: false),
       'Lined · A4 · Portrait',
     );
   });
@@ -35,7 +39,7 @@ void main() {
       orientation: PageOrientation.landscape,
     );
     expect(
-      pageSettingsSummary(page, isPdfPage: true),
+      l10n.pageSettingsSummary(page, isPdfPage: true),
       'PDF · Landscape',
     );
   });
@@ -62,5 +66,4 @@ void main() {
       isTrue,
     );
   });
-
 }

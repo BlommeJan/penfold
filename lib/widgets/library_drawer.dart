@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 
 class LibraryDrawer extends StatelessWidget {
@@ -46,6 +47,7 @@ class LibraryDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final folderTiles = _folderTiles(null, 0);
     return Drawer(
       child: SafeArea(
@@ -59,40 +61,40 @@ class LibraryDrawer extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  'Penfold',
+                  l10n.appTitle,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.grid_view_rounded),
-              title: const Text('Overview'),
+              title: Text(l10n.libraryOverview),
               selected: currentFolderId == null,
               onTap: onOverview,
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('Trash'),
+              title: Text(l10n.libraryTrash),
               trailing: trashCount > 0 ? Text('$trashCount') : null,
               onTap: onOpenTrash,
             ),
             ListTile(
               leading: const Icon(Icons.settings_outlined),
-              title: const Text('Settings'),
+              title: Text(l10n.librarySettings),
               onTap: onOpenSettings,
             ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
               child: Text(
-                'Folders',
+                l10n.libraryFolders,
                 style: Theme.of(context).textTheme.labelLarge,
               ),
             ),
             if (folderTiles.isEmpty)
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 4, 16, 12),
-                child: Text('No folders yet'),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                child: Text(l10n.libraryNoFoldersYet),
               )
             else
               ...folderTiles,

@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import 'page_audio_settings.dart';
 
 /// Whether a page uses an imported PDF background (size/orientation locked).
 bool isPdfBackgroundPage(NotePage page) =>
     page.pdfImagePath != null || page.pdfSourcePath != null;
-
-String pageTemplateLabel(PageTemplate template) => switch (template) {
-      PageTemplate.blank => 'Blank',
-      PageTemplate.lined => 'Lined',
-      PageTemplate.grid => 'Grid',
-      PageTemplate.dotted => 'Dotted',
-      PageTemplate.collegeRuled => 'College ruled',
-    };
 
 IconData pageTemplateIcon(PageTemplate template) => switch (template) {
       PageTemplate.blank => Icons.crop_portrait_rounded,
@@ -22,14 +15,6 @@ IconData pageTemplateIcon(PageTemplate template) => switch (template) {
       PageTemplate.dotted => Icons.apps_rounded,
       PageTemplate.collegeRuled => Icons.margin_rounded,
     };
-
-/// One-line summary for page settings (gear menu / tests).
-String pageSettingsSummary(NotePage page, {required bool isPdfPage}) {
-  if (isPdfPage) {
-    return 'PDF · ${page.orientation.label}';
-  }
-  return '${pageTemplateLabel(page.template)} · ${page.pageSize.label} · ${page.orientation.label}';
-}
 
 /// Gear menu actions anchored near the toolbar settings icon.
 enum EditorPageMenuAction {
@@ -49,39 +34,40 @@ Future<EditorPageMenuAction?> showEditorPageMenu({
   required RelativeRect position,
   required bool bookmarked,
 }) {
+  final l10n = context.l10n;
   return showMenu<EditorPageMenuAction>(
     context: context,
     position: position,
     items: [
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.pageSettings,
         child: ListTile(
-          leading: Icon(Icons.tune_rounded),
-          title: Text('Page settings'),
+          leading: const Icon(Icons.tune_rounded),
+          title: Text(l10n.pageSettingsTitle),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.pageSize,
         child: ListTile(
-          leading: Icon(Icons.aspect_ratio_rounded),
-          title: Text('Page size'),
+          leading: const Icon(Icons.aspect_ratio_rounded),
+          title: Text(l10n.pageSizeTitle),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.orientation,
         child: ListTile(
-          leading: Icon(Icons.screen_rotation_rounded),
-          title: Text('Orientation'),
+          leading: const Icon(Icons.screen_rotation_rounded),
+          title: Text(l10n.pageOrientationTitle),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.contents,
         child: ListTile(
-          leading: Icon(Icons.list_alt_rounded),
-          title: Text('Table of contents'),
+          leading: const Icon(Icons.list_alt_rounded),
+          title: Text(l10n.toolbarTableOfContents),
           contentPadding: EdgeInsets.zero,
         ),
       ),
@@ -91,31 +77,31 @@ Future<EditorPageMenuAction?> showEditorPageMenu({
           leading: Icon(
             bookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
           ),
-          title: Text(bookmarked ? 'Remove bookmark' : 'Bookmark'),
+          title: Text(bookmarked ? l10n.pageRemoveBookmark : l10n.pageBookmark),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.audio,
         child: ListTile(
-          leading: Icon(Icons.mic_none_rounded),
-          title: Text('Audio'),
+          leading: const Icon(Icons.mic_none_rounded),
+          title: Text(l10n.pageAudioTitle),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.split,
         child: ListTile(
-          leading: Icon(Icons.call_split_rounded),
-          title: Text('Split'),
+          leading: const Icon(Icons.call_split_rounded),
+          title: Text(l10n.pageSplit),
           contentPadding: EdgeInsets.zero,
         ),
       ),
-      const PopupMenuItem(
+      PopupMenuItem(
         value: EditorPageMenuAction.export,
         child: ListTile(
-          leading: Icon(Icons.upload_rounded),
-          title: Text('Export'),
+          leading: const Icon(Icons.upload_rounded),
+          title: Text(l10n.pageExportTitle),
           contentPadding: EdgeInsets.zero,
         ),
       ),
@@ -128,6 +114,7 @@ Future<Object?> showPageTemplatePicker({
   required NotePage page,
   required bool isPdfPage,
 }) {
+  final l10n = context.l10n;
   return showModalBottomSheet<Object?>(
     context: context,
     showDragHandle: true,
@@ -139,14 +126,14 @@ Future<Object?> showPageTemplatePicker({
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: Text(
-              'Page template',
+              l10n.pageTemplateTitle,
               style: Theme.of(ctx).textTheme.titleMedium,
             ),
           ),
           for (final t in PageTemplate.values)
             ListTile(
               leading: Icon(pageTemplateIcon(t)),
-              title: Text(pageTemplateLabel(t)),
+              title: Text(l10n.pageTemplateLabel(t)),
               trailing:
                   page.template == t ? const Icon(Icons.check_rounded) : null,
               onTap: () => Navigator.pop(ctx, t),
@@ -155,7 +142,7 @@ Future<Object?> showPageTemplatePicker({
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
-                'PDF pages keep their document background',
+                l10n.pdfPagesKeepBackground,
                 style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
                       color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                     ),
@@ -172,6 +159,7 @@ Future<Object?> showPageSizePicker({
   required NotePage page,
   required bool isPdfPage,
 }) {
+  final l10n = context.l10n;
   return showModalBottomSheet<Object?>(
     context: context,
     showDragHandle: true,
@@ -183,14 +171,14 @@ Future<Object?> showPageSizePicker({
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: Text(
-              'Page size',
+              l10n.pageSizeTitle,
               style: Theme.of(ctx).textTheme.titleMedium,
             ),
           ),
           for (final s in PageSize.values)
             ListTile(
               leading: const Icon(Icons.aspect_ratio_rounded),
-              title: Text(s.label),
+              title: Text(l10n.pageSizeLabel(s)),
               trailing:
                   page.pageSize == s ? const Icon(Icons.check_rounded) : null,
               enabled: !isPdfPage,
@@ -200,7 +188,7 @@ Future<Object?> showPageSizePicker({
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
-                'PDF pages keep their document dimensions',
+                l10n.pdfPagesKeepDimensions,
                 style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
                       color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                     ),
@@ -217,6 +205,7 @@ Future<Object?> showPageOrientationPicker({
   required NotePage page,
   required bool isPdfPage,
 }) {
+  final l10n = context.l10n;
   return showModalBottomSheet<Object?>(
     context: context,
     showDragHandle: true,
@@ -228,7 +217,7 @@ Future<Object?> showPageOrientationPicker({
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: Text(
-              'Orientation',
+              l10n.pageOrientationTitle,
               style: Theme.of(ctx).textTheme.titleMedium,
             ),
           ),
@@ -237,7 +226,7 @@ Future<Object?> showPageOrientationPicker({
               leading: Icon(o == PageOrientation.portrait
                   ? Icons.crop_portrait_rounded
                   : Icons.crop_landscape_rounded),
-              title: Text(o.label),
+              title: Text(l10n.pageOrientationLabel(o)),
               trailing:
                   page.orientation == o ? const Icon(Icons.check_rounded) : null,
               enabled: !isPdfPage,
@@ -247,7 +236,7 @@ Future<Object?> showPageOrientationPicker({
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
-                'PDF pages keep their document orientation',
+                l10n.pdfPagesKeepOrientation,
                 style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
                       color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                     ),
@@ -263,6 +252,7 @@ Future<Object?> showPageExportPicker({
   required BuildContext context,
   required int notebookPageCount,
 }) {
+  final l10n = context.l10n;
   return showModalBottomSheet<Object?>(
     context: context,
     showDragHandle: true,
@@ -273,24 +263,24 @@ Future<Object?> showPageExportPicker({
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Text('Export', style: Theme.of(ctx).textTheme.titleMedium),
+            child: Text(l10n.pageExportTitle, style: Theme.of(ctx).textTheme.titleMedium),
           ),
           ListTile(
             leading: const Icon(Icons.image_outlined),
-            title: const Text('Export page as PNG'),
-            subtitle: const Text('Share image of this page'),
+            title: Text(l10n.exportPageAsPng),
+            subtitle: Text(l10n.exportPageAsPngSubtitle),
             onTap: () => Navigator.pop(ctx, 'export_png'),
           ),
           ListTile(
             leading: const Icon(Icons.picture_as_pdf_outlined),
-            title: const Text('Export page as PDF'),
-            subtitle: const Text('Vector ink, share via system sheet'),
+            title: Text(l10n.exportPageAsPdf),
+            subtitle: Text(l10n.exportPageAsPdfSubtitle),
             onTap: () => Navigator.pop(ctx, 'export_pdf'),
           ),
           ListTile(
             leading: const Icon(Icons.menu_book_outlined),
-            title: const Text('Export notebook as PDF'),
-            subtitle: Text('$notebookPageCount pages'),
+            title: Text(l10n.exportNotebookAsPdf),
+            subtitle: Text(l10n.exportNotebookPageCount(notebookPageCount)),
             onTap: () => Navigator.pop(ctx, 'export_notebook_pdf'),
           ),
         ],
@@ -304,6 +294,7 @@ Future<void> showPageAudioSheet({
   required NotePage page,
   required ValueChanged<String?> onAudioChanged,
 }) {
+  final l10n = context.l10n;
   return showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
@@ -314,7 +305,7 @@ Future<void> showPageAudioSheet({
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-            child: Text('Audio', style: Theme.of(ctx).textTheme.titleMedium),
+            child: Text(l10n.pageAudioTitle, style: Theme.of(ctx).textTheme.titleMedium),
           ),
           PageAudioSettings(
             pageId: page.id,

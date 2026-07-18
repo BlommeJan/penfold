@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/gesture_ink_service.dart';
 import '../services/hwr_convert.dart';
@@ -2862,17 +2863,17 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                           height: 1.25,
                         ),
                         textInputAction: TextInputAction.done,
-                        decoration: const InputDecoration(
-                          hintText: 'Type here…',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.all(8),
+                        decoration: InputDecoration(
+                          hintText: context.l10n.textToolHint,
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.all(8),
                           isDense: true,
                         ),
                         onSubmitted: (_) => _commitTextEdit(),
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Done',
+                      tooltip: context.l10n.textToolDone,
                       icon: const Icon(Icons.check_rounded),
                       onPressed: _commitTextEdit,
                     ),

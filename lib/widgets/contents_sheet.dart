@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/toc_service.dart';
 
@@ -54,6 +55,7 @@ class _ContentsSheetState extends State<ContentsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SafeArea(
       child: DraggableScrollableSheet(
         expand: false,
@@ -67,14 +69,14 @@ class _ContentsSheetState extends State<ContentsSheet> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
                 child: Text(
-                  'Contents',
+                  l10n.contentsTitle,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Headings from typed text and OCR-indexed ink',
+                  l10n.contentsSubtitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -94,8 +96,7 @@ class _ContentsSheetState extends State<ContentsSheet> {
                         child: Padding(
                           padding: const EdgeInsets.all(24),
                           child: Text(
-                            'No headings found yet.\n'
-                            'Add large or short typed text, or OCR-indexed ink headings.',
+                            l10n.contentsEmpty,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
@@ -118,7 +119,7 @@ class _ContentsSheetState extends State<ContentsSheet> {
                                 : null,
                           ),
                           title: Text(entry.title),
-                          subtitle: Text('Page ${entry.pageIndex + 1}'),
+                          subtitle: Text(l10n.contentsPageNumber(entry.pageIndex + 1)),
                           trailing: onPage
                               ? Icon(
                                   Icons.my_location_rounded,

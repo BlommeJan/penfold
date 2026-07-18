@@ -55,6 +55,17 @@ Tests use `sqflite_common_ffi` with a temporary database directory — no emulat
 4. **Changelog** — Add an entry under `[Unreleased]` or the next version in [CHANGELOG.md](../CHANGELOG.md) for notable changes.
 5. **Style** — Match existing code: flat structure, no code generation, minimal dependencies.
 
+## Adding a language
+
+Penfold uses Flutter's official [gen-l10n](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization) workflow:
+
+1. Copy `lib/l10n/app_en.arb` to `lib/l10n/app_XX.arb` (e.g. `app_nl.arb` for Dutch).
+2. Translate the **values** only — keep keys and `@` metadata placeholders unchanged.
+3. Add the locale to `supportedLocales` in `lib/main.dart` (e.g. `Locale('nl')`).
+4. Run `flutter gen-l10n` (or `flutter pub get`, which regenerates localizations).
+
+The template file is always `app_en.arb` (`l10n.yaml` → `template-arb-file`).
+
 ## Code style
 
 - Keep imports at the top of each file (no inline imports).

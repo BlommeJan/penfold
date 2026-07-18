@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../canvas/painters.dart';
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/pdf_page_cache.dart';
 
@@ -145,10 +146,11 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
 
   Future<void> _confirmDelete() async {
     if (_selectedIds.isEmpty) return;
+    final l10n = context.l10n;
     if (_selectedIds.length >= _pages.length) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Keep at least one page')),
+        SnackBar(content: Text(l10n.pageOverviewKeepOnePage)),
       );
       return;
     }
@@ -157,16 +159,16 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Delete $count page${count == 1 ? '' : 's'}?'),
-        content: const Text('This cannot be undone.'),
+        title: Text(l10n.pageOverviewDeleteTitle(count)),
+        content: Text(l10n.pageOverviewDeleteBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(l10n.actionDelete),
           ),
         ],
       ),
@@ -196,6 +198,7 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final width = MediaQuery.sizeOf(context).width;
     final columns = _columnCount(width);
     final selectionCount = _selectedIds.length;
@@ -210,22 +213,22 @@ class _PageOverviewScreenState extends State<PageOverviewScreen> {
         appBar: AppBar(
           leading: BackButton(onPressed: _popWithResult),
           title: Text(_selectMode
-              ? '$selectionCount selected'
-              : '${widget.notebook.title} — Pages'),
+              ? l10n.pageOverviewSelected(selectionCount)
+              : '${widget.notebook.title}${l10n.pageOverviewPagesSuffix}'),
           actions: [
             if (_selectMode) ...[
               IconButton(
-                tooltip: 'Delete selected',
+                tooltip: l10n.pageOverviewDeleteSelected,
                 onPressed: selectionCount > 0 ? _confirmDelete : null,
                 icon: const Icon(Icons.delete_outline),
               ),
               TextButton(
                 onPressed: _exitSelectMode,
-                child: const Text('Done'),
+                child: Text(l10n.actionDone),
               ),
             ] else ...[
               IconButton(
-                tooltip: 'Select pages',
+                tooltip: l10n.pageOverviewSelectPages,
                 onPressed: () => setState(() => _selectMode = true),
                 icon: const Icon(Icons.checklist_rounded),
               ),
@@ -409,7 +412,7 @@ class _PageTile extends StatelessWidget {
                           onDragStarted: onDragStarted,
                           onDragEnd: (_) => onDragEnded(),
                           child: Tooltip(
-                            message: 'Drag to reorder',
+                            message: context.l10n.pageOverviewDragToReorder,
                             child: Container(
                               padding: const EdgeInsets.all(3),
                               decoration: BoxDecoration(
@@ -528,7 +531,7 @@ class _BookmarkBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Bookmarked',
+      message: context.l10n.pageOverviewBookmarked,
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
@@ -552,21 +555,22 @@ class _OcrBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     late final IconData icon;
     late final Color color;
     late final String tip;
     if (status.hasPending) {
       icon = Icons.hourglass_top_rounded;
       color = const Color(0xFFE67E22);
-      tip = 'OCR indexing…';
+      tip = l10n.ocrIndexing;
     } else if (status.isComplete) {
       icon = Icons.search_rounded;
       color = const Color(0xFF1E8449);
-      tip = 'Handwriting searchable';
+      tip = l10n.ocrHandwritingSearchable;
     } else {
       icon = Icons.text_fields_outlined;
       color = const Color(0xFF7F8C8D);
-      tip = 'OCR partial';
+      tip = l10n.ocrPartial;
     }
 
     return Tooltip(

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:penfold/l10n/app_localizations_en.dart';
+import 'package:penfold/l10n/labels.dart';
 import 'package:penfold/db/app_database.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/services/page_complexity_service.dart';
@@ -65,8 +67,9 @@ void main() {
     });
 
     test('warningMessage includes stroke count', () {
+      final l10n = AppLocalizationsEn('en');
       expect(
-        PageComplexityService.warningMessage(
+        l10n.pageComplexityWarning(
           PageComplexityService.strokeWarningThreshold,
         ),
         contains('${PageComplexityService.strokeWarningThreshold}'),

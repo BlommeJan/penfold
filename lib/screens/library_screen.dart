@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/app_info_service.dart';
 import '../services/backup_service.dart';
@@ -80,10 +81,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
     await Future<void>.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     if (ocr.modelStatus == InkModelStatus.downloading) {
+      final l10n = context.l10n;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Downloading handwriting model (~$inkRecognitionModelSizeEstimateMb MB) in background…',
+            l10n.handwritingModelDownloadingBackground(
+              inkRecognitionModelSizeEstimateMb,
+            ),
           ),
           duration: const Duration(seconds: 5),
         ),
@@ -280,19 +284,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _createFolder({String? parentId}) async {
-    final ctrl = TextEditingController(text: 'New folder');
+    final l10n = context.l10n;
+    final ctrl = TextEditingController(text: l10n.folderNew);
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(parentId == null ? 'New folder' : 'New subfolder'),
+        title: Text(parentId == null ? l10n.folderNew : l10n.folderNewSubfolder),
         content: TextField(controller: ctrl, autofocus: true),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+              child: Text(l10n.actionCancel)),
           FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Create')),
+              child: Text(l10n.actionCreate)),
         ],
       ),
     );
@@ -302,7 +307,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         : _allFolders.where((f) => f.parentId == parentId).toList();
     final f = Folder(
       id: _uuid.v4(),
-      name: ctrl.text.trim().isEmpty ? 'New folder' : ctrl.text.trim(),
+      name: ctrl.text.trim().isEmpty ? l10n.folderNew : ctrl.text.trim(),
       sortOrder: siblings.length,
       parentId: parentId,
     );
@@ -311,6 +316,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _folderMenu(Folder folder) async {
+    final l10n = context.l10n;
     final action = await showModalBottomSheet<String>(
       context: context,
       showDragHandle: true,
@@ -320,17 +326,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.drive_file_rename_outline_rounded),
-              title: const Text('Rename'),
+              title: Text(l10n.actionRename),
               onTap: () => Navigator.pop(ctx, 'rename'),
             ),
             ListTile(
               leading: const Icon(Icons.create_new_folder_outlined),
-              title: const Text('New subfolder'),
+              title: Text(l10n.folderNewSubfolder),
               onTap: () => Navigator.pop(ctx, 'subfolder'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('Move to Trash'),
+              title: Text(l10n.folderMoveToTrash),
               onTap: () => Navigator.pop(ctx, 'delete'),
             ),
           ],
@@ -342,15 +348,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Rename folder'),
+          title: Text(l10n.folderRename),
           content: TextField(controller: ctrl, autofocus: true),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
+                child: Text(l10n.actionCancel)),
             FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Rename')),
+                child: Text(l10n.actionRename)),
           ],
         ),
       );
@@ -364,17 +370,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Move "${folder.name}" to Trash?'),
-          content: const Text(
-            'The folder and its notebooks move to Trash for 30 days.',
-          ),
+          title: Text(l10n.folderMoveToTrashTitle(folder.name)),
+          content: Text(l10n.folderMoveToTrashBody),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
+                child: Text(l10n.actionCancel)),
             FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Move to Trash')),
+                child: Text(l10n.folderMoveToTrash)),
           ],
         ),
       );
@@ -410,10 +414,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _moveToFolder(Notebook n) async {
+    final l10n = context.l10n;
     final tiles = <Widget>[
       ListTile(
         leading: const Icon(Icons.folder_off_outlined),
-        title: const Text('Uncategorized'),
+        title: Text(l10n.libraryUncategorized),
         onTap: () => Navigator.pop(context, ''),
       ),
     ];
@@ -432,7 +437,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _createNotebook() async {
-    final titleCtrl = TextEditingController(text: 'Untitled');
+    final l10n = context.l10n;
+    final titleCtrl = TextEditingController(text: l10n.notebookUntitled);
     var template = PageTemplate.lined;
     var pageSize = PageSize.a4;
     var colorIx = 0;
@@ -441,7 +447,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialog) => AlertDialog(
-          title: const Text('New notebook'),
+          title: Text(l10n.notebookNew),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -450,24 +456,24 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 TextField(
                   controller: titleCtrl,
                   autofocus: true,
-                  decoration: const InputDecoration(labelText: 'Title'),
+                  decoration: InputDecoration(labelText: l10n.notebookTitleLabel),
                 ),
                 const SizedBox(height: 20),
-                Text('Size', style: Theme.of(ctx).textTheme.labelLarge),
+                Text(l10n.notebookSizeLabel, style: Theme.of(ctx).textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   children: [
                     for (final s in PageSize.values)
                       _themedChoiceChip(
-                        label: s.label,
+                        label: l10n.pageSizeLabel(s),
                         selected: pageSize == s,
                         onSelected: () => setDialog(() => pageSize = s),
                       ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                Text('Paper', style: Theme.of(ctx).textTheme.labelLarge),
+                Text(l10n.notebookPaperLabel, style: Theme.of(ctx).textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -475,20 +481,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   children: [
                     for (final t in PageTemplate.values)
                       _themedChoiceChip(
-                        label: switch (t) {
-                          PageTemplate.blank => 'Blank',
-                          PageTemplate.lined => 'Lined',
-                          PageTemplate.grid => 'Grid',
-                          PageTemplate.dotted => 'Dotted',
-                          PageTemplate.collegeRuled => 'College',
-                        },
+                        label: l10n.pageTemplateShortLabel(t),
                         selected: template == t,
                         onSelected: () => setDialog(() => template = t),
                       ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                Text('Cover', style: Theme.of(ctx).textTheme.labelLarge),
+                Text(l10n.notebookCoverLabel, style: Theme.of(ctx).textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -521,11 +521,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.actionCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Create'),
+              child: Text(l10n.actionCreate),
             ),
           ],
         ),
@@ -536,7 +536,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final now = DateTime.now().millisecondsSinceEpoch;
     final n = Notebook(
       id: _uuid.v4(),
-      title: titleCtrl.text.trim().isEmpty ? 'Untitled' : titleCtrl.text.trim(),
+      title: titleCtrl.text.trim().isEmpty ? l10n.notebookUntitled : titleCtrl.text.trim(),
       coverColor: _coverColors[colorIx],
       template: template,
       pageSize: pageSize,
@@ -558,21 +558,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _importPdf() async {
+    final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(const SnackBar(
-      content: Text('Importing PDF… pages render once, then stay offline.'),
-      duration: Duration(seconds: 2),
+    messenger.showSnackBar(SnackBar(
+      content: Text(l10n.importPdfSnack),
+      duration: const Duration(seconds: 2),
     ));
     try {
       final notebook = await PdfImportService.pickAndImport();
       await _refresh();
       if (notebook != null && mounted) _open(notebook);
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.importFailed(e.toString()))));
     }
   }
 
   Future<void> _notebookMenu(Notebook n) async {
+    final l10n = context.l10n;
     final action = await showModalBottomSheet<String>(
       context: context,
       showDragHandle: true,
@@ -582,28 +584,28 @@ class _LibraryScreenState extends State<LibraryScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.drive_file_rename_outline_rounded),
-              title: const Text('Rename'),
+              title: Text(l10n.actionRename),
               onTap: () => Navigator.pop(ctx, 'rename'),
             ),
             ListTile(
               leading: const Icon(Icons.folder_outlined),
-              title: const Text('Move to folder'),
+              title: Text(l10n.notebookMoveToFolder),
               onTap: () => Navigator.pop(ctx, 'folder'),
             ),
             ListTile(
               leading: const Icon(Icons.label_outline_rounded),
-              title: const Text('Edit tags'),
+              title: Text(l10n.notebookEditTags),
               onTap: () => Navigator.pop(ctx, 'tags'),
             ),
             ListTile(
               leading: const Icon(Icons.picture_as_pdf_outlined),
-              title: const Text('Export workbook'),
-              subtitle: const Text('Share all pages as PDF'),
+              title: Text(l10n.notebookExportWorkbook),
+              subtitle: Text(l10n.notebookExportWorkbookSubtitle),
               onTap: () => Navigator.pop(ctx, 'export_workbook'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('Move to Trash'),
+              title: Text(l10n.notebookMoveToTrash),
               onTap: () => Navigator.pop(ctx, 'delete'),
             ),
           ],
@@ -621,15 +623,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Rename notebook'),
+          title: Text(l10n.notebookRename),
           content: TextField(controller: ctrl, autofocus: true),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
+                child: Text(l10n.actionCancel)),
             FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Rename')),
+                child: Text(l10n.actionRename)),
           ],
         ),
       );
@@ -643,17 +645,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _exportWorkbook(Notebook n) async {
+    final l10n = context.l10n;
     final pages = await _db.pagesOf(n.id);
     if (pages.isEmpty) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('This notebook has no pages to export')),
+        SnackBar(content: Text(l10n.notebookNoPagesToExport)),
       );
       return;
     }
 
     final blockReason = await PageComplexityService.instance
-        .exportBlockReasonForPages(pages.map((p) => p.id));
+        .exportBlockReasonForPages(pages.map((p) => p.id), l10n);
     if (blockReason != null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -674,36 +677,33 @@ class _LibraryScreenState extends State<LibraryScreen> {
       );
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text('"${n.title}" exported as PDF')),
+        SnackBar(content: Text(l10n.notebookExportedAsPdf(n.title))),
       );
     } catch (e) {
       if (!mounted) return;
-      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.exportFailed(e.toString()))));
     }
   }
 
   Future<void> _confirmDeleteNotebook(Notebook n) async {
+    final l10n = context.l10n;
     final action = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Move "${n.title}" to Trash?'),
-        content: const Text(
-          'The notebook is hidden from the library for 30 days. '
-          'Ink and pages stay on this device until Trash is emptied. '
-          'Export a backup first if you want an extra copy.',
-        ),
+        title: Text(l10n.notebookMoveToTrashTitle(n.title)),
+        content: Text(l10n.notebookMoveToTrashBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, 'cancel'),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, 'export'),
-            child: const Text('Export first'),
+            child: Text(l10n.actionExportFirst),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, 'delete'),
-            child: const Text('Move to Trash'),
+            child: Text(l10n.notebookMoveToTrash),
           ),
         ],
       ),
@@ -713,15 +713,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
         await BackupService.instance.exportAndShare();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Backup exported. You can move to Trash when ready.'),
+            SnackBar(
+              content: Text(l10n.notebookBackupExportedReady),
             ),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Export failed: $e')),
+            SnackBar(content: Text(l10n.exportFailed(e.toString()))),
           );
         }
       }
@@ -735,6 +735,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Future<void> _editNotebookTags(Notebook n) async {
+    final l10n = context.l10n;
     final allTags = await _db.allTags();
     final current = await _db.tagsOfNotebook(n.id);
     final selected = current.map((t) => t.id).toSet();
@@ -744,7 +745,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialog) => AlertDialog(
-          title: Text('Tags for "${n.title}"'),
+          title: Text(l10n.notebookTagsFor(n.title)),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -752,7 +753,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               children: [
                 if (allTags.isEmpty)
                   Text(
-                    'No tags yet. Create one below.',
+                    l10n.notebookNoTagsYet,
                     style: Theme.of(ctx).textTheme.bodySmall,
                   )
                 else
@@ -782,8 +783,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Expanded(
                       child: TextField(
                         controller: newTagCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'New tag',
+                        decoration: InputDecoration(
+                          labelText: l10n.notebookNewTag,
                           isDense: true,
                         ),
                         onSubmitted: (_) async {
@@ -800,7 +801,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Add tag',
+                      tooltip: l10n.notebookAddTag,
                       icon: const Icon(Icons.add_rounded),
                       onPressed: () async {
                         final name = newTagCtrl.text.trim();
@@ -822,11 +823,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.actionCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Save'),
+              child: Text(l10n.actionSave),
             ),
           ],
         ),
@@ -1007,6 +1008,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget _searchField() {
+    final l10n = context.l10n;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1017,7 +1019,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         controller: _searchCtrl,
         style: const TextStyle(fontSize: 15),
         decoration: InputDecoration(
-          hintText: 'Search notebooks and typed text…',
+          hintText: l10n.librarySearchHint,
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
           prefixIcon:
               Icon(Icons.search_rounded, color: Colors.grey.shade600, size: 22),
@@ -1036,6 +1038,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget _headerRow() {
+    final l10n = context.l10n;
     final folderChips = _currentFolderId == null
         ? _topLevelFolders()
         : _childFolders;
@@ -1048,7 +1051,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           children: [
             if (_currentFolderId == null) ...[
               _filterChip(
-                label: 'All',
+                label: l10n.libraryAll,
                 selected: _view == _LibraryView.all,
                 onTap: () {
                   setState(() => _view = _LibraryView.all);
@@ -1056,7 +1059,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 },
               ),
               _filterChip(
-                label: 'Uncategorized',
+                label: l10n.libraryUncategorized,
                 selected: _view == _LibraryView.uncategorized,
                 onTap: () {
                   setState(() => _view = _LibraryView.uncategorized);
@@ -1070,7 +1073,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   _goToFolder(parent);
                 },
                 icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                label: const Text('Back'),
+                label: Text(l10n.actionBack),
                 style: TextButton.styleFrom(
                   foregroundColor: const Color(0xFF2455C3),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -1107,6 +1110,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget _breadcrumbBar() {
+    final l10n = context.l10n;
     final crumbs = _breadcrumb();
     if (crumbs.isEmpty) return const SizedBox.shrink();
 
@@ -1122,7 +1126,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               child: Text(
-                'Library',
+                l10n.libraryBreadcrumb,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF2455C3),
                       fontWeight: FontWeight.w600,
@@ -1159,6 +1163,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final displayNotebooks = _searching
         ? _searchResults.map((r) => r.notebook).toList()
         : _notebooks;
@@ -1169,14 +1174,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
             : <Folder>[]);
     final itemCount = showFolders.length + displayNotebooks.length;
     final emptyMessage = _searching
-        ? 'No matches'
+        ? l10n.libraryNoMatches
         : _currentFolderId != null
-            ? 'This folder is empty'
+            ? l10n.libraryFolderEmpty
             : _selectedTagId != null
-                ? 'No notebooks with this tag'
+                ? l10n.libraryNoNotebooksWithTag
                 : _view == _LibraryView.uncategorized
-                    ? 'No uncategorized notebooks'
-                    : 'No notebooks yet';
+                    ? l10n.libraryNoUncategorizedNotebooks
+                    : l10n.libraryNoNotebooksYet;
 
     return Scaffold(
       drawer: LibraryDrawer(
@@ -1210,7 +1215,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            const Text('Penfold'),
+            Text(l10n.appTitle),
             if (_appInfoLoaded) ...[
               const SizedBox(width: 8),
               Text(
@@ -1225,24 +1230,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            tooltip: 'Backup & Restore',
+            tooltip: l10n.tooltipBackupRestore,
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const SettingsScreen()),
             ),
           ),
           IconButton(
-            tooltip: 'Trash',
+            tooltip: l10n.tooltipTrash,
             icon: const Icon(Icons.delete_outline_rounded),
             onPressed: _openTrash,
           ),
           IconButton(
-            tooltip: 'New notebook',
+            tooltip: l10n.tooltipNewNotebook,
             icon: const Icon(Icons.note_add_outlined),
             onPressed: _createNotebook,
           ),
           IconButton(
-            tooltip: _currentFolderId == null ? 'New folder' : 'New subfolder',
+            tooltip: _currentFolderId == null
+                ? l10n.tooltipNewFolder
+                : l10n.tooltipNewSubfolder,
             icon: const Icon(Icons.create_new_folder_outlined),
             onPressed: () => _createFolder(parentId: _currentFolderId),
           ),
@@ -1263,7 +1270,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                'Could not load library: $_loadError',
+                l10n.libraryCouldNotLoad(_loadError!),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
@@ -1333,7 +1340,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         children: [
           FloatingActionButton.small(
             heroTag: 'pdf',
-            tooltip: 'Import PDF',
+            tooltip: l10n.tooltipImportPdf,
             onPressed: _importPdf,
             child: const Icon(Icons.picture_as_pdf_outlined),
           ),
@@ -1342,7 +1349,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             heroTag: 'new',
             onPressed: _createNotebook,
             icon: const Icon(Icons.add_rounded),
-            label: const Text('New notebook'),
+            label: Text(l10n.notebookNew),
           ),
         ],
       ),

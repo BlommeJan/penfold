@@ -10,6 +10,8 @@ import 'package:penfold/services/thumbnail_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'l10n_test_harness.dart';
+
 Future<void> settle(WidgetTester tester) async {
   for (var i = 0; i < 8; i++) {
     await tester.runAsync(
@@ -91,9 +93,7 @@ void main() {
       await PageTurnModeService.instance.load();
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: NotebookScreen(notebook: notebook),
-        ),
+        wrapWithL10n(NotebookScreen(notebook: notebook)),
       );
       await settle(tester);
 
@@ -111,9 +111,7 @@ void main() {
       final notebook = (await tester.runAsync(seedNotebook))!;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: NotebookScreen(notebook: notebook),
-        ),
+        wrapWithL10n(NotebookScreen(notebook: notebook)),
       );
       await settle(tester);
 

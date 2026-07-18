@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 
 class TrashScreen extends StatefulWidget {
@@ -53,11 +54,11 @@ class _TrashScreenState extends State<TrashScreen> {
     return remaining.clamp(0, AppDatabase.trashRetention.inDays);
   }
 
-  String _subtitleForDeletedAt(int? deletedAtMs) {
-    if (deletedAtMs == null) return 'Deletion date unavailable';
+  String _subtitleForDeletedAt(AppLocalizations l10n, int? deletedAtMs) {
+    if (deletedAtMs == null) return l10n.trashDeletionDateUnavailable;
     final remaining = _daysRemaining(deletedAtMs);
-    if (remaining == 0) return 'Expires today';
-    return '$remaining days remaining';
+    if (remaining == 0) return l10n.trashExpiresToday;
+    return l10n.trashDaysRemaining(remaining);
   }
 
   Future<void> _restoreNotebook(Notebook notebook) async {
@@ -66,21 +67,20 @@ class _TrashScreenState extends State<TrashScreen> {
   }
 
   Future<void> _deleteNotebook(Notebook notebook) async {
+    final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Delete "${notebook.title}" permanently?'),
-        content: const Text(
-          'This removes the notebook and all pages from this device.',
-        ),
+        title: Text(l10n.trashDeleteNotebookTitle(notebook.title)),
+        content: Text(l10n.trashDeleteNotebookBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(l10n.actionDelete),
           ),
         ],
       ),
@@ -97,21 +97,20 @@ class _TrashScreenState extends State<TrashScreen> {
   }
 
   Future<void> _deleteFolder(Folder folder) async {
+    final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Delete "${folder.name}" permanently?'),
-        content: const Text(
-          'This removes the folder and its notebooks from this device.',
-        ),
+        title: Text(l10n.trashDeleteFolderTitle(folder.name)),
+        content: Text(l10n.trashDeleteFolderBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(l10n.actionDelete),
           ),
         ],
       ),
@@ -131,6 +130,7 @@ class _TrashScreenState extends State<TrashScreen> {
       );
 
   Widget _trashTile({
+    required AppLocalizations l10n,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -145,12 +145,12 @@ class _TrashScreenState extends State<TrashScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            tooltip: 'Restore',
+            tooltip: l10n.trashRestore,
             icon: const Icon(Icons.restore_rounded),
             onPressed: onRestore,
           ),
           IconButton(
-            tooltip: 'Delete',
+            tooltip: l10n.actionDelete,
             icon: const Icon(Icons.delete_forever_outlined),
             onPressed: onDelete,
           ),
@@ -161,36 +161,41 @@ class _TrashScreenState extends State<TrashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Trash')),
+      appBar: AppBar(title: Text(l10n.trashTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Text('Failed to load Trash: $_error'))
+              ? Center(child: Text(l10n.trashFailedToLoad(_error!)))
               : (_folders.isEmpty && _notebooks.isEmpty)
-                  ? const Center(child: Text('Trash is empty'))
+                  ? Center(child: Text(l10n.trashEmpty))
                   : ListView(
                       children: [
                         if (_folders.isNotEmpty) ...[
-                          _sectionTitle('Folders'),
+                          _sectionTitle(l10n.trashSectionFolders),
                           for (final folder in _folders)
                             _trashTile(
+                              l10n: l10n,
                               icon: Icons.folder_outlined,
                               title: folder.name,
                               subtitle:
-                                  _subtitleForDeletedAt(folder.deletedAt),
+                                  _subtitleForDeletedAt(l10n, folder.deletedAt),
                               onRestore: () => _restoreFolder(folder),
                               onDelete: () => _deleteFolder(folder),
                             ),
                         ],
                         if (_notebooks.isNotEmpty) ...[
-                          _sectionTitle('Notebooks'),
+                          _sectionTitle(l10n.trashSectionNotebooks),
                           for (final notebook in _notebooks)
                             _trashTile(
+                              l10n: l10n,
                               icon: Icons.menu_book_outlined,
                               title: notebook.title,
-                              subtitle:
-                                  _subtitleForDeletedAt(notebook.deletedAt),
+                              subtitle: _subtitleForDeletedAt(
+                                l10n,
+                                notebook.deletedAt,
+                              ),
                               onRestore: () => _restoreNotebook(notebook),
                               onDelete: () => _deleteNotebook(notebook),
                             ),

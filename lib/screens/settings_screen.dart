@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../services/app_info_service.dart';
 import '../services/backup_service.dart';
 import '../services/finger_drawing_service.dart';
@@ -202,17 +203,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _addOcrTerm() async {
+    final l10n = context.l10n;
     final controller = TextEditingController();
     final term = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Add OCR term'),
+        title: Text(l10n.settingsAddOcrTermTitle),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'Term',
-            hintText: 'e.g. eigenvalue, mitochondria',
+          decoration: InputDecoration(
+            labelText: l10n.settingsOcrTermLabel,
+            hintText: l10n.settingsOcrTermHint,
           ),
           textCapitalization: TextCapitalization.none,
           onSubmitted: (value) => Navigator.pop(ctx, value),
@@ -220,11 +222,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: const Text('Add'),
+            child: Text(l10n.actionAdd),
           ),
         ],
       ),
@@ -251,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Backup failed: $e')),
+          SnackBar(content: Text(context.l10n.backupFailed(e.toString()))),
         );
       }
     } finally {
@@ -263,23 +265,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final latest = _latestAutoBackup;
     if (latest == null) return;
 
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Recover from auto-backup?'),
+        title: Text(l10n.settingsRecoverAutoBackupTitle),
         content: Text(
-          'This replaces your current notebooks and files with the backup '
-          'from ${_formatBackupTime(latest.createdAt)}. '
-          'Your current database will be saved to backups/ before restore.',
+          l10n.settingsRecoverAutoBackupBody(
+            _formatBackupTime(latest.createdAt),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Recover'),
+            child: Text(l10n.actionRecover),
           ),
         ],
       ),
@@ -293,7 +296,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(message),
+            content: Text(context.l10n.restoreComplete),
             duration: const Duration(seconds: 8),
           ),
         );
@@ -301,7 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Recovery failed: $e')),
+          SnackBar(content: Text(context.l10n.recoveryFailed(e.toString()))),
         );
       }
     } finally {
@@ -323,22 +326,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final zipPath = await BackupService.instance.pickBackupZip();
     if (zipPath == null || !mounted) return;
 
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Restore backup?'),
-        content: const Text(
-          'This replaces your current notebooks and files. '
-          'Your current database will be saved to backups/ before restore.',
-        ),
+        title: Text(l10n.settingsRestoreBackupTitle),
+        content: Text(l10n.settingsRestoreBackupBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Restore'),
+            child: Text(l10n.actionRestore),
           ),
         ],
       ),
@@ -351,7 +352,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(message),
+            content: Text(context.l10n.restoreComplete),
             duration: const Duration(seconds: 8),
           ),
         );
@@ -359,7 +360,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Restore failed: $e')),
+          SnackBar(content: Text(context.l10n.restoreFailed(e.toString()))),
         );
       }
     } finally {
@@ -369,8 +370,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: _busy
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -378,7 +380,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
                   child: Text(
-                    'Toolbar',
+                    l10n.settingsSectionToolbar,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -388,7 +390,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Drag to reorder drawing tools. Undo and redo stay fixed on the right.',
+                    l10n.settingsToolbarReorderHint,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -413,7 +415,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                     itemBuilder: (context, index) {
                       final id = _toolOrder[index];
-                      final label = ToolbarToolId.labels[id] ?? id;
+                      final label = l10n.toolbarToolLabel(id);
                       final icon = ToolbarToolId.icons[id] ?? Icons.help_outline;
                       return ListTile(
                         key: ValueKey(id),
@@ -430,14 +432,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: _resetToolOrder,
-                    child: const Text('Reset toolbar order'),
+                    child: Text(l10n.settingsResetToolbarOrder),
                   ),
                 ),
                 const Divider(height: 32),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'Notebook',
+                    l10n.settingsSectionNotebook,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -452,10 +454,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else
                   SwitchListTile(
                     secondary: const Icon(Icons.view_carousel_outlined),
-                    title: const Text('Page-turn mode'),
-                    subtitle: const Text(
-                      'Swipe one page at a time instead of continuous scroll (default off)',
-                    ),
+                    title: Text(l10n.settingsPageTurnMode),
+                    subtitle: Text(l10n.settingsPageTurnModeSubtitle),
                     value: _pageTurnMode,
                     onChanged: _setPageTurnMode,
                   ),
@@ -467,10 +467,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else
                   SwitchListTile(
                     secondary: const Icon(Icons.zoom_in_map_outlined),
-                    title: const Text('Zoom navigation'),
-                    subtitle: const Text(
-                      'Pinch to zoom and pan on pages (default on)',
-                    ),
+                    title: Text(l10n.settingsZoomNavigation),
+                    subtitle: Text(l10n.settingsZoomNavigationSubtitle),
                     value: _zoomNavigation,
                     onChanged: _setZoomNavigation,
                   ),
@@ -478,7 +476,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'Drawing',
+                    l10n.settingsSectionDrawing,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -493,10 +491,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else
                   SwitchListTile(
                     secondary: const Icon(Icons.draw_rounded),
-                    title: const Text('Stroke smoothing'),
-                    subtitle: const Text(
-                      'Smooth ink strokes with Chaikin corner-cutting (default on)',
-                    ),
+                    title: Text(l10n.settingsStrokeSmoothing),
+                    subtitle: Text(l10n.settingsStrokeSmoothingSubtitle),
                     value: _strokeSmoothing,
                     onChanged: _setStrokeSmoothing,
                   ),
@@ -508,10 +504,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else
                   SwitchListTile(
                     secondary: const Icon(Icons.touch_app_outlined),
-                    title: const Text('Finger drawing'),
-                    subtitle: const Text(
-                      'Draw with finger on paper; when off, only stylus draws (default off)',
-                    ),
+                    title: Text(l10n.settingsFingerDrawing),
+                    subtitle: Text(l10n.settingsFingerDrawingSubtitle),
                     value: _fingerDrawing,
                     onChanged: _setFingerDrawing,
                   ),
@@ -523,10 +517,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else
                   SwitchListTile(
                     secondary: const Icon(Icons.backspace_outlined),
-                    title: const Text('Gesture ink editing'),
-                    subtitle: const Text(
-                      'Scratch over OCR-indexed ink to erase it (default on)',
-                    ),
+                    title: Text(l10n.settingsGestureInkEditing),
+                    subtitle: Text(l10n.settingsGestureInkEditingSubtitle),
                     value: _gestureInkEditing,
                     onChanged: _setGestureInkEditing,
                   ),
@@ -534,7 +526,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'S Pen',
+                    l10n.settingsSectionSpen,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -544,9 +536,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Hold the S Pen side button to temporarily switch tools. '
-                    'Release to restore your previous tool. Works on Samsung '
-                    'devices with barrel-button support.',
+                    l10n.settingsSpenHint,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -560,15 +550,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                     child: DropdownButtonFormField<SpenBarrelAction>(
                       value: _spenAction,
-                      decoration: const InputDecoration(
-                        labelText: 'Barrel button action',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.settingsSpenBarrelAction,
+                        border: const OutlineInputBorder(),
                       ),
                       items: [
                         for (final action in SpenBarrelAction.values)
                           DropdownMenuItem(
                             value: action,
-                            child: Text(action.label),
+                            child: Text(l10n.spenBarrelActionLabel(action)),
                           ),
                       ],
                       onChanged: (value) {
@@ -580,7 +570,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'OCR dictionary',
+                    l10n.settingsSectionOcrDictionary,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -590,8 +580,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Domain terms for handwriting OCR. Close matches are corrected '
-                    'when ink is indexed, and terms boost notebook search.',
+                    l10n.settingsOcrDictionaryHint,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -605,7 +594,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
-                      'No custom terms yet.',
+                      l10n.settingsNoCustomOcrTerms,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -618,7 +607,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: Text(term),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete_outline),
-                        tooltip: 'Remove term',
+                        tooltip: l10n.settingsRemoveOcrTerm,
                         onPressed: () => _removeOcrTerm(term),
                       ),
                     ),
@@ -630,7 +619,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextButton.icon(
                       onPressed: _addOcrTerm,
                       icon: const Icon(Icons.add),
-                      label: const Text('Add term'),
+                      label: Text(l10n.settingsAddOcrTerm),
                     ),
                   ),
                 ),
@@ -638,7 +627,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'Your data',
+                    l10n.settingsSectionYourData,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -648,9 +637,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Penfold stores everything on this device in a single SQLite '
-                    'database and asset folders — no cloud sync. See '
-                    'docs/ARCHITECTURE.md for the full on-device file layout.',
+                    l10n.settingsYourDataHint,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -663,7 +650,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else ...[
                   ListTile(
                     leading: const Icon(Icons.storage_outlined),
-                    title: const Text('Database'),
+                    title: Text(l10n.settingsDatabase),
                     subtitle: SelectableText(
                       '${_yourData!.dbPath}\n'
                       '${YourDataService.formatBytes(_yourData!.dbBytes)}',
@@ -685,7 +672,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'Backup & Restore',
+                    l10n.settingsSectionBackupRestore,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -695,18 +682,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Export a zip of penfold.db and asset folders, or restore '
-                    'from a previous backup. Your current database is saved to '
-                    'backups/ before restore.',
+                    l10n.settingsBackupRestoreHint,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.upload_file_outlined),
-                  title: const Text('Export backup'),
-                  subtitle: const Text(
-                    'Zip penfold.db, PDF sources, images, and legacy PDF pages',
-                  ),
+                  title: Text(l10n.settingsExportBackup),
+                  subtitle: Text(l10n.settingsExportBackupSubtitle),
                   onTap: _export,
                 ),
                 if (!_autoBackupLoaded)
@@ -717,27 +700,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 else if (_latestAutoBackup != null)
                   ListTile(
                     leading: const Icon(Icons.history_rounded),
-                    title: const Text('Recover from backup'),
+                    title: Text(l10n.settingsRecoverFromBackup),
                     subtitle: Text(
-                      'Latest auto-backup: '
-                      '${_formatBackupTime(_latestAutoBackup!.createdAt)} '
-                      '(${YourDataService.formatBytes(_latestAutoBackup!.bytes)})',
+                      l10n.settingsLatestAutoBackup(
+                        _formatBackupTime(_latestAutoBackup!.createdAt),
+                        YourDataService.formatBytes(_latestAutoBackup!.bytes),
+                      ),
                     ),
                     onTap: _recoverFromAutoBackup,
                   ),
                 ListTile(
                   leading: const Icon(Icons.download_outlined),
-                  title: const Text('Restore backup'),
-                  subtitle: const Text(
-                    'Replace local data from a Penfold backup zip',
-                  ),
+                  title: Text(l10n.settingsRestoreBackup),
+                  subtitle: Text(l10n.settingsRestoreBackupSubtitle),
                   onTap: _restore,
                 ),
                 const Divider(height: 32),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Text(
-                    'About',
+                    l10n.settingsSectionAbout,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -754,8 +736,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leading: const Icon(Icons.info_outline_rounded),
                     title: Text(AppInfoService.instance.appName),
                     subtitle: Text(
-                      'Version ${AppInfoService.instance.versionLabel}\n'
-                      'Local-first handwriting notebook — no accounts, no cloud.',
+                      '${l10n.settingsVersion(AppInfoService.instance.versionLabel)}\n'
+                      '${l10n.settingsAboutSubtitle}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     isThreeLine: true,

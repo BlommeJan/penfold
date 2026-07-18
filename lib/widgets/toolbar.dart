@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../canvas/drawing_canvas.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/stroke_eraser.dart';
 import '../services/toolbar_order_service.dart';
@@ -125,11 +126,12 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
       listenable: Listenable.merge([toolState, ToolbarOrderService.instance]),
       builder: (context, _) {
         final t = toolState;
+        final l10n = context.l10n;
         final scheme = Theme.of(context).colorScheme;
         final penFamily = t.tool == ToolType.pen ||
             t.tool == ToolType.shape ||
             t.tool == ToolType.fill;
-        final centerTools = _buildCenterTools(context, t, penFamily);
+        final centerTools = _buildCenterTools(context, t, penFamily, l10n);
         return Material(
           color: Colors.white,
           elevation: 0.5,
@@ -145,12 +147,12 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       ? BackButton(onPressed: onBack)
                       : const BackButton(),
                   _ActionIconButton(
-                    tooltip: 'Previous bookmark',
+                    tooltip: l10n.toolbarPreviousBookmark,
                     icon: Icons.expand_less_rounded,
                     onPressed: canPrevBookmark ? onPrevBookmark : null,
                   ),
                   _ActionIconButton(
-                    tooltip: 'Next bookmark',
+                    tooltip: l10n.toolbarNextBookmark,
                     icon: Icons.expand_more_rounded,
                     onPressed: canNextBookmark ? onNextBookmark : null,
                   ),
@@ -170,24 +172,24 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                               if (hasSelection) ...[
                                 if (canConvertSelectionToText)
                                   _ActionIconButton(
-                                    tooltip: 'Convert to text',
+                                    tooltip: l10n.toolbarConvertToText,
                                     icon: Icons.text_fields_rounded,
                                     onPressed: onConvertToText,
                                   ),
                                 _ActionIconButton(
-                                  tooltip: 'Copy',
+                                  tooltip: l10n.toolbarCopy,
                                   icon: Icons.copy_rounded,
                                   onPressed: onCopy,
                                 ),
                                 _ActionIconButton(
-                                  tooltip: 'Delete',
+                                  tooltip: l10n.toolbarDelete,
                                   icon: Icons.delete_outline_rounded,
                                   onPressed: onDeleteSelection,
                                 ),
                               ],
                               if (canPaste)
                                 _ActionIconButton(
-                                  tooltip: 'Paste',
+                                  tooltip: l10n.toolbarPaste,
                                   icon: Icons.content_paste_rounded,
                                   onPressed: onPaste,
                                 ),
@@ -200,25 +202,25 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   const _ToolbarDivider(),
                   // Right: history + page actions (undo lives here, not by back).
                   _ActionIconButton(
-                    tooltip: 'Undo',
+                    tooltip: l10n.toolbarUndo,
                     icon: Icons.undo_rounded,
                     onPressed: canUndo ? onUndo : null,
                   ),
                   _ActionIconButton(
-                    tooltip: 'Redo',
+                    tooltip: l10n.toolbarRedo,
                     icon: Icons.redo_rounded,
                     onPressed: canRedo ? onRedo : null,
                   ),
                   const _ToolbarDivider(),
                   _ActionIconButton(
-                    tooltip: 'Add page',
+                    tooltip: l10n.toolbarAddPage,
                     icon: Icons.note_add_outlined,
                     onPressed: onAddPage,
                   ),
                   _ActionIconButton(
                     tooltip: t.stylusOnly
-                        ? 'Stylus-only (palm rejection)'
-                        : 'Finger drawing',
+                        ? l10n.toolbarStylusOnly
+                        : l10n.toolbarFingerDrawing,
                     icon: t.stylusOnly
                         ? Icons.do_not_touch_rounded
                         : Icons.touch_app_rounded,
@@ -228,20 +230,20 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   if (onPageOverview != null)
                     _ActionIconButton(
-                      tooltip: 'Page overview',
+                      tooltip: l10n.toolbarPageOverview,
                       icon: Icons.dashboard_rounded,
                       onPressed: onPageOverview,
                     ),
                   if (onContents != null)
                     _ActionIconButton(
-                      tooltip: 'Table of contents',
+                      tooltip: l10n.toolbarTableOfContents,
                       icon: Icons.list_alt_rounded,
                       onPressed: onContents,
                     ),
                   if (onPageMenu != null)
                     Builder(
                       builder: (btnContext) => _ActionIconButton(
-                        tooltip: 'Page menu',
+                        tooltip: l10n.toolbarPageMenu,
                         icon: Icons.settings_rounded,
                         onPressed: () => onPageMenu!(btnContext),
                       ),
@@ -260,6 +262,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     BuildContext context,
     ToolState t,
     bool penFamily,
+    AppLocalizations l10n,
   ) {
     final order = ToolbarOrderService.instance.order;
     final widgets = <Widget>[];
@@ -281,7 +284,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.edit_rounded,
               selected: penFamily && t.tool != ToolType.fill,
-              tooltip: 'Pen',
+              tooltip: l10n.toolPen,
               onTap: () => t.set((s) => s.tool = ToolType.pen),
               onTapWhenSelected: () =>
                   _showPenOptions(context, t, highlighter: false),
@@ -293,7 +296,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.brush_rounded,
               selected: t.tool == ToolType.highlighter,
-              tooltip: 'Highlighter',
+              tooltip: l10n.toolHighlighter,
               onTap: () => t.set((s) => s.tool = ToolType.highlighter),
               onTapWhenSelected: () =>
                   _showPenOptions(context, t, highlighter: true),
@@ -306,7 +309,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.visibility_off_outlined,
               selected: t.tool == ToolType.tape,
-              tooltip: 'Tape',
+              tooltip: l10n.toolTape,
               onTap: () => t.set((s) => s.tool = ToolType.tape),
               onTapWhenSelected: () => _showTapeOptions(context, t),
               accent: t.tool == ToolType.tape ? t.tapeColor : null,
@@ -322,7 +325,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                     : const Color(0xFF6B7280),
               ),
               selected: t.tool == ToolType.eraser,
-              tooltip: 'Eraser',
+              tooltip: l10n.toolEraser,
               onTap: () => t.set((s) => s.tool = ToolType.eraser),
               onTapWhenSelected: () => _showEraserOptions(context, t),
             ),
@@ -332,7 +335,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.near_me_rounded,
               selected: t.tool == ToolType.selection,
-              tooltip: 'Selection',
+              tooltip: l10n.toolSelection,
               onTap: () => t.set((s) => s.tool = ToolType.selection),
             ),
           );
@@ -341,7 +344,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.gesture_rounded,
               selected: t.tool == ToolType.lasso,
-              tooltip: 'Lasso',
+              tooltip: l10n.toolLasso,
               onTap: () => t.set((s) => s.tool = ToolType.lasso),
             ),
           );
@@ -350,7 +353,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.interests_rounded,
               selected: t.tool == ToolType.shape,
-              tooltip: 'Shape',
+              tooltip: l10n.toolShape,
               onTap: () => t.set((s) => s.tool = ToolType.shape),
               onTapWhenSelected: () =>
                   _showPenOptions(context, t, highlighter: false),
@@ -361,7 +364,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.format_color_fill_rounded,
               selected: t.tool == ToolType.fill,
-              tooltip: 'Fill',
+              tooltip: l10n.toolFill,
               onTap: () => t.set((s) => s.tool = ToolType.fill),
               onTapWhenSelected: () => _showFillOptions(context, t),
               accent: t.tool == ToolType.fill ? t.fillColor : null,
@@ -372,7 +375,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.text_fields_rounded,
               selected: t.tool == ToolType.text,
-              tooltip: 'Text',
+              tooltip: l10n.toolText,
               onTap: () => t.set((s) => s.tool = ToolType.text),
             ),
           );
@@ -381,7 +384,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             _ToolButton(
               icon: Icons.image_outlined,
               selected: false,
-              tooltip: 'Insert image',
+              tooltip: l10n.toolInsertImage,
               onTap: onAddImage,
             ),
           );
@@ -396,6 +399,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   void _showPenOptions(BuildContext context, ToolState t,
       {required bool highlighter}) {
+    final l10n = context.l10n;
     final presetColors = highlighter ? _highlighterColors : _penColors;
     showModalBottomSheet(
       context: context,
@@ -418,7 +422,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    highlighter ? 'Highlighter' : 'Pen',
+                    highlighter ? l10n.highlighterOptionsTitle : l10n.penOptionsTitle,
                     style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
                           color: scheme.onSurface,
                         ),
@@ -426,7 +430,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   if (!highlighter) ...[
                     const SizedBox(height: 12),
                     Text(
-                      'Brush',
+                      l10n.brushLabel,
                       style: Theme.of(ctx).textTheme.labelLarge?.copyWith(
                             color: scheme.onSurfaceVariant,
                           ),
@@ -438,7 +442,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       children: [
                         for (final b in _penBrushStyles)
                           _ThemedChoiceChip(
-                            label: _brushLabel(b),
+                            label: l10n.brushStyleLabel(b),
                             selected: t.brushStyle == b,
                             onSelected: () => t.set((s) => s.brushStyle = b),
                           ),
@@ -447,7 +451,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                   const SizedBox(height: 16),
                   Text(
-                    'Color',
+                    l10n.colorLabel,
                     style: Theme.of(ctx).textTheme.labelLarge?.copyWith(
                           color: scheme.onSurfaceVariant,
                         ),
@@ -539,6 +543,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void _showTapeOptions(BuildContext context, ToolState t) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -548,9 +553,9 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Tape', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(l10n.tapeOptionsTitle, style: Theme.of(ctx).textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text('Draw to cover notes; tap tape to reveal or hide again',
+            Text(l10n.tapeOptionsHint,
                 style: Theme.of(ctx).textTheme.bodySmall),
             const SizedBox(height: 16),
             Row(
@@ -607,6 +612,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void _showFillOptions(BuildContext context, ToolState t) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -616,7 +622,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Fill color', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(l10n.fillColorTitle, style: Theme.of(ctx).textTheme.titleMedium),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -647,7 +653,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text('Draw a closed loop, or tap inside a shape to fill',
+            Text(l10n.fillOptionsHint,
                 style: Theme.of(ctx).textTheme.bodySmall),
           ],
         ),
@@ -656,6 +662,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void _showEraserOptions(BuildContext context, ToolState t) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -665,7 +672,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Eraser size', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(l10n.eraserSizeTitle, style: Theme.of(ctx).textTheme.titleMedium),
             StatefulBuilder(
               builder: (ctx, setSheet) => Slider(
                 value: t.eraserRadius,
@@ -678,19 +685,19 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text('Eraser mode', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(l10n.eraserModeTitle, style: Theme.of(ctx).textTheme.titleMedium),
             StatefulBuilder(
               builder: (ctx, setSheet) => SegmentedButton<EraserMode>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: EraserMode.partial,
-                    label: Text('Pixel'),
-                    icon: Icon(Icons.grain, size: 18),
+                    label: Text(l10n.eraserModePixel),
+                    icon: const Icon(Icons.grain, size: 18),
                   ),
                   ButtonSegment(
                     value: EraserMode.wholeStroke,
-                    label: Text('Stroke'),
-                    icon: Icon(Icons.content_cut, size: 18),
+                    label: Text(l10n.eraserModeStroke),
+                    icon: const Icon(Icons.content_cut, size: 18),
                   ),
                 ],
                 selected: {t.eraserMode},
@@ -703,8 +710,8 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(height: 8),
             Text(
               t.eraserMode == EraserMode.partial
-                  ? 'Erases only ink under the eraser circle'
-                  : 'Erases whole strokes it touches',
+                  ? l10n.eraserModePartialHint
+                  : l10n.eraserModeWholeStrokeHint,
               style: Theme.of(ctx).textTheme.bodySmall,
             ),
             if (onEraseAllOnPage != null) ...[
@@ -715,21 +722,18 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                         final confirmed = await showDialog<bool>(
                           context: ctx,
                           builder: (dialogCtx) => AlertDialog(
-                            title: const Text('Erase all on page?'),
-                            content: const Text(
-                              'This removes every stroke on the current page. '
-                              'You can undo this action.',
-                            ),
+                            title: Text(l10n.eraseAllOnPageTitle),
+                            content: Text(l10n.eraseAllOnPageBody),
                             actions: [
                               TextButton(
                                 onPressed: () =>
                                     Navigator.pop(dialogCtx, false),
-                                child: const Text('Cancel'),
+                                child: Text(l10n.actionCancel),
                               ),
                               FilledButton(
                                 onPressed: () =>
                                     Navigator.pop(dialogCtx, true),
-                                child: const Text('Erase all'),
+                                child: Text(l10n.actionEraseAll),
                               ),
                             ],
                           ),
@@ -741,7 +745,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                       }
                     : null,
                 icon: const Icon(Icons.delete_sweep_outlined),
-                label: const Text('Erase all on page'),
+                label: Text(l10n.eraseAllOnPageButton),
               ),
             ],
           ],
@@ -809,13 +813,6 @@ class _ActionIconButton extends StatelessWidget {
   }
 }
 
-String _brushLabel(BrushStyle b) => switch (b) {
-      BrushStyle.pen => 'Pen',
-      BrushStyle.fountainPen => 'Fountain',
-      BrushStyle.pencil => 'Pencil',
-      BrushStyle.marker => 'Marker',
-      BrushStyle.calligraphy => 'Calligraphy',
-    };
 
 bool _colorsMatch(Color a, Color b) => a.value == b.value;
 
@@ -933,9 +930,10 @@ class _CustomColorPickerDialogState extends State<_CustomColorPickerDialog> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     final color = _hsv.toColor();
     return AlertDialog(
-      title: const Text('Custom color'),
+      title: Text(l10n.customColorTitle),
       content: SizedBox(
         width: 280,
         child: Column(
@@ -952,19 +950,19 @@ class _CustomColorPickerDialogState extends State<_CustomColorPickerDialog> {
             ),
             const SizedBox(height: 16),
             _SliderRow(
-              label: 'Hue',
+              label: l10n.hueLabel,
               value: _hsv.hue,
               max: 360,
               onChanged: (v) => setState(() => _hsv = _hsv.withHue(v)),
             ),
             _SliderRow(
-              label: 'Saturation',
+              label: l10n.saturationLabel,
               value: _hsv.saturation,
               max: 1,
               onChanged: (v) => setState(() => _hsv = _hsv.withSaturation(v)),
             ),
             _SliderRow(
-              label: 'Brightness',
+              label: l10n.brightnessLabel,
               value: _hsv.value,
               max: 1,
               onChanged: (v) => setState(() => _hsv = _hsv.withValue(v)),
@@ -975,11 +973,11 @@ class _CustomColorPickerDialogState extends State<_CustomColorPickerDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(l10n.actionCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(context, color),
-          child: const Text('Use color'),
+          child: Text(l10n.actionUseColor),
         ),
       ],
     );

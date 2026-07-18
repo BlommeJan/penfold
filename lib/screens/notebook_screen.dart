@@ -14,6 +14,7 @@ import '../canvas/viewport_metrics.dart';
 import '../canvas/penfold_scroll_behavior.dart';
 import '../canvas/pointer_routing.dart';
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/finger_drawing_service.dart';
 import '../services/page_complexity_service.dart';
@@ -493,11 +494,12 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   void _showComplexitySnackBar(int count) {
     if (!mounted) return;
+    final l10n = context.l10n;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(PageComplexityService.warningMessage(count)),
+        content: Text(l10n.pageComplexityWarning(count)),
         action: SnackBarAction(
-          label: 'Split page',
+          label: l10n.splitPageAction,
           onPressed: () => unawaited(_splitActivePage()),
         ),
       ),
@@ -505,13 +507,14 @@ class _NotebookScreenState extends State<NotebookScreen>
   }
 
   Future<void> _splitActivePage() async {
+    final l10n = context.l10n;
     final pageId = _activePage.id;
     final count = await PageComplexityService.instance.strokeCount(pageId);
     if (count < 2) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Need at least 2 strokes to split this page'),
+        SnackBar(
+          content: Text(l10n.splitPageNeedStrokes),
         ),
       );
       return;
@@ -520,19 +523,16 @@ class _NotebookScreenState extends State<NotebookScreen>
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Split page?'),
-        content: Text(
-          'Create a new page with the same template and move about half '
-          'of the $count strokes onto it.',
-        ),
+        title: Text(l10n.splitPageTitle),
+        content: Text(l10n.splitPageBody(count)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Split'),
+            child: Text(l10n.actionSplit),
           ),
         ],
       ),
@@ -557,16 +557,16 @@ class _NotebookScreenState extends State<NotebookScreen>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Page split: ${result.movedStrokeCount} strokes moved, '
-            '${result.remainingStrokeCount} remain',
-          ),
+          content: Text(l10n.splitPageSuccess(
+            result.movedStrokeCount,
+            result.remainingStrokeCount,
+          )),
         ),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Split failed: $e')),
+        SnackBar(content: Text(l10n.splitPageFailed(e.toString()))),
       );
     }
   }
@@ -674,11 +674,11 @@ class _NotebookScreenState extends State<NotebookScreen>
       final preview =
           text.length > 48 ? '${text.substring(0, 48)}…' : text;
       messenger.showSnackBar(
-        SnackBar(content: Text('Converted to text: $preview')),
+        SnackBar(content: Text(context.l10n.convertedToText(preview))),
       );
     } else {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Could not recognize handwriting')),
+        SnackBar(content: Text(context.l10n.couldNotRecognizeHandwriting)),
       );
     }
   }
@@ -774,7 +774,8 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   Future<String?> _exportBlockReason({String? pageId, List<String>? pageIds}) {
     final ids = pageId != null ? [pageId] : pageIds ?? [];
-    return PageComplexityService.instance.exportBlockReasonForPages(ids);
+    return PageComplexityService.instance
+        .exportBlockReasonForPages(ids, context.l10n);
   }
 
   Future<void> _openPageTemplateSettings() async {
@@ -870,11 +871,12 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   Future<void> _handlePageActionResult(Object? chosen) async {
     if (chosen == null || !mounted) return;
+    final l10n = context.l10n;
 
     if (chosen is PageTemplate) {
       if (_activePage.pdfImagePath != null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('PDF pages keep their document background')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(l10n.pdfPagesKeepBackground)));
         return;
       }
       await _db.updatePageTemplate(_activePage.id, chosen);
@@ -884,8 +886,8 @@ class _NotebookScreenState extends State<NotebookScreen>
 
     if (chosen is PageSize) {
       if (_isPdfPage(_activePage)) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('PDF pages keep their document dimensions')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(l10n.pdfPagesKeepDimensions)));
         return;
       }
       if (chosen == _activePage.pageSize) return;
@@ -893,19 +895,16 @@ class _NotebookScreenState extends State<NotebookScreen>
         final ok = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Change page size?'),
-            content: const Text(
-              'This page has ink. Changing the size will re-layout the page; '
-              'your ink stays in the same position on the page.',
-            ),
+            title: Text(l10n.changePageSizeTitle),
+            content: Text(l10n.changePageSizeBody),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel'),
+                child: Text(l10n.actionCancel),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Change size'),
+                child: Text(l10n.actionChangeSize),
               ),
             ],
           ),
@@ -920,8 +919,8 @@ class _NotebookScreenState extends State<NotebookScreen>
 
     if (chosen is PageOrientation) {
       if (_isPdfPage(_activePage)) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('PDF pages keep their document orientation')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(l10n.pdfPagesKeepOrientation)));
         return;
       }
       if (chosen == _activePage.orientation) return;
@@ -929,19 +928,16 @@ class _NotebookScreenState extends State<NotebookScreen>
         final ok = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Change orientation?'),
-            content: const Text(
-              'This page has ink. Changing orientation scales and centers '
-              'your content to fit the new page bounds.',
-            ),
+            title: Text(l10n.changeOrientationTitle),
+            content: Text(l10n.changeOrientationBody),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel'),
+                child: Text(l10n.actionCancel),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Change orientation'),
+                child: Text(l10n.actionChangeOrientation),
               ),
             ],
           ),
@@ -978,6 +974,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   }
 
   Future<void> _exportCurrentPage(ExportFormat format) async {
+    final l10n = context.l10n;
     final blockReason =
         await _exportBlockReason(pageId: _activePage.id);
     if (blockReason != null) {
@@ -1002,17 +999,18 @@ class _NotebookScreenState extends State<NotebookScreen>
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(
         content: Text(format == ExportFormat.png
-            ? 'Page exported as PNG'
-            : 'Page exported as PDF'),
+            ? l10n.pageExportedAsPng
+            : l10n.pageExportedAsPdf),
       ));
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(
-          SnackBar(content: Text('Export failed: $e')));
+          SnackBar(content: Text(l10n.exportFailed(e.toString()))));
     }
   }
 
   Future<void> _exportNotebookPdf() async {
+    final l10n = context.l10n;
     final blockReason = await _exportBlockReason(
       pageIds: _pages.map((p) => p.id).toList(),
     );
@@ -1035,11 +1033,11 @@ class _NotebookScreenState extends State<NotebookScreen>
       );
       if (!mounted) return;
       messenger.showSnackBar(
-          const SnackBar(content: Text('Notebook exported as PDF')));
+          SnackBar(content: Text(l10n.notebookExportedAsPdfSnack)));
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(
-          SnackBar(content: Text('Export failed: $e')));
+          SnackBar(content: Text(l10n.exportFailed(e.toString()))));
     }
   }
 
@@ -1277,18 +1275,19 @@ class _InkModelDownloadDialogState extends State<_InkModelDownloadDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return AlertDialog(
-      title: const Text('Handwriting model'),
+      title: Text(l10n.handwritingModelTitle),
       content: ValueListenableBuilder<InkModelStatus>(
         valueListenable: widget.ocr.modelStatusNotifier,
         builder: (context, status, _) {
           final statusLine = switch (status) {
             InkModelStatus.error =>
-              widget.ocr.modelError ?? 'Download failed. Check network and retry.',
+              widget.ocr.modelError ?? l10n.handwritingModelDownloadFailed,
             InkModelStatus.downloading ||
             InkModelStatus.notReady =>
-              'Downloading English handwriting model (~$inkRecognitionModelSizeEstimateMb MB)…',
-            InkModelStatus.ready => 'Model ready.',
+              l10n.handwritingModelDownloading(inkRecognitionModelSizeEstimateMb),
+            InkModelStatus.ready => l10n.handwritingModelReady,
           };
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -1306,14 +1305,14 @@ class _InkModelDownloadDialogState extends State<_InkModelDownloadDialog> {
               Text(statusLine),
               const SizedBox(height: 8),
               Text(
-                'Elapsed: ${_formatElapsed(_elapsed)}',
+                l10n.handwritingModelElapsed(_formatElapsed(_elapsed)),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                inkRecognitionModelDownloadHint,
+                l10n.handwritingModelDownloadHint(inkRecognitionModelSizeEstimateMb),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -1326,11 +1325,11 @@ class _InkModelDownloadDialogState extends State<_InkModelDownloadDialog> {
         if (widget.ocr.modelStatus == InkModelStatus.error) ...[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: _retrying ? null : _retry,
-            child: Text(_retrying ? 'Retrying…' : 'Retry'),
+            child: Text(_retrying ? l10n.actionRetrying : l10n.actionRetry),
           ),
         ],
       ],

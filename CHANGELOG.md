@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.78] — 2026
+
+### Added
+
+- **Internationalization (i18n)** — Flutter gen-l10n with `lib/l10n/app_en.arb` as the English master catalog; all user-facing UI strings wired through `AppLocalizations`; structure ready for `app_nl.arb` and other locales
+
 ## [0.2.77] — 2026
 
 ### Fixed

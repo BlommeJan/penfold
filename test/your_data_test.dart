@@ -16,6 +16,8 @@ import 'package:penfold/services/your_data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'l10n_test_harness.dart';
+
 Future<void> settle(WidgetTester tester) async {
   for (var i = 0; i < 8; i++) {
     await tester.runAsync(
@@ -119,7 +121,7 @@ void main() {
           .writeAsBytes([1, 2, 3, 4]);
     });
 
-    await tester.pumpWidget(const MaterialApp(home: SettingsScreen()));
+    await tester.pumpWidget(wrapWithL10n(const SettingsScreen()));
     await settle(tester);
 
     final listView = find.byType(ListView);

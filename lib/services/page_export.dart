@@ -15,6 +15,7 @@ import 'package:share_plus/share_plus.dart';
 import '../canvas/page_coords.dart';
 import '../canvas/painters.dart';
 import '../db/app_database.dart';
+import '../l10n/l10n.dart';
 import '../models/models.dart';
 import 'pdf_page_cache.dart';
 
@@ -752,9 +753,10 @@ Future<T?> withExportProgressDialog<T>({
         child: ValueListenableBuilder<(int current, int total)>(
           valueListenable: progress,
           builder: (_, value, __) {
+            final l10n = AppLocalizations.of(dialogContext);
             final label = value.$2 <= 1
-                ? 'Preparing export…'
-                : 'Exporting page ${value.$1} of ${value.$2}…';
+                ? l10n.exportPreparing
+                : l10n.exportProgress(value.$1, value.$2);
             return AlertDialog(
               content: Column(
                 mainAxisSize: MainAxisSize.min,

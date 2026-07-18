@@ -1,0 +1,469 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Penfold",
+
+  "actionCancel": "Cancel",
+  "actionCreate": "Create",
+  "actionRename": "Rename",
+  "actionSave": "Save",
+  "actionDelete": "Delete",
+  "actionAdd": "Add",
+  "actionBack": "Back",
+  "actionDone": "Done",
+  "actionSplit": "Split",
+  "actionRecover": "Recover",
+  "actionRestore": "Restore",
+  "actionExport": "Export",
+  "actionRetry": "Retry",
+  "actionRetrying": "Retrying…",
+  "actionExportFirst": "Export first",
+  "actionEraseAll": "Erase all",
+  "actionChangeSize": "Change size",
+  "actionChangeOrientation": "Change orientation",
+  "actionUseColor": "Use color",
+
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Overview",
+  "libraryTrash": "Trash",
+  "librarySettings": "Settings",
+  "libraryFolders": "Folders",
+  "libraryNoFoldersYet": "No folders yet",
+  "libraryAll": "All",
+  "libraryUncategorized": "Uncategorized",
+  "libraryBreadcrumb": "Library",
+  "librarySearchHint": "Search notebooks and typed text…",
+  "libraryNoMatches": "No matches",
+  "libraryFolderEmpty": "This folder is empty",
+  "libraryNoNotebooksWithTag": "No notebooks with this tag",
+  "libraryNoUncategorizedNotebooks": "No uncategorized notebooks",
+  "libraryNoNotebooksYet": "No notebooks yet",
+  "libraryCouldNotLoad": "Could not load library: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "tooltipBackupRestore": "Backup & Restore",
+  "tooltipTrash": "Trash",
+  "tooltipNewNotebook": "New notebook",
+  "tooltipNewFolder": "New folder",
+  "tooltipNewSubfolder": "New subfolder",
+  "tooltipImportPdf": "Import PDF",
+
+  "folderNew": "New folder",
+  "folderNewSubfolder": "New subfolder",
+  "folderRename": "Rename folder",
+  "folderMoveToTrash": "Move to Trash",
+  "folderMoveToTrashTitle": "Move \"{name}\" to Trash?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "folderMoveToTrashBody": "The folder and its notebooks move to Trash for 30 days.",
+
+  "notebookNew": "New notebook",
+  "notebookUntitled": "Untitled",
+  "notebookTitleLabel": "Title",
+  "notebookSizeLabel": "Size",
+  "notebookPaperLabel": "Paper",
+  "notebookCoverLabel": "Cover",
+  "notebookRename": "Rename notebook",
+  "notebookMoveToFolder": "Move to folder",
+  "notebookEditTags": "Edit tags",
+  "notebookExportWorkbook": "Export workbook",
+  "notebookExportWorkbookSubtitle": "Share all pages as PDF",
+  "notebookMoveToTrash": "Move to Trash",
+  "notebookMoveToTrashTitle": "Move \"{title}\" to Trash?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "notebookMoveToTrashBody": "The notebook is hidden from the library for 30 days. Ink and pages stay on this device until Trash is emptied. Export a backup first if you want an extra copy.",
+  "notebookTagsFor": "Tags for \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "notebookNoTagsYet": "No tags yet. Create one below.",
+  "notebookNewTag": "New tag",
+  "notebookAddTag": "Add tag",
+  "notebookNoPagesToExport": "This notebook has no pages to export",
+  "notebookExportedAsPdf": "\"{title}\" exported as PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "notebookBackupExportedReady": "Backup exported. You can move to Trash when ready.",
+
+  "importPdfSnack": "Importing PDF… pages render once, then stay offline.",
+  "importFailed": "Import failed: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "exportFailed": "Export failed: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "backupFailed": "Backup failed: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "recoveryFailed": "Recovery failed: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "restoreFailed": "Restore failed: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "handwritingModelDownloadingBackground": "Downloading handwriting model (~{sizeMb} MB) in background…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {"type": "int"}
+    }
+  },
+
+  "templateBlank": "Blank",
+  "templateLined": "Lined",
+  "templateGrid": "Grid",
+  "templateDotted": "Dotted",
+  "templateCollegeRuled": "College ruled",
+  "templateCollegeShort": "College",
+
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+
+  "orientationPortrait": "Portrait",
+  "orientationLandscape": "Landscape",
+
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+
+  "settingsTitle": "Settings",
+  "settingsSectionToolbar": "Toolbar",
+  "settingsToolbarReorderHint": "Drag to reorder drawing tools. Undo and redo stay fixed on the right.",
+  "settingsResetToolbarOrder": "Reset toolbar order",
+  "settingsSectionNotebook": "Notebook",
+  "settingsPageTurnMode": "Page-turn mode",
+  "settingsPageTurnModeSubtitle": "Swipe one page at a time instead of continuous scroll (default off)",
+  "settingsZoomNavigation": "Zoom navigation",
+  "settingsZoomNavigationSubtitle": "Pinch to zoom and pan on pages (default on)",
+  "settingsSectionDrawing": "Drawing",
+  "settingsStrokeSmoothing": "Stroke smoothing",
+  "settingsStrokeSmoothingSubtitle": "Smooth ink strokes with Chaikin corner-cutting (default on)",
+  "settingsFingerDrawing": "Finger drawing",
+  "settingsFingerDrawingSubtitle": "Draw with finger on paper; when off, only stylus draws (default off)",
+  "settingsGestureInkEditing": "Gesture ink editing",
+  "settingsGestureInkEditingSubtitle": "Scratch over OCR-indexed ink to erase it (default on)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Hold the S Pen side button to temporarily switch tools. Release to restore your previous tool. Works on Samsung devices with barrel-button support.",
+  "settingsSpenBarrelAction": "Barrel button action",
+  "settingsSectionOcrDictionary": "OCR dictionary",
+  "settingsOcrDictionaryHint": "Domain terms for handwriting OCR. Close matches are corrected when ink is indexed, and terms boost notebook search.",
+  "settingsNoCustomOcrTerms": "No custom terms yet.",
+  "settingsRemoveOcrTerm": "Remove term",
+  "settingsAddOcrTerm": "Add term",
+  "settingsAddOcrTermTitle": "Add OCR term",
+  "settingsOcrTermLabel": "Term",
+  "settingsOcrTermHint": "e.g. eigenvalue, mitochondria",
+  "settingsSectionYourData": "Your data",
+  "settingsYourDataHint": "Penfold stores everything on this device in a single SQLite database and asset folders — no cloud sync. See docs/ARCHITECTURE.md for the full on-device file layout.",
+  "settingsDatabase": "Database",
+  "settingsSectionBackupRestore": "Backup & Restore",
+  "settingsBackupRestoreHint": "Export a zip of penfold.db and asset folders, or restore from a previous backup. Your current database is saved to backups/ before restore.",
+  "settingsExportBackup": "Export backup",
+  "settingsExportBackupSubtitle": "Zip penfold.db, PDF sources, images, and legacy PDF pages",
+  "settingsRecoverFromBackup": "Recover from backup",
+  "settingsLatestAutoBackup": "Latest auto-backup: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {"type": "String"},
+      "size": {"type": "String"}
+    }
+  },
+  "settingsRestoreBackup": "Restore backup",
+  "settingsRestoreBackupSubtitle": "Replace local data from a Penfold backup zip",
+  "settingsRecoverAutoBackupTitle": "Recover from auto-backup?",
+  "settingsRecoverAutoBackupBody": "This replaces your current notebooks and files with the backup from {timestamp}. Your current database will be saved to backups/ before restore.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {"type": "String"}
+    }
+  },
+  "settingsRestoreBackupTitle": "Restore backup?",
+  "settingsRestoreBackupBody": "This replaces your current notebooks and files. Your current database will be saved to backups/ before restore.",
+  "settingsSectionAbout": "About",
+  "settingsAboutSubtitle": "Local-first handwriting notebook — no accounts, no cloud.",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+
+  "spenActionEraser": "Eraser",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Pen",
+  "spenActionNone": "None",
+
+  "toolPen": "Pen",
+  "toolHighlighter": "Highlighter",
+  "toolTape": "Tape",
+  "toolEraser": "Eraser",
+  "toolSelection": "Selection",
+  "toolLasso": "Lasso",
+  "toolShape": "Shape",
+  "toolFill": "Fill",
+  "toolText": "Text",
+  "toolInsertImage": "Insert image",
+
+  "brushPen": "Pen",
+  "brushFountain": "Fountain",
+  "brushPencil": "Pencil",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Calligraphy",
+
+  "toolbarPreviousBookmark": "Previous bookmark",
+  "toolbarNextBookmark": "Next bookmark",
+  "toolbarConvertToText": "Convert to text",
+  "toolbarCopy": "Copy",
+  "toolbarDelete": "Delete",
+  "toolbarPaste": "Paste",
+  "toolbarUndo": "Undo",
+  "toolbarRedo": "Redo",
+  "toolbarAddPage": "Add page",
+  "toolbarStylusOnly": "Stylus-only (palm rejection)",
+  "toolbarFingerDrawing": "Finger drawing",
+  "toolbarPageOverview": "Page overview",
+  "toolbarTableOfContents": "Table of contents",
+  "toolbarPageMenu": "Page menu",
+
+  "penOptionsTitle": "Pen",
+  "highlighterOptionsTitle": "Highlighter",
+  "brushLabel": "Brush",
+  "colorLabel": "Color",
+  "customColorTitle": "Custom color",
+  "hueLabel": "Hue",
+  "saturationLabel": "Saturation",
+  "brightnessLabel": "Brightness",
+  "tapeOptionsTitle": "Tape",
+  "tapeOptionsHint": "Draw to cover notes; tap tape to reveal or hide again",
+  "fillColorTitle": "Fill color",
+  "fillOptionsHint": "Draw a closed loop, or tap inside a shape to fill",
+  "eraserSizeTitle": "Eraser size",
+  "eraserModeTitle": "Eraser mode",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Stroke",
+  "eraserModePartialHint": "Erases only ink under the eraser circle",
+  "eraserModeWholeStrokeHint": "Erases whole strokes it touches",
+  "eraseAllOnPageTitle": "Erase all on page?",
+  "eraseAllOnPageBody": "This removes every stroke on the current page. You can undo this action.",
+  "eraseAllOnPageButton": "Erase all on page",
+
+  "pageSettingsTitle": "Page settings",
+  "pageSizeTitle": "Page size",
+  "pageOrientationTitle": "Orientation",
+  "pageTemplateTitle": "Page template",
+  "pageBookmark": "Bookmark",
+  "pageRemoveBookmark": "Remove bookmark",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Split",
+  "pageExportTitle": "Export",
+  "pdfPagesKeepBackground": "PDF pages keep their document background",
+  "pdfPagesKeepDimensions": "PDF pages keep their document dimensions",
+  "pdfPagesKeepOrientation": "PDF pages keep their document orientation",
+  "exportPageAsPng": "Export page as PNG",
+  "exportPageAsPngSubtitle": "Share image of this page",
+  "exportPageAsPdf": "Export page as PDF",
+  "exportPageAsPdfSubtitle": "Vector ink, share via system sheet",
+  "exportNotebookAsPdf": "Export notebook as PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "pageAudioAttach": "Attach audio file",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV, and other local formats",
+  "pageAudioAttachedToPage": "Attached to this page",
+  "pageAudioReplace": "Replace audio file",
+  "pageAudioRemove": "Remove audio",
+  "pageAudioPlay": "Play",
+  "pageAudioPause": "Pause",
+
+  "contentsTitle": "Contents",
+  "contentsSubtitle": "Headings from typed text and OCR-indexed ink",
+  "contentsEmpty": "No headings found yet.\nAdd large or short typed text, or OCR-indexed ink headings.",
+  "contentsPageNumber": "Page {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+
+  "pageOverviewPagesSuffix": " — Pages",
+  "pageOverviewSelected": "{count} selected",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "pageOverviewDeleteSelected": "Delete selected",
+  "pageOverviewSelectPages": "Select pages",
+  "pageOverviewKeepOnePage": "Keep at least one page",
+  "pageOverviewDeleteTitle": "Delete {count, plural, =1{1 page} other{{count} pages}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "pageOverviewDeleteBody": "This cannot be undone.",
+  "pageOverviewDragToReorder": "Drag to reorder",
+  "pageOverviewBookmarked": "Bookmarked",
+  "ocrIndexing": "OCR indexing…",
+  "ocrHandwritingSearchable": "Handwriting searchable",
+  "ocrPartial": "OCR partial",
+
+  "trashTitle": "Trash",
+  "trashFailedToLoad": "Failed to load Trash: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "trashEmpty": "Trash is empty",
+  "trashSectionFolders": "Folders",
+  "trashSectionNotebooks": "Notebooks",
+  "trashDeletionDateUnavailable": "Deletion date unavailable",
+  "trashExpiresToday": "Expires today",
+  "trashDaysRemaining": "{count, plural, =1{1 day remaining} other{{count} days remaining}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "trashRestore": "Restore",
+  "trashDeleteNotebookTitle": "Delete \"{title}\" permanently?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "trashDeleteNotebookBody": "This removes the notebook and all pages from this device.",
+  "trashDeleteFolderTitle": "Delete \"{name}\" permanently?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "trashDeleteFolderBody": "This removes the folder and its notebooks from this device.",
+
+  "splitPageTitle": "Split page?",
+  "splitPageBody": "Create a new page with the same template and move about half of the {count} strokes onto it.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "splitPageNeedStrokes": "Need at least 2 strokes to split this page",
+  "splitPageSuccess": "Page split: {moved} strokes moved, {remaining} remain",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {"type": "int"},
+      "remaining": {"type": "int"}
+    }
+  },
+  "splitPageFailed": "Split failed: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "splitPageAction": "Split page",
+
+  "changePageSizeTitle": "Change page size?",
+  "changePageSizeBody": "This page has ink. Changing the size will re-layout the page; your ink stays in the same position on the page.",
+  "changeOrientationTitle": "Change orientation?",
+  "changeOrientationBody": "This page has ink. Changing orientation scales and centers your content to fit the new page bounds.",
+
+  "convertedToText": "Converted to text: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {"type": "String"}
+    }
+  },
+  "couldNotRecognizeHandwriting": "Could not recognize handwriting",
+
+  "handwritingModelTitle": "Handwriting model",
+  "handwritingModelDownloadFailed": "Download failed. Check network and retry.",
+  "handwritingModelDownloading": "Downloading English handwriting model (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {"type": "int"}
+    }
+  },
+  "handwritingModelReady": "Model ready.",
+  "handwritingModelElapsed": "Elapsed: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {"type": "String"}
+    }
+  },
+  "handwritingModelDownloadHint": "First-time download (~{sizeMb} MB). Usually finishes in under two minutes on Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {"type": "int"}
+    }
+  },
+
+  "pageExportedAsPng": "Page exported as PNG",
+  "pageExportedAsPdf": "Page exported as PDF",
+  "notebookExportedAsPdfSnack": "Notebook exported as PDF",
+
+  "exportPreparing": "Preparing export…",
+  "exportProgress": "Exporting page {current} of {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+
+  "pageComplexityWarning": "This page has {count} strokes and may feel slow. Consider splitting it for better performance.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "pageComplexityExportBlocked": "Export blocked: a page has {count} strokes (limit {limit}). Split heavy pages first.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "limit": {"type": "int"}
+    }
+  },
+
+  "restoreComplete": "Restore complete. Please restart the app to load the restored data.",
+
+  "textToolHint": "Type here…",
+  "textToolDone": "Done"
+}

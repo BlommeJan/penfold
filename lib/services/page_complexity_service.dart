@@ -1,4 +1,5 @@
 import '../db/app_database.dart';
+import '../l10n/app_localizations.dart';
 import '../models/models.dart';
 
 /// Stroke-count guardrails and page split helper (v0.2.38).
@@ -19,20 +20,18 @@ class PageComplexityService {
   static bool shouldBlockExport(int strokeCount) =>
       strokeCount >= strokeExportBlockThreshold;
 
-  static String warningMessage(int strokeCount) =>
-      'This page has $strokeCount strokes and may feel slow. '
-      'Consider splitting it for better performance.';
-
-  static String exportBlockedMessage(int strokeCount) =>
-      'Export blocked: a page has $strokeCount strokes (limit '
-      '$strokeExportBlockThreshold). Split heavy pages first.';
-
   /// Returns a user-facing block reason when any page exceeds the export limit.
-  Future<String?> exportBlockReasonForPages(Iterable<String> pageIds) async {
+  Future<String?> exportBlockReasonForPages(
+    Iterable<String> pageIds,
+    AppLocalizations l10n,
+  ) async {
     for (final id in pageIds) {
       final count = await strokeCount(id);
       if (shouldBlockExport(count)) {
-        return exportBlockedMessage(count);
+        return l10n.pageComplexityExportBlocked(
+          count,
+          strokeExportBlockThreshold,
+        );
       }
     }
     return null;

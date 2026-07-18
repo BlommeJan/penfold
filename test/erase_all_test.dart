@@ -10,6 +10,7 @@ import 'package:penfold/services/thumbnail_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'l10n_test_harness.dart';
 import 'widget_test.dart' show settle;
 
 Widget _canvasHarness({
@@ -18,8 +19,8 @@ Widget _canvasHarness({
 }) {
   const viewport = Size(400, 560);
   final toolState = ToolState();
-  return MaterialApp(
-    home: Scaffold(
+  return wrapWithL10n(
+    Scaffold(
       body: DrawingCanvas(
         key: key,
         page: page,

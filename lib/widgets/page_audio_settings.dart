@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
+import '../l10n/l10n.dart';
 import '../services/page_audio_service.dart';
 
 /// Audio attach / play / remove controls for the page settings sheet.
@@ -82,6 +83,7 @@ class _PageAudioSettingsState extends State<PageAudioSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final path = _audioPath;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -89,13 +91,13 @@ class _PageAudioSettingsState extends State<PageAudioSettings> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-          child: Text('Audio', style: Theme.of(context).textTheme.titleSmall),
+          child: Text(l10n.pageAudioTitle, style: Theme.of(context).textTheme.titleSmall),
         ),
         if (path == null)
           ListTile(
             leading: const Icon(Icons.audio_file_outlined),
-            title: const Text('Attach audio file'),
-            subtitle: const Text('MP3, M4A, WAV, and other local formats'),
+            title: Text(l10n.pageAudioAttach),
+            subtitle: Text(l10n.pageAudioAttachSubtitle),
             enabled: !_busy,
             onTap: _busy ? null : _attach,
           )
@@ -112,23 +114,23 @@ class _PageAudioSettingsState extends State<PageAudioSettings> {
                         ? Icons.pause_circle_outline_rounded
                         : Icons.play_circle_outline_rounded,
                   ),
-                  tooltip: playing ? 'Pause' : 'Play',
+                  tooltip: playing ? l10n.pageAudioPause : l10n.pageAudioPlay,
                   onPressed: _togglePlay,
                 ),
                 title: Text(p.basename(path)),
-                subtitle: const Text('Attached to this page'),
+                subtitle: Text(l10n.pageAudioAttachedToPage),
               );
             },
           ),
           ListTile(
             leading: const Icon(Icons.swap_horiz_rounded),
-            title: const Text('Replace audio file'),
+            title: Text(l10n.pageAudioReplace),
             enabled: !_busy,
             onTap: _busy ? null : _attach,
           ),
           ListTile(
             leading: const Icon(Icons.delete_outline_rounded),
-            title: const Text('Remove audio'),
+            title: Text(l10n.pageAudioRemove),
             onTap: _remove,
           ),
         ],

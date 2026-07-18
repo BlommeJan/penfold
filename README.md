@@ -68,11 +68,22 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 ## Screenshots
 
-> Screenshots coming soon. Until then: imagine a clean library grid of colored notebook covers, a vertically scrolling editor with ruled paper and a floating page pill, and a toolbar of ink tools along the top.
+Drop PNG or JPG captures in [`docs/screenshots/`](docs/screenshots/) — see [docs/screenshots/README.md](docs/screenshots/README.md) for naming and capture tips. Paths below are wired for a v0.2.83 feature set (library, drawing, page themes, dark mode, i18n, handwriting OCR, S Pen tools, and more).
 
-| Library | Editor | Page overview |
-|:---:|:---:|:---:|
-| *Coming soon* | *Coming soon* | *Coming soon* |
+| | |
+|:---:|:---:|
+| **Library** — folders, tags, colored covers | **Notebook editor** — ink tools, templates, page pill |
+| ![Library home](docs/screenshots/01-library.png) | ![Notebook editor](docs/screenshots/02-notebook-editor.png) |
+| **Page overview** — grid, reorder, OCR badge | **Page themes** — light, dark, sepia, pastels |
+| ![Page overview](docs/screenshots/03-page-overview.png) | ![Page themes](docs/screenshots/04-page-themes.png) |
+| **Settings** — toolbar order, backup, OCR dictionary | **Dark mode** — system/light/dark theme |
+| ![Settings](docs/screenshots/05-settings.png) | ![Dark mode](docs/screenshots/06-dark-mode.png) |
+| **Languages** — locale picker (EN, FR, NL, …) | **OCR search** — handwriting indexed and searchable |
+| ![Languages](docs/screenshots/07-languages.png) | ![OCR search](docs/screenshots/08-ocr-search.png) |
+
+**S Pen & tools** — toolbar, lasso, shapes, barrel-button erase:
+
+![S Pen and toolbar](docs/screenshots/09-spen-toolbar.png)
 
 ---
 
@@ -86,6 +97,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
 | [docs/BUILD.md](docs/BUILD.md) | Release APK build instructions |
 | [docs/DEVICE_TESTING.md](docs/DEVICE_TESTING.md) | On-device feature checklist for QA |
+| [docs/screenshots/README.md](docs/screenshots/README.md) | README screenshot filenames and capture guide |
 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community standards |
 | [LICENSE](LICENSE) | MIT license |
 

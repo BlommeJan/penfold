@@ -16,6 +16,7 @@ import '../services/hwr_convert.dart';
 import '../services/ink_ocr_service.dart';
 import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
+import '../services/stroke_smoothing_service.dart';
 import '../services/text_block_measure.dart';
 import 'gesture_ink_recognizer.dart';
 import 'ink_coalesce.dart';
@@ -67,6 +68,9 @@ class ToolState extends ChangeNotifier {
 
   /// Chaikin smoothing on ink before stroke commit (default on).
   bool strokeSmoothing = true;
+
+  /// Smoothing strength 0–1 (see [StrokeSmoothingService.defaultStrength]).
+  double strokeSmoothingStrength = StrokeSmoothingService.defaultStrength;
 
   /// User-added swatches beyond toolbar presets (Agent 11 brush UI).
   final List<Color> customPenColors = [];
@@ -1998,9 +2002,18 @@ class DrawingCanvasState extends State<DrawingCanvas> {
       var stroke = _current!;
       _current = null;
 
+      final rawPos = _paperLocal(e);
+      final pos = _clampInkPos(rawPos);
+      final cPos = _toCanonical(pos);
+      final last = stroke.points.last;
+      if (shouldAppendFinalInkPoint(last: last, newCanonical: cPos)) {
+        stroke.points.add(StrokePoint(cPos.dx, cPos.dy, _pressure(e)));
+      }
+
       stroke.points = maybeSmoothStrokePoints(
         stroke.points,
         enabled: widget.toolState.strokeSmoothing,
+        strength: widget.toolState.strokeSmoothingStrength,
       );
 
       if (tool == ToolType.shape) {

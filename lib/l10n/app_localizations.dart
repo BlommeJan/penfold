@@ -784,6 +784,18 @@ abstract class AppLocalizations {
   /// **'Smooth ink strokes with Chaikin corner-cutting (default on)'**
   String get settingsStrokeSmoothingSubtitle;
 
+  /// No description provided for @settingsStrokeSmoothingStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoothing strength'**
+  String get settingsStrokeSmoothingStrength;
+
+  /// No description provided for @settingsStrokeSmoothingStrengthSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% — lower keeps finer detail; recommended {recommended}%'**
+  String settingsStrokeSmoothingStrengthSubtitle(int percent, int recommended);
+
   /// No description provided for @settingsFingerDrawing.
   ///
   /// In en, this message translates to:

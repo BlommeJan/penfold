@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.81] — 2026
+
+### Fixed
+
+- **Stroke smoothing for small writing** — Lower ink coalescing gap for slow strokes, flush final pointer position on lift, and distance-aware Chaikin smoothing with adjustable strength slider (recommended 35%)
+
 ## [0.2.80] — 2026
 
 ### Fixed

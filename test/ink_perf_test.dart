@@ -5,8 +5,8 @@ import 'dart:ui';
 
 void main() {
   group('adaptiveInkMinDist', () {
-    test('returns base at zero speed', () {
-      expect(adaptiveInkMinDist(0), kInkMinDistCanonical);
+    test('returns slow floor at zero speed', () {
+      expect(adaptiveInkMinDist(0), kInkMinDistSlow);
     });
 
     test('increases with speed', () {
@@ -19,7 +19,19 @@ void main() {
   });
 
   group('shouldAcceptInkPoint', () {
-    test('rejects tiny moves', () {
+    test('accepts small moves at slow speed', () {
+      const last = StrokePoint(0, 0, 0.5);
+      expect(
+        shouldAcceptInkPoint(
+          last: last,
+          newCanonical: const Offset(5, 0),
+          speedCanonicalPerSec: 100,
+        ),
+        isTrue,
+      );
+    });
+
+    test('rejects tiny moves below slow floor', () {
       const last = StrokePoint(0, 0, 0.5);
       expect(
         shouldAcceptInkPoint(
@@ -40,6 +52,30 @@ void main() {
           speedCanonicalPerSec: 0,
         ),
         isTrue,
+      );
+    });
+  });
+
+  group('shouldAppendFinalInkPoint', () {
+    test('appends when release moved from last sample', () {
+      const last = StrokePoint(0, 0, 0.5);
+      expect(
+        shouldAppendFinalInkPoint(
+          last: last,
+          newCanonical: const Offset(5, 0),
+        ),
+        isTrue,
+      );
+    });
+
+    test('skips duplicate release position', () {
+      const last = StrokePoint(0, 0, 0.5);
+      expect(
+        shouldAppendFinalInkPoint(
+          last: last,
+          newCanonical: const Offset(0.2, 0),
+        ),
+        isFalse,
       );
     });
   });

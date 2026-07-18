@@ -209,7 +209,10 @@ class _NotebookScreenState extends State<NotebookScreen>
 
   void _onStrokeSmoothingChanged() {
     _toolState.set(
-      (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
+      (s) {
+        s.strokeSmoothing = StrokeSmoothingService.instance.enabled;
+        s.strokeSmoothingStrength = StrokeSmoothingService.instance.strength;
+      },
     );
   }
 
@@ -384,7 +387,10 @@ class _NotebookScreenState extends State<NotebookScreen>
     }
     if (!mounted) return;
     _toolState.set(
-      (s) => s.strokeSmoothing = StrokeSmoothingService.instance.enabled,
+      (s) {
+        s.strokeSmoothing = StrokeSmoothingService.instance.enabled;
+        s.strokeSmoothingStrength = StrokeSmoothingService.instance.strength;
+      },
     );
   }
 

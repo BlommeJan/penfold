@@ -183,6 +183,18 @@
   "settingsSectionDrawing": "Drawing",
   "settingsStrokeSmoothing": "Stroke smoothing",
   "settingsStrokeSmoothingSubtitle": "Smooth ink strokes with Chaikin corner-cutting (default on)",
+  "settingsStrokeSmoothingStrength": "Smoothing strength",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — lower keeps finer detail; recommended {recommended}%",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
   "settingsFingerDrawing": "Finger drawing",
   "settingsFingerDrawingSubtitle": "Draw with finger on paper; when off, only stylus draws (default off)",
   "settingsGestureInkEditing": "Gesture ink editing",

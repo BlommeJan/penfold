@@ -97,6 +97,12 @@ Device re-verify on SM-X920 after install.
 
 **Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
 
+## v0.2.81 — stroke smoothing for small writing (2026-07-18)
+
+- Ink coalescing uses slower-writing floor (0.3 mm) and flushes final pointer position on lift
+- Distance-aware Chaikin smoothing with strength blend; Settings slider 0–100% (recommended 35%)
+- `StrokeSmoothingService.strength` persisted via SharedPreferences
+
 ## v0.2.80 — dark mode UI polish (2026-07-18)
 
 - Document viewport gutter uses `surfaceContainerLow` instead of white bleed around pages

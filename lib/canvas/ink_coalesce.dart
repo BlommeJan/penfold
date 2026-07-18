@@ -2,21 +2,30 @@ import 'dart:ui';
 
 import '../models/models.dart';
 
-/// Minimum gap between ink samples in canonical 0.1 mm units at low speed.
-const double kInkMinDistCanonical = 12; // ~1.2 display px at typical scale
+/// Minimum gap between ink samples when writing slowly or carefully (0.1 mm units).
+const double kInkMinDistSlow = 3; // 0.3 mm — preserves small handwriting
+
+/// Minimum gap between ink samples at moderate speed (0.1 mm units).
+const double kInkMinDistCanonical = 12; // 1.2 mm
 
 /// Maximum gap allowed when moving very fast (reduces point count).
-const double kInkMaxDistCanonical = 80; // ~8 mm
+const double kInkMaxDistCanonical = 80; // 8 mm
+
+/// Speed (canonical units/s) below which the slow-writing floor applies.
+const double kInkSlowSpeedThreshold = 1500;
 
 /// Adaptive minimum distance before accepting a new ink sample.
 ///
 /// [speedCanonicalPerSec] is stroke speed in canonical units per second.
-/// Faster strokes use a larger gap to keep point count bounded without
-/// visible stair-stepping on typical Tab displays.
+/// Slow, careful strokes use a smaller gap so small letters stay visible.
 double adaptiveInkMinDist(double speedCanonicalPerSec) {
-  if (speedCanonicalPerSec <= 0) return kInkMinDistCanonical;
-  // Scale gap with speed; clamp to sane bounds.
-  final scaled = kInkMinDistCanonical + speedCanonicalPerSec * 0.004;
+  if (speedCanonicalPerSec <= 0) return kInkMinDistSlow;
+  if (speedCanonicalPerSec < kInkSlowSpeedThreshold) {
+    final t = speedCanonicalPerSec / kInkSlowSpeedThreshold;
+    return kInkMinDistSlow + t * (kInkMinDistCanonical - kInkMinDistSlow);
+  }
+  final scaled =
+      kInkMinDistCanonical + (speedCanonicalPerSec - kInkSlowSpeedThreshold) * 0.004;
   return scaled.clamp(kInkMinDistCanonical, kInkMaxDistCanonical);
 }
 
@@ -29,6 +38,16 @@ bool shouldAcceptInkPoint({
   final dist =
       Offset(newCanonical.dx - last.x, newCanonical.dy - last.y).distance;
   return dist >= adaptiveInkMinDist(speedCanonicalPerSec);
+}
+
+/// Always append [newCanonical] on pointer-up when it differs from [last].
+bool shouldAppendFinalInkPoint({
+  required StrokePoint last,
+  required Offset newCanonical,
+}) {
+  final dist =
+      Offset(newCanonical.dx - last.x, newCanonical.dy - last.y).distance;
+  return dist >= 0.5;
 }
 
 /// Estimate speed from two canonical positions and elapsed [dt].

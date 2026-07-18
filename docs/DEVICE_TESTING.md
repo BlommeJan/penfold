@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.2.80
+**Version:** 0.2.81
 
-Install the release APK from `APKs/` (for example `Penfold-v0.2.80.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.2.81.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -183,7 +183,7 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] **Toolbar order** — drag tools to reorder; editor reflects new order
 - [ ] **S Pen** — barrel button action and description
 - [ ] **Page-turn scroll mode** — toggle on/off
-- [ ] **Stroke smoothing** — toggle on/off
+- [ ] **Stroke smoothing** — toggle on/off; adjust strength slider (recommended 35%) and verify small handwriting stays readable
 - [ ] **Gesture ink editing** — toggle scratch-to-delete on/off
 - [ ] **Backup & Restore** — export zip, recover from auto-backup, restore from file
 - [ ] **About** — shows app name and version at the bottom of Settings
@@ -218,4 +218,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.2.80*
+*Last updated for Penfold v0.2.81*

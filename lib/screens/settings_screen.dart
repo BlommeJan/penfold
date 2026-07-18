@@ -31,6 +31,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<String> _ocrTerms = [];
   bool _ocrTermsLoaded = false;
   bool _strokeSmoothing = true;
+  double _strokeSmoothingStrength =
+      StrokeSmoothingService.recommendedStrength;
   bool _strokeSmoothingLoaded = false;
   bool _gestureInkEditing = true;
   bool _gestureInkEditingLoaded = false;
@@ -112,6 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (!mounted) return;
     setState(() {
       _strokeSmoothing = StrokeSmoothingService.instance.enabled;
+      _strokeSmoothingStrength = StrokeSmoothingService.instance.strength;
       _strokeSmoothingLoaded = true;
     });
   }
@@ -120,6 +123,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await StrokeSmoothingService.instance.setEnabled(value);
     if (!mounted) return;
     setState(() => _strokeSmoothing = value);
+  }
+
+  Future<void> _setStrokeSmoothingStrength(double value) async {
+    await StrokeSmoothingService.instance.setStrength(value);
+    if (!mounted) return;
+    setState(() => _strokeSmoothingStrength = value);
   }
 
   Future<void> _loadGestureInkEditing() async {
@@ -494,7 +503,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: EdgeInsets.all(24),
                     child: Center(child: CircularProgressIndicator()),
                   )
-                else
+                else ...[
                   SwitchListTile(
                     secondary: const Icon(Icons.draw_rounded),
                     title: Text(l10n.settingsStrokeSmoothing),
@@ -502,6 +511,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     value: _strokeSmoothing,
                     onChanged: _setStrokeSmoothing,
                   ),
+                  if (_strokeSmoothing)
+                    ListTile(
+                      leading: const Icon(Icons.tune_rounded),
+                      title: Text(l10n.settingsStrokeSmoothingStrength),
+                      subtitle: Text(
+                        l10n.settingsStrokeSmoothingStrengthSubtitle(
+                          (_strokeSmoothingStrength * 100).round(),
+                          (StrokeSmoothingService.recommendedStrength * 100)
+                              .round(),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    ),
+                  if (_strokeSmoothing)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 24, 8),
+                      child: Slider(
+                        value: _strokeSmoothingStrength,
+                        min: 0,
+                        max: 1,
+                        divisions: 20,
+                        label:
+                            '${(_strokeSmoothingStrength * 100).round()}%',
+                        onChanged: _setStrokeSmoothingStrength,
+                      ),
+                    ),
+                ],
                 if (!_fingerDrawingLoaded)
                   const Padding(
                     padding: EdgeInsets.all(24),

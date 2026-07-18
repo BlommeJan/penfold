@@ -386,6 +386,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Smooth ink strokes with Chaikin corner-cutting (default on)';
 
   @override
+  String get settingsStrokeSmoothingStrength => 'Smoothing strength';
+
+  @override
+  String settingsStrokeSmoothingStrengthSubtitle(int percent, int recommended) {
+    return '$percent% — lower keeps finer detail; recommended $recommended%';
+  }
+
+  @override
   String get settingsFingerDrawing => 'Finger drawing';
 
   @override

@@ -25,6 +25,7 @@ import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/thumbnail_cache.dart';
 import '../services/ink_ocr_service.dart';
+import '../services/notebook_defaults_service.dart';
 import '../services/zoom_navigation_service.dart';
 import '../widgets/contents_sheet.dart';
 import '../widgets/page_editor.dart';
@@ -443,6 +444,7 @@ class _NotebookScreenState extends State<NotebookScreen>
         index: 0,
         template: widget.notebook.template,
         pageSize: widget.notebook.pageSize,
+        backgroundTheme: NotebookDefaultsService.instance.backgroundTheme,
       );
       await _db.insertPage(page);
       pages = [page];
@@ -741,6 +743,7 @@ class _NotebookScreenState extends State<NotebookScreen>
           ? _activePage.template
           : widget.notebook.template,
       pageSize: widget.notebook.pageSize,
+      backgroundTheme: _activePage.backgroundTheme,
     );
     await _db.insertPage(page);
     _pageKeys[page.id] = GlobalKey<PageEditorState>();
@@ -779,7 +782,7 @@ class _NotebookScreenState extends State<NotebookScreen>
   }
 
   Future<void> _openPageTemplateSettings() async {
-    final chosen = await showPageTemplatePicker(
+    final chosen = await showPageSettingsSheet(
       context: context,
       page: _activePage,
       isPdfPage: _isPdfPage(_activePage),
@@ -881,6 +884,18 @@ class _NotebookScreenState extends State<NotebookScreen>
       }
       await _db.updatePageTemplate(_activePage.id, chosen);
       setState(() => _activePage.template = chosen);
+      return;
+    }
+
+    if (chosen is PageBackgroundTheme) {
+      if (_isPdfPage(_activePage)) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(l10n.pdfPagesKeepBackground)));
+        return;
+      }
+      if (chosen == _activePage.backgroundTheme) return;
+      await _db.updatePageBackgroundTheme(_activePage.id, chosen);
+      setState(() => _activePage.backgroundTheme = chosen);
       return;
     }
 

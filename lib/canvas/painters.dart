@@ -14,18 +14,20 @@ class PagePainter extends CustomPainter {
   final PageTemplate template;
   final PageSize pageSize;
   final PageOrientation orientation;
+  final PageBackgroundTheme backgroundTheme;
   final ui.Image? pdfImage;
 
   PagePainter({
     required this.template,
     required this.pageSize,
     this.orientation = PageOrientation.portrait,
+    this.backgroundTheme = PageBackgroundTheme.light,
     this.pdfImage,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paper = Paint()..color = Colors.white;
+    final paper = Paint()..color = backgroundTheme.paperColor;
     canvas.drawRect(Offset.zero & size, paper);
 
     if (pdfImage != null) {
@@ -40,7 +42,7 @@ class PagePainter extends CustomPainter {
     }
 
     final line = Paint()
-      ..color = const Color(0xFFD9E2EC)
+      ..color = backgroundTheme.lineColor
       ..strokeWidth = 1;
 
     // Template spacing in canonical 0.1 mm, converted to display pixels.
@@ -63,7 +65,7 @@ class PagePainter extends CustomPainter {
         }
       case PageTemplate.collegeRuled:
         final marginPaint = Paint()
-          ..color = const Color(0xFFE8B4B4)
+          ..color = backgroundTheme.marginColor
           ..strokeWidth = 1;
         canvas.drawLine(
             Offset(marginLeft, 0), Offset(marginLeft, size.height), marginPaint);
@@ -79,7 +81,7 @@ class PagePainter extends CustomPainter {
           canvas.drawLine(Offset(x, 0), Offset(x, size.height), line);
         }
       case PageTemplate.dotted:
-        final dot = Paint()..color = const Color(0xFFC3CFDD);
+        final dot = Paint()..color = backgroundTheme.dotColor;
         for (var y = gridSpacing; y < size.height; y += gridSpacing) {
           for (var x = gridSpacing; x < size.width; x += gridSpacing) {
             canvas.drawCircle(Offset(x, y), 1.4, dot);
@@ -93,6 +95,7 @@ class PagePainter extends CustomPainter {
       old.template != template ||
       old.pageSize != pageSize ||
       old.orientation != orientation ||
+      old.backgroundTheme != backgroundTheme ||
       old.pdfImage != pdfImage;
 }
 
@@ -597,6 +600,7 @@ class PageThumbnailPainter extends CustomPainter {
   final PageTemplate template;
   final PageSize pageSize;
   final PageOrientation orientation;
+  final PageBackgroundTheme backgroundTheme;
   final List<Stroke> strokes;
   final List<FilledRegion> fills;
   final List<TextBlock> textBlocks;
@@ -606,6 +610,7 @@ class PageThumbnailPainter extends CustomPainter {
     required this.template,
     required this.pageSize,
     this.orientation = PageOrientation.portrait,
+    this.backgroundTheme = PageBackgroundTheme.light,
     required this.strokes,
     this.fills = const [],
     this.textBlocks = const [],
@@ -636,6 +641,7 @@ class PageThumbnailPainter extends CustomPainter {
       template: template,
       pageSize: pageSize,
       orientation: orientation,
+      backgroundTheme: backgroundTheme,
       pdfImage: pdfImage,
     ).paint(canvas, pageRect.size);
     final ink = InkPainter(
@@ -664,6 +670,7 @@ class PageThumbnailPainter extends CustomPainter {
       old.template != template ||
       old.pageSize != pageSize ||
       old.orientation != orientation ||
+      old.backgroundTheme != backgroundTheme ||
       old.strokes != strokes ||
       old.fills != fills ||
       old.textBlocks != textBlocks ||

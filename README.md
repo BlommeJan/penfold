@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.78&color=blue" alt="Version 0.2.78" /></a>
+  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.2.79&color=blue" alt="Version 0.2.79" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter 3.x" /></a>
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
@@ -33,7 +33,9 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 | **Rich ink tools** | Pen, pencil, highlighter, tape (hide-reveal), shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
 
-**v0.2.78** — Full Flutter i18n infrastructure with English string catalog (`app_en.arb`); UI ready for additional locales.
+**v0.2.79** — Settings restructure with language picker, dark mode (system/light/dark), and notebook defaults (paper size, type, page theme); per-page background themes with pastel palette.
+
+**v0.2.78** — Per-page paper themes (light, dark, sepia, pastels) with default notebook preferences (paper size, type, page color); full Flutter i18n infrastructure with English string catalog (`app_en.arb`).
 
 **v0.2.77** — Text tool Done checkmark commits typed text (same as keyboard Done); no longer opens a blank text box and loses content.
 
@@ -47,7 +49,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 
 **Drawing** — Pressure-sensitive pen (fountain, pencil, marker, calligraphy), highlighter, whole-stroke and pixel eraser (with brush-size outline and erase-all-on-page), optional stroke smoothing (Chaikin, default on), S Pen barrel-button hold-to-erase, shape recognition, flood fill, typed text blocks, lasso select with copy/paste and rotate/scale handles, and 100-step undo/redo with per-page history preserved when switching pages. Ink is stored in canonical page coordinates so strokes stay aligned when you rotate or zoom; changing page orientation scales and centers content to fit.
 
-**Pages** — Vertical scroll through multi-page notebooks (optional page-turn mode snaps one page at a time), page overview grid with drag-reorder and multi-select batch delete, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, gear menu for page settings (template, size, orientation, export, and more), image insert, per-page audio attachment (local files, play/pause in page settings), page complexity warning at 500 strokes with split-page tool in page settings, PDF import (lazy render with read-only hyperlinks), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
+**Pages** — Vertical scroll through multi-page notebooks (optional page-turn mode snaps one page at a time), page overview grid with drag-reorder and multi-select batch delete, blank/lined/grid/dotted/college-ruled templates, A4/A5/Letter sizes, per-page paper color themes (light, dark, sepia, pastels), gear menu for page settings (template, size, orientation, page color, export, and more), image insert, per-page audio attachment (local files, play/pause in page settings), page complexity warning at 500 strokes with split-page tool in page settings, PDF import (lazy render with read-only hyperlinks), and export current page or full notebook as PNG or vector PDF (ink strokes stay crisp at any zoom).
 
 **Library** — Colored notebook covers with first-page thumbnails (cached locally), nested folders, notebook tags with filter chips, full-text search (FTS5 → FTS4 → LIKE fallback; PDF embedded text indexed at import), PDF import from the home screen, long-press **Export workbook** (vector PDF), Trash view with 30-day retention (restore or delete), hamburger drawer for folders/settings/trash, muted version label in the app bar, full-database backup/restore (zip export via share sheet), Settings "Your data" screen (DB path, asset folder sizes, link to `docs/ARCHITECTURE.md`), Settings **About** section (app name and version), customizable toolbar tool order in Settings, and session persistence (remembers page, scroll, and tool while editing; cold start always opens the library).
 
@@ -86,7 +88,7 @@ To build a release APK, see [docs/BUILD.md](docs/BUILD.md).
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.78) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.2.79) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility, versions 0.2.7–0.2.40, dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -118,5 +120,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.2.78</strong> — write freely, keep it local.
+  <strong>Penfold v0.2.79</strong> — write freely, keep it local.
 </p>

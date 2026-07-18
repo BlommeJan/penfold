@@ -97,6 +97,10 @@ Device re-verify on SM-X920 after install.
 
 **Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
 
+## v0.2.79 — settings appearance (2026-07-18)
+
+- Settings restructure: language picker, dark mode (system/light/dark), notebook defaults (paper size, type, page theme); `PenfoldTheme` light/dark wired in `MaterialApp`.
+
 ## v0.2.78 — i18n (2026-07-18)
 
 - Added Flutter gen-l10n: `app_en.arb` master catalog, `MaterialApp` delegates, all UI strings via `AppLocalizations`.

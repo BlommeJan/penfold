@@ -634,6 +634,90 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @settingsSectionLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsSectionLanguage;
+
+  /// No description provided for @settingsSectionAppearanceAndPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance & Preferences'**
+  String get settingsSectionAppearanceAndPreferences;
+
+  /// No description provided for @settingsSectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsSectionAppearance;
+
+  /// No description provided for @settingsAppearanceDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode'**
+  String get settingsAppearanceDarkMode;
+
+  /// No description provided for @settingsAppearanceDarkModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose light, dark, or match your device (default system)'**
+  String get settingsAppearanceDarkModeSubtitle;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @settingsSectionPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsSectionPreferences;
+
+  /// No description provided for @settingsLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App language'**
+  String get settingsLanguageLabel;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get languageGerman;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get languageFrench;
+
+  /// No description provided for @languageDutch.
+  ///
+  /// In en, this message translates to:
+  /// **'Dutch'**
+  String get languageDutch;
+
   /// No description provided for @settingsSectionToolbar.
   ///
   /// In en, this message translates to:
@@ -1227,6 +1311,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Page settings'**
   String get pageSettingsTitle;
+
+  /// No description provided for @pageColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Page color'**
+  String get pageColorTitle;
+
+  /// No description provided for @pageThemeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Page theme'**
+  String get pageThemeTitle;
+
+  /// No description provided for @defaultPaperSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Default paper size'**
+  String get defaultPaperSize;
+
+  /// No description provided for @defaultPaperType.
+  ///
+  /// In en, this message translates to:
+  /// **'Default paper type'**
+  String get defaultPaperType;
+
+  /// No description provided for @defaultPageTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Default page theme'**
+  String get defaultPageTheme;
+
+  /// No description provided for @notebookDefaultsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used when you create a new notebook. You can still change choices in the dialog.'**
+  String get notebookDefaultsHint;
+
+  /// No description provided for @pageThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get pageThemeLight;
+
+  /// No description provided for @pageThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get pageThemeDark;
+
+  /// No description provided for @pageThemeSepia.
+  ///
+  /// In en, this message translates to:
+  /// **'Sepia'**
+  String get pageThemeSepia;
+
+  /// No description provided for @pageThemePastelPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pastel pink'**
+  String get pageThemePastelPink;
+
+  /// No description provided for @pageThemePastelBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Pastel blue'**
+  String get pageThemePastelBlue;
+
+  /// No description provided for @pageThemePastelMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pastel mint'**
+  String get pageThemePastelMint;
 
   /// No description provided for @pageSizeTitle.
   ///

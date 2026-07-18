@@ -461,6 +461,7 @@ class PageExportService {
       template: data.page.template,
       pageSize: pageSize,
       orientation: orientation,
+      backgroundTheme: data.page.backgroundTheme,
       pdfImage: data.pdfImage,
     ).paint(canvas, displaySize);
 
@@ -500,6 +501,7 @@ class PageExportService {
       template: data.page.template,
       pageSize: pageSize,
       orientation: orientation,
+      backgroundTheme: data.page.backgroundTheme,
       pdfImage: data.pdfImage,
     ).paint(canvas, displaySize);
 

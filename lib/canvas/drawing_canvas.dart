@@ -2784,6 +2784,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
                       template: widget.page.template,
                       pageSize: _pageSize,
                       orientation: _orientation,
+                      backgroundTheme: widget.page.backgroundTheme,
                       pdfImage: widget.pdfImage,
                     ),
                   ),

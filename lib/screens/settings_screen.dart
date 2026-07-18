@@ -12,6 +12,10 @@ import '../services/spen_button_service.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/toolbar_order_service.dart';
 import '../services/zoom_navigation_service.dart';
+import '../widgets/settings/dark_mode_switch.dart';
+import '../widgets/settings/language_selector.dart';
+import '../widgets/settings/notebook_defaults_section.dart';
+import '../widgets/settings/settings_section.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -377,22 +381,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-                  child: Text(
-                    l10n.settingsSectionToolbar,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
+                SettingsSection(
+                  title: l10n.settingsSectionLanguage,
+                  topPadding: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    l10n.settingsToolbarReorderHint,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                const LanguageSelector(),
+                SettingsSection(
+                  title: l10n.settingsSectionAppearanceAndPreferences,
+                  showDividerBefore: true,
+                  topPadding: 0,
+                ),
+                SettingsSubsection(title: l10n.settingsSectionAppearance),
+                const DarkModeSwitch(),
+                const NotebookDefaultsSection(),
+                SettingsSection(
+                  title: l10n.settingsSectionToolbar,
+                  subtitle: l10n.settingsToolbarReorderHint,
+                  showDividerBefore: true,
+                  topPadding: 0,
                 ),
                 const SizedBox(height: 8),
                 if (!_orderLoaded)

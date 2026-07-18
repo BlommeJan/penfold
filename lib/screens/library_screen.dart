@@ -13,6 +13,7 @@ import '../services/ink_ocr_service.dart';
 import '../services/page_complexity_service.dart';
 import '../services/page_export.dart';
 import '../services/pdf_import.dart';
+import '../services/notebook_defaults_service.dart';
 import '../services/thumbnail_cache.dart';
 import 'notebook_screen.dart';
 import 'settings_screen.dart';
@@ -438,9 +439,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Future<void> _createNotebook() async {
     final l10n = context.l10n;
+    await NotebookDefaultsService.instance.load();
+    final notebookDefaults = NotebookDefaultsService.instance.defaults;
     final titleCtrl = TextEditingController(text: l10n.notebookUntitled);
-    var template = PageTemplate.lined;
-    var pageSize = PageSize.a4;
+    var template = notebookDefaults.template;
+    var pageSize = notebookDefaults.pageSize;
+    var pageTheme = notebookDefaults.backgroundTheme;
     var colorIx = 0;
 
     final created = await showDialog<bool>(
@@ -484,6 +488,33 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         label: l10n.pageTemplateShortLabel(t),
                         selected: template == t,
                         onSelected: () => setDialog(() => template = t),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(l10n.defaultPageTheme, style: Theme.of(ctx).textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    for (final theme in PageBackgroundTheme.values)
+                      GestureDetector(
+                        onTap: () => setDialog(() => pageTheme = theme),
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: theme.paperColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: pageTheme == theme ? 3 : 1,
+                              color: pageTheme == theme
+                                  ? Theme.of(ctx).colorScheme.primary
+                                  : Theme.of(ctx).colorScheme.outlineVariant,
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -551,6 +582,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       index: 0,
       template: template,
       pageSize: pageSize,
+      backgroundTheme: pageTheme,
     );
     await _db.insertPage(page);
     await _refresh();

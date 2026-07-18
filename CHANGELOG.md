@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.79] — 2026
+
+### Added
+
+- **Settings appearance** — System / light / dark theme picker with persisted app-wide theme mode
+- **Language picker** — Settings language section with locale selection wired through `MaterialApp`
+- **Notebook defaults** — Default paper size, type, and page background theme preferences for new notebooks
+- **Page background themes** — Per-page paper colors (light, dark, sepia, pastels) with themed ruled/grid line colors
+
 ## [0.2.78] — 2026
 
 ### Added

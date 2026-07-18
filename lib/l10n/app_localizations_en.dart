@@ -305,6 +305,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get settingsSectionLanguage => 'Language';
+
+  @override
+  String get settingsSectionAppearanceAndPreferences =>
+      'Appearance & Preferences';
+
+  @override
+  String get settingsSectionAppearance => 'Appearance';
+
+  @override
+  String get settingsAppearanceDarkMode => 'Dark mode';
+
+  @override
+  String get settingsAppearanceDarkModeSubtitle =>
+      'Choose light, dark, or match your device (default system)';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get settingsSectionPreferences => 'Preferences';
+
+  @override
+  String get settingsLanguageLabel => 'App language';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageGerman => 'German';
+
+  @override
+  String get languageFrench => 'French';
+
+  @override
+  String get languageDutch => 'Dutch';
+
+  @override
   String get settingsSectionToolbar => 'Toolbar';
 
   @override
@@ -623,6 +667,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pageSettingsTitle => 'Page settings';
+
+  @override
+  String get pageColorTitle => 'Page color';
+
+  @override
+  String get pageThemeTitle => 'Page theme';
+
+  @override
+  String get defaultPaperSize => 'Default paper size';
+
+  @override
+  String get defaultPaperType => 'Default paper type';
+
+  @override
+  String get defaultPageTheme => 'Default page theme';
+
+  @override
+  String get notebookDefaultsHint =>
+      'Used when you create a new notebook. You can still change choices in the dialog.';
+
+  @override
+  String get pageThemeLight => 'Light';
+
+  @override
+  String get pageThemeDark => 'Dark';
+
+  @override
+  String get pageThemeSepia => 'Sepia';
+
+  @override
+  String get pageThemePastelPink => 'Pastel pink';
+
+  @override
+  String get pageThemePastelBlue => 'Pastel blue';
+
+  @override
+  String get pageThemePastelMint => 'Pastel mint';
 
   @override
   String get pageSizeTitle => 'Page size';

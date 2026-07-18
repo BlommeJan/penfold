@@ -34,6 +34,16 @@ extension AppLocalizationsLabels on AppLocalizations {
         PageOrientation.landscape => orientationLandscape,
       };
 
+  String pageBackgroundThemeLabel(PageBackgroundTheme theme) =>
+      switch (theme) {
+        PageBackgroundTheme.light => pageThemeLight,
+        PageBackgroundTheme.dark => pageThemeDark,
+        PageBackgroundTheme.sepia => pageThemeSepia,
+        PageBackgroundTheme.pastelPink => pageThemePastelPink,
+        PageBackgroundTheme.pastelBlue => pageThemePastelBlue,
+        PageBackgroundTheme.pastelMint => pageThemePastelMint,
+      };
+
   String toolbarToolLabel(String id) => switch (id) {
         ToolbarToolId.pen => toolPen,
         ToolbarToolId.highlighter => toolHighlighter,

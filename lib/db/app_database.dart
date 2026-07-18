@@ -15,7 +15,7 @@ class AppDatabase {
 
   Database? _db;
   _SearchBackend _searchBackend = _SearchBackend.none;
-  static const _schemaVersion = 16;
+  static const _schemaVersion = 17;
   static const _notDeleted = 'deleted_at IS NULL';
   static const _folderNotDeleted = 'deleted_at IS NULL';
   static const trashRetention = Duration(days: 30);
@@ -76,6 +76,7 @@ class AppDatabase {
         template INTEGER NOT NULL,
         page_size INTEGER NOT NULL DEFAULT 0,
         orientation INTEGER NOT NULL DEFAULT 0,
+        background_theme INTEGER NOT NULL DEFAULT 0,
         pdf_image TEXT,
         pdf_source_path TEXT,
         pdf_page_index INTEGER,
@@ -246,6 +247,12 @@ class AppDatabase {
     if (oldV < 16) {
       if (await _hasTable(db, 'folders')) {
         await _addColumnIfMissing(db, 'folders', 'deleted_at', 'INTEGER');
+      }
+    }
+    if (oldV < 17) {
+      if (await _hasTable(db, 'pages')) {
+        await _addColumnIfMissing(
+            db, 'pages', 'background_theme', 'INTEGER NOT NULL DEFAULT 0');
       }
     }
   }
@@ -1090,6 +1097,18 @@ class AppDatabase {
         where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<void> updatePageBackgroundTheme(
+    String id,
+    PageBackgroundTheme theme,
+  ) async {
+    await (await db).update(
+      'pages',
+      {'background_theme': theme.index},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<void> updatePageOrientation(
     String id,
     PageOrientation orientation,
@@ -1256,6 +1275,7 @@ class AppDatabase {
         template: sourcePage.template,
         pageSize: sourcePage.pageSize,
         orientation: sourcePage.orientation,
+        backgroundTheme: sourcePage.backgroundTheme,
         aspect: sourcePage.aspect,
       );
       await txn.insert('pages', newPage.toRow());

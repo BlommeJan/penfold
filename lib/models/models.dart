@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'page_background_theme.dart';
+
+export 'page_background_theme.dart';
+
 enum ToolType {
   pen,
   highlighter,
@@ -180,6 +184,7 @@ class NotePage {
   PageTemplate template;
   PageSize pageSize;
   PageOrientation orientation;
+  PageBackgroundTheme backgroundTheme;
 
   /// If non-null, this page is a rendered PDF page: path to a PNG background.
   final String? pdfImagePath;
@@ -205,6 +210,7 @@ class NotePage {
     required this.template,
     this.pageSize = PageSize.a4,
     this.orientation = PageOrientation.portrait,
+    this.backgroundTheme = PageBackgroundTheme.light,
     this.pdfImagePath,
     this.pdfSourcePath,
     this.pdfPageIndex,
@@ -220,6 +226,7 @@ class NotePage {
         'template': template.index,
         'page_size': pageSize.index,
         'orientation': orientation.index,
+        'background_theme': backgroundTheme.index,
         'pdf_image': pdfImagePath,
         'pdf_source_path': pdfSourcePath,
         'pdf_page_index': pdfPageIndex,
@@ -239,6 +246,9 @@ class NotePage {
       template: PageTemplate.values[r['template'] as int],
       pageSize: ps,
       orientation: orient,
+      backgroundTheme: PageBackgroundTheme.fromIndex(
+        (r['background_theme'] as int?) ?? 0,
+      ),
       pdfImagePath: r['pdf_image'] as String?,
       pdfSourcePath: r['pdf_source_path'] as String?,
       pdfPageIndex: r['pdf_page_index'] as int?,

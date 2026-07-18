@@ -145,4 +145,14 @@ void main() {
     expect(back.template, PageTemplate.grid);
     expect(back.pageSize, PageSize.letter);
   });
+
+  test('page background theme update persists', () async {
+    final db = AppDatabase.instance;
+    await db.insertNotebook(nb());
+    await db.insertPage(pg());
+
+    await db.updatePageBackgroundTheme('pg1', PageBackgroundTheme.sepia);
+    final back = (await db.pagesOf('nb1')).single;
+    expect(back.backgroundTheme, PageBackgroundTheme.sepia);
+  });
 }

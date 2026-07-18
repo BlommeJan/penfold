@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/l10n.dart';
 import '../models/models.dart';
 import 'page_audio_settings.dart';
+import 'settings/notebook_defaults_section.dart';
 
 /// Whether a page uses an imported PDF background (size/orientation locked).
 bool isPdfBackgroundPage(NotePage page) =>
@@ -106,6 +107,137 @@ Future<EditorPageMenuAction?> showEditorPageMenu({
         ),
       ),
     ],
+  );
+}
+
+Future<Object?> showPageSettingsSheet({
+  required BuildContext context,
+  required NotePage page,
+  required bool isPdfPage,
+}) {
+  final l10n = context.l10n;
+  var template = page.template;
+  var backgroundTheme = page.backgroundTheme;
+
+  return showModalBottomSheet<Object?>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setSheet) => SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                child: Text(
+                  l10n.pageSettingsTitle,
+                  style: Theme.of(ctx).textTheme.titleMedium,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  l10n.pageTemplateTitle,
+                  style: Theme.of(ctx).textTheme.labelLarge,
+                ),
+              ),
+              for (final t in PageTemplate.values)
+                ListTile(
+                  leading: Icon(pageTemplateIcon(t)),
+                  title: Text(l10n.pageTemplateLabel(t)),
+                  trailing: template == t
+                      ? const Icon(Icons.check_rounded)
+                      : null,
+                  enabled: !isPdfPage,
+                  onTap: !isPdfPage
+                      ? () {
+                          setSheet(() => template = t);
+                          Navigator.pop(ctx, template);
+                        }
+                      : null,
+                ),
+              const Divider(height: 24),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  l10n.pageColorTitle,
+                  style: Theme.of(ctx).textTheme.labelLarge,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: PageBackgroundThemePickerRow(
+                  selected: backgroundTheme,
+                  enabled: !isPdfPage,
+                  onSelected: (theme) {
+                    setSheet(() => backgroundTheme = theme);
+                    Navigator.pop(ctx, theme);
+                  },
+                ),
+              ),
+              if (isPdfPage)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Text(
+                    l10n.pdfPagesKeepBackground,
+                    style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<Object?> showPageBackgroundThemePicker({
+  required BuildContext context,
+  required NotePage page,
+  required bool isPdfPage,
+}) {
+  final l10n = context.l10n;
+  return showModalBottomSheet<Object?>(
+    context: context,
+    showDragHandle: true,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Text(
+              l10n.pageColorTitle,
+              style: Theme.of(ctx).textTheme.titleMedium,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: PageBackgroundThemePickerRow(
+              selected: page.backgroundTheme,
+              enabled: !isPdfPage,
+              onSelected: (theme) => Navigator.pop(ctx, theme),
+            ),
+          ),
+          if (isPdfPage)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Text(
+                l10n.pdfPagesKeepBackground,
+                style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -319,7 +451,7 @@ Future<void> showPageAudioSheet({
   );
 }
 
-/// Legacy entry point — opens template picker only.
+/// Legacy entry point — opens combined page settings sheet.
 Future<Object?> showPageSettingsPopup({
   required BuildContext context,
   required NotePage page,
@@ -327,7 +459,7 @@ Future<Object?> showPageSettingsPopup({
   required int notebookPageCount,
   required ValueChanged<String?> onAudioChanged,
 }) =>
-    showPageTemplatePicker(
+    showPageSettingsSheet(
       context: context,
       page: page,
       isPdfPage: isPdfPage,

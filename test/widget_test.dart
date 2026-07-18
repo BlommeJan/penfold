@@ -8,6 +8,7 @@ import 'package:penfold/main.dart';
 import 'package:penfold/models/models.dart';
 import 'package:penfold/services/app_info_service.dart';
 import 'package:penfold/services/session_service.dart';
+import 'package:penfold/services/theme_settings_service.dart';
 import 'package:penfold/services/thumbnail_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -49,11 +50,12 @@ void main() {
     PackageInfo.setMockInitialValues(
       appName: 'Penfold',
       packageName: 'com.itsbryce.penfold',
-      version: '0.2.78',
+      version: '0.2.79',
       buildNumber: '1',
       buildSignature: '',
     );
     AppInfoService.instance.resetForTests();
+    ThemeSettingsService.instance.resetForTests();
     tmp = await Directory.systemTemp.createTemp('penfold_widget_test');
     AppDatabase.overrideDirPath = tmp.path;
   });
@@ -69,7 +71,7 @@ void main() {
     await settle(tester);
 
     expect(find.text('Penfold'), findsOneWidget);
-    expect(find.textContaining('v0.2.78'), findsOneWidget);
+    expect(find.textContaining('v0.2.79'), findsOneWidget);
     expect(find.text('No notebooks yet'), findsOneWidget);
     expect(find.text('New notebook'), findsOneWidget);
   });

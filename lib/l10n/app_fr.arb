@@ -1,0 +1,557 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Penfold",
+  "actionCancel": "Annuler",
+  "actionCreate": "Créer",
+  "actionRename": "Renommer",
+  "actionSave": "Enregistrer",
+  "actionDelete": "Supprimer",
+  "actionAdd": "Ajouter",
+  "actionBack": "Retour",
+  "actionDone": "Terminé",
+  "actionSplit": "Diviser",
+  "actionRecover": "Récupérer",
+  "actionRestore": "Restaurer",
+  "actionExport": "Exporter",
+  "actionRetry": "Réessayer",
+  "actionRetrying": "Nouvelle tentative…",
+  "actionExportFirst": "Exporter d'abord",
+  "actionEraseAll": "Tout effacer",
+  "actionChangeSize": "Changer la taille",
+  "actionChangeOrientation": "Changer l'orientation",
+  "actionUseColor": "Utiliser la couleur",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Aperçu",
+  "libraryTrash": "Corbeille",
+  "librarySettings": "Réglages",
+  "libraryFolders": "Dossiers",
+  "libraryNoFoldersYet": "Aucun dossier pour l'instant",
+  "libraryAll": "Tout",
+  "libraryUncategorized": "Sans catégorie",
+  "libraryBreadcrumb": "Bibliothèque",
+  "librarySearchHint": "Rechercher des carnets et du texte saisi…",
+  "libraryNoMatches": "Aucun résultat",
+  "libraryFolderEmpty": "Ce dossier est vide",
+  "libraryNoNotebooksWithTag": "Aucun carnet avec cette étiquette",
+  "libraryNoUncategorizedNotebooks": "Aucun carnet sans catégorie",
+  "libraryNoNotebooksYet": "Aucun carnet pour l'instant",
+  "libraryCouldNotLoad": "Impossible de charger la bibliothèque : {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Sauvegarde et restauration",
+  "tooltipTrash": "Corbeille",
+  "tooltipNewNotebook": "Nouveau carnet",
+  "tooltipNewFolder": "Nouveau dossier",
+  "tooltipNewSubfolder": "Nouveau sous-dossier",
+  "tooltipImportPdf": "Importer un PDF",
+  "folderNew": "Nouveau dossier",
+  "folderNewSubfolder": "Nouveau sous-dossier",
+  "folderRename": "Renommer le dossier",
+  "folderMoveToTrash": "Mettre à la corbeille",
+  "folderMoveToTrashTitle": "Mettre « {name} » à la corbeille ?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Le dossier et ses carnets seront conservés dans la corbeille pendant 30 jours.",
+  "notebookNew": "Nouveau carnet",
+  "notebookUntitled": "Sans titre",
+  "notebookTitleLabel": "Titre",
+  "notebookSizeLabel": "Taille",
+  "notebookPaperLabel": "Papier",
+  "notebookCoverLabel": "Couverture",
+  "notebookRename": "Renommer le carnet",
+  "notebookMoveToFolder": "Déplacer vers un dossier",
+  "notebookEditTags": "Modifier les étiquettes",
+  "notebookExportWorkbook": "Exporter le carnet",
+  "notebookExportWorkbookSubtitle": "Partager toutes les pages en PDF",
+  "notebookMoveToTrash": "Mettre à la corbeille",
+  "notebookMoveToTrashTitle": "Mettre « {title} » à la corbeille ?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Le carnet est masqué de la bibliothèque pendant 30 jours. L'encre et les pages restent sur cet appareil jusqu'à vidage de la corbeille. Exportez une sauvegarde au préalable si vous souhaitez une copie supplémentaire.",
+  "notebookTagsFor": "Étiquettes pour « {title} »",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Aucune étiquette pour l'instant. Créez-en une ci-dessous.",
+  "notebookNewTag": "Nouvelle étiquette",
+  "notebookAddTag": "Ajouter une étiquette",
+  "notebookNoPagesToExport": "Ce carnet n'a aucune page à exporter",
+  "notebookExportedAsPdf": "« {title} » exporté en PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Sauvegarde exportée. Vous pouvez le mettre à la corbeille quand vous le souhaitez.",
+  "importPdfSnack": "Importation du PDF… les pages sont rendues une fois, puis restent hors ligne.",
+  "importFailed": "Échec de l'importation : {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Échec de l'exportation : {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Échec de la sauvegarde : {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Échec de la récupération : {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Échec de la restauration : {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Téléchargement du modèle d'écriture manuscrite (~{sizeMb} Mo) en arrière-plan…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Vierge",
+  "templateLined": "Ligné",
+  "templateGrid": "Quadrillé",
+  "templateDotted": "Pointillé",
+  "templateCollegeRuled": "Ligné universitaire",
+  "templateCollegeShort": "Universitaire",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Portrait",
+  "orientationLandscape": "Paysage",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Réglages",
+  "settingsSectionLanguage": "Langue",
+  "settingsSectionAppearanceAndPreferences": "Apparence et préférences",
+  "settingsSectionAppearance": "Apparence",
+  "settingsAppearanceDarkMode": "Mode sombre",
+  "settingsAppearanceDarkModeSubtitle": "Choisir clair, sombre ou suivre l'appareil (système par défaut)",
+  "themeSystem": "Système",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "settingsSectionPreferences": "Préférences",
+  "settingsLanguageLabel": "Langue de l'application",
+  "languageEnglish": "Anglais",
+  "languageGerman": "Allemand",
+  "languageFrench": "Français",
+  "languageDutch": "Néerlandais",
+  "settingsSectionToolbar": "Barre d'outils",
+  "settingsToolbarReorderHint": "Faites glisser pour réorganiser les outils de dessin. Annuler et rétablir restent fixes à droite.",
+  "settingsResetToolbarOrder": "Réinitialiser l'ordre de la barre d'outils",
+  "settingsSectionNotebook": "Carnet",
+  "settingsPageTurnMode": "Mode de changement de page",
+  "settingsPageTurnModeSubtitle": "Balayer une page à la fois au lieu du défilement continu (désactivé par défaut)",
+  "settingsZoomNavigation": "Navigation par zoom",
+  "settingsZoomNavigationSubtitle": "Pincer pour zoomer et faire défiler les pages (activé par défaut)",
+  "settingsSectionDrawing": "Dessin",
+  "settingsStrokeSmoothing": "Lissage des traits",
+  "settingsStrokeSmoothingSubtitle": "Lisser les traits d'encre avec l'algorithme de Chaikin (activé par défaut)",
+  "settingsStrokeSmoothingStrength": "Intensité du lissage",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — une valeur plus basse conserve plus de détails ; {recommended} % recommandé",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Dessin au doigt",
+  "settingsFingerDrawingSubtitle": "Dessiner au doigt sur le papier ; si désactivé, seul le stylet dessine (désactivé par défaut)",
+  "settingsGestureInkEditing": "Édition gestuelle de l'encre",
+  "settingsGestureInkEditingSubtitle": "Gratter l'encre indexée par OCR pour l'effacer (activé par défaut)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Maintenez le bouton latéral du S Pen pour changer d'outil temporairement. Relâchez pour revenir à l'outil précédent. Fonctionne sur les appareils Samsung avec bouton latéral.",
+  "settingsSpenBarrelAction": "Action du bouton latéral",
+  "settingsSectionOcrDictionary": "Dictionnaire OCR",
+  "settingsOcrDictionaryHint": "Termes spécialisés pour la reconnaissance d'écriture manuscrite. Les correspondances proches sont corrigées lors de l'indexation de l'encre, et les termes améliorent la recherche dans les carnets.",
+  "settingsNoCustomOcrTerms": "Aucun terme personnalisé pour l'instant.",
+  "settingsRemoveOcrTerm": "Supprimer le terme",
+  "settingsAddOcrTerm": "Ajouter un terme",
+  "settingsAddOcrTermTitle": "Ajouter un terme OCR",
+  "settingsOcrTermLabel": "Terme",
+  "settingsOcrTermHint": "p. ex. valeur propre, mitochondrie",
+  "settingsSectionYourData": "Vos données",
+  "settingsYourDataHint": "Penfold stocke tout sur cet appareil dans une base SQLite unique et des dossiers de ressources — pas de synchronisation cloud. Consultez docs/ARCHITECTURE.md pour la disposition complète des fichiers sur l'appareil.",
+  "settingsDatabase": "Base de données",
+  "settingsSectionBackupRestore": "Sauvegarde et restauration",
+  "settingsBackupRestoreHint": "Exporter une archive zip de penfold.db et des dossiers de ressources, ou restaurer à partir d'une sauvegarde précédente. Votre base actuelle est enregistrée dans backups/ avant la restauration.",
+  "settingsExportBackup": "Exporter la sauvegarde",
+  "settingsExportBackupSubtitle": "Compresser penfold.db, les sources PDF, images et pages PDF héritées",
+  "settingsRecoverFromBackup": "Récupérer depuis une sauvegarde",
+  "settingsLatestAutoBackup": "Dernière sauvegarde automatique : {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Restaurer une sauvegarde",
+  "settingsRestoreBackupSubtitle": "Remplacer les données locales par une archive Penfold",
+  "settingsRecoverAutoBackupTitle": "Récupérer depuis la sauvegarde automatique ?",
+  "settingsRecoverAutoBackupBody": "Cela remplace vos carnets et fichiers actuels par la sauvegarde de {timestamp}. Votre base actuelle sera enregistrée dans backups/ avant la restauration.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Restaurer une sauvegarde ?",
+  "settingsRestoreBackupBody": "Cela remplace vos carnets et fichiers actuels. Votre base actuelle sera enregistrée dans backups/ avant la restauration.",
+  "settingsSectionAbout": "À propos",
+  "settingsAboutSubtitle": "Carnet d'écriture manuscrite local — pas de comptes, pas de cloud.",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Gomme",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Stylo",
+  "spenActionNone": "Aucune",
+  "toolPen": "Stylo",
+  "toolHighlighter": "Surligneur",
+  "toolTape": "Ruban",
+  "toolEraser": "Gomme",
+  "toolSelection": "Sélection",
+  "toolLasso": "Lasso",
+  "toolShape": "Forme",
+  "toolFill": "Remplissage",
+  "toolText": "Texte",
+  "toolInsertImage": "Insérer une image",
+  "brushPen": "Stylo",
+  "brushFountain": "Plume",
+  "brushPencil": "Crayon",
+  "brushMarker": "Marqueur",
+  "brushCalligraphy": "Calligraphie",
+  "toolbarPreviousBookmark": "Signet précédent",
+  "toolbarNextBookmark": "Signet suivant",
+  "toolbarConvertToText": "Convertir en texte",
+  "toolbarCopy": "Copier",
+  "toolbarDelete": "Supprimer",
+  "toolbarPaste": "Coller",
+  "toolbarUndo": "Annuler",
+  "toolbarRedo": "Rétablir",
+  "toolbarAddPage": "Ajouter une page",
+  "toolbarStylusOnly": "Stylet uniquement (rejet de la paume)",
+  "toolbarFingerDrawing": "Dessin au doigt",
+  "toolbarPageOverview": "Aperçu des pages",
+  "toolbarTableOfContents": "Table des matières",
+  "toolbarPageMenu": "Menu de la page",
+  "penOptionsTitle": "Stylo",
+  "highlighterOptionsTitle": "Surligneur",
+  "brushLabel": "Style",
+  "colorLabel": "Couleur",
+  "customColorTitle": "Couleur personnalisée",
+  "hueLabel": "Teinte",
+  "saturationLabel": "Saturation",
+  "brightnessLabel": "Luminosité",
+  "tapeOptionsTitle": "Ruban",
+  "tapeOptionsHint": "Dessinez pour masquer des notes ; touchez le ruban pour afficher ou masquer à nouveau",
+  "fillColorTitle": "Couleur de remplissage",
+  "fillOptionsHint": "Dessinez une boucle fermée, ou touchez l'intérieur d'une forme pour remplir",
+  "eraserSizeTitle": "Taille de la gomme",
+  "eraserModeTitle": "Mode gomme",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Trait",
+  "eraserModePartialHint": "Efface uniquement l'encre sous le cercle de la gomme",
+  "eraserModeWholeStrokeHint": "Efface les traits entiers qu'elle touche",
+  "eraseAllOnPageTitle": "Tout effacer sur la page ?",
+  "eraseAllOnPageBody": "Cela supprime tous les traits de la page actuelle. Vous pouvez annuler cette action.",
+  "eraseAllOnPageButton": "Tout effacer sur la page",
+  "pageSettingsTitle": "Réglages de la page",
+  "pageColorTitle": "Couleur de la page",
+  "pageThemeTitle": "Thème de la page",
+  "defaultPaperSize": "Taille de papier par défaut",
+  "defaultPaperType": "Type de papier par défaut",
+  "defaultPageTheme": "Thème de page par défaut",
+  "notebookDefaultsHint": "Utilisé lors de la création d'un nouveau carnet. Vous pouvez toujours modifier les choix dans la boîte de dialogue.",
+  "pageThemeLight": "Clair",
+  "pageThemeDark": "Sombre",
+  "pageThemeSepia": "Sépia",
+  "pageThemePastelPink": "Rose pastel",
+  "pageThemePastelBlue": "Bleu pastel",
+  "pageThemePastelMint": "Menthe pastel",
+  "pageSizeTitle": "Taille de la page",
+  "pageOrientationTitle": "Orientation",
+  "pageTemplateTitle": "Modèle de page",
+  "pageBookmark": "Signet",
+  "pageRemoveBookmark": "Retirer le signet",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Diviser",
+  "pageExportTitle": "Exporter",
+  "pdfPagesKeepBackground": "Les pages PDF conservent l'arrière-plan du document",
+  "pdfPagesKeepDimensions": "Les pages PDF conservent les dimensions du document",
+  "pdfPagesKeepOrientation": "Les pages PDF conservent l'orientation du document",
+  "exportPageAsPng": "Exporter la page en PNG",
+  "exportPageAsPngSubtitle": "Partager l'image de cette page",
+  "exportPageAsPdf": "Exporter la page en PDF",
+  "exportPageAsPdfSubtitle": "Encre vectorielle, partage via la feuille système",
+  "exportNotebookAsPdf": "Exporter le carnet en PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Joindre un fichier audio",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV et autres formats locaux",
+  "pageAudioAttachedToPage": "Joint à cette page",
+  "pageAudioReplace": "Remplacer le fichier audio",
+  "pageAudioRemove": "Supprimer l'audio",
+  "pageAudioPlay": "Lecture",
+  "pageAudioPause": "Pause",
+  "contentsTitle": "Sommaire",
+  "contentsSubtitle": "Titres du texte saisi et de l'encre indexée par OCR",
+  "contentsEmpty": "Aucun titre trouvé pour l'instant.\nAjoutez du texte saisi de grande ou petite taille, ou des titres d'encre indexés par OCR.",
+  "contentsPageNumber": "Page {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Pages",
+  "pageOverviewSelected": "{count} sélectionnée(s)",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Supprimer la sélection",
+  "pageOverviewSelectPages": "Sélectionner des pages",
+  "pageOverviewKeepOnePage": "Conserver au moins une page",
+  "pageOverviewDeleteTitle": "Supprimer {count, plural, =1{1 page} other{{count} pages}} ?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Cette action est irréversible.",
+  "pageOverviewDragToReorder": "Faites glisser pour réorganiser",
+  "pageOverviewBookmarked": "Signet ajouté",
+  "ocrIndexing": "Indexation OCR…",
+  "ocrHandwritingSearchable": "Écriture manuscrite recherchable",
+  "ocrPartial": "OCR partiel",
+  "trashTitle": "Corbeille",
+  "trashFailedToLoad": "Échec du chargement de la corbeille : {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "La corbeille est vide",
+  "trashSectionFolders": "Dossiers",
+  "trashSectionNotebooks": "Carnets",
+  "trashDeletionDateUnavailable": "Date de suppression indisponible",
+  "trashExpiresToday": "Expire aujourd'hui",
+  "trashDaysRemaining": "{count, plural, =1{1 jour restant} other{{count} jours restants}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Restaurer",
+  "trashDeleteNotebookTitle": "Supprimer « {title} » définitivement ?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Cela supprime le carnet et toutes ses pages de cet appareil.",
+  "trashDeleteFolderTitle": "Supprimer « {name} » définitivement ?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Cela supprime le dossier et ses carnets de cet appareil.",
+  "splitPageTitle": "Diviser la page ?",
+  "splitPageBody": "Créer une nouvelle page avec le même modèle et déplacer environ la moitié des {count} traits dessus.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Au moins 2 traits sont nécessaires pour diviser cette page",
+  "splitPageSuccess": "Page divisée : {moved} traits déplacés, {remaining} restants",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Échec de la division : {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Diviser la page",
+  "changePageSizeTitle": "Changer la taille de la page ?",
+  "changePageSizeBody": "Cette page contient de l'encre. Changer la taille réorganisera la page ; votre encre reste à la même position sur la page.",
+  "changeOrientationTitle": "Changer l'orientation ?",
+  "changeOrientationBody": "Cette page contient de l'encre. Changer l'orientation redimensionne et centre votre contenu pour l'adapter aux nouvelles dimensions.",
+  "convertedToText": "Converti en texte : {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Impossible de reconnaître l'écriture manuscrite",
+  "handwritingModelTitle": "Modèle d'écriture manuscrite",
+  "handwritingModelDownloadFailed": "Échec du téléchargement. Vérifiez le réseau et réessayez.",
+  "handwritingModelDownloading": "Téléchargement du modèle d'écriture manuscrite en anglais (~{sizeMb} Mo)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Modèle prêt.",
+  "handwritingModelElapsed": "Temps écoulé : {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Téléchargement initial (~{sizeMb} Mo). Prend généralement moins de deux minutes en Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Page exportée en PNG",
+  "pageExportedAsPdf": "Page exportée en PDF",
+  "notebookExportedAsPdfSnack": "Carnet exporté en PDF",
+  "exportPreparing": "Préparation de l'exportation…",
+  "exportProgress": "Exportation de la page {current} sur {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Cette page contient {count} traits et peut être lente. Envisagez de la diviser pour de meilleures performances.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Exportation bloquée : une page contient {count} traits (limite {limit}). Divisez d'abord les pages lourdes.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Restauration terminée. Veuillez redémarrer l'application pour charger les données restaurées.",
+  "textToolHint": "Saisissez ici…",
+  "textToolDone": "Terminé",
+  "languageKorean": "Coréen",
+  "languagePolish": "Polonais",
+  "languageSpanish": "Espagnol",
+  "languageItalian": "Italien",
+  "languageUkrainian": "Ukrainien",
+  "languageSwedish": "Suédois",
+  "languageNorwegian": "Norvégien",
+  "languageFinnish": "Finnois",
+  "languageDanish": "Danois",
+  "languagePortuguese": "Portugais"
+}

@@ -2,6 +2,12 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.82] — 2026
+
+### Added
+
+- **13 locale translations** — German, French, Dutch, Korean, Polish, Spanish, Italian, Ukrainian, Swedish, Norwegian Bokmål, Finnish, Danish, and Portuguese UI catalogs; settings language picker lists all 14 supported locales
+
 ## [0.2.81] — 2026
 
 ### Fixed

@@ -1,0 +1,557 @@
+{
+  "@@locale": "uk",
+  "appTitle": "Penfold",
+  "actionCancel": "Скасувати",
+  "actionCreate": "Створити",
+  "actionRename": "Перейменувати",
+  "actionSave": "Зберегти",
+  "actionDelete": "Видалити",
+  "actionAdd": "Додати",
+  "actionBack": "Назад",
+  "actionDone": "Готово",
+  "actionSplit": "Розділити",
+  "actionRecover": "Відновити",
+  "actionRestore": "Відновити",
+  "actionExport": "Експорт",
+  "actionRetry": "Повторити",
+  "actionRetrying": "Повторення…",
+  "actionExportFirst": "Спочатку експорт",
+  "actionEraseAll": "Стерти все",
+  "actionChangeSize": "Змінити розмір",
+  "actionChangeOrientation": "Змінити орієнтацію",
+  "actionUseColor": "Використати колір",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Огляд",
+  "libraryTrash": "Кошик",
+  "librarySettings": "Налаштування",
+  "libraryFolders": "Папки",
+  "libraryNoFoldersYet": "Папок ще немає",
+  "libraryAll": "Усі",
+  "libraryUncategorized": "Без категорії",
+  "libraryBreadcrumb": "Бібліотека",
+  "librarySearchHint": "Пошук зошитів і набраного тексту…",
+  "libraryNoMatches": "Нічого не знайдено",
+  "libraryFolderEmpty": "Ця папка порожня",
+  "libraryNoNotebooksWithTag": "Немає зошитів із цим тегом",
+  "libraryNoUncategorizedNotebooks": "Немає зошитів без категорії",
+  "libraryNoNotebooksYet": "Зошитів ще немає",
+  "libraryCouldNotLoad": "Не вдалося завантажити бібліотеку: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Резервна копія та відновлення",
+  "tooltipTrash": "Кошик",
+  "tooltipNewNotebook": "Новий зошит",
+  "tooltipNewFolder": "Нова папка",
+  "tooltipNewSubfolder": "Нова вкладена папка",
+  "tooltipImportPdf": "Імпорт PDF",
+  "folderNew": "Нова папка",
+  "folderNewSubfolder": "Нова вкладена папка",
+  "folderRename": "Перейменувати папку",
+  "folderMoveToTrash": "Перемістити в кошик",
+  "folderMoveToTrashTitle": "Перемістити «{name}» у кошик?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Папку та її зошити буде переміщено в кошик на 30 днів.",
+  "notebookNew": "Новий зошит",
+  "notebookUntitled": "Без назви",
+  "notebookTitleLabel": "Назва",
+  "notebookSizeLabel": "Розмір",
+  "notebookPaperLabel": "Папір",
+  "notebookCoverLabel": "Обкладинка",
+  "notebookRename": "Перейменувати зошит",
+  "notebookMoveToFolder": "Перемістити в папку",
+  "notebookEditTags": "Редагувати теги",
+  "notebookExportWorkbook": "Експорт зошита",
+  "notebookExportWorkbookSubtitle": "Надіслати всі сторінки як PDF",
+  "notebookMoveToTrash": "Перемістити в кошик",
+  "notebookMoveToTrashTitle": "Перемістити «{title}» у кошик?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Зошит буде приховано з бібліотеки на 30 днів. Чернетки та сторінки залишаться на цьому пристрої, доки кошик не буде очищено. Експортуйте резервну копію, якщо потрібна додаткова копія.",
+  "notebookTagsFor": "Теги для «{title}»",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Тегів ще немає. Створіть новий нижче.",
+  "notebookNewTag": "Новий тег",
+  "notebookAddTag": "Додати тег",
+  "notebookNoPagesToExport": "У цьому зошиті немає сторінок для експорту",
+  "notebookExportedAsPdf": "«{title}» експортовано як PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Резервну копію експортовано. Можете перемістити в кошик, коли будете готові.",
+  "importPdfSnack": "Імпорт PDF… сторінки відображаються один раз, потім працюють офлайн.",
+  "importFailed": "Помилка імпорту: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Помилка експорту: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Помилка резервного копіювання: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Помилка відновлення: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Помилка відновлення: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Завантаження моделі розпізнавання почерку (~{sizeMb} МБ) у фоновому режимі…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Порожній",
+  "templateLined": "Лінований",
+  "templateGrid": "Клітинка",
+  "templateDotted": "Крапки",
+  "templateCollegeRuled": "Лінований (college)",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Книжкова",
+  "orientationLandscape": "Альбомна",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Налаштування",
+  "settingsSectionLanguage": "Мова",
+  "settingsSectionAppearanceAndPreferences": "Зовнішній вигляд і налаштування",
+  "settingsSectionAppearance": "Зовнішній вигляд",
+  "settingsAppearanceDarkMode": "Темний режим",
+  "settingsAppearanceDarkModeSubtitle": "Світла, темна тема або як на пристрої (системна за замовчуванням)",
+  "themeSystem": "Системна",
+  "themeLight": "Світла",
+  "themeDark": "Темна",
+  "settingsSectionPreferences": "Налаштування",
+  "settingsLanguageLabel": "Мова застосунку",
+  "languageEnglish": "Англійська",
+  "languageGerman": "Німецька",
+  "languageFrench": "Французька",
+  "languageDutch": "Нідерландська",
+  "settingsSectionToolbar": "Панель інструментів",
+  "settingsToolbarReorderHint": "Перетягніть, щоб змінити порядок інструментів малювання. Скасувати та повторити залишаються праворуч.",
+  "settingsResetToolbarOrder": "Скинути порядок панелі",
+  "settingsSectionNotebook": "Зошит",
+  "settingsPageTurnMode": "Режим перегортання",
+  "settingsPageTurnModeSubtitle": "Перегортати по одній сторінці замість безперервного прокручування (за замовчуванням вимкнено)",
+  "settingsZoomNavigation": "Навігація масштабом",
+  "settingsZoomNavigationSubtitle": "Масштабування та переміщення сторінок жестами (за замовчуванням увімкнено)",
+  "settingsSectionDrawing": "Малювання",
+  "settingsStrokeSmoothing": "Згладжування штрихів",
+  "settingsStrokeSmoothingSubtitle": "Згладжувати штрихи методом Chaikin (за замовчуванням увімкнено)",
+  "settingsStrokeSmoothingStrength": "Сила згладжування",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — менше значення зберігає більше деталей; рекомендовано {recommended}%",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Малювання пальцем",
+  "settingsFingerDrawingSubtitle": "Малювати пальцем на папері; якщо вимкнено, малює лише стилус (за замовчуванням вимкнено)",
+  "settingsGestureInkEditing": "Редагування чернеток жестами",
+  "settingsGestureInkEditingSubtitle": "Проведіть по OCR-індексованих чернетках, щоб їх стерти (за замовчуванням увімкнено)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Утримуйте бокову кнопку S Pen, щоб тимчасово перемкнути інструмент. Відпустіть, щоб повернути попередній інструмент. Працює на пристроях Samsung із підтримкою бокової кнопки.",
+  "settingsSpenBarrelAction": "Дія бокової кнопки",
+  "settingsSectionOcrDictionary": "Словник OCR",
+  "settingsOcrDictionaryHint": "Спеціальні терміни для OCR почерку. Схожі збіги виправляються під час індексації, а терміни покращують пошук у зошитах.",
+  "settingsNoCustomOcrTerms": "Власних термінів ще немає.",
+  "settingsRemoveOcrTerm": "Видалити термін",
+  "settingsAddOcrTerm": "Додати термін",
+  "settingsAddOcrTermTitle": "Додати термін OCR",
+  "settingsOcrTermLabel": "Термін",
+  "settingsOcrTermHint": "наприклад, eigenvalue, mitochondria",
+  "settingsSectionYourData": "Ваші дані",
+  "settingsYourDataHint": "Penfold зберігає все на цьому пристрої в одній базі SQLite та папках ресурсів — без хмарної синхронізації. Повний опис локального сховища див. у docs/ARCHITECTURE.md.",
+  "settingsDatabase": "База даних",
+  "settingsSectionBackupRestore": "Резервна копія та відновлення",
+  "settingsBackupRestoreHint": "Експортуйте zip-архів penfold.db і папок ресурсів або відновіть з попередньої резервної копії. Поточну базу буде збережено в backups/ перед відновленням.",
+  "settingsExportBackup": "Експорт резервної копії",
+  "settingsExportBackupSubtitle": "Zip-архів penfold.db, PDF-джерел, зображень і застарілих PDF-сторінок",
+  "settingsRecoverFromBackup": "Відновити з резервної копії",
+  "settingsLatestAutoBackup": "Остання автокопія: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Відновити резервну копію",
+  "settingsRestoreBackupSubtitle": "Замінити локальні дані з zip-архіву резервної копії Penfold",
+  "settingsRecoverAutoBackupTitle": "Відновити з автокопії?",
+  "settingsRecoverAutoBackupBody": "Це замінить ваші поточні зошити та файли резервною копією від {timestamp}. Поточну базу буде збережено в backups/ перед відновленням.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Відновити резервну копію?",
+  "settingsRestoreBackupBody": "Це замінить ваші поточні зошити та файли. Поточну базу буде збережено в backups/ перед відновленням.",
+  "settingsSectionAbout": "Про застосунок",
+  "settingsAboutSubtitle": "Локальний зошит для рукопису — без облікових записів і хмари.",
+  "settingsVersion": "Версія {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Гумка",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Перо",
+  "spenActionNone": "Немає",
+  "toolPen": "Перо",
+  "toolHighlighter": "Маркер",
+  "toolTape": "Стрічка",
+  "toolEraser": "Гумка",
+  "toolSelection": "Виділення",
+  "toolLasso": "Lasso",
+  "toolShape": "Фігура",
+  "toolFill": "Заливка",
+  "toolText": "Текст",
+  "toolInsertImage": "Вставити зображення",
+  "brushPen": "Перо",
+  "brushFountain": "Перьова",
+  "brushPencil": "Олівець",
+  "brushMarker": "Маркер",
+  "brushCalligraphy": "Каліграфія",
+  "toolbarPreviousBookmark": "Попередня закладка",
+  "toolbarNextBookmark": "Наступна закладка",
+  "toolbarConvertToText": "Перетворити на текст",
+  "toolbarCopy": "Копіювати",
+  "toolbarDelete": "Видалити",
+  "toolbarPaste": "Вставити",
+  "toolbarUndo": "Скасувати",
+  "toolbarRedo": "Повторити",
+  "toolbarAddPage": "Додати сторінку",
+  "toolbarStylusOnly": "Лише стилус (блокування долоні)",
+  "toolbarFingerDrawing": "Малювання пальцем",
+  "toolbarPageOverview": "Огляд сторінок",
+  "toolbarTableOfContents": "Зміст",
+  "toolbarPageMenu": "Меню сторінки",
+  "penOptionsTitle": "Перо",
+  "highlighterOptionsTitle": "Маркер",
+  "brushLabel": "Пензель",
+  "colorLabel": "Колір",
+  "customColorTitle": "Власний колір",
+  "hueLabel": "Відтінок",
+  "saturationLabel": "Насиченість",
+  "brightnessLabel": "Яскравість",
+  "tapeOptionsTitle": "Стрічка",
+  "tapeOptionsHint": "Малюйте, щоб приховати нотатки; торкніться стрічки, щоб знову показати або сховати",
+  "fillColorTitle": "Колір заливки",
+  "fillOptionsHint": "Намалюйте замкнутий контур або торкніться всередині фігури, щоб залити",
+  "eraserSizeTitle": "Розмір гумки",
+  "eraserModeTitle": "Режим гумки",
+  "eraserModePixel": "Піксельна",
+  "eraserModeStroke": "Штрих",
+  "eraserModePartialHint": "Стирає лише чернетки під колом гумки",
+  "eraserModeWholeStrokeHint": "Стирає цілі штрихи, яких торкається",
+  "eraseAllOnPageTitle": "Стерти все на сторінці?",
+  "eraseAllOnPageBody": "Це видалить усі штрихи на поточній сторінці. Дію можна скасувати.",
+  "eraseAllOnPageButton": "Стерти все на сторінці",
+  "pageSettingsTitle": "Налаштування сторінки",
+  "pageColorTitle": "Колір сторінки",
+  "pageThemeTitle": "Тема сторінки",
+  "defaultPaperSize": "Розмір паперу за замовчуванням",
+  "defaultPaperType": "Тип паперу за замовчуванням",
+  "defaultPageTheme": "Тема сторінки за замовчуванням",
+  "notebookDefaultsHint": "Використовується під час створення нового зошита. Вибір можна змінити в діалозі.",
+  "pageThemeLight": "Світла",
+  "pageThemeDark": "Темна",
+  "pageThemeSepia": "Сепія",
+  "pageThemePastelPink": "Пастельний рожевий",
+  "pageThemePastelBlue": "Пастельний блакитний",
+  "pageThemePastelMint": "Пастельна мʼята",
+  "pageSizeTitle": "Розмір сторінки",
+  "pageOrientationTitle": "Орієнтація",
+  "pageTemplateTitle": "Шаблон сторінки",
+  "pageBookmark": "Закладка",
+  "pageRemoveBookmark": "Прибрати закладку",
+  "pageAudioTitle": "Аудіо",
+  "pageSplit": "Розділити",
+  "pageExportTitle": "Експорт",
+  "pdfPagesKeepBackground": "PDF-сторінки зберігають фон документа",
+  "pdfPagesKeepDimensions": "PDF-сторінки зберігають розміри документа",
+  "pdfPagesKeepOrientation": "PDF-сторінки зберігають орієнтацію документа",
+  "exportPageAsPng": "Експорт сторінки як PNG",
+  "exportPageAsPngSubtitle": "Надіслати зображення цієї сторінки",
+  "exportPageAsPdf": "Експорт сторінки як PDF",
+  "exportPageAsPdfSubtitle": "Векторні чернетки, надіслати через системне меню",
+  "exportNotebookAsPdf": "Експорт зошита як PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 сторінка} few{{count} сторінки} many{{count} сторінок} other{{count} сторінок}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Додати аудіофайл",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV та інші локальні формати",
+  "pageAudioAttachedToPage": "Додано до цієї сторінки",
+  "pageAudioReplace": "Замінити аудіофайл",
+  "pageAudioRemove": "Видалити аудіо",
+  "pageAudioPlay": "Відтворити",
+  "pageAudioPause": "Пауза",
+  "contentsTitle": "Зміст",
+  "contentsSubtitle": "Заголовки з набраного тексту та OCR-індексованих чернеток",
+  "contentsEmpty": "Заголовків ще не знайдено.\nДодайте великий або короткий набраний текст або OCR-індексовані заголовки.",
+  "contentsPageNumber": "Сторінка {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Сторінки",
+  "pageOverviewSelected": "Вибрано: {count}",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Видалити вибране",
+  "pageOverviewSelectPages": "Вибрати сторінки",
+  "pageOverviewKeepOnePage": "Залиште щонайменше одну сторінку",
+  "pageOverviewDeleteTitle": "Видалити {count, plural, =1{1 сторінку} few{{count} сторінки} many{{count} сторінок} other{{count} сторінок}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Цю дію не можна скасувати.",
+  "pageOverviewDragToReorder": "Перетягніть, щоб змінити порядок",
+  "pageOverviewBookmarked": "З закладкою",
+  "ocrIndexing": "Індексація OCR…",
+  "ocrHandwritingSearchable": "Пошук по почерку доступний",
+  "ocrPartial": "OCR частково",
+  "trashTitle": "Кошик",
+  "trashFailedToLoad": "Не вдалося завантажити кошик: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Кошик порожній",
+  "trashSectionFolders": "Папки",
+  "trashSectionNotebooks": "Зошити",
+  "trashDeletionDateUnavailable": "Дата видалення недоступна",
+  "trashExpiresToday": "Термін дії сьогодні",
+  "trashDaysRemaining": "{count, plural, =1{Залишився 1 день} few{Залишилося {count} дні} many{Залишилося {count} днів} other{Залишилося {count} днів}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Відновити",
+  "trashDeleteNotebookTitle": "Назавжди видалити «{title}»?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Це видалить зошит і всі його сторінки з цього пристрою.",
+  "trashDeleteFolderTitle": "Назавжди видалити «{name}»?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Це видалить папку та її зошити з цього пристрою.",
+  "splitPageTitle": "Розділити сторінку?",
+  "splitPageBody": "Створити нову сторінку з тим самим шаблоном і перенести на неї приблизно половину з {count} штрихів.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Потрібно щонайменше 2 штрихи, щоб розділити цю сторінку",
+  "splitPageSuccess": "Сторінку розділено: перенесено {moved} штрихів, залишилося {remaining}",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Помилка розділення: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Розділити сторінку",
+  "changePageSizeTitle": "Змінити розмір сторінки?",
+  "changePageSizeBody": "На цій сторінці є чернетки. Зміна розміру перекомпонує сторінку; чернетки залишаться на тих самих позиціях.",
+  "changeOrientationTitle": "Змінити орієнтацію?",
+  "changeOrientationBody": "На цій сторінці є чернетки. Зміна орієнтації масштабує та центрує вміст під нові межі сторінки.",
+  "convertedToText": "Перетворено на текст: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Не вдалося розпізнати почерк",
+  "handwritingModelTitle": "Модель розпізнавання почерку",
+  "handwritingModelDownloadFailed": "Помилка завантаження. Перевірте мережу та повторіть.",
+  "handwritingModelDownloading": "Завантаження англомовної моделі розпізнавання почерку (~{sizeMb} МБ)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Модель готова.",
+  "handwritingModelElapsed": "Минуло: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Перше завантаження (~{sizeMb} МБ). Зазвичай завершується менш ніж за дві хвилини через Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Сторінку експортовано як PNG",
+  "pageExportedAsPdf": "Сторінку експортовано як PDF",
+  "notebookExportedAsPdfSnack": "Зошит експортовано як PDF",
+  "exportPreparing": "Підготовка експорту…",
+  "exportProgress": "Експорт сторінки {current} з {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "На цій сторінці {count} штрихів — може працювати повільно. Розділіть її для кращої продуктивності.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Експорт заблоковано: на сторінці {count} штрихів (ліміт {limit}). Спочатку розділіть важкі сторінки.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Відновлення завершено. Перезапустіть застосунок, щоб завантажити відновлені дані.",
+  "textToolHint": "Введіть текст…",
+  "textToolDone": "Готово",
+  "languageKorean": "Корейська",
+  "languagePolish": "Польська",
+  "languageSpanish": "Іспанська",
+  "languageItalian": "Італійська",
+  "languageUkrainian": "Українська",
+  "languageSwedish": "Шведська",
+  "languageNorwegian": "Норвезька",
+  "languageFinnish": "Фінська",
+  "languageDanish": "Данська",
+  "languagePortuguese": "Португальська"
+}

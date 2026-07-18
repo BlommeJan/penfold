@@ -1,0 +1,557 @@
+{
+  "@@locale": "sv",
+  "appTitle": "Penfold",
+  "actionCancel": "Avbryt",
+  "actionCreate": "Skapa",
+  "actionRename": "Byt namn",
+  "actionSave": "Spara",
+  "actionDelete": "Radera",
+  "actionAdd": "Lägg till",
+  "actionBack": "Tillbaka",
+  "actionDone": "Klar",
+  "actionSplit": "Dela",
+  "actionRecover": "Återställ",
+  "actionRestore": "Återställ",
+  "actionExport": "Exportera",
+  "actionRetry": "Försök igen",
+  "actionRetrying": "Försöker igen…",
+  "actionExportFirst": "Exportera först",
+  "actionEraseAll": "Radera allt",
+  "actionChangeSize": "Ändra storlek",
+  "actionChangeOrientation": "Ändra orientering",
+  "actionUseColor": "Använd färg",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Översikt",
+  "libraryTrash": "Papperskorg",
+  "librarySettings": "Inställningar",
+  "libraryFolders": "Mappar",
+  "libraryNoFoldersYet": "Inga mappar ännu",
+  "libraryAll": "Alla",
+  "libraryUncategorized": "Okategoriserade",
+  "libraryBreadcrumb": "Bibliotek",
+  "librarySearchHint": "Sök i anteckningsböcker och skriven text…",
+  "libraryNoMatches": "Inga träffar",
+  "libraryFolderEmpty": "Den här mappen är tom",
+  "libraryNoNotebooksWithTag": "Inga anteckningsböcker med den här taggen",
+  "libraryNoUncategorizedNotebooks": "Inga okategoriserade anteckningsböcker",
+  "libraryNoNotebooksYet": "Inga anteckningsböcker ännu",
+  "libraryCouldNotLoad": "Kunde inte ladda biblioteket: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Säkerhetskopiera och återställ",
+  "tooltipTrash": "Papperskorg",
+  "tooltipNewNotebook": "Ny anteckningsbok",
+  "tooltipNewFolder": "Ny mapp",
+  "tooltipNewSubfolder": "Ny undermapp",
+  "tooltipImportPdf": "Importera PDF",
+  "folderNew": "Ny mapp",
+  "folderNewSubfolder": "Ny undermapp",
+  "folderRename": "Byt namn på mapp",
+  "folderMoveToTrash": "Flytta till papperskorgen",
+  "folderMoveToTrashTitle": "Flytta \"{name}\" till papperskorgen?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Mappen och dess anteckningsböcker flyttas till papperskorgen i 30 dagar.",
+  "notebookNew": "Ny anteckningsbok",
+  "notebookUntitled": "Namnlös",
+  "notebookTitleLabel": "Titel",
+  "notebookSizeLabel": "Storlek",
+  "notebookPaperLabel": "Papper",
+  "notebookCoverLabel": "Omslag",
+  "notebookRename": "Byt namn på anteckningsbok",
+  "notebookMoveToFolder": "Flytta till mapp",
+  "notebookEditTags": "Redigera taggar",
+  "notebookExportWorkbook": "Exportera arbetsbok",
+  "notebookExportWorkbookSubtitle": "Dela alla sidor som PDF",
+  "notebookMoveToTrash": "Flytta till papperskorgen",
+  "notebookMoveToTrashTitle": "Flytta \"{title}\" till papperskorgen?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Anteckningsboken döljs i biblioteket i 30 dagar. Bläck och sidor finns kvar på enheten tills papperskorgen töms. Exportera en säkerhetskopia först om du vill ha en extra kopia.",
+  "notebookTagsFor": "Taggar för \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Inga taggar ännu. Skapa en nedan.",
+  "notebookNewTag": "Ny tagg",
+  "notebookAddTag": "Lägg till tagg",
+  "notebookNoPagesToExport": "Den här anteckningsboken har inga sidor att exportera",
+  "notebookExportedAsPdf": "\"{title}\" exporterades som PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Säkerhetskopia exporterad. Du kan flytta till papperskorgen när du är redo.",
+  "importPdfSnack": "Importerar PDF… sidorna renderas en gång och finns sedan offline.",
+  "importFailed": "Import misslyckades: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Export misslyckades: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Säkerhetskopiering misslyckades: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Återställning misslyckades: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Återställning misslyckades: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Laddar ner handstilsmodell (~{sizeMb} MB) i bakgrunden…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Tom",
+  "templateLined": "Linjerat",
+  "templateGrid": "Rutnät",
+  "templateDotted": "Prickat",
+  "templateCollegeRuled": "College-linjerat",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Stående",
+  "orientationLandscape": "Liggande",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Inställningar",
+  "settingsSectionLanguage": "Språk",
+  "settingsSectionAppearanceAndPreferences": "Utseende och inställningar",
+  "settingsSectionAppearance": "Utseende",
+  "settingsAppearanceDarkMode": "Mörkt läge",
+  "settingsAppearanceDarkModeSubtitle": "Välj ljust, mörkt eller följ enheten (systemstandard)",
+  "themeSystem": "System",
+  "themeLight": "Ljust",
+  "themeDark": "Mörkt",
+  "settingsSectionPreferences": "Preferenser",
+  "settingsLanguageLabel": "Appspråk",
+  "languageEnglish": "Engelska",
+  "languageGerman": "Tyska",
+  "languageFrench": "Franska",
+  "languageDutch": "Nederländska",
+  "settingsSectionToolbar": "Verktygsfält",
+  "settingsToolbarReorderHint": "Dra för att ordna om ritverktyg. Ångra och gör om står kvar till höger.",
+  "settingsResetToolbarOrder": "Återställ ordning i verktygsfältet",
+  "settingsSectionNotebook": "Anteckningsbok",
+  "settingsPageTurnMode": "Bläddringsläge",
+  "settingsPageTurnModeSubtitle": "Svep en sida i taget i stället för kontinuerlig rullning (av som standard)",
+  "settingsZoomNavigation": "Zoomnavigering",
+  "settingsZoomNavigationSubtitle": "Nyp för att zooma och panorera på sidor (på som standard)",
+  "settingsSectionDrawing": "Ritning",
+  "settingsStrokeSmoothing": "Streckutjämning",
+  "settingsStrokeSmoothingSubtitle": "Utjämna bläckstreck med Chaikins hörnavskärning (på som standard)",
+  "settingsStrokeSmoothingStrength": "Utjämningsstyrka",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — lägre behåller mer detalj; rekommenderat {recommended} %",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Rita med fingret",
+  "settingsFingerDrawingSubtitle": "Rita med fingret på papperet; när av är det bara stylus som ritar (av som standard)",
+  "settingsGestureInkEditing": "Gestbläckredigering",
+  "settingsGestureInkEditingSubtitle": "Stryk över OCR-indexerat bläck för att radera det (på som standard)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Håll ned sidoknappen på S Pen för att tillfälligt byta verktyg. Släpp för att återgå till föregående verktyg. Fungerar på Samsung-enheter med stöd för sidoknapp.",
+  "settingsSpenBarrelAction": "Sidoknappsåtgärd",
+  "settingsSectionOcrDictionary": "OCR-ordlista",
+  "settingsOcrDictionaryHint": "Domäntermer för handstils-OCR. Nära matchningar korrigeras när bläck indexeras, och termer förbättrar sökning i anteckningsböcker.",
+  "settingsNoCustomOcrTerms": "Inga anpassade termer ännu.",
+  "settingsRemoveOcrTerm": "Ta bort term",
+  "settingsAddOcrTerm": "Lägg till term",
+  "settingsAddOcrTermTitle": "Lägg till OCR-term",
+  "settingsOcrTermLabel": "Term",
+  "settingsOcrTermHint": "t.ex. egenvärde, mitokondrier",
+  "settingsSectionYourData": "Dina data",
+  "settingsYourDataHint": "Penfold lagrar allt på den här enheten i en SQLite-databas och resursmappar — ingen molnsynkronisering. Se docs/ARCHITECTURE.md för den fullständiga fillayouten på enheten.",
+  "settingsDatabase": "Databas",
+  "settingsSectionBackupRestore": "Säkerhetskopiera och återställ",
+  "settingsBackupRestoreHint": "Exportera en zip med penfold.db och resursmappar, eller återställ från en tidigare säkerhetskopia. Din nuvarande databas sparas i backups/ före återställning.",
+  "settingsExportBackup": "Exportera säkerhetskopia",
+  "settingsExportBackupSubtitle": "Zip:a penfold.db, PDF-källor, bilder och äldre PDF-sidor",
+  "settingsRecoverFromBackup": "Återställ från säkerhetskopia",
+  "settingsLatestAutoBackup": "Senaste autosäkerhetskopia: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Återställ säkerhetskopia",
+  "settingsRestoreBackupSubtitle": "Ersätt lokala data från en Penfold-säkerhetskopia i zip-format",
+  "settingsRecoverAutoBackupTitle": "Återställ från autosäkerhetskopia?",
+  "settingsRecoverAutoBackupBody": "Detta ersätter dina nuvarande anteckningsböcker och filer med säkerhetskopian från {timestamp}. Din nuvarande databas sparas i backups/ före återställning.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Återställ säkerhetskopia?",
+  "settingsRestoreBackupBody": "Detta ersätter dina nuvarande anteckningsböcker och filer. Din nuvarande databas sparas i backups/ före återställning.",
+  "settingsSectionAbout": "Om",
+  "settingsAboutSubtitle": "Lokal handstilsanteckningsbok — inga konton, inget moln.",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Suddgummi",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Penna",
+  "spenActionNone": "Ingen",
+  "toolPen": "Penna",
+  "toolHighlighter": "Överstrykningspenna",
+  "toolTape": "Tejp",
+  "toolEraser": "Suddgummi",
+  "toolSelection": "Markering",
+  "toolLasso": "Lasso",
+  "toolShape": "Form",
+  "toolFill": "Fyll",
+  "toolText": "Text",
+  "toolInsertImage": "Infoga bild",
+  "brushPen": "Penna",
+  "brushFountain": "Reservoarpenna",
+  "brushPencil": "Blyerts",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Kalligrafi",
+  "toolbarPreviousBookmark": "Föregående bokmärke",
+  "toolbarNextBookmark": "Nästa bokmärke",
+  "toolbarConvertToText": "Konvertera till text",
+  "toolbarCopy": "Kopiera",
+  "toolbarDelete": "Radera",
+  "toolbarPaste": "Klistra in",
+  "toolbarUndo": "Ångra",
+  "toolbarRedo": "Gör om",
+  "toolbarAddPage": "Lägg till sida",
+  "toolbarStylusOnly": "Endast stylus (handavvisning)",
+  "toolbarFingerDrawing": "Rita med fingret",
+  "toolbarPageOverview": "Sidöversikt",
+  "toolbarTableOfContents": "Innehållsförteckning",
+  "toolbarPageMenu": "Sidmeny",
+  "penOptionsTitle": "Penna",
+  "highlighterOptionsTitle": "Överstrykningspenna",
+  "brushLabel": "Pensel",
+  "colorLabel": "Färg",
+  "customColorTitle": "Anpassad färg",
+  "hueLabel": "Nyans",
+  "saturationLabel": "Mättnad",
+  "brightnessLabel": "Ljusstyrka",
+  "tapeOptionsTitle": "Tejp",
+  "tapeOptionsHint": "Rita för att täcka anteckningar; tryck på tejpen för att visa eller dölja igen",
+  "fillColorTitle": "Fyllningsfärg",
+  "fillOptionsHint": "Rita en sluten loop, eller tryck inuti en form för att fylla",
+  "eraserSizeTitle": "Suddgummistolek",
+  "eraserModeTitle": "Suddgummiläge",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Streck",
+  "eraserModePartialHint": "Raderar bara bläck under suddgummiets cirkel",
+  "eraserModeWholeStrokeHint": "Raderar hela streck som den berör",
+  "eraseAllOnPageTitle": "Radera allt på sidan?",
+  "eraseAllOnPageBody": "Detta tar bort alla streck på den aktuella sidan. Du kan ångra den här åtgärden.",
+  "eraseAllOnPageButton": "Radera allt på sidan",
+  "pageSettingsTitle": "Sidinställningar",
+  "pageColorTitle": "Sidfärg",
+  "pageThemeTitle": "Sidtema",
+  "defaultPaperSize": "Standardpappersstorlek",
+  "defaultPaperType": "Standardpapperstyp",
+  "defaultPageTheme": "Standardsidtema",
+  "notebookDefaultsHint": "Används när du skapar en ny anteckningsbok. Du kan fortfarande ändra valen i dialogrutan.",
+  "pageThemeLight": "Ljust",
+  "pageThemeDark": "Mörkt",
+  "pageThemeSepia": "Sepia",
+  "pageThemePastelPink": "Pastellrosa",
+  "pageThemePastelBlue": "Pastellblå",
+  "pageThemePastelMint": "Pastellmint",
+  "pageSizeTitle": "Sidstorlek",
+  "pageOrientationTitle": "Orientering",
+  "pageTemplateTitle": "Sidmall",
+  "pageBookmark": "Bokmärke",
+  "pageRemoveBookmark": "Ta bort bokmärke",
+  "pageAudioTitle": "Ljud",
+  "pageSplit": "Dela",
+  "pageExportTitle": "Exportera",
+  "pdfPagesKeepBackground": "PDF-sidor behåller dokumentets bakgrund",
+  "pdfPagesKeepDimensions": "PDF-sidor behåller dokumentets dimensioner",
+  "pdfPagesKeepOrientation": "PDF-sidor behåller dokumentets orientering",
+  "exportPageAsPng": "Exportera sida som PNG",
+  "exportPageAsPngSubtitle": "Dela bild av den här sidan",
+  "exportPageAsPdf": "Exportera sida som PDF",
+  "exportPageAsPdfSubtitle": "Vektorbläck, dela via systemark",
+  "exportNotebookAsPdf": "Exportera anteckningsbok som PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 sida} other{{count} sidor}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Bifoga ljudfil",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV och andra lokala format",
+  "pageAudioAttachedToPage": "Bifogad till den här sidan",
+  "pageAudioReplace": "Ersätt ljudfil",
+  "pageAudioRemove": "Ta bort ljud",
+  "pageAudioPlay": "Spela",
+  "pageAudioPause": "Pausa",
+  "contentsTitle": "Innehåll",
+  "contentsSubtitle": "Rubriker från skriven text och OCR-indexerat bläck",
+  "contentsEmpty": "Inga rubriker hittades ännu.\nLägg till stor eller kort skriven text, eller OCR-indexerade rubriker i bläck.",
+  "contentsPageNumber": "Sida {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Sidor",
+  "pageOverviewSelected": "{count, plural, =1{1 vald} other{{count} valda}}",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Radera valda",
+  "pageOverviewSelectPages": "Välj sidor",
+  "pageOverviewKeepOnePage": "Behåll minst en sida",
+  "pageOverviewDeleteTitle": "Radera {count, plural, =1{1 sida} other{{count} sidor}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Detta kan inte ångras.",
+  "pageOverviewDragToReorder": "Dra för att ordna om",
+  "pageOverviewBookmarked": "Bokmärkt",
+  "ocrIndexing": "OCR-indexerar…",
+  "ocrHandwritingSearchable": "Handstil sökbar",
+  "ocrPartial": "OCR delvis",
+  "trashTitle": "Papperskorg",
+  "trashFailedToLoad": "Kunde inte ladda papperskorgen: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Papperskorgen är tom",
+  "trashSectionFolders": "Mappar",
+  "trashSectionNotebooks": "Anteckningsböcker",
+  "trashDeletionDateUnavailable": "Raderingsdatum otillgängligt",
+  "trashExpiresToday": "Går ut idag",
+  "trashDaysRemaining": "{count, plural, =1{1 dag kvar} other{{count} dagar kvar}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Återställ",
+  "trashDeleteNotebookTitle": "Radera \"{title}\" permanent?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Detta tar bort anteckningsboken och alla sidor från enheten.",
+  "trashDeleteFolderTitle": "Radera \"{name}\" permanent?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Detta tar bort mappen och dess anteckningsböcker från enheten.",
+  "splitPageTitle": "Dela sida?",
+  "splitPageBody": "Skapa en ny sida med samma mall och flytta ungefär hälften av de {count} strecken till den.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Minst 2 streck krävs för att dela sidan",
+  "splitPageSuccess": "Sida delad: {moved} streck flyttades, {remaining} kvar",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Delning misslyckades: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Dela sida",
+  "changePageSizeTitle": "Ändra sidstorlek?",
+  "changePageSizeBody": "Den här sidan har bläck. Om du ändrar storlek omformateras sidan; ditt bläck stannar på samma position på sidan.",
+  "changeOrientationTitle": "Ändra orientering?",
+  "changeOrientationBody": "Den här sidan har bläck. Om du ändrar orientering skalas och centreras innehållet för att passa sidans nya gränser.",
+  "convertedToText": "Konverterat till text: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Kunde inte känna igen handstil",
+  "handwritingModelTitle": "Handstilsmodell",
+  "handwritingModelDownloadFailed": "Nedladdning misslyckades. Kontrollera nätverket och försök igen.",
+  "handwritingModelDownloading": "Laddar ner engelsk handstilsmodell (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Modellen är redo.",
+  "handwritingModelElapsed": "Förfluten tid: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Första nedladdningen (~{sizeMb} MB). Tar vanligtvis under två minuter på Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Sida exporterad som PNG",
+  "pageExportedAsPdf": "Sida exporterad som PDF",
+  "notebookExportedAsPdfSnack": "Anteckningsbok exporterad som PDF",
+  "exportPreparing": "Förbereder export…",
+  "exportProgress": "Exporterar sida {current} av {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Den här sidan har {count} streck och kan kännas långsam. Överväg att dela den för bättre prestanda.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Export blockerad: en sida har {count} streck (gräns {limit}). Dela tunga sidor först.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Återställning klar. Starta om appen för att ladda det återställda innehållet.",
+  "textToolHint": "Skriv här…",
+  "textToolDone": "Klar",
+  "languageKorean": "Koreanska",
+  "languagePolish": "Polska",
+  "languageSpanish": "Spanska",
+  "languageItalian": "Italienska",
+  "languageUkrainian": "Ukrainska",
+  "languageSwedish": "Svenska",
+  "languageNorwegian": "Norska",
+  "languageFinnish": "Finska",
+  "languageDanish": "Danska",
+  "languagePortuguese": "Portugisiska"
+}

@@ -1,8 +1,6 @@
 {
   "@@locale": "en",
-
   "appTitle": "Penfold",
-
   "actionCancel": "Cancel",
   "actionCreate": "Create",
   "actionRename": "Rename",
@@ -22,7 +20,6 @@
   "actionChangeSize": "Change size",
   "actionChangeOrientation": "Change orientation",
   "actionUseColor": "Use color",
-
   "libraryTitle": "Penfold",
   "libraryOverview": "Overview",
   "libraryTrash": "Trash",
@@ -41,17 +38,17 @@
   "libraryCouldNotLoad": "Could not load library: {error}",
   "@libraryCouldNotLoad": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
-
   "tooltipBackupRestore": "Backup & Restore",
   "tooltipTrash": "Trash",
   "tooltipNewNotebook": "New notebook",
   "tooltipNewFolder": "New folder",
   "tooltipNewSubfolder": "New subfolder",
   "tooltipImportPdf": "Import PDF",
-
   "folderNew": "New folder",
   "folderNewSubfolder": "New subfolder",
   "folderRename": "Rename folder",
@@ -59,11 +56,12 @@
   "folderMoveToTrashTitle": "Move \"{name}\" to Trash?",
   "@folderMoveToTrashTitle": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "folderMoveToTrashBody": "The folder and its notebooks move to Trash for 30 days.",
-
   "notebookNew": "New notebook",
   "notebookUntitled": "Untitled",
   "notebookTitleLabel": "Title",
@@ -79,14 +77,18 @@
   "notebookMoveToTrashTitle": "Move \"{title}\" to Trash?",
   "@notebookMoveToTrashTitle": {
     "placeholders": {
-      "title": {"type": "String"}
+      "title": {
+        "type": "String"
+      }
     }
   },
   "notebookMoveToTrashBody": "The notebook is hidden from the library for 30 days. Ink and pages stay on this device until Trash is emptied. Export a backup first if you want an extra copy.",
   "notebookTagsFor": "Tags for \"{title}\"",
   "@notebookTagsFor": {
     "placeholders": {
-      "title": {"type": "String"}
+      "title": {
+        "type": "String"
+      }
     }
   },
   "notebookNoTagsYet": "No tags yet. Create one below.",
@@ -96,67 +98,74 @@
   "notebookExportedAsPdf": "\"{title}\" exported as PDF",
   "@notebookExportedAsPdf": {
     "placeholders": {
-      "title": {"type": "String"}
+      "title": {
+        "type": "String"
+      }
     }
   },
   "notebookBackupExportedReady": "Backup exported. You can move to Trash when ready.",
-
   "importPdfSnack": "Importing PDF… pages render once, then stay offline.",
   "importFailed": "Import failed: {error}",
   "@importFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "exportFailed": "Export failed: {error}",
   "@exportFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "backupFailed": "Backup failed: {error}",
   "@backupFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "recoveryFailed": "Recovery failed: {error}",
   "@recoveryFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "restoreFailed": "Restore failed: {error}",
   "@restoreFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
-
   "handwritingModelDownloadingBackground": "Downloading handwriting model (~{sizeMb} MB) in background…",
   "@handwritingModelDownloadingBackground": {
     "placeholders": {
-      "sizeMb": {"type": "int"}
+      "sizeMb": {
+        "type": "int"
+      }
     }
   },
-
   "templateBlank": "Blank",
   "templateLined": "Lined",
   "templateGrid": "Grid",
   "templateDotted": "Dotted",
   "templateCollegeRuled": "College ruled",
   "templateCollegeShort": "College",
-
   "pageSizeA4": "A4",
   "pageSizeA5": "A5",
   "pageSizeLetter": "Letter",
-
   "orientationPortrait": "Portrait",
   "orientationLandscape": "Landscape",
-
   "pdfLabel": "PDF",
   "settingsSummarySeparator": " · ",
-
   "settingsTitle": "Settings",
   "settingsSectionLanguage": "Language",
   "settingsSectionAppearanceAndPreferences": "Appearance & Preferences",
@@ -221,8 +230,12 @@
   "settingsLatestAutoBackup": "Latest auto-backup: {timestamp} ({size})",
   "@settingsLatestAutoBackup": {
     "placeholders": {
-      "timestamp": {"type": "String"},
-      "size": {"type": "String"}
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
     }
   },
   "settingsRestoreBackup": "Restore backup",
@@ -231,7 +244,9 @@
   "settingsRecoverAutoBackupBody": "This replaces your current notebooks and files with the backup from {timestamp}. Your current database will be saved to backups/ before restore.",
   "@settingsRecoverAutoBackupBody": {
     "placeholders": {
-      "timestamp": {"type": "String"}
+      "timestamp": {
+        "type": "String"
+      }
     }
   },
   "settingsRestoreBackupTitle": "Restore backup?",
@@ -241,15 +256,15 @@
   "settingsVersion": "Version {version}",
   "@settingsVersion": {
     "placeholders": {
-      "version": {"type": "String"}
+      "version": {
+        "type": "String"
+      }
     }
   },
-
   "spenActionEraser": "Eraser",
   "spenActionLasso": "Lasso",
   "spenActionPen": "Pen",
   "spenActionNone": "None",
-
   "toolPen": "Pen",
   "toolHighlighter": "Highlighter",
   "toolTape": "Tape",
@@ -260,13 +275,11 @@
   "toolFill": "Fill",
   "toolText": "Text",
   "toolInsertImage": "Insert image",
-
   "brushPen": "Pen",
   "brushFountain": "Fountain",
   "brushPencil": "Pencil",
   "brushMarker": "Marker",
   "brushCalligraphy": "Calligraphy",
-
   "toolbarPreviousBookmark": "Previous bookmark",
   "toolbarNextBookmark": "Next bookmark",
   "toolbarConvertToText": "Convert to text",
@@ -281,7 +294,6 @@
   "toolbarPageOverview": "Page overview",
   "toolbarTableOfContents": "Table of contents",
   "toolbarPageMenu": "Page menu",
-
   "penOptionsTitle": "Pen",
   "highlighterOptionsTitle": "Highlighter",
   "brushLabel": "Brush",
@@ -303,7 +315,6 @@
   "eraseAllOnPageTitle": "Erase all on page?",
   "eraseAllOnPageBody": "This removes every stroke on the current page. You can undo this action.",
   "eraseAllOnPageButton": "Erase all on page",
-
   "pageSettingsTitle": "Page settings",
   "pageColorTitle": "Page color",
   "pageThemeTitle": "Page theme",
@@ -336,10 +347,11 @@
   "exportNotebookPageCount": "{count, plural, =1{1 page} other{{count} pages}}",
   "@exportNotebookPageCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "pageAudioAttach": "Attach audio file",
   "pageAudioAttachSubtitle": "MP3, M4A, WAV, and other local formats",
   "pageAudioAttachedToPage": "Attached to this page",
@@ -347,22 +359,24 @@
   "pageAudioRemove": "Remove audio",
   "pageAudioPlay": "Play",
   "pageAudioPause": "Pause",
-
   "contentsTitle": "Contents",
   "contentsSubtitle": "Headings from typed text and OCR-indexed ink",
   "contentsEmpty": "No headings found yet.\nAdd large or short typed text, or OCR-indexed ink headings.",
   "contentsPageNumber": "Page {number}",
   "@contentsPageNumber": {
     "placeholders": {
-      "number": {"type": "int"}
+      "number": {
+        "type": "int"
+      }
     }
   },
-
   "pageOverviewPagesSuffix": " — Pages",
   "pageOverviewSelected": "{count} selected",
   "@pageOverviewSelected": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "pageOverviewDeleteSelected": "Delete selected",
@@ -371,7 +385,9 @@
   "pageOverviewDeleteTitle": "Delete {count, plural, =1{1 page} other{{count} pages}}?",
   "@pageOverviewDeleteTitle": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "pageOverviewDeleteBody": "This cannot be undone.",
@@ -380,12 +396,13 @@
   "ocrIndexing": "OCR indexing…",
   "ocrHandwritingSearchable": "Handwriting searchable",
   "ocrPartial": "OCR partial",
-
   "trashTitle": "Trash",
   "trashFailedToLoad": "Failed to load Trash: {error}",
   "@trashFailedToLoad": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "trashEmpty": "Trash is empty",
@@ -396,112 +413,145 @@
   "trashDaysRemaining": "{count, plural, =1{1 day remaining} other{{count} days remaining}}",
   "@trashDaysRemaining": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "trashRestore": "Restore",
   "trashDeleteNotebookTitle": "Delete \"{title}\" permanently?",
   "@trashDeleteNotebookTitle": {
     "placeholders": {
-      "title": {"type": "String"}
+      "title": {
+        "type": "String"
+      }
     }
   },
   "trashDeleteNotebookBody": "This removes the notebook and all pages from this device.",
   "trashDeleteFolderTitle": "Delete \"{name}\" permanently?",
   "@trashDeleteFolderTitle": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "trashDeleteFolderBody": "This removes the folder and its notebooks from this device.",
-
   "splitPageTitle": "Split page?",
   "splitPageBody": "Create a new page with the same template and move about half of the {count} strokes onto it.",
   "@splitPageBody": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "splitPageNeedStrokes": "Need at least 2 strokes to split this page",
   "splitPageSuccess": "Page split: {moved} strokes moved, {remaining} remain",
   "@splitPageSuccess": {
     "placeholders": {
-      "moved": {"type": "int"},
-      "remaining": {"type": "int"}
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
     }
   },
   "splitPageFailed": "Split failed: {error}",
   "@splitPageFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "splitPageAction": "Split page",
-
   "changePageSizeTitle": "Change page size?",
   "changePageSizeBody": "This page has ink. Changing the size will re-layout the page; your ink stays in the same position on the page.",
   "changeOrientationTitle": "Change orientation?",
   "changeOrientationBody": "This page has ink. Changing orientation scales and centers your content to fit the new page bounds.",
-
   "convertedToText": "Converted to text: {preview}",
   "@convertedToText": {
     "placeholders": {
-      "preview": {"type": "String"}
+      "preview": {
+        "type": "String"
+      }
     }
   },
   "couldNotRecognizeHandwriting": "Could not recognize handwriting",
-
   "handwritingModelTitle": "Handwriting model",
   "handwritingModelDownloadFailed": "Download failed. Check network and retry.",
   "handwritingModelDownloading": "Downloading English handwriting model (~{sizeMb} MB)…",
   "@handwritingModelDownloading": {
     "placeholders": {
-      "sizeMb": {"type": "int"}
+      "sizeMb": {
+        "type": "int"
+      }
     }
   },
   "handwritingModelReady": "Model ready.",
   "handwritingModelElapsed": "Elapsed: {elapsed}",
   "@handwritingModelElapsed": {
     "placeholders": {
-      "elapsed": {"type": "String"}
+      "elapsed": {
+        "type": "String"
+      }
     }
   },
   "handwritingModelDownloadHint": "First-time download (~{sizeMb} MB). Usually finishes in under two minutes on Wi‑Fi.",
   "@handwritingModelDownloadHint": {
     "placeholders": {
-      "sizeMb": {"type": "int"}
+      "sizeMb": {
+        "type": "int"
+      }
     }
   },
-
   "pageExportedAsPng": "Page exported as PNG",
   "pageExportedAsPdf": "Page exported as PDF",
   "notebookExportedAsPdfSnack": "Notebook exported as PDF",
-
   "exportPreparing": "Preparing export…",
   "exportProgress": "Exporting page {current} of {total}…",
   "@exportProgress": {
     "placeholders": {
-      "current": {"type": "int"},
-      "total": {"type": "int"}
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
-
   "pageComplexityWarning": "This page has {count} strokes and may feel slow. Consider splitting it for better performance.",
   "@pageComplexityWarning": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "pageComplexityExportBlocked": "Export blocked: a page has {count} strokes (limit {limit}). Split heavy pages first.",
   "@pageComplexityExportBlocked": {
     "placeholders": {
-      "count": {"type": "int"},
-      "limit": {"type": "int"}
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
     }
   },
-
   "restoreComplete": "Restore complete. Please restart the app to load the restored data.",
-
   "textToolHint": "Type here…",
-  "textToolDone": "Done"
+  "textToolDone": "Done",
+  "languageKorean": "Korean",
+  "languagePolish": "Polish",
+  "languageSpanish": "Spanish",
+  "languageItalian": "Italian",
+  "languageUkrainian": "Ukrainian",
+  "languageSwedish": "Swedish",
+  "languageNorwegian": "Norwegian",
+  "languageFinnish": "Finnish",
+  "languageDanish": "Danish",
+  "languagePortuguese": "Portuguese"
 }

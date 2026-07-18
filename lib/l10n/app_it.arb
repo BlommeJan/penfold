@@ -1,0 +1,557 @@
+{
+  "@@locale": "it",
+  "appTitle": "Penfold",
+  "actionCancel": "Annulla",
+  "actionCreate": "Crea",
+  "actionRename": "Rinomina",
+  "actionSave": "Salva",
+  "actionDelete": "Elimina",
+  "actionAdd": "Aggiungi",
+  "actionBack": "Indietro",
+  "actionDone": "Fine",
+  "actionSplit": "Dividi",
+  "actionRecover": "Recupera",
+  "actionRestore": "Ripristina",
+  "actionExport": "Esporta",
+  "actionRetry": "Riprova",
+  "actionRetrying": "Nuovo tentativo…",
+  "actionExportFirst": "Esporta prima",
+  "actionEraseAll": "Cancella tutto",
+  "actionChangeSize": "Cambia dimensione",
+  "actionChangeOrientation": "Cambia orientamento",
+  "actionUseColor": "Usa colore",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Panoramica",
+  "libraryTrash": "Cestino",
+  "librarySettings": "Impostazioni",
+  "libraryFolders": "Cartelle",
+  "libraryNoFoldersYet": "Nessuna cartella",
+  "libraryAll": "Tutti",
+  "libraryUncategorized": "Senza categoria",
+  "libraryBreadcrumb": "Libreria",
+  "librarySearchHint": "Cerca quaderni e testo digitato…",
+  "libraryNoMatches": "Nessun risultato",
+  "libraryFolderEmpty": "Questa cartella è vuota",
+  "libraryNoNotebooksWithTag": "Nessun quaderno con questo tag",
+  "libraryNoUncategorizedNotebooks": "Nessun quaderno senza categoria",
+  "libraryNoNotebooksYet": "Nessun quaderno",
+  "libraryCouldNotLoad": "Impossibile caricare la libreria: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Backup e ripristino",
+  "tooltipTrash": "Cestino",
+  "tooltipNewNotebook": "Nuovo quaderno",
+  "tooltipNewFolder": "Nuova cartella",
+  "tooltipNewSubfolder": "Nuova sottocartella",
+  "tooltipImportPdf": "Importa PDF",
+  "folderNew": "Nuova cartella",
+  "folderNewSubfolder": "Nuova sottocartella",
+  "folderRename": "Rinomina cartella",
+  "folderMoveToTrash": "Sposta nel cestino",
+  "folderMoveToTrashTitle": "Spostare \"{name}\" nel cestino?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "La cartella e i suoi quaderni vengono spostati nel cestino per 30 giorni.",
+  "notebookNew": "Nuovo quaderno",
+  "notebookUntitled": "Senza titolo",
+  "notebookTitleLabel": "Titolo",
+  "notebookSizeLabel": "Dimensione",
+  "notebookPaperLabel": "Carta",
+  "notebookCoverLabel": "Copertina",
+  "notebookRename": "Rinomina quaderno",
+  "notebookMoveToFolder": "Sposta in cartella",
+  "notebookEditTags": "Modifica tag",
+  "notebookExportWorkbook": "Esporta quaderno",
+  "notebookExportWorkbookSubtitle": "Condividi tutte le pagine come PDF",
+  "notebookMoveToTrash": "Sposta nel cestino",
+  "notebookMoveToTrashTitle": "Spostare \"{title}\" nel cestino?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Il quaderno viene nascosto dalla libreria per 30 giorni. Inchiostro e pagine restano su questo dispositivo finché il cestino non viene svuotato. Esporta un backup se vuoi una copia aggiuntiva.",
+  "notebookTagsFor": "Tag per \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Nessun tag. Creane uno qui sotto.",
+  "notebookNewTag": "Nuovo tag",
+  "notebookAddTag": "Aggiungi tag",
+  "notebookNoPagesToExport": "Questo quaderno non ha pagine da esportare",
+  "notebookExportedAsPdf": "\"{title}\" esportato come PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Backup esportato. Puoi spostare il quaderno nel cestino quando vuoi.",
+  "importPdfSnack": "Importazione PDF… le pagine vengono renderizzate una volta, poi restano offline.",
+  "importFailed": "Importazione non riuscita: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Esportazione non riuscita: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Backup non riuscito: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Recupero non riuscito: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Ripristino non riuscito: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Download del modello di scrittura (~{sizeMb} MB) in background…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Bianco",
+  "templateLined": "Righe",
+  "templateGrid": "Quadretti",
+  "templateDotted": "Puntini",
+  "templateCollegeRuled": "Righe americane",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Verticale",
+  "orientationLandscape": "Orizzontale",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Impostazioni",
+  "settingsSectionLanguage": "Lingua",
+  "settingsSectionAppearanceAndPreferences": "Aspetto e preferenze",
+  "settingsSectionAppearance": "Aspetto",
+  "settingsAppearanceDarkMode": "Modalità scura",
+  "settingsAppearanceDarkModeSubtitle": "Scegli chiaro, scuro o segui il dispositivo (impostazione predefinita di sistema)",
+  "themeSystem": "Sistema",
+  "themeLight": "Chiaro",
+  "themeDark": "Scuro",
+  "settingsSectionPreferences": "Preferenze",
+  "settingsLanguageLabel": "Lingua dell'app",
+  "languageEnglish": "Inglese",
+  "languageGerman": "Tedesco",
+  "languageFrench": "Francese",
+  "languageDutch": "Olandese",
+  "settingsSectionToolbar": "Barra strumenti",
+  "settingsToolbarReorderHint": "Trascina per riordinare gli strumenti di disegno. Annulla e ripeti restano fissi a destra.",
+  "settingsResetToolbarOrder": "Ripristina ordine barra strumenti",
+  "settingsSectionNotebook": "Quaderno",
+  "settingsPageTurnMode": "Modalità cambio pagina",
+  "settingsPageTurnModeSubtitle": "Scorri una pagina alla volta invece dello scorrimento continuo (predefinito disattivato)",
+  "settingsZoomNavigation": "Navigazione con zoom",
+  "settingsZoomNavigationSubtitle": "Pizzica per ingrandire e spostarti sulle pagine (predefinito attivato)",
+  "settingsSectionDrawing": "Disegno",
+  "settingsStrokeSmoothing": "Levigatura tratti",
+  "settingsStrokeSmoothingSubtitle": "Leviga i tratti d'inchiostro con l'algoritmo Chaikin (predefinito attivato)",
+  "settingsStrokeSmoothingStrength": "Intensità levigatura",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — valori più bassi mantengono più dettaglio; consigliato {recommended}%",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Disegno con dito",
+  "settingsFingerDrawingSubtitle": "Disegna con il dito sulla pagina; se disattivato, solo lo stilo disegna (predefinito disattivato)",
+  "settingsGestureInkEditing": "Modifica inchiostro con gesti",
+  "settingsGestureInkEditingSubtitle": "Gratta sull'inchiostro indicizzato con OCR per cancellarlo (predefinito attivato)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Tieni premuto il pulsante laterale della S Pen per cambiare temporaneamente strumento. Rilascia per ripristinare lo strumento precedente. Funziona sui dispositivi Samsung con supporto del pulsante laterale.",
+  "settingsSpenBarrelAction": "Azione pulsante laterale",
+  "settingsSectionOcrDictionary": "Dizionario OCR",
+  "settingsOcrDictionaryHint": "Termini di dominio per l'OCR della scrittura. Le corrispondenze simili vengono corrette quando l'inchiostro viene indicizzato e i termini migliorano la ricerca nei quaderni.",
+  "settingsNoCustomOcrTerms": "Nessun termine personalizzato.",
+  "settingsRemoveOcrTerm": "Rimuovi termine",
+  "settingsAddOcrTerm": "Aggiungi termine",
+  "settingsAddOcrTermTitle": "Aggiungi termine OCR",
+  "settingsOcrTermLabel": "Termine",
+  "settingsOcrTermHint": "es. autovalore, mitocondrio",
+  "settingsSectionYourData": "I tuoi dati",
+  "settingsYourDataHint": "Penfold salva tutto su questo dispositivo in un unico database SQLite e cartelle di risorse — nessuna sincronizzazione cloud. Vedi docs/ARCHITECTURE.md per la struttura completa dei file sul dispositivo.",
+  "settingsDatabase": "Database",
+  "settingsSectionBackupRestore": "Backup e ripristino",
+  "settingsBackupRestoreHint": "Esporta uno zip di penfold.db e delle cartelle di risorse, oppure ripristina da un backup precedente. Il database attuale viene salvato in backups/ prima del ripristino.",
+  "settingsExportBackup": "Esporta backup",
+  "settingsExportBackupSubtitle": "Comprimi penfold.db, PDF sorgente, immagini e pagine PDF legacy",
+  "settingsRecoverFromBackup": "Recupera da backup",
+  "settingsLatestAutoBackup": "Ultimo backup automatico: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Ripristina backup",
+  "settingsRestoreBackupSubtitle": "Sostituisci i dati locali con uno zip di backup Penfold",
+  "settingsRecoverAutoBackupTitle": "Recuperare dal backup automatico?",
+  "settingsRecoverAutoBackupBody": "Questo sostituisce quaderni e file attuali con il backup del {timestamp}. Il database attuale verrà salvato in backups/ prima del ripristino.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Ripristinare il backup?",
+  "settingsRestoreBackupBody": "Questo sostituisce quaderni e file attuali. Il database attuale verrà salvato in backups/ prima del ripristino.",
+  "settingsSectionAbout": "Informazioni",
+  "settingsAboutSubtitle": "Quaderno per scrittura a mano locale — nessun account, nessun cloud.",
+  "settingsVersion": "Versione {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Gomma",
+  "spenActionLasso": "Lazo",
+  "spenActionPen": "Penna",
+  "spenActionNone": "Nessuna",
+  "toolPen": "Penna",
+  "toolHighlighter": "Evidenziatore",
+  "toolTape": "Nastro",
+  "toolEraser": "Gomma",
+  "toolSelection": "Selezione",
+  "toolLasso": "Lazo",
+  "toolShape": "Forma",
+  "toolFill": "Riempimento",
+  "toolText": "Testo",
+  "toolInsertImage": "Inserisci immagine",
+  "brushPen": "Penna",
+  "brushFountain": "Stilografica",
+  "brushPencil": "Matita",
+  "brushMarker": "Pennarello",
+  "brushCalligraphy": "Calligrafia",
+  "toolbarPreviousBookmark": "Segnalibro precedente",
+  "toolbarNextBookmark": "Segnalibro successivo",
+  "toolbarConvertToText": "Converti in testo",
+  "toolbarCopy": "Copia",
+  "toolbarDelete": "Elimina",
+  "toolbarPaste": "Incolla",
+  "toolbarUndo": "Annulla",
+  "toolbarRedo": "Ripeti",
+  "toolbarAddPage": "Aggiungi pagina",
+  "toolbarStylusOnly": "Solo stilo (rifiuto palmo)",
+  "toolbarFingerDrawing": "Disegno con dito",
+  "toolbarPageOverview": "Panoramica pagine",
+  "toolbarTableOfContents": "Sommario",
+  "toolbarPageMenu": "Menu pagina",
+  "penOptionsTitle": "Penna",
+  "highlighterOptionsTitle": "Evidenziatore",
+  "brushLabel": "Pennello",
+  "colorLabel": "Colore",
+  "customColorTitle": "Colore personalizzato",
+  "hueLabel": "Tonalità",
+  "saturationLabel": "Saturazione",
+  "brightnessLabel": "Luminosità",
+  "tapeOptionsTitle": "Nastro",
+  "tapeOptionsHint": "Disegna per coprire le note; tocca il nastro per mostrare o nascondere di nuovo",
+  "fillColorTitle": "Colore di riempimento",
+  "fillOptionsHint": "Disegna un contorno chiuso oppure tocca l'interno di una forma per riempirla",
+  "eraserSizeTitle": "Dimensione gomma",
+  "eraserModeTitle": "Modalità gomma",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Tratto",
+  "eraserModePartialHint": "Cancella solo l'inchiostro sotto il cerchio della gomma",
+  "eraserModeWholeStrokeHint": "Cancella i tratti interi che tocca",
+  "eraseAllOnPageTitle": "Cancellare tutto sulla pagina?",
+  "eraseAllOnPageBody": "Questo rimuove ogni tratto sulla pagina corrente. Puoi annullare questa azione.",
+  "eraseAllOnPageButton": "Cancella tutto sulla pagina",
+  "pageSettingsTitle": "Impostazioni pagina",
+  "pageColorTitle": "Colore pagina",
+  "pageThemeTitle": "Tema pagina",
+  "defaultPaperSize": "Dimensione carta predefinita",
+  "defaultPaperType": "Tipo carta predefinito",
+  "defaultPageTheme": "Tema pagina predefinito",
+  "notebookDefaultsHint": "Usato quando crei un nuovo quaderno. Puoi comunque modificare le scelte nella finestra di dialogo.",
+  "pageThemeLight": "Chiaro",
+  "pageThemeDark": "Scuro",
+  "pageThemeSepia": "Seppia",
+  "pageThemePastelPink": "Rosa pastello",
+  "pageThemePastelBlue": "Blu pastello",
+  "pageThemePastelMint": "Menta pastello",
+  "pageSizeTitle": "Dimensione pagina",
+  "pageOrientationTitle": "Orientamento",
+  "pageTemplateTitle": "Modello pagina",
+  "pageBookmark": "Segnalibro",
+  "pageRemoveBookmark": "Rimuovi segnalibro",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Dividi",
+  "pageExportTitle": "Esporta",
+  "pdfPagesKeepBackground": "Le pagine PDF mantengono lo sfondo del documento",
+  "pdfPagesKeepDimensions": "Le pagine PDF mantengono le dimensioni del documento",
+  "pdfPagesKeepOrientation": "Le pagine PDF mantengono l'orientamento del documento",
+  "exportPageAsPng": "Esporta pagina come PNG",
+  "exportPageAsPngSubtitle": "Condividi l'immagine di questa pagina",
+  "exportPageAsPdf": "Esporta pagina come PDF",
+  "exportPageAsPdfSubtitle": "Inchiostro vettoriale, condividi con il menu di condivisione",
+  "exportNotebookAsPdf": "Esporta quaderno come PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 pagina} other{{count} pagine}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Allega file audio",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV e altri formati locali",
+  "pageAudioAttachedToPage": "Allegato a questa pagina",
+  "pageAudioReplace": "Sostituisci file audio",
+  "pageAudioRemove": "Rimuovi audio",
+  "pageAudioPlay": "Riproduci",
+  "pageAudioPause": "Pausa",
+  "contentsTitle": "Sommario",
+  "contentsSubtitle": "Intestazioni da testo digitato e inchiostro indicizzato con OCR",
+  "contentsEmpty": "Nessuna intestazione trovata.\nAggiungi testo digitato grande o breve, oppure intestazioni in inchiostro indicizzato con OCR.",
+  "contentsPageNumber": "Pagina {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Pagine",
+  "pageOverviewSelected": "Selezionate: {count}",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Elimina selezionate",
+  "pageOverviewSelectPages": "Seleziona pagine",
+  "pageOverviewKeepOnePage": "Mantieni almeno una pagina",
+  "pageOverviewDeleteTitle": "Eliminare {count, plural, =1{1 pagina} other{{count} pagine}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Questa azione non può essere annullata.",
+  "pageOverviewDragToReorder": "Trascina per riordinare",
+  "pageOverviewBookmarked": "Con segnalibro",
+  "ocrIndexing": "Indicizzazione OCR…",
+  "ocrHandwritingSearchable": "Scrittura ricercabile",
+  "ocrPartial": "OCR parziale",
+  "trashTitle": "Cestino",
+  "trashFailedToLoad": "Impossibile caricare il cestino: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Il cestino è vuoto",
+  "trashSectionFolders": "Cartelle",
+  "trashSectionNotebooks": "Quaderni",
+  "trashDeletionDateUnavailable": "Data eliminazione non disponibile",
+  "trashExpiresToday": "Scade oggi",
+  "trashDaysRemaining": "{count, plural, =1{1 giorno rimanente} other{{count} giorni rimanenti}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Ripristina",
+  "trashDeleteNotebookTitle": "Eliminare \"{title}\" definitivamente?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Questo rimuove il quaderno e tutte le pagine da questo dispositivo.",
+  "trashDeleteFolderTitle": "Eliminare \"{name}\" definitivamente?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Questo rimuove la cartella e i suoi quaderni da questo dispositivo.",
+  "splitPageTitle": "Dividere la pagina?",
+  "splitPageBody": "Crea una nuova pagina con lo stesso modello e sposta circa metà dei {count} tratti su di essa.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Servono almeno 2 tratti per dividere questa pagina",
+  "splitPageSuccess": "Pagina divisa: {moved} tratti spostati, {remaining} rimasti",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Divisione non riuscita: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Dividi pagina",
+  "changePageSizeTitle": "Cambiare dimensione pagina?",
+  "changePageSizeBody": "Questa pagina ha inchiostro. Cambiare la dimensione riorganizza la pagina; l'inchiostro resta nella stessa posizione sulla pagina.",
+  "changeOrientationTitle": "Cambiare orientamento?",
+  "changeOrientationBody": "Questa pagina ha inchiostro. Cambiare l'orientamento ridimensiona e centra il contenuto per adattarlo ai nuovi limiti della pagina.",
+  "convertedToText": "Convertito in testo: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Impossibile riconoscere la scrittura",
+  "handwritingModelTitle": "Modello di scrittura",
+  "handwritingModelDownloadFailed": "Download non riuscito. Controlla la rete e riprova.",
+  "handwritingModelDownloading": "Download del modello di scrittura inglese (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Modello pronto.",
+  "handwritingModelElapsed": "Trascorso: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Download iniziale (~{sizeMb} MB). Di solito termina in meno di due minuti su Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Pagina esportata come PNG",
+  "pageExportedAsPdf": "Pagina esportata come PDF",
+  "notebookExportedAsPdfSnack": "Quaderno esportato come PDF",
+  "exportPreparing": "Preparazione esportazione…",
+  "exportProgress": "Esportazione pagina {current} di {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Questa pagina ha {count} tratti e potrebbe risultare lenta. Considera di dividerla per migliorare le prestazioni.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Esportazione bloccata: una pagina ha {count} tratti (limite {limit}). Dividi prima le pagine pesanti.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Ripristino completato. Riavvia l'app per caricare i dati ripristinati.",
+  "textToolHint": "Digita qui…",
+  "textToolDone": "Fine",
+  "languageKorean": "Coreano",
+  "languagePolish": "Polacco",
+  "languageSpanish": "Spagnolo",
+  "languageItalian": "Italiano",
+  "languageUkrainian": "Ucraino",
+  "languageSwedish": "Svedese",
+  "languageNorwegian": "Norvegese",
+  "languageFinnish": "Finlandese",
+  "languageDanish": "Danese",
+  "languagePortuguese": "Portoghese"
+}

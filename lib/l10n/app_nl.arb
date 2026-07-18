@@ -1,0 +1,557 @@
+{
+  "@@locale": "nl",
+  "appTitle": "Penfold",
+  "actionCancel": "Annuleren",
+  "actionCreate": "Aanmaken",
+  "actionRename": "Hernoemen",
+  "actionSave": "Opslaan",
+  "actionDelete": "Verwijderen",
+  "actionAdd": "Toevoegen",
+  "actionBack": "Terug",
+  "actionDone": "Klaar",
+  "actionSplit": "Splitsen",
+  "actionRecover": "Herstellen",
+  "actionRestore": "Terugzetten",
+  "actionExport": "Exporteren",
+  "actionRetry": "Opnieuw proberen",
+  "actionRetrying": "Opnieuw proberen…",
+  "actionExportFirst": "Eerst exporteren",
+  "actionEraseAll": "Alles wissen",
+  "actionChangeSize": "Formaat wijzigen",
+  "actionChangeOrientation": "Richting wijzigen",
+  "actionUseColor": "Kleur gebruiken",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Overzicht",
+  "libraryTrash": "Prullenbak",
+  "librarySettings": "Instellingen",
+  "libraryFolders": "Mappen",
+  "libraryNoFoldersYet": "Nog geen mappen",
+  "libraryAll": "Alles",
+  "libraryUncategorized": "Zonder categorie",
+  "libraryBreadcrumb": "Bibliotheek",
+  "librarySearchHint": "Zoek in notitieboeken en getypte tekst…",
+  "libraryNoMatches": "Geen resultaten",
+  "libraryFolderEmpty": "Deze map is leeg",
+  "libraryNoNotebooksWithTag": "Geen notitieboeken met dit label",
+  "libraryNoUncategorizedNotebooks": "Geen notitieboeken zonder categorie",
+  "libraryNoNotebooksYet": "Nog geen notitieboeken",
+  "libraryCouldNotLoad": "Bibliotheek kon niet worden geladen: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Back-up & herstel",
+  "tooltipTrash": "Prullenbak",
+  "tooltipNewNotebook": "Nieuw notitieboek",
+  "tooltipNewFolder": "Nieuwe map",
+  "tooltipNewSubfolder": "Nieuwe submap",
+  "tooltipImportPdf": "PDF importeren",
+  "folderNew": "Nieuwe map",
+  "folderNewSubfolder": "Nieuwe submap",
+  "folderRename": "Map hernoemen",
+  "folderMoveToTrash": "Naar prullenbak",
+  "folderMoveToTrashTitle": "\"{name}\" naar prullenbak verplaatsen?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "De map en bijbehorende notitieboeken gaan 30 dagen naar de prullenbak.",
+  "notebookNew": "Nieuw notitieboek",
+  "notebookUntitled": "Naamloos",
+  "notebookTitleLabel": "Titel",
+  "notebookSizeLabel": "Formaat",
+  "notebookPaperLabel": "Papier",
+  "notebookCoverLabel": "Omslag",
+  "notebookRename": "Notitieboek hernoemen",
+  "notebookMoveToFolder": "Naar map verplaatsen",
+  "notebookEditTags": "Labels bewerken",
+  "notebookExportWorkbook": "Werkboek exporteren",
+  "notebookExportWorkbookSubtitle": "Deel alle pagina's als PDF",
+  "notebookMoveToTrash": "Naar prullenbak",
+  "notebookMoveToTrashTitle": "\"{title}\" naar prullenbak verplaatsen?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Het notitieboek wordt 30 dagen uit de bibliotheek verborgen. Inkt en pagina's blijven op dit apparaat totdat de prullenbak wordt geleegd. Exporteer eerst een back-up als je een extra kopie wilt.",
+  "notebookTagsFor": "Labels voor \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Nog geen labels. Maak er hieronder een aan.",
+  "notebookNewTag": "Nieuw label",
+  "notebookAddTag": "Label toevoegen",
+  "notebookNoPagesToExport": "Dit notitieboek heeft geen pagina's om te exporteren",
+  "notebookExportedAsPdf": "\"{title}\" geëxporteerd als PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Back-up geëxporteerd. Je kunt naar de prullenbak verplaatsen wanneer je klaar bent.",
+  "importPdfSnack": "PDF importeren… pagina's worden één keer gerenderd en blijven daarna offline.",
+  "importFailed": "Importeren mislukt: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Exporteren mislukt: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Back-up mislukt: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Herstel mislukt: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Terugzetten mislukt: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Handschriftmodel downloaden (~{sizeMb} MB) op de achtergrond…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Blanco",
+  "templateLined": "Gelijnd",
+  "templateGrid": "Raster",
+  "templateDotted": "Gestippeld",
+  "templateCollegeRuled": "College-lijntjes",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Staand",
+  "orientationLandscape": "Liggend",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Instellingen",
+  "settingsSectionLanguage": "Taal",
+  "settingsSectionAppearanceAndPreferences": "Weergave & voorkeuren",
+  "settingsSectionAppearance": "Weergave",
+  "settingsAppearanceDarkMode": "Donkere modus",
+  "settingsAppearanceDarkModeSubtitle": "Kies licht, donker of volg je apparaat (standaard systeem)",
+  "themeSystem": "Systeem",
+  "themeLight": "Licht",
+  "themeDark": "Donker",
+  "settingsSectionPreferences": "Voorkeuren",
+  "settingsLanguageLabel": "Apptaal",
+  "languageEnglish": "Engels",
+  "languageGerman": "Duits",
+  "languageFrench": "Frans",
+  "languageDutch": "Nederlands",
+  "settingsSectionToolbar": "Werkbalk",
+  "settingsToolbarReorderHint": "Sleep om tekengereedschappen te herschikken. Ongedaan maken en opnieuw blijven rechts vast staan.",
+  "settingsResetToolbarOrder": "Volgorde werkbalk resetten",
+  "settingsSectionNotebook": "Notitieboek",
+  "settingsPageTurnMode": "Bladermodus",
+  "settingsPageTurnModeSubtitle": "Veeg één pagina per keer in plaats van doorlopend scrollen (standaard uit)",
+  "settingsZoomNavigation": "Zoomnavigatie",
+  "settingsZoomNavigationSubtitle": "Knijp om in te zoomen en te pannen op pagina's (standaard aan)",
+  "settingsSectionDrawing": "Tekenen",
+  "settingsStrokeSmoothing": "Lijnverzachting",
+  "settingsStrokeSmoothingSubtitle": "Verzacht inktlijnen met Chaikin corner-cutting (standaard aan)",
+  "settingsStrokeSmoothingStrength": "Verzachtingssterkte",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — lager behoudt meer detail; aanbevolen {recommended}%",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Tekenen met vinger",
+  "settingsFingerDrawingSubtitle": "Teken met je vinger op papier; uitgeschakeld tekent alleen de stylus (standaard uit)",
+  "settingsGestureInkEditing": "Gebaren-inktbewerking",
+  "settingsGestureInkEditingSubtitle": "Streep over OCR-geïndexeerde inkt om die te wissen (standaard aan)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Houd de zijknop van de S Pen ingedrukt om tijdelijk van gereedschap te wisselen. Laat los om je vorige gereedschap te herstellen. Werkt op Samsung-apparaten met ondersteuning voor de zijknop.",
+  "settingsSpenBarrelAction": "Actie zijknop",
+  "settingsSectionOcrDictionary": "OCR-woordenlijst",
+  "settingsOcrDictionaryHint": "Vaktermen voor handschriftherkenning. Bijna-matches worden gecorrigeerd wanneer inkt wordt geïndexeerd, en termen verbeteren het zoeken in notitieboeken.",
+  "settingsNoCustomOcrTerms": "Nog geen aangepaste termen.",
+  "settingsRemoveOcrTerm": "Term verwijderen",
+  "settingsAddOcrTerm": "Term toevoegen",
+  "settingsAddOcrTermTitle": "OCR-term toevoegen",
+  "settingsOcrTermLabel": "Term",
+  "settingsOcrTermHint": "bijv. eigenwaarde, mitochondrium",
+  "settingsSectionYourData": "Je gegevens",
+  "settingsYourDataHint": "Penfold slaat alles op dit apparaat op in één SQLite-database en assetmappen — geen cloudsynchronisatie. Zie docs/ARCHITECTURE.md voor de volledige lokale bestandsstructuur.",
+  "settingsDatabase": "Database",
+  "settingsSectionBackupRestore": "Back-up & herstel",
+  "settingsBackupRestoreHint": "Exporteer een zip van penfold.db en assetmappen, of herstel vanuit een eerdere back-up. Je huidige database wordt vóór het herstel opgeslagen in backups/.",
+  "settingsExportBackup": "Back-up exporteren",
+  "settingsExportBackupSubtitle": "Zip penfold.db, PDF-bronnen, afbeeldingen en legacy PDF-pagina's",
+  "settingsRecoverFromBackup": "Herstellen vanuit back-up",
+  "settingsLatestAutoBackup": "Laatste automatische back-up: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Back-up terugzetten",
+  "settingsRestoreBackupSubtitle": "Vervang lokale gegevens door een Penfold-back-up-zip",
+  "settingsRecoverAutoBackupTitle": "Herstellen vanuit automatische back-up?",
+  "settingsRecoverAutoBackupBody": "Dit vervangt je huidige notitieboeken en bestanden door de back-up van {timestamp}. Je huidige database wordt vóór het herstel opgeslagen in backups/.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Back-up terugzetten?",
+  "settingsRestoreBackupBody": "Dit vervangt je huidige notitieboeken en bestanden. Je huidige database wordt vóór het herstel opgeslagen in backups/.",
+  "settingsSectionAbout": "Over",
+  "settingsAboutSubtitle": "Lokaal handschriftnotitieboek — geen accounts, geen cloud.",
+  "settingsVersion": "Versie {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Gum",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Pen",
+  "spenActionNone": "Geen",
+  "toolPen": "Pen",
+  "toolHighlighter": "Markeerstift",
+  "toolTape": "Tape",
+  "toolEraser": "Gum",
+  "toolSelection": "Selectie",
+  "toolLasso": "Lasso",
+  "toolShape": "Vorm",
+  "toolFill": "Vulling",
+  "toolText": "Tekst",
+  "toolInsertImage": "Afbeelding invoegen",
+  "brushPen": "Pen",
+  "brushFountain": "Vulpen",
+  "brushPencil": "Potlood",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Kalligrafie",
+  "toolbarPreviousBookmark": "Vorige bladwijzer",
+  "toolbarNextBookmark": "Volgende bladwijzer",
+  "toolbarConvertToText": "Omzetten naar tekst",
+  "toolbarCopy": "Kopiëren",
+  "toolbarDelete": "Verwijderen",
+  "toolbarPaste": "Plakken",
+  "toolbarUndo": "Ongedaan maken",
+  "toolbarRedo": "Opnieuw",
+  "toolbarAddPage": "Pagina toevoegen",
+  "toolbarStylusOnly": "Alleen stylus (handpalmafwijzing)",
+  "toolbarFingerDrawing": "Tekenen met vinger",
+  "toolbarPageOverview": "Pagina-overzicht",
+  "toolbarTableOfContents": "Inhoudsopgave",
+  "toolbarPageMenu": "Paginamenu",
+  "penOptionsTitle": "Pen",
+  "highlighterOptionsTitle": "Markeerstift",
+  "brushLabel": "Penseel",
+  "colorLabel": "Kleur",
+  "customColorTitle": "Aangepaste kleur",
+  "hueLabel": "Tint",
+  "saturationLabel": "Verzadiging",
+  "brightnessLabel": "Helderheid",
+  "tapeOptionsTitle": "Tape",
+  "tapeOptionsHint": "Teken om notities af te dekken; tik op tape om opnieuw te tonen of te verbergen",
+  "fillColorTitle": "Vulkleur",
+  "fillOptionsHint": "Teken een gesloten lus, of tik binnen een vorm om te vullen",
+  "eraserSizeTitle": "Grootte gum",
+  "eraserModeTitle": "Gummodus",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Lijn",
+  "eraserModePartialHint": "Wist alleen inkt onder de gumcirkel",
+  "eraserModeWholeStrokeHint": "Wist hele lijnen die worden geraakt",
+  "eraseAllOnPageTitle": "Alles op pagina wissen?",
+  "eraseAllOnPageBody": "Dit verwijdert elke lijn op de huidige pagina. Je kunt deze actie ongedaan maken.",
+  "eraseAllOnPageButton": "Alles op pagina wissen",
+  "pageSettingsTitle": "Pagina-instellingen",
+  "pageColorTitle": "Paginakleur",
+  "pageThemeTitle": "Paginathema",
+  "defaultPaperSize": "Standaard papierformaat",
+  "defaultPaperType": "Standaard papiertype",
+  "defaultPageTheme": "Standaard paginathema",
+  "notebookDefaultsHint": "Gebruikt wanneer je een nieuw notitieboek maakt. Je kunt keuzes nog steeds wijzigen in het dialoogvenster.",
+  "pageThemeLight": "Licht",
+  "pageThemeDark": "Donker",
+  "pageThemeSepia": "Sepia",
+  "pageThemePastelPink": "Pastelroze",
+  "pageThemePastelBlue": "Pastelblauw",
+  "pageThemePastelMint": "Pastelmunt",
+  "pageSizeTitle": "Paginaformaat",
+  "pageOrientationTitle": "Richting",
+  "pageTemplateTitle": "Paginasjabloon",
+  "pageBookmark": "Bladwijzer",
+  "pageRemoveBookmark": "Bladwijzer verwijderen",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Splitsen",
+  "pageExportTitle": "Exporteren",
+  "pdfPagesKeepBackground": "PDF-pagina's behouden hun documentachtergrond",
+  "pdfPagesKeepDimensions": "PDF-pagina's behouden hun documentafmetingen",
+  "pdfPagesKeepOrientation": "PDF-pagina's behouden hun documentoriëntatie",
+  "exportPageAsPng": "Pagina exporteren als PNG",
+  "exportPageAsPngSubtitle": "Deel afbeelding van deze pagina",
+  "exportPageAsPdf": "Pagina exporteren als PDF",
+  "exportPageAsPdfSubtitle": "Vectorinkt, delen via deelmenu",
+  "exportNotebookAsPdf": "Notitieboek exporteren als PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 pagina} other{{count} pagina's}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Audiobestand bijvoegen",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV en andere lokale formaten",
+  "pageAudioAttachedToPage": "Bijgevoegd aan deze pagina",
+  "pageAudioReplace": "Audiobestand vervangen",
+  "pageAudioRemove": "Audio verwijderen",
+  "pageAudioPlay": "Afspelen",
+  "pageAudioPause": "Pauzeren",
+  "contentsTitle": "Inhoud",
+  "contentsSubtitle": "Koppen uit getypte tekst en OCR-geïndexeerde inkt",
+  "contentsEmpty": "Nog geen koppen gevonden.\nVoeg grote of korte getypte tekst toe, of OCR-geïndexeerde inktkoppen.",
+  "contentsPageNumber": "Pagina {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Pagina's",
+  "pageOverviewSelected": "{count} geselecteerd",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Geselecteerde verwijderen",
+  "pageOverviewSelectPages": "Pagina's selecteren",
+  "pageOverviewKeepOnePage": "Houd minstens één pagina",
+  "pageOverviewDeleteTitle": "{count, plural, =1{1 pagina} other{{count} pagina's}} verwijderen?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Dit kan niet ongedaan worden gemaakt.",
+  "pageOverviewDragToReorder": "Sleep om te herschikken",
+  "pageOverviewBookmarked": "Met bladwijzer",
+  "ocrIndexing": "OCR-indexering…",
+  "ocrHandwritingSearchable": "Handschift doorzoekbaar",
+  "ocrPartial": "OCR gedeeltelijk",
+  "trashTitle": "Prullenbak",
+  "trashFailedToLoad": "Prullenbak kon niet worden geladen: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Prullenbak is leeg",
+  "trashSectionFolders": "Mappen",
+  "trashSectionNotebooks": "Notitieboeken",
+  "trashDeletionDateUnavailable": "Verwijderingsdatum niet beschikbaar",
+  "trashExpiresToday": "Verloopt vandaag",
+  "trashDaysRemaining": "{count, plural, =1{1 dag resterend} other{{count} dagen resterend}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Terugzetten",
+  "trashDeleteNotebookTitle": "\"{title}\" permanent verwijderen?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Dit verwijdert het notitieboek en alle pagina's van dit apparaat.",
+  "trashDeleteFolderTitle": "\"{name}\" permanent verwijderen?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Dit verwijdert de map en bijbehorende notitieboeken van dit apparaat.",
+  "splitPageTitle": "Pagina splitsen?",
+  "splitPageBody": "Maak een nieuwe pagina met dezelfde sjabloon en verplaats ongeveer de helft van de {count} lijnen ernaartoe.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Minstens 2 lijnen nodig om deze pagina te splitsen",
+  "splitPageSuccess": "Pagina gesplitst: {moved} lijnen verplaatst, {remaining} blijven over",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Splitsen mislukt: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Pagina splitsen",
+  "changePageSizeTitle": "Paginaformaat wijzigen?",
+  "changePageSizeBody": "Deze pagina bevat inkt. Het wijzigen van het formaat herlegt de pagina; je inkt blijft op dezelfde positie op de pagina.",
+  "changeOrientationTitle": "Richting wijzigen?",
+  "changeOrientationBody": "Deze pagina bevat inkt. Het wijzigen van de richting schaalt en centreert je inhoud zodat die binnen de nieuwe paginagrenzen past.",
+  "convertedToText": "Omgezet naar tekst: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Handschrift kon niet worden herkend",
+  "handwritingModelTitle": "Handschriftmodel",
+  "handwritingModelDownloadFailed": "Download mislukt. Controleer netwerk en probeer opnieuw.",
+  "handwritingModelDownloading": "Engels handschriftmodel downloaden (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Model gereed.",
+  "handwritingModelElapsed": "Verstreken: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Eerste download (~{sizeMb} MB). Duurt meestal minder dan twee minuten via Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Pagina geëxporteerd als PNG",
+  "pageExportedAsPdf": "Pagina geëxporteerd als PDF",
+  "notebookExportedAsPdfSnack": "Notitieboek geëxporteerd als PDF",
+  "exportPreparing": "Export voorbereiden…",
+  "exportProgress": "Pagina {current} van {total} exporteren…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Deze pagina heeft {count} lijnen en kan traag aanvoelen. Overweeg om te splitsen voor betere prestaties.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Export geblokkeerd: een pagina heeft {count} lijnen (limiet {limit}). Splits zware pagina's eerst.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Herstel voltooid. Start de app opnieuw om de herstelde gegevens te laden.",
+  "textToolHint": "Typ hier…",
+  "textToolDone": "Klaar",
+  "languageKorean": "Koreaans",
+  "languagePolish": "Pools",
+  "languageSpanish": "Spaans",
+  "languageItalian": "Italiaans",
+  "languageUkrainian": "Oekraïens",
+  "languageSwedish": "Zweeds",
+  "languageNorwegian": "Noors",
+  "languageFinnish": "Fins",
+  "languageDanish": "Deens",
+  "languagePortuguese": "Portugees"
+}

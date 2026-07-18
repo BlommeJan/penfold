@@ -1,0 +1,557 @@
+{
+  "@@locale": "da",
+  "appTitle": "Penfold",
+  "actionCancel": "Annuller",
+  "actionCreate": "Opret",
+  "actionRename": "Omdøb",
+  "actionSave": "Gem",
+  "actionDelete": "Slet",
+  "actionAdd": "Tilføj",
+  "actionBack": "Tilbage",
+  "actionDone": "Færdig",
+  "actionSplit": "Opdel",
+  "actionRecover": "Gendan",
+  "actionRestore": "Gendan",
+  "actionExport": "Eksporter",
+  "actionRetry": "Prøv igen",
+  "actionRetrying": "Prøver igen…",
+  "actionExportFirst": "Eksporter først",
+  "actionEraseAll": "Slet alt",
+  "actionChangeSize": "Skift størrelse",
+  "actionChangeOrientation": "Skift retning",
+  "actionUseColor": "Brug farve",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Oversigt",
+  "libraryTrash": "Papirkurv",
+  "librarySettings": "Indstillinger",
+  "libraryFolders": "Mapper",
+  "libraryNoFoldersYet": "Ingen mapper endnu",
+  "libraryAll": "Alle",
+  "libraryUncategorized": "Uden kategori",
+  "libraryBreadcrumb": "Bibliotek",
+  "librarySearchHint": "Søg i notesbøger og indtastet tekst…",
+  "libraryNoMatches": "Ingen resultater",
+  "libraryFolderEmpty": "Denne mappe er tom",
+  "libraryNoNotebooksWithTag": "Ingen notesbøger med dette tag",
+  "libraryNoUncategorizedNotebooks": "Ingen notesbøger uden kategori",
+  "libraryNoNotebooksYet": "Ingen notesbøger endnu",
+  "libraryCouldNotLoad": "Kunne ikke indlæse bibliotek: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Sikkerhedskopi og gendannelse",
+  "tooltipTrash": "Papirkurv",
+  "tooltipNewNotebook": "Ny notesbog",
+  "tooltipNewFolder": "Ny mappe",
+  "tooltipNewSubfolder": "Ny undermappe",
+  "tooltipImportPdf": "Importér PDF",
+  "folderNew": "Ny mappe",
+  "folderNewSubfolder": "Ny undermappe",
+  "folderRename": "Omdøb mappe",
+  "folderMoveToTrash": "Flyt til papirkurv",
+  "folderMoveToTrashTitle": "Flyt \"{name}\" til papirkurv?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Mappen og dens notesbøger flyttes til papirkurven i 30 dage.",
+  "notebookNew": "Ny notesbog",
+  "notebookUntitled": "Uden titel",
+  "notebookTitleLabel": "Titel",
+  "notebookSizeLabel": "Størrelse",
+  "notebookPaperLabel": "Papir",
+  "notebookCoverLabel": "Cover",
+  "notebookRename": "Omdøb notesbog",
+  "notebookMoveToFolder": "Flyt til mappe",
+  "notebookEditTags": "Rediger tags",
+  "notebookExportWorkbook": "Eksporter notesbog",
+  "notebookExportWorkbookSubtitle": "Del alle sider som PDF",
+  "notebookMoveToTrash": "Flyt til papirkurv",
+  "notebookMoveToTrashTitle": "Flyt \"{title}\" til papirkurv?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Notesbogen skjules i biblioteket i 30 dage. Blæk og sider forbliver på denne enhed, indtil papirkurven tømmes. Eksporter en sikkerhedskopi først, hvis du vil have en ekstra kopi.",
+  "notebookTagsFor": "Tags til \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Ingen tags endnu. Opret et nedenfor.",
+  "notebookNewTag": "Nyt tag",
+  "notebookAddTag": "Tilføj tag",
+  "notebookNoPagesToExport": "Denne notesbog har ingen sider at eksportere",
+  "notebookExportedAsPdf": "\"{title}\" eksporteret som PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Sikkerhedskopi eksporteret. Du kan flytte til papirkurv, når du er klar.",
+  "importPdfSnack": "Importerer PDF… sider gengives én gang og forbliver derefter offline.",
+  "importFailed": "Import mislykkedes: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Eksport mislykkedes: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Sikkerhedskopi mislykkedes: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Gendannelse mislykkedes: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Gendannelse mislykkedes: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Henter håndskriftmodel (~{sizeMb} MB) i baggrunden…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Tom",
+  "templateLined": "Linjeret",
+  "templateGrid": "Gitter",
+  "templateDotted": "Prikket",
+  "templateCollegeRuled": "College-linjeret",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Stående",
+  "orientationLandscape": "Liggende",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Indstillinger",
+  "settingsSectionLanguage": "Sprog",
+  "settingsSectionAppearanceAndPreferences": "Udseende og præferencer",
+  "settingsSectionAppearance": "Udseende",
+  "settingsAppearanceDarkMode": "Mørk tilstand",
+  "settingsAppearanceDarkModeSubtitle": "Vælg lys, mørk eller følg enheden (standard: system)",
+  "themeSystem": "System",
+  "themeLight": "Lys",
+  "themeDark": "Mørk",
+  "settingsSectionPreferences": "Præferencer",
+  "settingsLanguageLabel": "Appsprog",
+  "languageEnglish": "Engelsk",
+  "languageGerman": "Tysk",
+  "languageFrench": "Fransk",
+  "languageDutch": "Hollandsk",
+  "settingsSectionToolbar": "Værktøjslinje",
+  "settingsToolbarReorderHint": "Træk for at omarrangere tegneværktøjer. Fortryd og gendan forbliver fast til højre.",
+  "settingsResetToolbarOrder": "Nulstil rækkefølge på værktøjslinje",
+  "settingsSectionNotebook": "Notesbog",
+  "settingsPageTurnMode": "Sidevendningstilstand",
+  "settingsPageTurnModeSubtitle": "Stryg én side ad gangen i stedet for løbende rulning (standard: fra)",
+  "settingsZoomNavigation": "Zoomnavigation",
+  "settingsZoomNavigationSubtitle": "Knib for at zoome og panorere på sider (standard: til)",
+  "settingsSectionDrawing": "Tegning",
+  "settingsStrokeSmoothing": "Strøgudjævning",
+  "settingsStrokeSmoothingSubtitle": "Gør blækstrøg glattere med Chaikin-hjørneskæring (standard: til)",
+  "settingsStrokeSmoothingStrength": "Udjævningsstyrke",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — lavere bevarer finere detaljer; anbefalet {recommended} %",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Tegning med finger",
+  "settingsFingerDrawingSubtitle": "Tegn med finger på papiret; når fra, tegner kun stylus (standard: fra)",
+  "settingsGestureInkEditing": "Gestusblækredigering",
+  "settingsGestureInkEditingSubtitle": "Skrab over OCR-indekseret blæk for at slette det (standard: til)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Hold S Pen-sideknappen nede for midlertidigt at skifte værktøj. Slip for at gendanne dit forrige værktøj. Virker på Samsung-enheder med sideknap-understøttelse.",
+  "settingsSpenBarrelAction": "Sideknap-handling",
+  "settingsSectionOcrDictionary": "OCR-ordliste",
+  "settingsOcrDictionaryHint": "Fagtermer til håndskrift-OCR. Tætte matches rettes, når blæk indekseres, og termer booster notesbogssøgning.",
+  "settingsNoCustomOcrTerms": "Ingen brugerdefinerede termer endnu.",
+  "settingsRemoveOcrTerm": "Fjern term",
+  "settingsAddOcrTerm": "Tilføj term",
+  "settingsAddOcrTermTitle": "Tilføj OCR-term",
+  "settingsOcrTermLabel": "Term",
+  "settingsOcrTermHint": "f.eks. egenværdi, mitokondrie",
+  "settingsSectionYourData": "Dine data",
+  "settingsYourDataHint": "Penfold gemmer alt på denne enhed i én SQLite-database og aktivmapper — ingen cloudsynkronisering. Se docs/ARCHITECTURE.md for det fulde lokale fillayout.",
+  "settingsDatabase": "Database",
+  "settingsSectionBackupRestore": "Sikkerhedskopi og gendannelse",
+  "settingsBackupRestoreHint": "Eksporter en zip med penfold.db og aktivmapper, eller gendan fra en tidligere sikkerhedskopi. Din nuværende database gemmes i backups/ før gendannelse.",
+  "settingsExportBackup": "Eksporter sikkerhedskopi",
+  "settingsExportBackupSubtitle": "Zip penfold.db, PDF-kilder, billeder og ældre PDF-sider",
+  "settingsRecoverFromBackup": "Gendan fra sikkerhedskopi",
+  "settingsLatestAutoBackup": "Seneste autosikkerhedskopi: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Gendan sikkerhedskopi",
+  "settingsRestoreBackupSubtitle": "Erstat lokale data fra en Penfold-sikkerhedskopi-zip",
+  "settingsRecoverAutoBackupTitle": "Gendan fra autosikkerhedskopi?",
+  "settingsRecoverAutoBackupBody": "Dette erstatter dine nuværende notesbøger og filer med sikkerhedskopien fra {timestamp}. Din nuværende database gemmes i backups/ før gendannelse.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Gendan sikkerhedskopi?",
+  "settingsRestoreBackupBody": "Dette erstatter dine nuværende notesbøger og filer. Din nuværende database gemmes i backups/ før gendannelse.",
+  "settingsSectionAbout": "Om",
+  "settingsAboutSubtitle": "Lokal-først håndskriftsnotesbog — ingen konti, ingen cloud.",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Viskelæder",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Pen",
+  "spenActionNone": "Ingen",
+  "toolPen": "Pen",
+  "toolHighlighter": "Overstregningstusch",
+  "toolTape": "Tape",
+  "toolEraser": "Viskelæder",
+  "toolSelection": "Markering",
+  "toolLasso": "Lasso",
+  "toolShape": "Form",
+  "toolFill": "Fyld",
+  "toolText": "Tekst",
+  "toolInsertImage": "Indsæt billede",
+  "brushPen": "Pen",
+  "brushFountain": "Fyldepen",
+  "brushPencil": "Blyant",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Kalligrafi",
+  "toolbarPreviousBookmark": "Forrige bogmærke",
+  "toolbarNextBookmark": "Næste bogmærke",
+  "toolbarConvertToText": "Konvertér til tekst",
+  "toolbarCopy": "Kopiér",
+  "toolbarDelete": "Slet",
+  "toolbarPaste": "Indsæt",
+  "toolbarUndo": "Fortryd",
+  "toolbarRedo": "Gentag",
+  "toolbarAddPage": "Tilføj side",
+  "toolbarStylusOnly": "Kun stylus (håndfladeafvisning)",
+  "toolbarFingerDrawing": "Tegning med finger",
+  "toolbarPageOverview": "Sideoversigt",
+  "toolbarTableOfContents": "Indholdsfortegnelse",
+  "toolbarPageMenu": "Sidemenu",
+  "penOptionsTitle": "Pen",
+  "highlighterOptionsTitle": "Overstregningstusch",
+  "brushLabel": "Pensel",
+  "colorLabel": "Farve",
+  "customColorTitle": "Brugerdefineret farve",
+  "hueLabel": "Nuance",
+  "saturationLabel": "Mætning",
+  "brightnessLabel": "Lysstyrke",
+  "tapeOptionsTitle": "Tape",
+  "tapeOptionsHint": "Tegn for at dække noter; tryk på tape for at vise eller skjule igen",
+  "fillColorTitle": "Fyldfarve",
+  "fillOptionsHint": "Tegn en lukket løkke, eller tryk inde i en form for at fylde",
+  "eraserSizeTitle": "Viskelæderstørrelse",
+  "eraserModeTitle": "Viskelædertilstand",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Strøg",
+  "eraserModePartialHint": "Sletter kun blæk under viskelædercirklen",
+  "eraserModeWholeStrokeHint": "Sletter hele strøg, den rører",
+  "eraseAllOnPageTitle": "Slet alt på siden?",
+  "eraseAllOnPageBody": "Dette fjerner alle strøg på den nuværende side. Du kan fortryde denne handling.",
+  "eraseAllOnPageButton": "Slet alt på siden",
+  "pageSettingsTitle": "Sideindstillinger",
+  "pageColorTitle": "Sidefarve",
+  "pageThemeTitle": "Sidetema",
+  "defaultPaperSize": "Standard papirstørrelse",
+  "defaultPaperType": "Standard papirtype",
+  "defaultPageTheme": "Standard sidetema",
+  "notebookDefaultsHint": "Bruges, når du opretter en ny notesbog. Du kan stadig ændre valg i dialogen.",
+  "pageThemeLight": "Lys",
+  "pageThemeDark": "Mørk",
+  "pageThemeSepia": "Sepia",
+  "pageThemePastelPink": "Pastelrosa",
+  "pageThemePastelBlue": "Pastelblå",
+  "pageThemePastelMint": "Pastelmint",
+  "pageSizeTitle": "Sidestørrelse",
+  "pageOrientationTitle": "Retning",
+  "pageTemplateTitle": "Sideskabelon",
+  "pageBookmark": "Bogmærke",
+  "pageRemoveBookmark": "Fjern bogmærke",
+  "pageAudioTitle": "Lyd",
+  "pageSplit": "Opdel",
+  "pageExportTitle": "Eksport",
+  "pdfPagesKeepBackground": "PDF-sider beholder dokumentets baggrund",
+  "pdfPagesKeepDimensions": "PDF-sider beholder dokumentets dimensioner",
+  "pdfPagesKeepOrientation": "PDF-sider beholder dokumentets retning",
+  "exportPageAsPng": "Eksporter side som PNG",
+  "exportPageAsPngSubtitle": "Del billede af denne side",
+  "exportPageAsPdf": "Eksporter side som PDF",
+  "exportPageAsPdfSubtitle": "Vektorblæk, del via systemark",
+  "exportNotebookAsPdf": "Eksporter notesbog som PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 side} other{{count} sider}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Vedhæft lydfil",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV og andre lokale formater",
+  "pageAudioAttachedToPage": "Vedhæftet til denne side",
+  "pageAudioReplace": "Erstat lydfil",
+  "pageAudioRemove": "Fjern lyd",
+  "pageAudioPlay": "Afspil",
+  "pageAudioPause": "Pause",
+  "contentsTitle": "Indhold",
+  "contentsSubtitle": "Overskrifter fra indtastet tekst og OCR-indekseret blæk",
+  "contentsEmpty": "Ingen overskrifter fundet endnu.\nTilføj stor eller kort indtastet tekst, eller OCR-indekserede blækoverskrifter.",
+  "contentsPageNumber": "Side {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Sider",
+  "pageOverviewSelected": "{count} valgt",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Slet valgte",
+  "pageOverviewSelectPages": "Vælg sider",
+  "pageOverviewKeepOnePage": "Behold mindst én side",
+  "pageOverviewDeleteTitle": "Slet {count, plural, =1{1 side} other{{count} sider}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Dette kan ikke fortrydes.",
+  "pageOverviewDragToReorder": "Træk for at omarrangere",
+  "pageOverviewBookmarked": "Bogmærket",
+  "ocrIndexing": "OCR-indekserer…",
+  "ocrHandwritingSearchable": "Håndskrift kan søges",
+  "ocrPartial": "OCR delvis",
+  "trashTitle": "Papirkurv",
+  "trashFailedToLoad": "Kunne ikke indlæse papirkurv: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Papirkurven er tom",
+  "trashSectionFolders": "Mapper",
+  "trashSectionNotebooks": "Notesbøger",
+  "trashDeletionDateUnavailable": "Sletningsdato utilgængelig",
+  "trashExpiresToday": "Udløber i dag",
+  "trashDaysRemaining": "{count, plural, =1{1 dag tilbage} other{{count} dage tilbage}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Gendan",
+  "trashDeleteNotebookTitle": "Slet \"{title}\" permanent?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Dette fjerner notesbogen og alle sider fra denne enhed.",
+  "trashDeleteFolderTitle": "Slet \"{name}\" permanent?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Dette fjerner mappen og dens notesbøger fra denne enhed.",
+  "splitPageTitle": "Opdel side?",
+  "splitPageBody": "Opret en ny side med samme skabelon og flyt cirka halvdelen af de {count} strøg over på den.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Mindst 2 strøg kræves for at opdele denne side",
+  "splitPageSuccess": "Side opdelt: {moved} strøg flyttet, {remaining} tilbage",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Opdeling mislykkedes: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Opdel side",
+  "changePageSizeTitle": "Skift sidestørrelse?",
+  "changePageSizeBody": "Denne side har blæk. Ændring af størrelsen omarrangerer siden; dit blæk forbliver på samme position på siden.",
+  "changeOrientationTitle": "Skift retning?",
+  "changeOrientationBody": "Denne side har blæk. Ændring af retning skalerer og centrerer dit indhold, så det passer til de nye sidegrænser.",
+  "convertedToText": "Konverteret til tekst: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Kunne ikke genkende håndskrift",
+  "handwritingModelTitle": "Håndskriftmodel",
+  "handwritingModelDownloadFailed": "Download mislykkedes. Tjek netværk og prøv igen.",
+  "handwritingModelDownloading": "Henter engelsk håndskriftmodel (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Model klar.",
+  "handwritingModelElapsed": "Forløbet: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Førstegangsdownload (~{sizeMb} MB). Slutter normalt på under to minutter over Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Side eksporteret som PNG",
+  "pageExportedAsPdf": "Side eksporteret som PDF",
+  "notebookExportedAsPdfSnack": "Notesbog eksporteret som PDF",
+  "exportPreparing": "Forbereder eksport…",
+  "exportProgress": "Eksporterer side {current} af {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Denne side har {count} strøg og kan føles langsom. Overvej at opdele den for bedre ydeevne.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Eksport blokeret: en side har {count} strøg (grænse {limit}). Opdel tunge sider først.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Gendannelse fuldført. Genstart appen for at indlæse de gendannede data.",
+  "textToolHint": "Skriv her…",
+  "textToolDone": "Færdig",
+  "languageKorean": "Koreansk",
+  "languagePolish": "Polsk",
+  "languageSpanish": "Spansk",
+  "languageItalian": "Italiensk",
+  "languageUkrainian": "Ukrainsk",
+  "languageSwedish": "Svensk",
+  "languageNorwegian": "Norsk",
+  "languageFinnish": "Finsk",
+  "languageDanish": "Dansk",
+  "languagePortuguese": "Portugisisk"
+}

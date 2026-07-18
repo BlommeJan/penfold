@@ -1021,4 +1021,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get textToolDone => 'Done';
+
+  @override
+  String get languageKorean => 'Korean';
+
+  @override
+  String get languagePolish => 'Polish';
+
+  @override
+  String get languageSpanish => 'Spanish';
+
+  @override
+  String get languageItalian => 'Italian';
+
+  @override
+  String get languageUkrainian => 'Ukrainian';
+
+  @override
+  String get languageSwedish => 'Swedish';
+
+  @override
+  String get languageNorwegian => 'Norwegian';
+
+  @override
+  String get languageFinnish => 'Finnish';
+
+  @override
+  String get languageDanish => 'Danish';
+
+  @override
+  String get languagePortuguese => 'Portuguese';
 }

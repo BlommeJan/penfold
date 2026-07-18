@@ -1,0 +1,557 @@
+{
+  "@@locale": "de",
+  "appTitle": "Penfold",
+  "actionCancel": "Abbrechen",
+  "actionCreate": "Erstellen",
+  "actionRename": "Umbenennen",
+  "actionSave": "Speichern",
+  "actionDelete": "Löschen",
+  "actionAdd": "Hinzufügen",
+  "actionBack": "Zurück",
+  "actionDone": "Fertig",
+  "actionSplit": "Teilen",
+  "actionRecover": "Wiederherstellen",
+  "actionRestore": "Zurücksetzen",
+  "actionExport": "Exportieren",
+  "actionRetry": "Erneut versuchen",
+  "actionRetrying": "Wird wiederholt…",
+  "actionExportFirst": "Zuerst exportieren",
+  "actionEraseAll": "Alles löschen",
+  "actionChangeSize": "Größe ändern",
+  "actionChangeOrientation": "Ausrichtung ändern",
+  "actionUseColor": "Farbe verwenden",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Übersicht",
+  "libraryTrash": "Papierkorb",
+  "librarySettings": "Einstellungen",
+  "libraryFolders": "Ordner",
+  "libraryNoFoldersYet": "Noch keine Ordner",
+  "libraryAll": "Alle",
+  "libraryUncategorized": "Ohne Kategorie",
+  "libraryBreadcrumb": "Bibliothek",
+  "librarySearchHint": "Notizbücher und getippten Text durchsuchen…",
+  "libraryNoMatches": "Keine Treffer",
+  "libraryFolderEmpty": "Dieser Ordner ist leer",
+  "libraryNoNotebooksWithTag": "Keine Notizbücher mit diesem Tag",
+  "libraryNoUncategorizedNotebooks": "Keine Notizbücher ohne Kategorie",
+  "libraryNoNotebooksYet": "Noch keine Notizbücher",
+  "libraryCouldNotLoad": "Bibliothek konnte nicht geladen werden: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Sicherung & Wiederherstellung",
+  "tooltipTrash": "Papierkorb",
+  "tooltipNewNotebook": "Neues Notizbuch",
+  "tooltipNewFolder": "Neuer Ordner",
+  "tooltipNewSubfolder": "Neuer Unterordner",
+  "tooltipImportPdf": "PDF importieren",
+  "folderNew": "Neuer Ordner",
+  "folderNewSubfolder": "Neuer Unterordner",
+  "folderRename": "Ordner umbenennen",
+  "folderMoveToTrash": "In Papierkorb verschieben",
+  "folderMoveToTrashTitle": "„{name}“ in Papierkorb verschieben?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Der Ordner und seine Notizbücher werden 30 Tage im Papierkorb aufbewahrt.",
+  "notebookNew": "Neues Notizbuch",
+  "notebookUntitled": "Ohne Titel",
+  "notebookTitleLabel": "Titel",
+  "notebookSizeLabel": "Größe",
+  "notebookPaperLabel": "Papier",
+  "notebookCoverLabel": "Umschlag",
+  "notebookRename": "Notizbuch umbenennen",
+  "notebookMoveToFolder": "In Ordner verschieben",
+  "notebookEditTags": "Tags bearbeiten",
+  "notebookExportWorkbook": "Arbeitsmappe exportieren",
+  "notebookExportWorkbookSubtitle": "Alle Seiten als PDF teilen",
+  "notebookMoveToTrash": "In Papierkorb verschieben",
+  "notebookMoveToTrashTitle": "„{title}“ in Papierkorb verschieben?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Das Notizbuch wird 30 Tage aus der Bibliothek ausgeblendet. Tinte und Seiten bleiben auf diesem Gerät, bis der Papierkorb geleert wird. Exportieren Sie vorher eine Sicherung, wenn Sie eine zusätzliche Kopie möchten.",
+  "notebookTagsFor": "Tags für „{title}“",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Noch keine Tags. Erstellen Sie unten einen.",
+  "notebookNewTag": "Neuer Tag",
+  "notebookAddTag": "Tag hinzufügen",
+  "notebookNoPagesToExport": "Dieses Notizbuch hat keine Seiten zum Exportieren",
+  "notebookExportedAsPdf": "„{title}“ als PDF exportiert",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Sicherung exportiert. Sie können das Notizbuch verschieben, wenn Sie bereit sind.",
+  "importPdfSnack": "PDF wird importiert… Seiten werden einmal gerendert und bleiben dann offline.",
+  "importFailed": "Import fehlgeschlagen: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Export fehlgeschlagen: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Sicherung fehlgeschlagen: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Wiederherstellung fehlgeschlagen: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Zurücksetzen fehlgeschlagen: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Handschriftmodell (~{sizeMb} MB) wird im Hintergrund heruntergeladen…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Leer",
+  "templateLined": "Liniert",
+  "templateGrid": "Kariert",
+  "templateDotted": "Gepunktet",
+  "templateCollegeRuled": "College-Liniert",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Hochformat",
+  "orientationLandscape": "Querformat",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Einstellungen",
+  "settingsSectionLanguage": "Sprache",
+  "settingsSectionAppearanceAndPreferences": "Erscheinungsbild & Einstellungen",
+  "settingsSectionAppearance": "Erscheinungsbild",
+  "settingsAppearanceDarkMode": "Dunkelmodus",
+  "settingsAppearanceDarkModeSubtitle": "Hell, dunkel oder Systemeinstellung verwenden (Standard: System)",
+  "themeSystem": "System",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel",
+  "settingsSectionPreferences": "Präferenzen",
+  "settingsLanguageLabel": "App-Sprache",
+  "languageEnglish": "Englisch",
+  "languageGerman": "Deutsch",
+  "languageFrench": "Französisch",
+  "languageDutch": "Niederländisch",
+  "settingsSectionToolbar": "Symbolleiste",
+  "settingsToolbarReorderHint": "Zeichenwerkzeuge per Drag & Drop sortieren. Rückgängig und Wiederholen bleiben rechts fixiert.",
+  "settingsResetToolbarOrder": "Symbolleisten-Reihenfolge zurücksetzen",
+  "settingsSectionNotebook": "Notizbuch",
+  "settingsPageTurnMode": "Blättermodus",
+  "settingsPageTurnModeSubtitle": "Seite für Seite wischen statt durchgehend scrollen (Standard: aus)",
+  "settingsZoomNavigation": "Zoom-Navigation",
+  "settingsZoomNavigationSubtitle": "Seiten zoomen und verschieben per Pinch (Standard: an)",
+  "settingsSectionDrawing": "Zeichnen",
+  "settingsStrokeSmoothing": "Strichglättung",
+  "settingsStrokeSmoothingSubtitle": "Tintenstriche mit Chaikin-Glättung verbessern (Standard: an)",
+  "settingsStrokeSmoothingStrength": "Glättungsstärke",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — niedrigere Werte behalten mehr Details; empfohlen {recommended} %",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Zeichnen mit dem Finger",
+  "settingsFingerDrawingSubtitle": "Mit dem Finger auf dem Papier zeichnen; ausgeschaltet zeichnet nur der Stift (Standard: aus)",
+  "settingsGestureInkEditing": "Gesten-Tintenbearbeitung",
+  "settingsGestureInkEditingSubtitle": "OCR-indizierte Tinte durchstreichen, um sie zu löschen (Standard: an)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Halten Sie die S-Pen-Seitentaste, um vorübergehend das Werkzeug zu wechseln. Loslassen stellt das vorherige Werkzeug wieder her. Funktioniert auf Samsung-Geräten mit Seitentasten-Unterstützung.",
+  "settingsSpenBarrelAction": "Seitentasten-Aktion",
+  "settingsSectionOcrDictionary": "OCR-Wörterbuch",
+  "settingsOcrDictionaryHint": "Fachbegriffe für Handschrift-OCR. Ähnliche Treffer werden bei der Tintenindizierung korrigiert, und Begriffe verbessern die Notizbuchsuche.",
+  "settingsNoCustomOcrTerms": "Noch keine eigenen Begriffe.",
+  "settingsRemoveOcrTerm": "Begriff entfernen",
+  "settingsAddOcrTerm": "Begriff hinzufügen",
+  "settingsAddOcrTermTitle": "OCR-Begriff hinzufügen",
+  "settingsOcrTermLabel": "Begriff",
+  "settingsOcrTermHint": "z. B. Eigenwert, Mitochondrium",
+  "settingsSectionYourData": "Ihre Daten",
+  "settingsYourDataHint": "Penfold speichert alles auf diesem Gerät in einer SQLite-Datenbank und Asset-Ordnern — ohne Cloud-Synchronisation. Siehe docs/ARCHITECTURE.md für die vollständige lokale Dateistruktur.",
+  "settingsDatabase": "Datenbank",
+  "settingsSectionBackupRestore": "Sicherung & Wiederherstellung",
+  "settingsBackupRestoreHint": "Exportieren Sie ein Zip mit penfold.db und Asset-Ordnern oder stellen Sie aus einer früheren Sicherung wieder her. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "settingsExportBackup": "Sicherung exportieren",
+  "settingsExportBackupSubtitle": "penfold.db, PDF-Quellen, Bilder und ältere PDF-Seiten als Zip",
+  "settingsRecoverFromBackup": "Aus Sicherung wiederherstellen",
+  "settingsLatestAutoBackup": "Neueste Auto-Sicherung: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Sicherung zurücksetzen",
+  "settingsRestoreBackupSubtitle": "Lokale Daten aus einer Penfold-Sicherungs-Zip ersetzen",
+  "settingsRecoverAutoBackupTitle": "Aus Auto-Sicherung wiederherstellen?",
+  "settingsRecoverAutoBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien durch die Sicherung vom {timestamp}. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Sicherung zurücksetzen?",
+  "settingsRestoreBackupBody": "Dies ersetzt Ihre aktuellen Notizbücher und Dateien. Ihre aktuelle Datenbank wird vor dem Zurücksetzen in backups/ gesichert.",
+  "settingsSectionAbout": "Über",
+  "settingsAboutSubtitle": "Lokales Handschrift-Notizbuch — ohne Konten, ohne Cloud.",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Radierer",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Stift",
+  "spenActionNone": "Keine",
+  "toolPen": "Stift",
+  "toolHighlighter": "Textmarker",
+  "toolTape": "Abdeckband",
+  "toolEraser": "Radierer",
+  "toolSelection": "Auswahl",
+  "toolLasso": "Lasso",
+  "toolShape": "Form",
+  "toolFill": "Füllen",
+  "toolText": "Text",
+  "toolInsertImage": "Bild einfügen",
+  "brushPen": "Stift",
+  "brushFountain": "Füller",
+  "brushPencil": "Bleistift",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Kalligrafie",
+  "toolbarPreviousBookmark": "Vorheriges Lesezeichen",
+  "toolbarNextBookmark": "Nächstes Lesezeichen",
+  "toolbarConvertToText": "In Text umwandeln",
+  "toolbarCopy": "Kopieren",
+  "toolbarDelete": "Löschen",
+  "toolbarPaste": "Einfügen",
+  "toolbarUndo": "Rückgängig",
+  "toolbarRedo": "Wiederholen",
+  "toolbarAddPage": "Seite hinzufügen",
+  "toolbarStylusOnly": "Nur Stift (Handballen-Erkennung)",
+  "toolbarFingerDrawing": "Zeichnen mit dem Finger",
+  "toolbarPageOverview": "Seitenübersicht",
+  "toolbarTableOfContents": "Inhaltsverzeichnis",
+  "toolbarPageMenu": "Seitenmenü",
+  "penOptionsTitle": "Stift",
+  "highlighterOptionsTitle": "Textmarker",
+  "brushLabel": "Stiftart",
+  "colorLabel": "Farbe",
+  "customColorTitle": "Eigene Farbe",
+  "hueLabel": "Farbton",
+  "saturationLabel": "Sättigung",
+  "brightnessLabel": "Helligkeit",
+  "tapeOptionsTitle": "Abdeckband",
+  "tapeOptionsHint": "Ziehen, um Notizen zu verdecken; auf das Band tippen, um wieder anzuzeigen oder zu verbergen",
+  "fillColorTitle": "Füllfarbe",
+  "fillOptionsHint": "Eine geschlossene Form zeichnen oder in eine Form tippen, um sie zu füllen",
+  "eraserSizeTitle": "Radierergröße",
+  "eraserModeTitle": "Radierermodus",
+  "eraserModePixel": "Pixel",
+  "eraserModeStroke": "Strich",
+  "eraserModePartialHint": "Löscht nur Tinte unter dem Radiererkreis",
+  "eraserModeWholeStrokeHint": "Löscht ganze Striche, die berührt werden",
+  "eraseAllOnPageTitle": "Alles auf der Seite löschen?",
+  "eraseAllOnPageBody": "Dies entfernt jeden Strich auf der aktuellen Seite. Sie können diese Aktion rückgängig machen.",
+  "eraseAllOnPageButton": "Alles auf der Seite löschen",
+  "pageSettingsTitle": "Seiteneinstellungen",
+  "pageColorTitle": "Seitenfarbe",
+  "pageThemeTitle": "Seitenthema",
+  "defaultPaperSize": "Standard-Papiergröße",
+  "defaultPaperType": "Standard-Papiertyp",
+  "defaultPageTheme": "Standard-Seitenthema",
+  "notebookDefaultsHint": "Wird beim Erstellen eines neuen Notizbuchs verwendet. Sie können die Auswahl im Dialog weiterhin ändern.",
+  "pageThemeLight": "Hell",
+  "pageThemeDark": "Dunkel",
+  "pageThemeSepia": "Sepia",
+  "pageThemePastelPink": "Pastellrosa",
+  "pageThemePastelBlue": "Pastellblau",
+  "pageThemePastelMint": "Pastellmint",
+  "pageSizeTitle": "Seitengröße",
+  "pageOrientationTitle": "Ausrichtung",
+  "pageTemplateTitle": "Seitenvorlage",
+  "pageBookmark": "Lesezeichen",
+  "pageRemoveBookmark": "Lesezeichen entfernen",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Teilen",
+  "pageExportTitle": "Exportieren",
+  "pdfPagesKeepBackground": "PDF-Seiten behalten ihren Dokumenthintergrund",
+  "pdfPagesKeepDimensions": "PDF-Seiten behalten ihre Dokumentmaße",
+  "pdfPagesKeepOrientation": "PDF-Seiten behalten ihre Dokumentausrichtung",
+  "exportPageAsPng": "Seite als PNG exportieren",
+  "exportPageAsPngSubtitle": "Bild dieser Seite teilen",
+  "exportPageAsPdf": "Seite als PDF exportieren",
+  "exportPageAsPdfSubtitle": "Vektor-Tinte, über Systemdialog teilen",
+  "exportNotebookAsPdf": "Notizbuch als PDF exportieren",
+  "exportNotebookPageCount": "{count, plural, =1{1 Seite} other{{count} Seiten}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Audiodatei anhängen",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV und andere lokale Formate",
+  "pageAudioAttachedToPage": "An diese Seite angehängt",
+  "pageAudioReplace": "Audiodatei ersetzen",
+  "pageAudioRemove": "Audio entfernen",
+  "pageAudioPlay": "Abspielen",
+  "pageAudioPause": "Pausieren",
+  "contentsTitle": "Inhalt",
+  "contentsSubtitle": "Überschriften aus getipptem Text und OCR-indizierter Tinte",
+  "contentsEmpty": "Noch keine Überschriften gefunden.\nFügen Sie großen oder kleinen getippten Text oder OCR-indizierte Tintenüberschriften hinzu.",
+  "contentsPageNumber": "Seite {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Seiten",
+  "pageOverviewSelected": "{count} ausgewählt",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Auswahl löschen",
+  "pageOverviewSelectPages": "Seiten auswählen",
+  "pageOverviewKeepOnePage": "Mindestens eine Seite behalten",
+  "pageOverviewDeleteTitle": "{count, plural, =1{1 Seite} other{{count} Seiten}} löschen?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Dies kann nicht rückgängig gemacht werden.",
+  "pageOverviewDragToReorder": "Zum Sortieren ziehen",
+  "pageOverviewBookmarked": "Mit Lesezeichen",
+  "ocrIndexing": "OCR-Indizierung…",
+  "ocrHandwritingSearchable": "Handschrift durchsuchbar",
+  "ocrPartial": "OCR unvollständig",
+  "trashTitle": "Papierkorb",
+  "trashFailedToLoad": "Papierkorb konnte nicht geladen werden: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Papierkorb ist leer",
+  "trashSectionFolders": "Ordner",
+  "trashSectionNotebooks": "Notizbücher",
+  "trashDeletionDateUnavailable": "Löschdatum nicht verfügbar",
+  "trashExpiresToday": "Läuft heute ab",
+  "trashDaysRemaining": "{count, plural, =1{1 Tag verbleibend} other{{count} Tage verbleibend}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Wiederherstellen",
+  "trashDeleteNotebookTitle": "„{title}“ endgültig löschen?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Dies entfernt das Notizbuch und alle Seiten von diesem Gerät.",
+  "trashDeleteFolderTitle": "„{name}“ endgültig löschen?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Dies entfernt den Ordner und seine Notizbücher von diesem Gerät.",
+  "splitPageTitle": "Seite teilen?",
+  "splitPageBody": "Eine neue Seite mit derselben Vorlage erstellen und etwa die Hälfte der {count} Striche darauf verschieben.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Mindestens 2 Striche nötig, um diese Seite zu teilen",
+  "splitPageSuccess": "Seite geteilt: {moved} Striche verschoben, {remaining} verbleiben",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Teilen fehlgeschlagen: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Seite teilen",
+  "changePageSizeTitle": "Seitengröße ändern?",
+  "changePageSizeBody": "Diese Seite enthält Tinte. Beim Ändern der Größe wird das Layout neu berechnet; Ihre Tinte bleibt an derselben Position auf der Seite.",
+  "changeOrientationTitle": "Ausrichtung ändern?",
+  "changeOrientationBody": "Diese Seite enthält Tinte. Beim Ändern der Ausrichtung wird der Inhalt skaliert und zentriert, um in die neuen Seitenmaße zu passen.",
+  "convertedToText": "In Text umgewandelt: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Handschrift konnte nicht erkannt werden",
+  "handwritingModelTitle": "Handschriftmodell",
+  "handwritingModelDownloadFailed": "Download fehlgeschlagen. Netzwerk prüfen und erneut versuchen.",
+  "handwritingModelDownloading": "Englisches Handschriftmodell (~{sizeMb} MB) wird heruntergeladen…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Modell bereit.",
+  "handwritingModelElapsed": "Verstrichen: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Erstmaliger Download (~{sizeMb} MB). Dauert per WLAN meist unter zwei Minuten.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Seite als PNG exportiert",
+  "pageExportedAsPdf": "Seite als PDF exportiert",
+  "notebookExportedAsPdfSnack": "Notizbuch als PDF exportiert",
+  "exportPreparing": "Export wird vorbereitet…",
+  "exportProgress": "Seite {current} von {total} wird exportiert…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Diese Seite hat {count} Striche und kann langsam wirken. Teilen Sie die Seite für bessere Leistung.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Export blockiert: Eine Seite hat {count} Striche (Limit {limit}). Teilen Sie zuerst schwere Seiten.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Zurücksetzen abgeschlossen. Bitte starten Sie die App neu, um die wiederhergestellten Daten zu laden.",
+  "textToolHint": "Hier tippen…",
+  "textToolDone": "Fertig",
+  "languageKorean": "Koreanisch",
+  "languagePolish": "Polnisch",
+  "languageSpanish": "Spanisch",
+  "languageItalian": "Italienisch",
+  "languageUkrainian": "Ukrainisch",
+  "languageSwedish": "Schwedisch",
+  "languageNorwegian": "Norwegisch",
+  "languageFinnish": "Finnisch",
+  "languageDanish": "Dänisch",
+  "languagePortuguese": "Portugiesisch"
+}

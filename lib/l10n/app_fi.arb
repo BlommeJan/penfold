@@ -1,0 +1,557 @@
+{
+  "@@locale": "fi",
+  "appTitle": "Penfold",
+  "actionCancel": "Peruuta",
+  "actionCreate": "Luo",
+  "actionRename": "Nimeä uudelleen",
+  "actionSave": "Tallenna",
+  "actionDelete": "Poista",
+  "actionAdd": "Lisää",
+  "actionBack": "Takaisin",
+  "actionDone": "Valmis",
+  "actionSplit": "Jaa",
+  "actionRecover": "Palauta",
+  "actionRestore": "Palauta",
+  "actionExport": "Vie",
+  "actionRetry": "Yritä uudelleen",
+  "actionRetrying": "Yritetään uudelleen…",
+  "actionExportFirst": "Vie ensin",
+  "actionEraseAll": "Pyyhi kaikki",
+  "actionChangeSize": "Vaihda koko",
+  "actionChangeOrientation": "Vaihda suunta",
+  "actionUseColor": "Käytä väriä",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Yleiskatsaus",
+  "libraryTrash": "Roskakori",
+  "librarySettings": "Asetukset",
+  "libraryFolders": "Kansiot",
+  "libraryNoFoldersYet": "Ei kansioita vielä",
+  "libraryAll": "Kaikki",
+  "libraryUncategorized": "Luokittelemattomat",
+  "libraryBreadcrumb": "Kirjasto",
+  "librarySearchHint": "Hae muistikirjoja ja kirjoitettua tekstiä…",
+  "libraryNoMatches": "Ei tuloksia",
+  "libraryFolderEmpty": "Tämä kansio on tyhjä",
+  "libraryNoNotebooksWithTag": "Ei muistikirjoja tällä tunnisteella",
+  "libraryNoUncategorizedNotebooks": "Ei luokittelemattomia muistikirjoja",
+  "libraryNoNotebooksYet": "Ei muistikirjoja vielä",
+  "libraryCouldNotLoad": "Kirjastoa ei voitu ladata: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Varmuuskopiointi ja palautus",
+  "tooltipTrash": "Roskakori",
+  "tooltipNewNotebook": "Uusi muistikirja",
+  "tooltipNewFolder": "Uusi kansio",
+  "tooltipNewSubfolder": "Uusi alikansio",
+  "tooltipImportPdf": "Tuo PDF",
+  "folderNew": "Uusi kansio",
+  "folderNewSubfolder": "Uusi alikansio",
+  "folderRename": "Nimeä kansio uudelleen",
+  "folderMoveToTrash": "Siirrä roskakoriin",
+  "folderMoveToTrashTitle": "Siirretäänkö \"{name}\" roskakoriin?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Kansio ja sen muistikirjat siirtyvät roskakoriin 30 päiväksi.",
+  "notebookNew": "Uusi muistikirja",
+  "notebookUntitled": "Nimetön",
+  "notebookTitleLabel": "Otsikko",
+  "notebookSizeLabel": "Koko",
+  "notebookPaperLabel": "Paperi",
+  "notebookCoverLabel": "Kansi",
+  "notebookRename": "Nimeä muistikirja uudelleen",
+  "notebookMoveToFolder": "Siirrä kansioon",
+  "notebookEditTags": "Muokkaa tunnisteita",
+  "notebookExportWorkbook": "Vie muistikirja",
+  "notebookExportWorkbookSubtitle": "Jaa kaikki sivut PDF:nä",
+  "notebookMoveToTrash": "Siirrä roskakoriin",
+  "notebookMoveToTrashTitle": "Siirretäänkö \"{title}\" roskakoriin?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Muistikirja piilotetaan kirjastosta 30 päiväksi. Piirrot ja sivut säilyvät laitteella, kunnes roskakori tyhjennetään. Vie varmuuskopio ensin, jos haluat ylimääräisen kopion.",
+  "notebookTagsFor": "Tunnisteet kohteelle \"{title}\"",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Ei tunnisteita vielä. Luo uusi alla.",
+  "notebookNewTag": "Uusi tunniste",
+  "notebookAddTag": "Lisää tunniste",
+  "notebookNoPagesToExport": "Tässä muistikirjassa ei ole vietäviä sivuja",
+  "notebookExportedAsPdf": "\"{title}\" viety PDF:nä",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Varmuuskopio viety. Voit siirtää roskakoriin, kun olet valmis.",
+  "importPdfSnack": "Tuodaan PDF… sivut renderöidään kerran ja pysyvät sen jälkeen offline-tilassa.",
+  "importFailed": "Tuonti epäonnistui: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Vienti epäonnistui: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Varmuuskopiointi epäonnistui: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Palautus epäonnistui: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Palautus epäonnistui: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Ladataan käsialamallia (~{sizeMb} Mt) taustalla…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Tyhjä",
+  "templateLined": "Viivallinen",
+  "templateGrid": "Ruudukko",
+  "templateDotted": "Pisteviivallinen",
+  "templateCollegeRuled": "Yliopistoviivallinen",
+  "templateCollegeShort": "Yliopisto",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Pysty",
+  "orientationLandscape": "Vaaka",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Asetukset",
+  "settingsSectionLanguage": "Kieli",
+  "settingsSectionAppearanceAndPreferences": "Ulkoasu ja preferenssit",
+  "settingsSectionAppearance": "Ulkoasu",
+  "settingsAppearanceDarkMode": "Tumma tila",
+  "settingsAppearanceDarkModeSubtitle": "Valitse vaalea, tumma tai seuraa laitetta (järjestelmäoletus)",
+  "themeSystem": "Järjestelmä",
+  "themeLight": "Vaalea",
+  "themeDark": "Tumma",
+  "settingsSectionPreferences": "Preferenssit",
+  "settingsLanguageLabel": "Sovelluksen kieli",
+  "languageEnglish": "Englanti",
+  "languageGerman": "Saksa",
+  "languageFrench": "Ranska",
+  "languageDutch": "Hollanti",
+  "settingsSectionToolbar": "Työkalupalkki",
+  "settingsToolbarReorderHint": "Järjestä piirtotyökalut vetämällä. Kumoa ja tee uudelleen pysyvät oikealla.",
+  "settingsResetToolbarOrder": "Palauta työkalupalkin järjestys",
+  "settingsSectionNotebook": "Muistikirja",
+  "settingsPageTurnMode": "Sivunvaihtotila",
+  "settingsPageTurnModeSubtitle": "Pyyhkäise yksi sivu kerrallaan jatkuvan vierityksen sijaan (oletus pois päältä)",
+  "settingsZoomNavigation": "Zoomauksen navigointi",
+  "settingsZoomNavigationSubtitle": "Zoomaa ja panoroi sivuja nipistämällä (oletus päällä)",
+  "settingsSectionDrawing": "Piirtäminen",
+  "settingsStrokeSmoothing": "Piirron tasoitus",
+  "settingsStrokeSmoothingSubtitle": "Tasoita mustevedot Chaikinin kulmien leikkausmenetelmällä (oletus päällä)",
+  "settingsStrokeSmoothingStrength": "Tasoituksen voimakkuus",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent} % — alempi säilyttää hienommat yksityiskohdat; suositus {recommended} %",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Piirtäminen sormella",
+  "settingsFingerDrawingSubtitle": "Piirrä sormella paperilla; pois päältä piirtää vain kynä (oletus pois päältä)",
+  "settingsGestureInkEditing": "Eleet musteen muokkaukseen",
+  "settingsGestureInkEditingSubtitle": "Pyyhi OCR-indeksoitua mustetta raaputtamalla (oletus päällä)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Pidä S Penin sivupainiketta pohjassa vaihtaaksesi työkalua tilapäisesti. Päästä irti palauttaaksesi edellisen työkalun. Toimii Samsung-laitteilla, joissa on sivupainiketuki.",
+  "settingsSpenBarrelAction": "Sivupainikkeen toiminto",
+  "settingsSectionOcrDictionary": "OCR-sanasto",
+  "settingsOcrDictionaryHint": "Alakohtaiset termit käsialan OCR:lle. Lähellä olevat osumat korjataan, kun muste indeksoidaan, ja termit parantavat muistikirjahakua.",
+  "settingsNoCustomOcrTerms": "Ei mukautettuja termejä vielä.",
+  "settingsRemoveOcrTerm": "Poista termi",
+  "settingsAddOcrTerm": "Lisää termi",
+  "settingsAddOcrTermTitle": "Lisää OCR-termi",
+  "settingsOcrTermLabel": "Termi",
+  "settingsOcrTermHint": "esim. ominaisarvo, mitochondria",
+  "settingsSectionYourData": "Tietosi",
+  "settingsYourDataHint": "Penfold tallentaa kaiken tälle laitteelle yhteen SQLite-tietokantaan ja resurssikansioihin — ei pilvisynkronointia. Katso docs/ARCHITECTURE.md täydellisestä paikallisesta tiedostorakenteesta.",
+  "settingsDatabase": "Tietokanta",
+  "settingsSectionBackupRestore": "Varmuuskopiointi ja palautus",
+  "settingsBackupRestoreHint": "Vie zip-tiedosto penfold.db:stä ja resurssikansioista tai palauta aiemmasta varmuuskopiosta. Nykyinen tietokanta tallennetaan backups/-kansioon ennen palautusta.",
+  "settingsExportBackup": "Vie varmuuskopio",
+  "settingsExportBackupSubtitle": "Pakkaa zip-tiedostoksi penfold.db, PDF-lähteet, kuvat ja vanhat PDF-sivut",
+  "settingsRecoverFromBackup": "Palauta varmuuskopiosta",
+  "settingsLatestAutoBackup": "Viimeisin automaattinen varmuuskopio: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Palauta varmuuskopio",
+  "settingsRestoreBackupSubtitle": "Korvaa paikalliset tiedot Penfold-varmuuskopio-zipillä",
+  "settingsRecoverAutoBackupTitle": "Palautetaanko automaattisesta varmuuskopiosta?",
+  "settingsRecoverAutoBackupBody": "Tämä korvaa nykyiset muistikirjat ja tiedostot varmuuskopiosta {timestamp}. Nykyinen tietokanta tallennetaan backups/-kansioon ennen palautusta.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Palautetaanko varmuuskopio?",
+  "settingsRestoreBackupBody": "Tämä korvaa nykyiset muistikirjat ja tiedostot. Nykyinen tietokanta tallennetaan backups/-kansioon ennen palautusta.",
+  "settingsSectionAbout": "Tietoja",
+  "settingsAboutSubtitle": "Paikallinen käsialamuistikirja — ei tilejä, ei pilveä.",
+  "settingsVersion": "Versio {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Pyyhin",
+  "spenActionLasso": "Nuolalla valinta",
+  "spenActionPen": "Kynä",
+  "spenActionNone": "Ei mitään",
+  "toolPen": "Kynä",
+  "toolHighlighter": "Korostuskynä",
+  "toolTape": "Teippi",
+  "toolEraser": "Pyyhin",
+  "toolSelection": "Valinta",
+  "toolLasso": "Nuolalla valinta",
+  "toolShape": "Muoto",
+  "toolFill": "Täytä",
+  "toolText": "Teksti",
+  "toolInsertImage": "Lisää kuva",
+  "brushPen": "Kynä",
+  "brushFountain": "Täytekynä",
+  "brushPencil": "Lyijykynä",
+  "brushMarker": "Tussi",
+  "brushCalligraphy": "Kalligrafia",
+  "toolbarPreviousBookmark": "Edellinen kirjanmerkki",
+  "toolbarNextBookmark": "Seuraava kirjanmerkki",
+  "toolbarConvertToText": "Muunna tekstiksi",
+  "toolbarCopy": "Kopioi",
+  "toolbarDelete": "Poista",
+  "toolbarPaste": "Liitä",
+  "toolbarUndo": "Kumoa",
+  "toolbarRedo": "Tee uudelleen",
+  "toolbarAddPage": "Lisää sivu",
+  "toolbarStylusOnly": "Vain kynä (kämmenen hylkäys)",
+  "toolbarFingerDrawing": "Piirtäminen sormella",
+  "toolbarPageOverview": "Sivujen yleiskatsaus",
+  "toolbarTableOfContents": "Sisällysluettelo",
+  "toolbarPageMenu": "Sivuvalikko",
+  "penOptionsTitle": "Kynä",
+  "highlighterOptionsTitle": "Korostuskynä",
+  "brushLabel": "Sivellin",
+  "colorLabel": "Väri",
+  "customColorTitle": "Mukautettu väri",
+  "hueLabel": "Sävy",
+  "saturationLabel": "Kylläisyys",
+  "brightnessLabel": "Kirkkaus",
+  "tapeOptionsTitle": "Teippi",
+  "tapeOptionsHint": "Piirrä peittääksesi muistiinpanot; napauta teippiä näyttääksesi tai piilottaaksesi uudelleen",
+  "fillColorTitle": "Täyttöväri",
+  "fillOptionsHint": "Piirrä suljettu silmukka tai napauta muodon sisällä täyttääksesi",
+  "eraserSizeTitle": "Pyyhtimen koko",
+  "eraserModeTitle": "Pyyhintatila",
+  "eraserModePixel": "Pikseli",
+  "eraserModeStroke": "Piirto",
+  "eraserModePartialHint": "Pyyhkii vain musteen pyyhtimen ympyrän alla",
+  "eraserModeWholeStrokeHint": "Pyyhkii kokonaiset piirrot, joita se koskettaa",
+  "eraseAllOnPageTitle": "Pyyhitäänkö kaikki sivulta?",
+  "eraseAllOnPageBody": "Tämä poistaa kaikki piirrot nykyiseltä sivulta. Voit kumota tämän toiminnon.",
+  "eraseAllOnPageButton": "Pyyhi kaikki sivulta",
+  "pageSettingsTitle": "Sivun asetukset",
+  "pageColorTitle": "Sivun väri",
+  "pageThemeTitle": "Sivun teema",
+  "defaultPaperSize": "Paperin oletuskoko",
+  "defaultPaperType": "Paperin oletustyyppi",
+  "defaultPageTheme": "Sivun oletusteema",
+  "notebookDefaultsHint": "Käytetään, kun luot uuden muistikirjan. Voit silti muuttaa valintoja valintaikkunassa.",
+  "pageThemeLight": "Vaalea",
+  "pageThemeDark": "Tumma",
+  "pageThemeSepia": "Seepia",
+  "pageThemePastelPink": "Pastellin vaaleanpunainen",
+  "pageThemePastelBlue": "Pastellinsininen",
+  "pageThemePastelMint": "Pastellin minttu",
+  "pageSizeTitle": "Sivun koko",
+  "pageOrientationTitle": "Suunta",
+  "pageTemplateTitle": "Sivupohja",
+  "pageBookmark": "Kirjanmerkki",
+  "pageRemoveBookmark": "Poista kirjanmerkki",
+  "pageAudioTitle": "Ääni",
+  "pageSplit": "Jaa",
+  "pageExportTitle": "Vie",
+  "pdfPagesKeepBackground": "PDF-sivut säilyttävät asiakirjan taustan",
+  "pdfPagesKeepDimensions": "PDF-sivut säilyttävät asiakirjan mitat",
+  "pdfPagesKeepOrientation": "PDF-sivut säilyttävät asiakirjan suunnan",
+  "exportPageAsPng": "Vie sivu PNG:nä",
+  "exportPageAsPngSubtitle": "Jaa kuva tästä sivusta",
+  "exportPageAsPdf": "Vie sivu PDF:nä",
+  "exportPageAsPdfSubtitle": "Vektorimuste, jaa järjestelmän jakopainikkeella",
+  "exportNotebookAsPdf": "Vie muistikirja PDF:nä",
+  "exportNotebookPageCount": "{count, plural, =1{1 sivu} other{{count} sivua}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Liitä äänitiedosto",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV ja muut paikalliset muodot",
+  "pageAudioAttachedToPage": "Liitetty tälle sivulle",
+  "pageAudioReplace": "Korvaa äänitiedosto",
+  "pageAudioRemove": "Poista ääni",
+  "pageAudioPlay": "Toista",
+  "pageAudioPause": "Tauko",
+  "contentsTitle": "Sisällys",
+  "contentsSubtitle": "Otsikot kirjoitetusta tekstistä ja OCR-indeksoidusta musteesta",
+  "contentsEmpty": "Otsikoita ei löytynyt vielä.\nLisää suurta tai lyhyttä kirjoitettua tekstiä tai OCR-indeksoituja musteotsikoita.",
+  "contentsPageNumber": "Sivu {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Sivut",
+  "pageOverviewSelected": "{count} valittu",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Poista valitut",
+  "pageOverviewSelectPages": "Valitse sivut",
+  "pageOverviewKeepOnePage": "Pidä vähintään yksi sivu",
+  "pageOverviewDeleteTitle": "Poistetaanko {count, plural, =1{1 sivu} other{{count} sivua}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Tätä ei voi kumota.",
+  "pageOverviewDragToReorder": "Järjestä uudelleen vetämällä",
+  "pageOverviewBookmarked": "Kirjanmerkitty",
+  "ocrIndexing": "OCR-indeksointi…",
+  "ocrHandwritingSearchable": "Käsiala haettavissa",
+  "ocrPartial": "OCR osittainen",
+  "trashTitle": "Roskakori",
+  "trashFailedToLoad": "Roskakorin lataus epäonnistui: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Roskakori on tyhjä",
+  "trashSectionFolders": "Kansiot",
+  "trashSectionNotebooks": "Muistikirjat",
+  "trashDeletionDateUnavailable": "Poistopäivä ei saatavilla",
+  "trashExpiresToday": "Vanhenee tänään",
+  "trashDaysRemaining": "{count, plural, =1{1 päivä jäljellä} other{{count} päivää jäljellä}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Palauta",
+  "trashDeleteNotebookTitle": "Poistetaanko \"{title}\" pysyvästi?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "Tämä poistaa muistikirjan ja kaikki sivut tältä laitteelta.",
+  "trashDeleteFolderTitle": "Poistetaanko \"{name}\" pysyvästi?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "Tämä poistaa kansion ja sen muistikirjat tältä laitteelta.",
+  "splitPageTitle": "Jaetaanko sivu?",
+  "splitPageBody": "Luo uusi sivu samalla pohjalla ja siirrä noin puolet {count} piirrosta sille.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Tarvitaan vähintään 2 piirtoa sivun jakamiseen",
+  "splitPageSuccess": "Sivu jaettu: {moved} piirtoa siirretty, {remaining} jäljellä",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Jako epäonnistui: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Jaa sivu",
+  "changePageSizeTitle": "Vaihdetaanko sivun kokoa?",
+  "changePageSizeBody": "Tällä sivulla on mustetta. Koon vaihto järjestää sivun uudelleen; musteesi pysyy samassa kohdassa sivulla.",
+  "changeOrientationTitle": "Vaihdetaanko suuntaa?",
+  "changeOrientationBody": "Tällä sivulla on mustetta. Suunnan vaihto skaalaa ja keskittää sisällön uusiin sivurajoihin.",
+  "convertedToText": "Muunnettu tekstiksi: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Käsialaa ei voitu tunnistaa",
+  "handwritingModelTitle": "Käsialamalli",
+  "handwritingModelDownloadFailed": "Lataus epäonnistui. Tarkista verkko ja yritä uudelleen.",
+  "handwritingModelDownloading": "Ladataan englanninkielistä käsialamallia (~{sizeMb} Mt)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Malli valmis.",
+  "handwritingModelElapsed": "Kulunut: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Ensimmäinen lataus (~{sizeMb} Mt). Wi-Fi-yhteydellä yleensä alle kaksi minuuttia.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Sivu viety PNG:nä",
+  "pageExportedAsPdf": "Sivu viety PDF:nä",
+  "notebookExportedAsPdfSnack": "Muistikirja viety PDF:nä",
+  "exportPreparing": "Valmistellaan vientiä…",
+  "exportProgress": "Viedään sivu {current}/{total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Tällä sivulla on {count} piirtoa, ja se voi tuntua hitaalta. Harkitse jakamista paremman suorituskyvyn vuoksi.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Vienti estetty: sivulla on {count} piirtoa (raja {limit}). Jaa raskaat sivut ensin.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Palautus valmis. Käynnistä sovellus uudelleen ladataksesi palautetut tiedot.",
+  "textToolHint": "Kirjoita tähän…",
+  "textToolDone": "Valmis",
+  "languageKorean": "Korea",
+  "languagePolish": "Puola",
+  "languageSpanish": "Espanja",
+  "languageItalian": "Italia",
+  "languageUkrainian": "Ukraina",
+  "languageSwedish": "Ruotsi",
+  "languageNorwegian": "Norja",
+  "languageFinnish": "Suomi",
+  "languageDanish": "Tanska",
+  "languagePortuguese": "Portugali"
+}

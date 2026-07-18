@@ -97,6 +97,12 @@ Device re-verify on SM-X920 after install.
 
 **Acceptance:** Pinch to any zoom, tap Text, place/edit text with keyboard open — document scale and pan unchanged; dismiss keyboard — transform still unchanged.
 
+## v0.2.82 — 13 locale translations (2026-07-18)
+
+- Added ARB catalogs for de, fr, nl, ko, pl, es, it, uk, sv, nb, fi, da, pt (308 keys each)
+- Settings language picker lists all 14 supported locales with localized language names
+- `flutter gen-l10n` generates `AppLocalizations.supportedLocales` for MaterialApp
+
 ## v0.2.81 — stroke smoothing for small writing (2026-07-18)
 
 - Ink coalescing uses slower-writing floor (0.3 mm) and flushes final pointer position on lift

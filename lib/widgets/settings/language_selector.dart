@@ -17,6 +17,26 @@ class LanguageSelector extends StatelessWidget {
         return l10n.languageFrench;
       case 'nl':
         return l10n.languageDutch;
+      case 'ko':
+        return l10n.languageKorean;
+      case 'pl':
+        return l10n.languagePolish;
+      case 'es':
+        return l10n.languageSpanish;
+      case 'it':
+        return l10n.languageItalian;
+      case 'uk':
+        return l10n.languageUkrainian;
+      case 'sv':
+        return l10n.languageSwedish;
+      case 'nb':
+        return l10n.languageNorwegian;
+      case 'fi':
+        return l10n.languageFinnish;
+      case 'da':
+        return l10n.languageDanish;
+      case 'pt':
+        return l10n.languagePortuguese;
       default:
         return locale.languageCode;
     }

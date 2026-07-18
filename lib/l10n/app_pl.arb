@@ -1,0 +1,557 @@
+{
+  "@@locale": "pl",
+  "appTitle": "Penfold",
+  "actionCancel": "Anuluj",
+  "actionCreate": "Utwórz",
+  "actionRename": "Zmień nazwę",
+  "actionSave": "Zapisz",
+  "actionDelete": "Usuń",
+  "actionAdd": "Dodaj",
+  "actionBack": "Wstecz",
+  "actionDone": "Gotowe",
+  "actionSplit": "Podziel",
+  "actionRecover": "Odtwórz",
+  "actionRestore": "Przywróć",
+  "actionExport": "Eksportuj",
+  "actionRetry": "Ponów",
+  "actionRetrying": "Ponawianie…",
+  "actionExportFirst": "Najpierw eksportuj",
+  "actionEraseAll": "Wymaż wszystko",
+  "actionChangeSize": "Zmień rozmiar",
+  "actionChangeOrientation": "Zmień orientację",
+  "actionUseColor": "Użyj koloru",
+  "libraryTitle": "Penfold",
+  "libraryOverview": "Przegląd",
+  "libraryTrash": "Kosz",
+  "librarySettings": "Ustawienia",
+  "libraryFolders": "Foldery",
+  "libraryNoFoldersYet": "Brak folderów",
+  "libraryAll": "Wszystkie",
+  "libraryUncategorized": "Bez kategorii",
+  "libraryBreadcrumb": "Biblioteka",
+  "librarySearchHint": "Szukaj notatników i wpisanego tekstu…",
+  "libraryNoMatches": "Brak wyników",
+  "libraryFolderEmpty": "Ten folder jest pusty",
+  "libraryNoNotebooksWithTag": "Brak notatników z tą etykietą",
+  "libraryNoUncategorizedNotebooks": "Brak notatników bez kategorii",
+  "libraryNoNotebooksYet": "Brak notatników",
+  "libraryCouldNotLoad": "Nie udało się wczytać biblioteki: {error}",
+  "@libraryCouldNotLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipBackupRestore": "Kopia zapasowa i przywracanie",
+  "tooltipTrash": "Kosz",
+  "tooltipNewNotebook": "Nowy notatnik",
+  "tooltipNewFolder": "Nowy folder",
+  "tooltipNewSubfolder": "Nowy podfolder",
+  "tooltipImportPdf": "Importuj PDF",
+  "folderNew": "Nowy folder",
+  "folderNewSubfolder": "Nowy podfolder",
+  "folderRename": "Zmień nazwę folderu",
+  "folderMoveToTrash": "Przenieś do kosza",
+  "folderMoveToTrashTitle": "Przenieść „{name}” do kosza?",
+  "@folderMoveToTrashTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderMoveToTrashBody": "Folder i jego notatniki trafią do kosza na 30 dni.",
+  "notebookNew": "Nowy notatnik",
+  "notebookUntitled": "Bez tytułu",
+  "notebookTitleLabel": "Tytuł",
+  "notebookSizeLabel": "Rozmiar",
+  "notebookPaperLabel": "Papier",
+  "notebookCoverLabel": "Okładka",
+  "notebookRename": "Zmień nazwę notatnika",
+  "notebookMoveToFolder": "Przenieś do folderu",
+  "notebookEditTags": "Edytuj etykiety",
+  "notebookExportWorkbook": "Eksportuj zeszyt",
+  "notebookExportWorkbookSubtitle": "Udostępnij wszystkie strony jako PDF",
+  "notebookMoveToTrash": "Przenieś do kosza",
+  "notebookMoveToTrashTitle": "Przenieść „{title}” do kosza?",
+  "@notebookMoveToTrashTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMoveToTrashBody": "Notatnik zniknie z biblioteki na 30 dni. Pismo i strony pozostaną na tym urządzeniu, dopóki nie opróżnisz kosza. Wyeksportuj kopię zapasową, jeśli chcesz dodatkową kopię.",
+  "notebookTagsFor": "Etykiety dla „{title}”",
+  "@notebookTagsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookNoTagsYet": "Brak etykiet. Utwórz nową poniżej.",
+  "notebookNewTag": "Nowa etykieta",
+  "notebookAddTag": "Dodaj etykietę",
+  "notebookNoPagesToExport": "Ten notatnik nie ma stron do eksportu",
+  "notebookExportedAsPdf": "„{title}” wyeksportowano jako PDF",
+  "@notebookExportedAsPdf": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookBackupExportedReady": "Kopia zapasowa wyeksportowana. Możesz przenieść notatnik do kosza, gdy będziesz gotowy.",
+  "importPdfSnack": "Importowanie PDF… strony renderują się raz, potem działają offline.",
+  "importFailed": "Import nie powiódł się: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exportFailed": "Eksport nie powiódł się: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupFailed": "Kopia zapasowa nie powiodła się: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryFailed": "Odtwarzanie nie powiodło się: {error}",
+  "@recoveryFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFailed": "Przywracanie nie powiodło się: {error}",
+  "@restoreFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadingBackground": "Pobieranie modelu pisma odręcznego (~{sizeMb} MB) w tle…",
+  "@handwritingModelDownloadingBackground": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "templateBlank": "Pusty",
+  "templateLined": "W linie",
+  "templateGrid": "W kratkę",
+  "templateDotted": "W kropki",
+  "templateCollegeRuled": "W linie (college)",
+  "templateCollegeShort": "College",
+  "pageSizeA4": "A4",
+  "pageSizeA5": "A5",
+  "pageSizeLetter": "Letter",
+  "orientationPortrait": "Pionowa",
+  "orientationLandscape": "Pozioma",
+  "pdfLabel": "PDF",
+  "settingsSummarySeparator": " · ",
+  "settingsTitle": "Ustawienia",
+  "settingsSectionLanguage": "Język",
+  "settingsSectionAppearanceAndPreferences": "Wygląd i preferencje",
+  "settingsSectionAppearance": "Wygląd",
+  "settingsAppearanceDarkMode": "Tryb ciemny",
+  "settingsAppearanceDarkModeSubtitle": "Wybierz jasny, ciemny lub zgodny z urządzeniem (domyślnie system)",
+  "themeSystem": "System",
+  "themeLight": "Jasny",
+  "themeDark": "Ciemny",
+  "settingsSectionPreferences": "Preferencje",
+  "settingsLanguageLabel": "Język aplikacji",
+  "languageEnglish": "Angielski",
+  "languageGerman": "Niemiecki",
+  "languageFrench": "Francuski",
+  "languageDutch": "Holenderski",
+  "settingsSectionToolbar": "Pasek narzędzi",
+  "settingsToolbarReorderHint": "Przeciągnij, aby zmienić kolejność narzędzi rysowania. Cofnij i ponów pozostają po prawej.",
+  "settingsResetToolbarOrder": "Resetuj kolejność paska narzędzi",
+  "settingsSectionNotebook": "Notatnik",
+  "settingsPageTurnMode": "Tryb przewracania stron",
+  "settingsPageTurnModeSubtitle": "Przewijaj po jednej stronie zamiast ciągłego przewijania (domyślnie wył.)",
+  "settingsZoomNavigation": "Nawigacja powiększeniem",
+  "settingsZoomNavigationSubtitle": "Szczypnij, aby powiększyć i przesuwać strony (domyślnie wł.)",
+  "settingsSectionDrawing": "Rysowanie",
+  "settingsStrokeSmoothing": "Wygładzanie pociągnięć",
+  "settingsStrokeSmoothingSubtitle": "Wygładzaj pociągnięcia atramentu algorytmem Chaikina (domyślnie wł.)",
+  "settingsStrokeSmoothingStrength": "Siła wygładzania",
+  "settingsStrokeSmoothingStrengthSubtitle": "{percent}% — niższa wartość zachowuje więcej detali; zalecane {recommended}%",
+  "@settingsStrokeSmoothingStrengthSubtitle": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "recommended": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsFingerDrawing": "Rysowanie palcem",
+  "settingsFingerDrawingSubtitle": "Rysuj palcem na papierze; gdy wył., tylko rysik rysuje (domyślnie wył.)",
+  "settingsGestureInkEditing": "Edycja pisma gestem",
+  "settingsGestureInkEditingSubtitle": "Przekreśl pismo zindeksowane OCR, aby je wymazać (domyślnie wł.)",
+  "settingsSectionSpen": "S Pen",
+  "settingsSpenHint": "Przytrzymaj boczny przycisk S Pen, aby tymczasowo przełączyć narzędzie. Puść, aby przywrócić poprzednie. Działa na urządzeniach Samsung z obsługą przycisku bocznego.",
+  "settingsSpenBarrelAction": "Akcja przycisku bocznego",
+  "settingsSectionOcrDictionary": "Słownik OCR",
+  "settingsOcrDictionaryHint": "Terminy branżowe dla OCR pisma odręcznego. Podobne dopasowania są korygowane przy indeksowaniu pisma, a terminy wzmacniają wyszukiwanie w notatniku.",
+  "settingsNoCustomOcrTerms": "Brak własnych terminów.",
+  "settingsRemoveOcrTerm": "Usuń termin",
+  "settingsAddOcrTerm": "Dodaj termin",
+  "settingsAddOcrTermTitle": "Dodaj termin OCR",
+  "settingsOcrTermLabel": "Termin",
+  "settingsOcrTermHint": "np. wartość własna, mitochondrium",
+  "settingsSectionYourData": "Twoje dane",
+  "settingsYourDataHint": "Penfold przechowuje wszystko na tym urządzeniu w jednej bazie SQLite i folderach zasobów — bez synchronizacji w chmurze. Pełny układ plików na urządzeniu: docs/ARCHITECTURE.md.",
+  "settingsDatabase": "Baza danych",
+  "settingsSectionBackupRestore": "Kopia zapasowa i przywracanie",
+  "settingsBackupRestoreHint": "Eksportuj zip z penfold.db i folderami zasobów lub przywróć z wcześniejszej kopii. Obecna baza zostanie zapisana w backups/ przed przywróceniem.",
+  "settingsExportBackup": "Eksportuj kopię zapasową",
+  "settingsExportBackupSubtitle": "Spakuj penfold.db, źródła PDF, obrazy i starsze strony PDF",
+  "settingsRecoverFromBackup": "Odtwórz z kopii zapasowej",
+  "settingsLatestAutoBackup": "Ostatnia automatyczna kopia: {timestamp} ({size})",
+  "@settingsLatestAutoBackup": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackup": "Przywróć kopię zapasową",
+  "settingsRestoreBackupSubtitle": "Zastąp lokalne dane plikiem zip kopii Penfold",
+  "settingsRecoverAutoBackupTitle": "Odtworzyć z automatycznej kopii?",
+  "settingsRecoverAutoBackupBody": "To zastąpi bieżące notatniki i pliki kopią z {timestamp}. Obecna baza zostanie zapisana w backups/ przed przywróceniem.",
+  "@settingsRecoverAutoBackupBody": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreBackupTitle": "Przywrócić kopię zapasową?",
+  "settingsRestoreBackupBody": "To zastąpi bieżące notatniki i pliki. Obecna baza zostanie zapisana w backups/ przed przywróceniem.",
+  "settingsSectionAbout": "Informacje",
+  "settingsAboutSubtitle": "Notatnik z pismem odręcznym — lokalnie, bez kont i chmury.",
+  "settingsVersion": "Wersja {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spenActionEraser": "Gumka",
+  "spenActionLasso": "Lasso",
+  "spenActionPen": "Pióro",
+  "spenActionNone": "Brak",
+  "toolPen": "Pióro",
+  "toolHighlighter": "Zakreślacz",
+  "toolTape": "Taśma",
+  "toolEraser": "Gumka",
+  "toolSelection": "Zaznaczenie",
+  "toolLasso": "Lasso",
+  "toolShape": "Kształt",
+  "toolFill": "Wypełnienie",
+  "toolText": "Tekst",
+  "toolInsertImage": "Wstaw obraz",
+  "brushPen": "Pióro",
+  "brushFountain": "Pióro wieczne",
+  "brushPencil": "Ołówek",
+  "brushMarker": "Marker",
+  "brushCalligraphy": "Kaligrafia",
+  "toolbarPreviousBookmark": "Poprzednia zakładka",
+  "toolbarNextBookmark": "Następna zakładka",
+  "toolbarConvertToText": "Konwertuj na tekst",
+  "toolbarCopy": "Kopiuj",
+  "toolbarDelete": "Usuń",
+  "toolbarPaste": "Wklej",
+  "toolbarUndo": "Cofnij",
+  "toolbarRedo": "Ponów",
+  "toolbarAddPage": "Dodaj stronę",
+  "toolbarStylusOnly": "Tylko rysik (odrzucanie dłoni)",
+  "toolbarFingerDrawing": "Rysowanie palcem",
+  "toolbarPageOverview": "Przegląd stron",
+  "toolbarTableOfContents": "Spis treści",
+  "toolbarPageMenu": "Menu strony",
+  "penOptionsTitle": "Pióro",
+  "highlighterOptionsTitle": "Zakreślacz",
+  "brushLabel": "Pędzel",
+  "colorLabel": "Kolor",
+  "customColorTitle": "Kolor własny",
+  "hueLabel": "Odcień",
+  "saturationLabel": "Nasycenie",
+  "brightnessLabel": "Jasność",
+  "tapeOptionsTitle": "Taśma",
+  "tapeOptionsHint": "Rysuj, aby zakryć notatki; dotknij taśmy, aby ponownie pokazać lub ukryć",
+  "fillColorTitle": "Kolor wypełnienia",
+  "fillOptionsHint": "Narysuj zamkniętą pętlę lub dotknij wnętrza kształtu, aby wypełnić",
+  "eraserSizeTitle": "Rozmiar gumki",
+  "eraserModeTitle": "Tryb gumki",
+  "eraserModePixel": "Piksel",
+  "eraserModeStroke": "Pociągnięcie",
+  "eraserModePartialHint": "Wymazuje tylko atrament pod kołem gumki",
+  "eraserModeWholeStrokeHint": "Wymazuje całe pociągnięcia, których dotknie",
+  "eraseAllOnPageTitle": "Wymazać wszystko na stronie?",
+  "eraseAllOnPageBody": "To usunie wszystkie pociągnięcia na bieżącej stronie. Możesz cofnąć tę akcję.",
+  "eraseAllOnPageButton": "Wymaż wszystko na stronie",
+  "pageSettingsTitle": "Ustawienia strony",
+  "pageColorTitle": "Kolor strony",
+  "pageThemeTitle": "Motyw strony",
+  "defaultPaperSize": "Domyślny rozmiar papieru",
+  "defaultPaperType": "Domyślny typ papieru",
+  "defaultPageTheme": "Domyślny motyw strony",
+  "notebookDefaultsHint": "Używane przy tworzeniu nowego notatnika. Możesz nadal zmienić wybory w oknie dialogowym.",
+  "pageThemeLight": "Jasny",
+  "pageThemeDark": "Ciemny",
+  "pageThemeSepia": "Sepia",
+  "pageThemePastelPink": "Pastelowy róż",
+  "pageThemePastelBlue": "Pastelowy błękit",
+  "pageThemePastelMint": "Pastelowa mięta",
+  "pageSizeTitle": "Rozmiar strony",
+  "pageOrientationTitle": "Orientacja",
+  "pageTemplateTitle": "Szablon strony",
+  "pageBookmark": "Zakładka",
+  "pageRemoveBookmark": "Usuń zakładkę",
+  "pageAudioTitle": "Audio",
+  "pageSplit": "Podziel",
+  "pageExportTitle": "Eksport",
+  "pdfPagesKeepBackground": "Strony PDF zachowują tło dokumentu",
+  "pdfPagesKeepDimensions": "Strony PDF zachowują wymiary dokumentu",
+  "pdfPagesKeepOrientation": "Strony PDF zachowują orientację dokumentu",
+  "exportPageAsPng": "Eksportuj stronę jako PNG",
+  "exportPageAsPngSubtitle": "Udostępnij obraz tej strony",
+  "exportPageAsPdf": "Eksportuj stronę jako PDF",
+  "exportPageAsPdfSubtitle": "Atrament wektorowy, udostępnij przez arkusz systemowy",
+  "exportNotebookAsPdf": "Eksportuj notatnik jako PDF",
+  "exportNotebookPageCount": "{count, plural, =1{1 strona} few{{count} strony} many{{count} stron} other{{count} stron}}",
+  "@exportNotebookPageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageAudioAttach": "Dołącz plik audio",
+  "pageAudioAttachSubtitle": "MP3, M4A, WAV i inne lokalne formaty",
+  "pageAudioAttachedToPage": "Dołączono do tej strony",
+  "pageAudioReplace": "Zastąp plik audio",
+  "pageAudioRemove": "Usuń audio",
+  "pageAudioPlay": "Odtwórz",
+  "pageAudioPause": "Wstrzymaj",
+  "contentsTitle": "Spis treści",
+  "contentsSubtitle": "Nagłówki z wpisanego tekstu i pisma zindeksowanego OCR",
+  "contentsEmpty": "Nie znaleziono jeszcze nagłówków.\nDodaj duży lub krótki wpisany tekst albo nagłówki pisma zindeksowanego OCR.",
+  "contentsPageNumber": "Strona {number}",
+  "@contentsPageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewPagesSuffix": " — Strony",
+  "pageOverviewSelected": "Zaznaczono: {count}",
+  "@pageOverviewSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteSelected": "Usuń zaznaczone",
+  "pageOverviewSelectPages": "Zaznacz strony",
+  "pageOverviewKeepOnePage": "Zachowaj co najmniej jedną stronę",
+  "pageOverviewDeleteTitle": "Usunąć {count, plural, =1{1 stronę} few{{count} strony} many{{count} stron} other{{count} stron}}?",
+  "@pageOverviewDeleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageOverviewDeleteBody": "Tej operacji nie można cofnąć.",
+  "pageOverviewDragToReorder": "Przeciągnij, aby zmienić kolejność",
+  "pageOverviewBookmarked": "Ma zakładkę",
+  "ocrIndexing": "Indeksowanie OCR…",
+  "ocrHandwritingSearchable": "Pismo odręczne przeszukiwalne",
+  "ocrPartial": "OCR częściowe",
+  "trashTitle": "Kosz",
+  "trashFailedToLoad": "Nie udało się wczytać kosza: {error}",
+  "@trashFailedToLoad": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trashEmpty": "Kosz jest pusty",
+  "trashSectionFolders": "Foldery",
+  "trashSectionNotebooks": "Notatniki",
+  "trashDeletionDateUnavailable": "Data usunięcia niedostępna",
+  "trashExpiresToday": "Wygasa dziś",
+  "trashDaysRemaining": "{count, plural, =1{Pozostał 1 dzień} few{Pozostały {count} dni} many{Pozostało {count} dni} other{Pozostało {count} dni}}",
+  "@trashDaysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRestore": "Przywróć",
+  "trashDeleteNotebookTitle": "Trwale usunąć „{title}”?",
+  "@trashDeleteNotebookTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNotebookBody": "To usunie notatnik i wszystkie strony z tego urządzenia.",
+  "trashDeleteFolderTitle": "Trwale usunąć „{name}”?",
+  "@trashDeleteFolderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteFolderBody": "To usunie folder i jego notatniki z tego urządzenia.",
+  "splitPageTitle": "Podzielić stronę?",
+  "splitPageBody": "Utwórz nową stronę z tym samym szablonem i przenieś około połowę z {count} pociągnięć na nią.",
+  "@splitPageBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageNeedStrokes": "Potrzeba co najmniej 2 pociągnięć, aby podzielić tę stronę",
+  "splitPageSuccess": "Strona podzielona: przeniesiono {moved} pociągnięć, pozostało {remaining}",
+  "@splitPageSuccess": {
+    "placeholders": {
+      "moved": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "splitPageFailed": "Podział nie powiódł się: {error}",
+  "@splitPageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "splitPageAction": "Podziel stronę",
+  "changePageSizeTitle": "Zmienić rozmiar strony?",
+  "changePageSizeBody": "Ta strona ma atrament. Zmiana rozmiaru przeformatuje stronę; atrament pozostanie w tej samej pozycji na stronie.",
+  "changeOrientationTitle": "Zmienić orientację?",
+  "changeOrientationBody": "Ta strona ma atrament. Zmiana orientacji skaluje i wyśrodkuje zawartość, aby dopasować ją do nowych granic strony.",
+  "convertedToText": "Skonwertowano na tekst: {preview}",
+  "@convertedToText": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotRecognizeHandwriting": "Nie udało się rozpoznać pisma odręcznego",
+  "handwritingModelTitle": "Model pisma odręcznego",
+  "handwritingModelDownloadFailed": "Pobieranie nie powiodło się. Sprawdź sieć i ponów.",
+  "handwritingModelDownloading": "Pobieranie angielskiego modelu pisma odręcznego (~{sizeMb} MB)…",
+  "@handwritingModelDownloading": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "handwritingModelReady": "Model gotowy.",
+  "handwritingModelElapsed": "Upłynęło: {elapsed}",
+  "@handwritingModelElapsed": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "handwritingModelDownloadHint": "Pierwsze pobieranie (~{sizeMb} MB). Zwykle kończy się w mniej niż dwie minuty przez Wi‑Fi.",
+  "@handwritingModelDownloadHint": {
+    "placeholders": {
+      "sizeMb": {
+        "type": "int"
+      }
+    }
+  },
+  "pageExportedAsPng": "Strona wyeksportowana jako PNG",
+  "pageExportedAsPdf": "Strona wyeksportowana jako PDF",
+  "notebookExportedAsPdfSnack": "Notatnik wyeksportowany jako PDF",
+  "exportPreparing": "Przygotowywanie eksportu…",
+  "exportProgress": "Eksportowanie strony {current} z {total}…",
+  "@exportProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityWarning": "Ta strona ma {count} pociągnięć i może działać wolno. Rozważ podział dla lepszej wydajności.",
+  "@pageComplexityWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageComplexityExportBlocked": "Eksport zablokowany: strona ma {count} pociągnięć (limit {limit}). Najpierw podziel obciążone strony.",
+  "@pageComplexityExportBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreComplete": "Przywracanie zakończone. Uruchom ponownie aplikację, aby wczytać przywrócone dane.",
+  "textToolHint": "Wpisz tutaj…",
+  "textToolDone": "Gotowe",
+  "languageKorean": "Koreański",
+  "languagePolish": "Polski",
+  "languageSpanish": "Hiszpański",
+  "languageItalian": "Włoski",
+  "languageUkrainian": "Ukraiński",
+  "languageSwedish": "Szwedzki",
+  "languageNorwegian": "Norweski",
+  "languageFinnish": "Fiński",
+  "languageDanish": "Duński",
+  "languagePortuguese": "Portugalski"
+}

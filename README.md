@@ -33,23 +33,7 @@ There is no sign-in, no sync server, and no analytics. Every stroke, image, fold
 | **Rich ink tools** | Pen, pencil, highlighter, tape (hide-reveal), shapes, fill, text, lasso |
 | **PDF import** | Render pages once, then work fully offline |
 
-**v0.2.83** — Contextual native review of all 13 non-English UI locales (notebook/ink/stylus/trash terminology and recover-vs-restore phrasing).
-
-**v0.2.82** — 13 new UI locales (de, fr, nl, ko, pl, es, it, uk, sv, nb, fi, da, pt) with full string catalogs and settings language picker.
-
-**v0.2.81** — Stroke smoothing fix for small handwriting: slower ink sampling, final-point flush on lift, and adjustable smoothing strength slider (recommended 35%).
-
-**v0.2.80** — Dark mode polish: library, notebook toolbar, page overview, document viewport, and settings dropdowns/chips use theme colors instead of hardcoded white.
-
-**v0.2.79** — Settings restructure with language picker, dark mode (system/light/dark), and notebook defaults (paper size, type, page theme); per-page background themes with pastel palette.
-
-**v0.2.78** — Per-page paper themes (light, dark, sepia, pastels) with default notebook preferences (paper size, type, page color); full Flutter i18n infrastructure with English string catalog (`app_en.arb`).
-
-**v0.2.77** — Text tool Done checkmark commits typed text (same as keyboard Done); no longer opens a blank text box and loses content.
-
-**v0.2.76** — Text tool keeps document zoom/pan stable when the keyboard opens (keyboard inset no longer shrinks page layout).
-
-**v0.2.7** — GoodNotes-style toolbar (back left, tools center, actions right), richer brand theme (#2455C3), vibrant library covers, and colored selection handles.
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ---
 

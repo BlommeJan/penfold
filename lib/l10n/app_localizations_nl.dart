@@ -90,6 +90,12 @@ class AppLocalizationsNl extends AppLocalizations {
   String get libraryAll => 'Alles';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => 'Zonder categorie';
 
   @override

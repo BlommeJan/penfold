@@ -90,6 +90,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get libraryAll => 'Усі';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => 'Без категорії';
 
   @override

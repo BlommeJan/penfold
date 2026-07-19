@@ -23,6 +23,7 @@ void main() {
         home: LibraryDrawer(
           folders: folders,
           currentFolderId: null,
+          overviewActive: true,
           trashCount: 3,
           onOverview: () {},
           onOpenTrash: () {},

@@ -27,6 +27,8 @@
   "libraryFolders": "Folders",
   "libraryNoFoldersYet": "No folders yet",
   "libraryAll": "All",
+  "libraryViewAll": "All",
+  "libraryViewOverview": "Overview",
   "libraryUncategorized": "Uncategorized",
   "libraryBreadcrumb": "Library",
   "librarySearchHint": "Search notebooks, tags, folders, and typed text…",

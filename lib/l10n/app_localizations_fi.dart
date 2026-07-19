@@ -90,6 +90,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get libraryAll => 'Kaikki';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => 'Luokittelemattomat';
 
   @override

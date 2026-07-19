@@ -284,6 +284,18 @@ abstract class AppLocalizations {
   /// **'All'**
   String get libraryAll;
 
+  /// No description provided for @libraryViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get libraryViewAll;
+
+  /// No description provided for @libraryViewOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get libraryViewOverview;
+
   /// No description provided for @libraryUncategorized.
   ///
   /// In en, this message translates to:

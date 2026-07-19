@@ -90,6 +90,12 @@ class AppLocalizationsDa extends AppLocalizations {
   String get libraryAll => 'Alle';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => 'Uden kategori';
 
   @override

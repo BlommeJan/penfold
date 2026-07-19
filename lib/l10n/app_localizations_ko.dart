@@ -90,6 +90,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get libraryAll => '전체';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => '미분류';
 
   @override

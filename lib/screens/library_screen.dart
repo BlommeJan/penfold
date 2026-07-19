@@ -32,7 +32,7 @@ const _coverColors = [
   0xFF2E5A8C,
 ];
 
-enum _LibraryView { all, uncategorized }
+enum _LibraryViewMode { all, overview }
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -49,7 +49,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   List<Folder> _childFolders = [];
   List<Tag> _allTags = [];
   List<SearchResult> _searchResults = [];
-  _LibraryView _view = _LibraryView.all;
+  _LibraryViewMode _viewMode = _LibraryViewMode.all;
   String? _currentFolderId;
   String? _selectedTagId;
   bool _loading = true;
@@ -151,14 +151,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
       final allTags = await _db.allTags();
       final trashedNotebooks = await _db.trashedNotebooks();
       final trashedFolders = await _db.trashedFolders();
-      final childFolders = _currentFolderId == null
-          ? await _db.folders()
-          : await _db.folders(parentId: _currentFolderId);
+      final childFolders = _viewMode == _LibraryViewMode.overview
+          ? (_currentFolderId == null
+              ? await _db.folders()
+              : await _db.folders(parentId: _currentFolderId))
+          : <Folder>[];
       final List<Notebook> items;
-      if (_currentFolderId == null) {
-        items = await _db.notebooks(
-          folderId: _view == _LibraryView.uncategorized ? '' : null,
-        );
+      if (_viewMode == _LibraryViewMode.all) {
+        items = await _db.notebooks();
+      } else if (_currentFolderId == null) {
+        items = await _db.notebooks(folderId: '');
       } else {
         items = await _db.notebooks(folderId: _currentFolderId);
       }
@@ -253,8 +255,19 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   void _openFolder(String folderId) {
     setState(() {
+      _viewMode = _LibraryViewMode.overview;
       _currentFolderId = folderId;
-      _view = _LibraryView.all;
+    });
+    _refresh();
+  }
+
+  void _setViewMode(_LibraryViewMode mode) {
+    if (_viewMode == mode) return;
+    setState(() {
+      _viewMode = mode;
+      if (mode == _LibraryViewMode.all) {
+        _currentFolderId = null;
+      }
     });
     _refresh();
   }
@@ -907,7 +920,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _notebookCard(Notebook n) {
+  String? _folderSubtitle(Notebook n) {
+    if (n.folderId == null) return null;
+    return _folderById(n.folderId!)?.name;
+  }
+
+  Widget _notebookCard(Notebook n, {String? folderSubtitle}) {
     final cover = Color(n.coverColor);
     final thumbPath = _thumbnailPaths[n.id];
     final scheme = Theme.of(context).colorScheme;
@@ -986,6 +1004,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   color: scheme.onSurface,
                 ),
           ),
+          if (folderSubtitle != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              folderSubtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
         ],
       ),
     );
@@ -1083,58 +1112,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _folderFilterRow() {
+  Widget _viewModeToggle() {
     final l10n = context.l10n;
-    final folderChips = _currentFolderId == null
-        ? _topLevelFolders()
-        : _childFolders;
-
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            if (_currentFolderId == null) ...[
-              _filterChip(
-                label: l10n.libraryAll,
-                selected: _view == _LibraryView.all,
-                onTap: () {
-                  setState(() => _view = _LibraryView.all);
-                  _refresh();
-                },
-              ),
-              _filterChip(
-                label: l10n.libraryUncategorized,
-                selected: _view == _LibraryView.uncategorized,
-                onTap: () {
-                  setState(() => _view = _LibraryView.uncategorized);
-                  _refresh();
-                },
-              ),
-            ] else
-              TextButton.icon(
-                onPressed: () {
-                  final parent = _folderById(_currentFolderId!)?.parentId;
-                  _goToFolder(parent);
-                },
-                icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                label: Text(l10n.actionBack),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                ),
-              ),
-            if (folderChips.isNotEmpty) ...[
-              const SizedBox(width: 8),
-              for (final f in folderChips)
-                _filterChip(
-                  label: f.name,
-                  selected: _currentFolderId == f.id,
-                  onTap: () => _openFolder(f.id),
-                ),
-            ],
-          ],
-        ),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: SegmentedButton<_LibraryViewMode>(
+        segments: [
+          ButtonSegment(
+            value: _LibraryViewMode.all,
+            label: Text(l10n.libraryViewAll),
+          ),
+          ButtonSegment(
+            value: _LibraryViewMode.overview,
+            label: Text(l10n.libraryViewOverview),
+          ),
+        ],
+        selected: {_viewMode},
+        onSelectionChanged: (selection) {
+          if (selection.isEmpty) return;
+          _setViewMode(selection.first);
+        },
       ),
     );
   }
@@ -1210,34 +1207,43 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final displayNotebooks = _searching
         ? _searchResults.map((r) => r.notebook).toList()
         : _notebooks;
-    final showFolders = !_searching && _currentFolderId != null
-        ? _childFolders
-        : (!_searching && _currentFolderId == null && _view == _LibraryView.all
-            ? _topLevelFolders()
-            : <Folder>[]);
+    final showFolders = !_searching && _viewMode == _LibraryViewMode.overview
+        ? (_currentFolderId == null ? _topLevelFolders() : _childFolders)
+        : <Folder>[];
     final itemCount = showFolders.length + displayNotebooks.length;
+    final inOverviewFolder = _viewMode == _LibraryViewMode.overview &&
+        _currentFolderId != null;
     final emptyMessage = _searching
         ? l10n.libraryNoMatches
-        : _currentFolderId != null
+        : inOverviewFolder
             ? l10n.libraryFolderEmpty
             : _selectedTagId != null
                 ? l10n.libraryNoNotebooksWithTag
-                : _view == _LibraryView.uncategorized
-                    ? l10n.libraryNoUncategorizedNotebooks
-                    : l10n.libraryNoNotebooksYet;
+                : _viewMode == _LibraryViewMode.overview &&
+                        _currentFolderId == null &&
+                        showFolders.isEmpty
+                    ? l10n.libraryNoNotebooksYet
+                    : _viewMode == _LibraryViewMode.all
+                        ? l10n.libraryNoNotebooksYet
+                        : l10n.libraryNoUncategorizedNotebooks;
     final showEmptyPrivacyHint = !_searching &&
         _currentFolderId == null &&
         _selectedTagId == null &&
-        _view != _LibraryView.uncategorized;
+        _viewMode == _LibraryViewMode.all;
 
     return Scaffold(
       drawer: LibraryDrawer(
         folders: _allFolders,
         currentFolderId: _currentFolderId,
+        overviewActive: _viewMode == _LibraryViewMode.overview,
         trashCount: _trashedNotebookCount + _trashedFolderCount,
         onOverview: () {
           Navigator.pop(context);
-          _goToRoot();
+          setState(() {
+            _viewMode = _LibraryViewMode.overview;
+            _currentFolderId = null;
+          });
+          _refresh();
         },
         onOpenTrash: () {
           Navigator.pop(context);
@@ -1308,9 +1314,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: _searchField(),
           ),
           if (!_searching) ...[
+            _viewModeToggle(),
             _tagFilterRow(),
-            _breadcrumbBar(),
-            _folderFilterRow(),
+            if (_viewMode == _LibraryViewMode.overview) _breadcrumbBar(),
           ],
           if (_loadError != null)
             Padding(
@@ -1397,7 +1403,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               ],
                             );
                           }
-                          return _notebookCard(displayNotebooks[nbIndex]);
+                          final notebook = displayNotebooks[nbIndex];
+                          return _notebookCard(
+                            notebook,
+                            folderSubtitle: _viewMode == _LibraryViewMode.all
+                                ? _folderSubtitle(notebook)
+                                : null,
+                          );
                         },
                       ),
           ),

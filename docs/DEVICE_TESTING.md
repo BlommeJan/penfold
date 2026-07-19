@@ -1,8 +1,8 @@
 # Penfold — Device Testing Checklist
 
-**Version:** 0.3.3
+**Version:** 0.3.4
 
-Install the release APK from `APKs/` (for example `Penfold-v0.3.3.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
+Install the release APK from `APKs/` (for example `Penfold-v0.3.4.apk`) on your Android tablet or phone, then work through the sections below. Check each box when the feature works as expected.
 
 ---
 
@@ -76,7 +76,11 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 - [ ] Move a notebook into a folder
 - [ ] Delete a folder (moves to Trash with its notebooks)
 - [ ] Restore a folder from Trash
-- [ ] Filter: All, Uncategorized, and folder chips
+- [ ] **All | Overview** segmented control below search
+- [ ] **All** view lists every notebook (folder subtitle when in a folder)
+- [ ] **Overview** view shows folders at root; notebooks in folders only appear inside that folder
+- [ ] **Overview** root shows uncategorized notebooks (no folder) in a separate area from folder tiles
+- [ ] Tag filter chips (no All/Uncategorized/folder chip row)
 - [ ] Search notebooks by title or content
 - [ ] Add tags to a notebook and filter by tag
 - [ ] Notebook covers show a first-page thumbnail
@@ -218,4 +222,4 @@ Then extract `penfold.db` from the backup on a workstation, or use Settings → 
 
 ---
 
-*Last updated for Penfold v0.3.3*
+*Last updated for Penfold v0.3.4*

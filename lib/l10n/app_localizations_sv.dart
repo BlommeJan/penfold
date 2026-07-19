@@ -90,6 +90,12 @@ class AppLocalizationsSv extends AppLocalizations {
   String get libraryAll => 'Alla';
 
   @override
+  String get libraryViewAll => 'All';
+
+  @override
+  String get libraryViewOverview => 'Overview';
+
+  @override
   String get libraryUncategorized => 'Okategoriserade';
 
   @override

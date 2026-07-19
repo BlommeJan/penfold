@@ -6,6 +6,7 @@
 
 ## Supervisor notes
 
+- **v0.3.4 library All/Overview UX (2026-07-19)** — Segmented All | Overview library views; tag chips only (removed folder filter row). Integration agent: tests, `Penfold-v0.3.4.apk`, device install on R52X909VNGW.
 - **v0.3.3 shape tool + color picker (2026-07-19)** — Shape strokes render on ink layer; pen/shape toolbar selection fixed; color picker HSV/RGB/hex layout polish. Integration agent: tests, `Penfold-v0.3.3.apk`, device install on R52X909VNGW.
 - **v0.3.2 messaging (2026-07-19)** — README, settings, and library copy emphasize offline local-first privacy (no account, no cloud sync, no telemetry).
 - **v0.3.1 user-test fixes (2026-07-19)** — Library tag chips + tag search, fill closed shapes, tape tap-remove with opacity, hex/RGB/HSV color picker. Integration agent: 304 tests, `Penfold-v0.3.1.apk`, device install on R52X909VNGW.

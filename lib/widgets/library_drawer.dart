@@ -7,6 +7,7 @@ class LibraryDrawer extends StatelessWidget {
   final List<Folder> folders;
   final String? currentFolderId;
   final int trashCount;
+  final bool overviewActive;
   final VoidCallback onOverview;
   final VoidCallback onOpenTrash;
   final VoidCallback onOpenSettings;
@@ -16,6 +17,7 @@ class LibraryDrawer extends StatelessWidget {
     super.key,
     required this.folders,
     required this.currentFolderId,
+    required this.overviewActive,
     required this.trashCount,
     required this.onOverview,
     required this.onOpenTrash,
@@ -71,7 +73,7 @@ class LibraryDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.grid_view_rounded),
               title: Text(l10n.libraryOverview),
-              selected: currentFolderId == null,
+              selected: overviewActive && currentFolderId == null,
               onTap: onOverview,
             ),
             ListTile(

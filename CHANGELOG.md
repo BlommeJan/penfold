@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.4] — 2026-07-19
+
+Library screen UX — clearer All vs Overview browsing and tag-only filters.
+
+### Changed
+
+- **Library views** — Segmented **All | Overview** control: All shows every notebook (with optional folder subtitle); Overview is folder-first with uncategorized notebooks at root only
+- **Library filters** — Tag chips only; removed the old All/Uncategorized/folder chip row
+
 ## [0.3.3] — 2026-07-19
 
 Shape tool visibility and color picker layout polish from device QA.

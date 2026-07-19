@@ -81,25 +81,15 @@ class _PenfoldColorPickerDialogState extends State<PenfoldColorPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     return AlertDialog(
       title: Text(l10n.customColorTitle),
+      contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       content: SizedBox(
         width: 300,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: _color,
-                shape: BoxShape.circle,
-                border: Border.all(color: scheme.outline),
-              ),
-            ),
-            const SizedBox(height: 16),
             SegmentedButton<_ColorPickerMode>(
               segments: [
                 ButtonSegment(
@@ -120,13 +110,11 @@ class _PenfoldColorPickerDialogState extends State<PenfoldColorPickerDialog> {
                 setState(() => _mode = selection.first);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             switch (_mode) {
               _ColorPickerMode.hsv => _HsvPicker(
                   hsv: _hsv,
                   onChanged: _applyHsv,
-                  hueLabel: l10n.hueLabel,
-                  saturationLabel: l10n.saturationLabel,
                   brightnessLabel: l10n.brightnessLabel,
                 ),
               _ColorPickerMode.rgb => _RgbPicker(
@@ -138,6 +126,7 @@ class _PenfoldColorPickerDialogState extends State<PenfoldColorPickerDialog> {
                 ),
               _ColorPickerMode.hex => _HexPicker(
                   controller: _hexController,
+                  color: _color,
                   isValid: _hexValid,
                   onSubmitted: _onHexSubmitted,
                   hexLabel: l10n.hexLabel,
@@ -161,75 +150,106 @@ class _PenfoldColorPickerDialogState extends State<PenfoldColorPickerDialog> {
   }
 }
 
+class _ColorPreviewChip extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _ColorPreviewChip({required this.color, this.size = 32});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(size <= 32 ? 6 : 8),
+        border: Border.all(color: scheme.outline),
+      ),
+    );
+  }
+}
+
 class _HsvPicker extends StatelessWidget {
   final HSVColor hsv;
   final ValueChanged<HSVColor> onChanged;
-  final String hueLabel;
-  final String saturationLabel;
   final String brightnessLabel;
 
   const _HsvPicker({
     required this.hsv,
     required this.onChanged,
-    required this.hueLabel,
-    required this.saturationLabel,
     required this.brightnessLabel,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _HueWheel(
-          hue: hsv.hue,
-          onChanged: (hue) => onChanged(hsv.withHue(hue)),
-        ),
-        const SizedBox(height: 12),
-        _SaturationValueSquare(
-          hue: hsv.hue,
-          saturation: hsv.saturation,
-          value: hsv.value,
-          onChanged: (s, v) => onChanged(hsv.withSaturation(s).withValue(v)),
-        ),
-        const SizedBox(height: 12),
-        _SliderRow(
-          label: hueLabel,
-          value: hsv.hue,
-          max: 360,
-          onChanged: (v) => onChanged(hsv.withHue(v)),
-        ),
-        _SliderRow(
-          label: saturationLabel,
-          value: hsv.saturation,
-          max: 1,
-          onChanged: (v) => onChanged(hsv.withSaturation(v)),
-        ),
-        _SliderRow(
-          label: brightnessLabel,
-          value: hsv.value,
-          max: 1,
-          onChanged: (v) => onChanged(hsv.withValue(v)),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final pickerSize = (constraints.maxWidth - 8) / 2;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _HueWheel(
+                    size: pickerSize,
+                    hue: hsv.hue,
+                    onChanged: (hue) => onChanged(hsv.withHue(hue)),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _SaturationValueSquare(
+                    size: pickerSize,
+                    hue: hsv.hue,
+                    saturation: hsv.saturation,
+                    value: hsv.value,
+                    onChanged: (s, v) =>
+                        onChanged(hsv.withSaturation(s).withValue(v)),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _SliderRow(
+              label: brightnessLabel,
+              value: hsv.value,
+              max: 1,
+              onChanged: (v) => onChanged(hsv.withValue(v)),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _ColorPreviewChip(color: hsv.toColor()),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
 class _HueWheel extends StatelessWidget {
+  final double size;
   final double hue;
   final ValueChanged<double> onChanged;
 
-  const _HueWheel({required this.hue, required this.onChanged});
+  const _HueWheel({
+    required this.size,
+    required this.hue,
+    required this.onChanged,
+  });
 
-  static const _size = 160.0;
-  static const _stroke = 22.0;
+  static const _stroke = 18.0;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _size,
-      height: _size,
+      width: size,
+      height: size,
       child: GestureDetector(
         onPanDown: (d) => _updateHue(d.localPosition),
         onPanUpdate: (d) => _updateHue(d.localPosition),
@@ -238,14 +258,14 @@ class _HueWheel extends StatelessWidget {
             hue: hue,
             strokeWidth: _stroke,
           ),
-          size: const Size(_size, _size),
+          size: Size(size, size),
         ),
       ),
     );
   }
 
   void _updateHue(Offset local) {
-    final center = Offset(_size / 2, _size / 2);
+    final center = Offset(size / 2, size / 2);
     final delta = local - center;
     final angle = math.atan2(delta.dy, delta.dx);
     final degrees = (angle * 180 / math.pi + 360) % 360;
@@ -306,19 +326,19 @@ class _HueWheelPainter extends CustomPainter {
 }
 
 class _SaturationValueSquare extends StatelessWidget {
+  final double size;
   final double hue;
   final double saturation;
   final double value;
   final void Function(double saturation, double value) onChanged;
 
   const _SaturationValueSquare({
+    required this.size,
     required this.hue,
     required this.saturation,
     required this.value,
     required this.onChanged,
   });
-
-  static const _size = 160.0;
 
   @override
   Widget build(BuildContext context) {
@@ -326,8 +346,8 @@ class _SaturationValueSquare extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: SizedBox(
-        width: _size,
-        height: _size,
+        width: size,
+        height: size,
         child: GestureDetector(
           onPanDown: (d) => _update(d.localPosition),
           onPanUpdate: (d) => _update(d.localPosition),
@@ -366,8 +386,8 @@ class _SaturationValueSquare extends StatelessWidget {
   }
 
   void _update(Offset local) {
-    final s = (local.dx / _size).clamp(0.0, 1.0);
-    final v = (1 - local.dy / _size).clamp(0.0, 1.0);
+    final s = (local.dx / size).clamp(0.0, 1.0);
+    final v = (1 - local.dy / size).clamp(0.0, 1.0);
     onChanged(s, v);
   }
 }
@@ -389,14 +409,14 @@ class _SaturationValueThumbPainter extends CustomPainter {
     final y = (1 - value) * size.height;
     canvas.drawCircle(
       Offset(x, y),
-      8,
+      7,
       Paint()
         ..color = color
         ..style = PaintingStyle.fill,
     );
     canvas.drawCircle(
       Offset(x, y),
-      8,
+      7,
       Paint()
         ..color = Colors.white
         ..style = PaintingStyle.stroke
@@ -431,6 +451,11 @@ class _RgbPicker extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: _ColorPreviewChip(color: color, size: 36),
+        ),
+        const SizedBox(height: 10),
         _SliderRow(
           label: redLabel,
           value: color.red.toDouble(),
@@ -474,6 +499,7 @@ class _RgbPicker extends StatelessWidget {
 
 class _HexPicker extends StatelessWidget {
   final TextEditingController controller;
+  final Color color;
   final bool isValid;
   final ValueChanged<String> onSubmitted;
   final String hexLabel;
@@ -481,6 +507,7 @@ class _HexPicker extends StatelessWidget {
 
   const _HexPicker({
     required this.controller,
+    required this.color,
     required this.isValid,
     required this.onSubmitted,
     required this.hexLabel,
@@ -489,26 +516,42 @@ class _HexPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: hexLabel,
-        hintText: hexHint,
-        errorText: isValid ? null : hexHint,
-        border: const OutlineInputBorder(),
-        prefixIcon: const Icon(Icons.tag_rounded),
-      ),
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            fontFamily: 'monospace',
-            letterSpacing: 1.2,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: hexLabel,
+              hintText: hexHint,
+              errorText: isValid ? null : hexHint,
+              border: const OutlineInputBorder(),
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
+            ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontFamily: 'monospace',
+                  letterSpacing: 1.2,
+                ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[#0-9A-Fa-f]')),
+              LengthLimitingTextInputFormatter(7),
+            ],
+            textCapitalization: TextCapitalization.characters,
+            onChanged: onSubmitted,
+            onSubmitted: onSubmitted,
           ),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[#0-9A-Fa-f]')),
-        LengthLimitingTextInputFormatter(7),
+        ),
+        const SizedBox(width: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: _ColorPreviewChip(color: color),
+        ),
       ],
-      textCapitalization: TextCapitalization.characters,
-      onChanged: onSubmitted,
-      onSubmitted: onSubmitted,
     );
   }
 }
@@ -533,16 +576,19 @@ class _SliderRow extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 88,
+          width: 72,
           child: Text(label, style: Theme.of(context).textTheme.bodySmall),
         ),
         Expanded(
-          child: Slider(
-            value: value.clamp(0, max),
-            min: 0,
-            max: max,
-            activeColor: activeColor,
-            onChanged: onChanged,
+          child: SliderTheme(
+            data: SliderTheme.of(context).copyWith(trackHeight: 3),
+            child: Slider(
+              value: value.clamp(0, max),
+              min: 0,
+              max: max,
+              activeColor: activeColor,
+              onChanged: onChanged,
+            ),
           ),
         ),
       ],

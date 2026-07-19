@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.3] — 2026-07-19
+
+Shape tool visibility and color picker layout polish from device QA.
+
+### Fixed
+
+- **Shape tool** — Recognized shape strokes render on the ink layer; pen/shape toolbar selection no longer conflates fill mode
+- **Color picker** — Cleaner HSV/RGB/hex tab layout with improved spacing and preview alignment
+
 ## [0.3.2] — 2026-07-19
 
 Messaging update — emphasize offline, local-first, and private-by-design positioning across README, settings, and library copy.

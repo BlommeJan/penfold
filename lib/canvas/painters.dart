@@ -99,6 +99,14 @@ class PagePainter extends CustomPainter {
       old.pdfImage != pdfImage;
 }
 
+/// Whether [stroke] is drawn on the canvas ink layer.
+bool inkStrokeVisibleOnCanvas(Stroke stroke) {
+  return stroke.tool == ToolType.pen ||
+      stroke.tool == ToolType.highlighter ||
+      stroke.tool == ToolType.shape ||
+      stroke.tool == ToolType.tape;
+}
+
 /// Paints committed strokes + the in-progress stroke + selection overlay.
 class InkPainter extends CustomPainter {
   final List<Stroke> strokes;
@@ -177,12 +185,7 @@ class InkPainter extends CustomPainter {
       _drawTextBlock(canvas, tb);
     }
 
-    final inkStrokes = strokes
-        .where((s) =>
-            s.tool == ToolType.pen ||
-            s.tool == ToolType.highlighter ||
-            s.tool == ToolType.tape)
-        .toList()
+    final inkStrokes = strokes.where(inkStrokeVisibleOnCanvas).toList()
       ..sort((a, b) => a.z.compareTo(b.z));
     for (final s in inkStrokes) {
       if (s.tool == ToolType.tape) {

@@ -88,10 +88,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
         final t = toolState;
         final l10n = context.l10n;
         final scheme = Theme.of(context).colorScheme;
-        final penFamily = t.tool == ToolType.pen ||
-            t.tool == ToolType.shape ||
-            t.tool == ToolType.fill;
-        final centerTools = _buildCenterTools(context, t, penFamily, l10n);
+        final centerTools = _buildCenterTools(context, t, l10n);
         return Material(
           color: scheme.surface,
           elevation: 0.5,
@@ -221,7 +218,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   List<Widget> _buildCenterTools(
     BuildContext context,
     ToolState t,
-    bool penFamily,
     AppLocalizations l10n,
   ) {
     final order = ToolbarOrderService.instance.order;
@@ -240,15 +236,16 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
 
       switch (id) {
         case ToolbarToolId.pen:
+          final penLinked = t.tool == ToolType.pen || t.tool == ToolType.shape;
           widgets.add(
             _ToolButton(
               icon: Icons.edit_rounded,
-              selected: penFamily && t.tool != ToolType.fill,
+              selected: penLinked,
               tooltip: l10n.toolPen,
               onTap: () => t.set((s) => s.tool = ToolType.pen),
               onTapWhenSelected: () =>
                   _showPenOptions(context, t, highlighter: false),
-              accent: penFamily && t.tool != ToolType.fill ? t.penColor : null,
+              accent: penLinked ? t.penColor : null,
             ),
           );
         case ToolbarToolId.highlighter:
@@ -315,8 +312,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
               selected: t.tool == ToolType.shape,
               tooltip: l10n.toolShape,
               onTap: () => t.set((s) => s.tool = ToolType.shape),
-              onTapWhenSelected: () =>
-                  _showPenOptions(context, t, highlighter: false),
+              onTapWhenSelected: () => t.set((s) => s.tool = ToolType.pen),
             ),
           );
         case ToolbarToolId.fill:

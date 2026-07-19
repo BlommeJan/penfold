@@ -21,6 +21,11 @@ Future<void> settle(WidgetTester tester) async {
   }
 }
 
+Future<void> openDrawer(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.menu));
+  await settle(tester);
+}
+
 Future<void> seedLibraryFixtures(AppDatabase db) async {
   await db.insertFolder(Folder(id: 'f1', name: 'Work', sortOrder: 0));
   await db.insertNotebook(
@@ -78,17 +83,21 @@ void main() {
     await tmp.delete(recursive: true);
   });
 
-  testWidgets('library shows All and Overview segmented control',
+  testWidgets('library drawer lists All, Overview, Trash, and Settings',
       (tester) async {
     await tester.pumpWidget(const PenfoldApp());
     await settle(tester);
 
-    expect(
-      find.byWidgetPredicate((widget) => widget is SegmentedButton),
-      findsOneWidget,
-    );
+    await openDrawer(tester);
+
     expect(find.text('All'), findsOneWidget);
     expect(find.text('Overview'), findsOneWidget);
+    expect(find.text('Trash'), findsOneWidget);
+    expect(find.text('Settings'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((widget) => widget is SegmentedButton),
+      findsNothing,
+    );
   });
 
   testWidgets('Overview root shows folders and uncategorized notebooks only',
@@ -98,6 +107,7 @@ void main() {
     await tester.pumpWidget(const PenfoldApp());
     await settle(tester);
 
+    await openDrawer(tester);
     await tester.tap(find.text('Overview'));
     await settle(tester);
 
@@ -113,6 +123,7 @@ void main() {
     await tester.pumpWidget(const PenfoldApp());
     await settle(tester);
 
+    await openDrawer(tester);
     await tester.tap(find.text('All'));
     await settle(tester);
 
@@ -126,6 +137,10 @@ void main() {
     await tester.runAsync(() => seedLibraryFixtures(AppDatabase.instance));
 
     await tester.pumpWidget(const PenfoldApp());
+    await settle(tester);
+
+    await openDrawer(tester);
+    await tester.tap(find.text('Overview'));
     await settle(tester);
 
     await tester.enterText(find.byType(TextField), 'Project');

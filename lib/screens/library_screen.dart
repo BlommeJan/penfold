@@ -111,7 +111,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   void _onSearchChanged() {
-    setState(() {});
     final q = _searchCtrl.text.trim();
     if (q.isEmpty) {
       setState(() {
@@ -120,6 +119,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
       });
       return;
     }
+    setState(() => _searching = true);
+    _runSearch(q);
+  }
+
+  void _rerunSearchIfActive() {
+    final q = _searchCtrl.text.trim();
+    if (q.isEmpty) return;
+    setState(() => _searching = true);
     _runSearch(q);
   }
 
@@ -127,6 +134,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     try {
       final results = await _db.searchNotebooks(q);
       if (!mounted) return;
+      if (_searchCtrl.text.trim() != q) return;
       setState(() {
         _searching = true;
         _searchResults = results;
@@ -259,17 +267,24 @@ class _LibraryScreenState extends State<LibraryScreen> {
       _currentFolderId = folderId;
     });
     _refresh();
+    _rerunSearchIfActive();
   }
 
   void _setViewMode(_LibraryViewMode mode) {
-    if (_viewMode == mode) return;
+    if (_viewMode == mode &&
+        (mode != _LibraryViewMode.overview || _currentFolderId == null)) {
+      return;
+    }
     setState(() {
       _viewMode = mode;
       if (mode == _LibraryViewMode.all) {
         _currentFolderId = null;
+      } else if (mode == _LibraryViewMode.overview) {
+        _currentFolderId = null;
       }
     });
     _refresh();
+    _rerunSearchIfActive();
   }
 
   void _goToRoot() {
@@ -1112,30 +1127,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _viewModeToggle() {
-    final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      child: SegmentedButton<_LibraryViewMode>(
-        segments: [
-          ButtonSegment(
-            value: _LibraryViewMode.all,
-            label: Text(l10n.libraryViewAll),
-          ),
-          ButtonSegment(
-            value: _LibraryViewMode.overview,
-            label: Text(l10n.libraryViewOverview),
-          ),
-        ],
-        selected: {_viewMode},
-        onSelectionChanged: (selection) {
-          if (selection.isEmpty) return;
-          _setViewMode(selection.first);
-        },
-      ),
-    );
-  }
-
   String _searchResultSubtitle(SearchResult result) {
     final l10n = context.l10n;
     if (result.matchedTagName != null) {
@@ -1235,15 +1226,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
       drawer: LibraryDrawer(
         folders: _allFolders,
         currentFolderId: _currentFolderId,
-        overviewActive: _viewMode == _LibraryViewMode.overview,
+        allActive: _viewMode == _LibraryViewMode.all,
+        overviewActive: _viewMode == _LibraryViewMode.overview &&
+            _currentFolderId == null,
         trashCount: _trashedNotebookCount + _trashedFolderCount,
+        onAll: () {
+          Navigator.pop(context);
+          _setViewMode(_LibraryViewMode.all);
+        },
         onOverview: () {
           Navigator.pop(context);
-          setState(() {
-            _viewMode = _LibraryViewMode.overview;
-            _currentFolderId = null;
-          });
-          _refresh();
+          _setViewMode(_LibraryViewMode.overview);
         },
         onOpenTrash: () {
           Navigator.pop(context);
@@ -1314,7 +1307,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: _searchField(),
           ),
           if (!_searching) ...[
-            _viewModeToggle(),
             _tagFilterRow(),
             if (_viewMode == _LibraryViewMode.overview) _breadcrumbBar(),
           ],

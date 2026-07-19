@@ -787,8 +787,11 @@ class AppDatabase {
       try {
         results = await _searchNotebooksFts(database, trimmed);
       } catch (_) {
-        results = await _searchNotebooksLike(database, trimmed);
+        results = <SearchResult>[];
       }
+      // Supplement FTS with LIKE so titles and partial matches always resolve globally.
+      final likeResults = await _searchNotebooksLike(database, trimmed);
+      results = _mergeSearchResults(results, likeResults);
     }
     final metadataMatches =
         await _searchNotebooksByTagsAndFolders(database, trimmed);

@@ -2,6 +2,25 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.0] — 2026
+
+User milestone **v0.3** — consolidates the 0.2.x polish and feature wave into a single release tag.
+
+### Added
+
+- **13-language i18n** — Full UI localization for 14 locales (English plus de, fr, nl, ko, pl, es, it, uk, sv, nb, fi, da, pt); settings language picker with localized language names
+- **Dark mode** — System / light / dark theme picker with app-wide `PenfoldTheme` polish (library, toolbar, page overview, document viewport, settings controls)
+- **Page paper themes** — Per-page background colors (light, dark, sepia, pastels) with themed ruled/grid line colors; notebook defaults for paper size, type, and page theme
+- **Settings restructure** — Language, appearance, and preferences sections (theme mode, locale, stroke smoothing, notebook defaults)
+- **Stroke smoothing slider** — Adjustable 0–100% strength with distance-aware Chaikin smoothing and small-writing coalescing improvements
+- **Samsung S Pen** — Barrel button eraser toggle, hover preview, and toolbar eraser polish
+- **Handwriting OCR** — ML Kit digital ink recognition, selection convert-to-text, custom dictionary, ink OCR index, and table-of-contents heading detection
+- **Document zoom** — Pinch zoom, two-finger pan, double-tap reset, bounds clamping, and zoom UX fixes (no white seams; finger scroll in stylus-only mode)
+
+### Fixed
+
+- **Contextual locale review** — Native review pass for all 13 non-English locales (notebook vs laptop terminology, ink/stylus/trash/export phrasing, recover-vs-restore distinctions)
+
 ## [0.2.83] — 2026
 
 ### Fixed

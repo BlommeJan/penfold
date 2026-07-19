@@ -6,6 +6,7 @@
 
 ## Supervisor notes
 
+- **v0.3.0 milestone (2026-07-19)** — User milestone tag consolidating the 0.2.x wave: 13-language i18n, dark mode, page paper themes, settings restructure (language/appearance/preferences), stroke smoothing slider, contextual locale review, Samsung S Pen polish, handwriting OCR, and document zoom UX. Patch releases 0.2.78–0.2.83 remain in CHANGELOG detail; integration agent tags `0.3.0` in pubspec.
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
 - **Current position:** v0.2.41 landscape pinch-zoom patch shipped after v0.2.40 roadmap completion.
 - **Run completed:** 2026-07-16 — resumed from v0.2.29 (`1361e6b`, 130 tests); shipped v0.2.30–0.2.40 (11 features); final main at `71ea66c`, **200/200 tests**, release APK built.

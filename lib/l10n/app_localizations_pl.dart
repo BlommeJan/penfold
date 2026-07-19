@@ -124,6 +124,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get libraryNoNotebooksYet => 'Brak notatników';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return 'Nie udało się wczytać biblioteki: $error';
   }

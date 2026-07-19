@@ -124,6 +124,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get libraryNoNotebooksYet => '노트가 없습니다';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return '라이브러리를 불러올 수 없습니다: $error';
   }

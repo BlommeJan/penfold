@@ -344,6 +344,12 @@ abstract class AppLocalizations {
   /// **'No notebooks yet'**
   String get libraryNoNotebooksYet;
 
+  /// No description provided for @libraryNoNotebooksYetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Private by design — no login. Your notes stay on this device.'**
+  String get libraryNoNotebooksYetHint;
+
   /// No description provided for @libraryCouldNotLoad.
   ///
   /// In en, this message translates to:
@@ -935,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsYourDataHint.
   ///
   /// In en, this message translates to:
-  /// **'Penfold stores everything on this device in a single SQLite database and asset folders — no cloud sync. See docs/ARCHITECTURE.md for the full on-device file layout.'**
+  /// **'Your notes live on this device in a SQLite database and asset folders — not in a cloud account. No sync server, no telemetry. Export or back up whenever you choose. See docs/ARCHITECTURE.md for the on-device file layout.'**
   String get settingsYourDataHint;
 
   /// No description provided for @settingsDatabase.
@@ -1025,7 +1031,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Local-first handwriting notebook — no accounts, no cloud.'**
+  /// **'Your notes stay on your device — no account, works offline, no cloud sync.'**
   String get settingsAboutSubtitle;
 
   /// No description provided for @settingsVersion.

@@ -50,7 +50,7 @@ void main() {
     PackageInfo.setMockInitialValues(
       appName: 'Penfold',
       packageName: 'com.itsbryce.penfold',
-      version: '0.3.1',
+      version: '0.3.2',
       buildNumber: '1',
       buildSignature: '',
     );
@@ -71,8 +71,12 @@ void main() {
     await settle(tester);
 
     expect(find.text('Penfold'), findsOneWidget);
-    expect(find.textContaining('v0.3.1'), findsOneWidget);
+    expect(find.textContaining('v0.3.2'), findsOneWidget);
     expect(find.text('No notebooks yet'), findsOneWidget);
+    expect(
+      find.text('Private by design — no login. Your notes stay on this device.'),
+      findsOneWidget,
+    );
     expect(find.text('New notebook'), findsOneWidget);
   });
 

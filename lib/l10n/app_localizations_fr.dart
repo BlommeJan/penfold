@@ -124,6 +124,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get libraryNoNotebooksYet => 'Aucun carnet pour l\'instant';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return 'Impossible de charger la bibliothèque : $error';
   }

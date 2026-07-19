@@ -124,6 +124,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get libraryNoNotebooksYet => 'Зошитів ще немає';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return 'Не вдалося завантажити бібліотеку: $error';
   }

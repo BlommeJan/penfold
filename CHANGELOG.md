@@ -2,6 +2,14 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.2] — 2026-07-19
+
+Messaging update — emphasize offline, local-first, and private-by-design positioning across README, settings, and library copy.
+
+### Changed
+
+- **Messaging** — emphasize offline local-first privacy (no account, no cloud sync, no telemetry; you control export & backup)
+
 ## [0.3.1] — 2026-07-19
 
 User-test fixes from device QA — library organization, fill tool, tape behavior, and color picking.

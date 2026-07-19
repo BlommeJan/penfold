@@ -51,6 +51,7 @@
   "libraryNoNotebooksWithTag": "No notebooks with this tag",
   "libraryNoUncategorizedNotebooks": "No uncategorized notebooks",
   "libraryNoNotebooksYet": "No notebooks yet",
+  "libraryNoNotebooksYetHint": "Private by design — no login. Your notes stay on this device.",
   "libraryCouldNotLoad": "Could not load library: {error}",
   "@libraryCouldNotLoad": {
     "placeholders": {
@@ -236,7 +237,7 @@
   "settingsOcrTermLabel": "Term",
   "settingsOcrTermHint": "e.g. eigenvalue, mitochondria",
   "settingsSectionYourData": "Your data",
-  "settingsYourDataHint": "Penfold stores everything on this device in a single SQLite database and asset folders — no cloud sync. See docs/ARCHITECTURE.md for the full on-device file layout.",
+  "settingsYourDataHint": "Your notes live on this device in a SQLite database and asset folders — not in a cloud account. No sync server, no telemetry. Export or back up whenever you choose. See docs/ARCHITECTURE.md for the on-device file layout.",
   "settingsDatabase": "Database",
   "settingsSectionBackupRestore": "Backup & Restore",
   "settingsBackupRestoreHint": "Export a zip of penfold.db and asset folders, or restore from a previous backup. Your current database is saved to backups/ before restore.",
@@ -268,7 +269,7 @@
   "settingsRestoreBackupTitle": "Restore backup?",
   "settingsRestoreBackupBody": "This replaces your current notebooks and files. Your current database will be saved to backups/ before restore.",
   "settingsSectionAbout": "About",
-  "settingsAboutSubtitle": "Local-first handwriting notebook — no accounts, no cloud.",
+  "settingsAboutSubtitle": "Your notes stay on your device — no account, works offline, no cloud sync.",
   "settingsVersion": "Version {version}",
   "@settingsVersion": {
     "placeholders": {

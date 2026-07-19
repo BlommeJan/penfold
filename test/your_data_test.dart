@@ -157,7 +157,7 @@ void main() {
     expect(find.text('Penfold'), findsWidgets);
     expect(find.textContaining('Version v0.2.62'), findsOneWidget);
     expect(
-      find.textContaining('Local-first handwriting notebook'),
+      find.textContaining('no account'),
       findsOneWidget,
     );
   });

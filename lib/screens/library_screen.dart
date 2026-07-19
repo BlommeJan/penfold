@@ -1225,6 +1225,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 : _view == _LibraryView.uncategorized
                     ? l10n.libraryNoUncategorizedNotebooks
                     : l10n.libraryNoNotebooksYet;
+    final showEmptyPrivacyHint = !_searching &&
+        _currentFolderId == null &&
+        _selectedTagId == null &&
+        _view != _LibraryView.uncategorized;
 
     return Scaffold(
       drawer: LibraryDrawer(
@@ -1338,6 +1342,25 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             Text(emptyMessage,
                                 style:
                                     Theme.of(context).textTheme.titleMedium),
+                            if (showEmptyPrivacyHint) ...[
+                              const SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
+                                child: Text(
+                                  l10n.libraryNoNotebooksYetHint,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       )

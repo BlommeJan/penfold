@@ -126,6 +126,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get libraryNoNotebooksYet => 'Inga anteckningsböcker ännu';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return 'Kunde inte ladda biblioteket: $error';
   }

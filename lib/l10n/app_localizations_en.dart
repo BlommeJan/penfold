@@ -125,6 +125,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libraryNoNotebooksYet => 'No notebooks yet';
 
   @override
+  String get libraryNoNotebooksYetHint =>
+      'Private by design — no login. Your notes stay on this device.';
+
+  @override
   String libraryCouldNotLoad(String error) {
     return 'Could not load library: $error';
   }
@@ -458,7 +462,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsYourDataHint =>
-      'Penfold stores everything on this device in a single SQLite database and asset folders — no cloud sync. See docs/ARCHITECTURE.md for the full on-device file layout.';
+      'Your notes live on this device in a SQLite database and asset folders — not in a cloud account. No sync server, no telemetry. Export or back up whenever you choose. See docs/ARCHITECTURE.md for the on-device file layout.';
 
   @override
   String get settingsDatabase => 'Database';
@@ -512,7 +516,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Local-first handwriting notebook — no accounts, no cloud.';
+      'Your notes stay on your device — no account, works offline, no cloud sync.';
 
   @override
   String settingsVersion(String version) {

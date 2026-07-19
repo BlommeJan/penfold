@@ -1,7 +1,7 @@
 name: penfold
-description: Local-first handwriting notebook. No accounts, no cloud — everything in SQLite on-device.
+description: Private, local-first handwriting notebook. No account, no cloud — everything in SQLite on your device.
 publish_to: 'none'
-version: 0.3.1
+version: 0.3.2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

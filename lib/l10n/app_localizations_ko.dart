@@ -941,6 +941,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get trashDeleteFolderBody => '폴더와 포함된 노트가 이 기기에서 제거됩니다.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => '페이지를 분할하시겠습니까?';
 
   @override

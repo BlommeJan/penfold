@@ -967,6 +967,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela supprime le dossier et ses carnets de cet appareil.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => 'Diviser la page ?';
 
   @override

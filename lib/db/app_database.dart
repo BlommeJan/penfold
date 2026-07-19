@@ -1036,6 +1036,18 @@ class AppDatabase {
     await database.delete('notebooks', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Permanently deletes every item currently in Trash.
+  Future<void> emptyTrash() async {
+    final folders = await trashedFolders();
+    for (final folder in folders) {
+      await deleteFolderPermanently(folder.id);
+    }
+    final notebooks = await trashedNotebooks();
+    for (final notebook in notebooks) {
+      await deleteNotebook(notebook.id);
+    }
+  }
+
   /// Hard-delete notebooks and folders older than [trashRetention].
   Future<void> purgeTrash({int? nowMs}) async {
     final database = await db;

@@ -962,6 +962,16 @@ class AppLocalizationsDa extends AppLocalizations {
       'Dette fjerner mappen og dens notesbøger fra denne enhed.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => 'Opdel side?';
 
   @override

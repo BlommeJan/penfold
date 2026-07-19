@@ -2,6 +2,15 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.5] — 2026-07-19
+
+Small library and trash UX fixes from user feedback.
+
+### Changed
+
+- **Library default view** — opening the library now starts in **Overview** (folder explorer) instead of **All**
+- **Trash** — **Delete all** button in the trash app bar permanently empties trash after confirmation
+
 ## [0.3.4] — 2026-07-19
 
 Library screen UX — clearer All vs Overview browsing and tag-only filters.

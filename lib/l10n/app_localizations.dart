@@ -1820,6 +1820,24 @@ abstract class AppLocalizations {
   /// **'This removes the folder and its notebooks from this device.'**
   String get trashDeleteFolderBody;
 
+  /// No description provided for @trashDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all'**
+  String get trashDeleteAll;
+
+  /// No description provided for @trashDeleteAllConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all items in Trash?'**
+  String get trashDeleteAllConfirmTitle;
+
+  /// No description provided for @trashDeleteAllConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently removes all trashed notebooks and folders from this device.'**
+  String get trashDeleteAllConfirmBody;
+
   /// No description provided for @splitPageTitle.
   ///
   /// In en, this message translates to:

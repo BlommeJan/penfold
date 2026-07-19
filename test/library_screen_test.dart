@@ -67,7 +67,7 @@ void main() {
     PackageInfo.setMockInitialValues(
       appName: 'Penfold',
       packageName: 'com.itsbryce.penfold',
-      version: '0.3.4',
+      version: '0.3.5',
       buildNumber: '1',
       buildSignature: '',
     );
@@ -98,6 +98,26 @@ void main() {
       find.byWidgetPredicate((widget) => widget is SegmentedButton),
       findsNothing,
     );
+  });
+
+  testWidgets('library opens in Overview by default', (tester) async {
+    await tester.runAsync(() => seedLibraryFixtures(AppDatabase.instance));
+
+    await tester.pumpWidget(const PenfoldApp());
+    await settle(tester);
+
+    expect(find.text('Work'), findsOneWidget);
+    expect(find.text('Loose Leaf'), findsOneWidget);
+    expect(find.text('Project Notes'), findsNothing);
+
+    await openDrawer(tester);
+    final overviewTile = tester.widget<ListTile>(
+      find.ancestor(
+        of: find.text('Overview'),
+        matching: find.byType(ListTile),
+      ),
+    );
+    expect(overviewTile.selected, isTrue);
   });
 
   testWidgets('Overview root shows folders and uncategorized notebooks only',
@@ -137,10 +157,6 @@ void main() {
     await tester.runAsync(() => seedLibraryFixtures(AppDatabase.instance));
 
     await tester.pumpWidget(const PenfoldApp());
-    await settle(tester);
-
-    await openDrawer(tester);
-    await tester.tap(find.text('Overview'));
     await settle(tester);
 
     await tester.enterText(find.byType(TextField), 'Project');

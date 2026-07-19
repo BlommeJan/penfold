@@ -965,6 +965,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dies entfernt den Ordner und seine Notizbücher von diesem Gerät.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => 'Seite aufteilen?';
 
   @override

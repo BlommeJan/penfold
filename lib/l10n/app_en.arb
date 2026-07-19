@@ -464,6 +464,9 @@
     }
   },
   "trashDeleteFolderBody": "This removes the folder and its notebooks from this device.",
+  "trashDeleteAll": "Delete all",
+  "trashDeleteAllConfirmTitle": "Delete all items in Trash?",
+  "trashDeleteAllConfirmBody": "This permanently removes all trashed notebooks and folders from this device.",
   "splitPageTitle": "Split page?",
   "splitPageBody": "Create a new page with the same template and move about half of the {count} strokes onto it.",
   "@splitPageBody": {

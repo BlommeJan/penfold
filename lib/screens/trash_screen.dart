@@ -121,6 +121,33 @@ class _TrashScreenState extends State<TrashScreen> {
     }
   }
 
+  bool get _hasTrashItems => _folders.isNotEmpty || _notebooks.isNotEmpty;
+
+  Future<void> _deleteAll() async {
+    final l10n = context.l10n;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.trashDeleteAllConfirmTitle),
+        content: Text(l10n.trashDeleteAllConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.actionCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.trashDeleteAll),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) {
+      await _db.emptyTrash();
+      await _load();
+    }
+  }
+
   Widget _sectionTitle(String label) => Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
         child: Text(
@@ -162,8 +189,21 @@ class _TrashScreenState extends State<TrashScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.trashTitle)),
+      appBar: AppBar(
+        title: Text(l10n.trashTitle),
+        actions: [
+          if (!_loading && _error == null && _hasTrashItems)
+            TextButton(
+              onPressed: _deleteAll,
+              child: Text(
+                l10n.trashDeleteAll,
+                style: TextStyle(color: scheme.error),
+              ),
+            ),
+        ],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null

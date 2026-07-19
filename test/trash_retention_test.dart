@@ -83,4 +83,28 @@ void main() {
     expect(rows.single['deleted_at'], isNull);
     expect(rows.single['folder_id'], isNull);
   });
+
+  test('emptyTrash permanently removes all trashed notebooks and folders',
+      () async {
+    final db = AppDatabase.instance;
+    await db.insertFolder(_folder(id: 'f1'));
+    await db.insertNotebook(_notebook(id: 'nb1', folderId: 'f1'));
+    await db.insertNotebook(_notebook(id: 'nb2'));
+    await db.softDeleteFolder('f1');
+    await db.softDeleteNotebook('nb2');
+
+    await db.emptyTrash();
+
+    final database = await db.db;
+    expect(await db.trashedNotebooks(), isEmpty);
+    expect(await db.trashedFolders(), isEmpty);
+    expect(
+      await database.query('notebooks', where: 'id IN (?, ?)', whereArgs: ['nb1', 'nb2']),
+      isEmpty,
+    );
+    expect(
+      await database.query('folders', where: 'id = ?', whereArgs: ['f1']),
+      isEmpty,
+    );
+  });
 }

@@ -49,7 +49,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   List<Folder> _childFolders = [];
   List<Tag> _allTags = [];
   List<SearchResult> _searchResults = [];
-  _LibraryViewMode _viewMode = _LibraryViewMode.all;
+  _LibraryViewMode _viewMode = _LibraryViewMode.overview;
   String? _currentFolderId;
   String? _selectedTagId;
   bool _loading = true;

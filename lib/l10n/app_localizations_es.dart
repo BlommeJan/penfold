@@ -968,6 +968,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esto elimina la carpeta y sus cuadernos de este dispositivo.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => '¿Dividir página?';
 
   @override

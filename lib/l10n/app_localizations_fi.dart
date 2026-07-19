@@ -963,6 +963,16 @@ class AppLocalizationsFi extends AppLocalizations {
       'Tämä poistaa kansion ja sen muistikirjat tältä laitteelta.';
 
   @override
+  String get trashDeleteAll => 'Delete all';
+
+  @override
+  String get trashDeleteAllConfirmTitle => 'Delete all items in Trash?';
+
+  @override
+  String get trashDeleteAllConfirmBody =>
+      'This permanently removes all trashed notebooks and folders from this device.';
+
+  @override
   String get splitPageTitle => 'Jaetaanko sivu?';
 
   @override

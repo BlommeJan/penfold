@@ -99,6 +99,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get librarySearchHint => 'Notizbücher und getippten Text durchsuchen…';
 
   @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
+
+  @override
   String get libraryNoMatches => 'Keine Treffer';
 
   @override
@@ -634,6 +644,30 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get brightnessLabel => 'Helligkeit';
+
+  @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
 
   @override
   String get tapeOptionsTitle => 'Klebeband';

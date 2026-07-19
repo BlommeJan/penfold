@@ -177,20 +177,26 @@ class InkPainter extends CustomPainter {
       _drawTextBlock(canvas, tb);
     }
 
-    for (final s in strokes) {
-      if (s.tool == ToolType.tape) continue;
-      _drawStroke(canvas, s, dim: false);
+    final inkStrokes = strokes
+        .where((s) =>
+            s.tool == ToolType.pen ||
+            s.tool == ToolType.highlighter ||
+            s.tool == ToolType.tape)
+        .toList()
+      ..sort((a, b) => a.z.compareTo(b.z));
+    for (final s in inkStrokes) {
+      if (s.tool == ToolType.tape) {
+        _drawTapeStroke(canvas, s);
+      } else {
+        _drawStroke(canvas, s, dim: false);
+      }
     }
-    if (current != null && current!.tool != ToolType.tape) {
-      _drawStroke(canvas, current!, dim: false);
-    }
-
-    for (final s in strokes) {
-      if (s.tool != ToolType.tape) continue;
-      _drawTapeStroke(canvas, s);
-    }
-    if (current != null && current!.tool == ToolType.tape) {
-      _drawTapeStroke(canvas, current!);
+    if (current != null) {
+      if (current!.tool == ToolType.tape) {
+        _drawTapeStroke(canvas, current!);
+      } else {
+        _drawStroke(canvas, current!, dim: false);
+      }
     }
 
     canvas.restore();
@@ -325,11 +331,14 @@ class InkPainter extends CustomPainter {
   }
 
   void _drawTapeStroke(Canvas canvas, Stroke s) {
+    if (s.hidden) return;
+
     final base = Color(s.color);
-    final covering = !s.hidden;
-    final color = covering ? base.withOpacity(0.62) : base.withOpacity(0.18);
+    final opacity = base.a / 255.0;
+    if (opacity <= 0) return;
+
     final paint = Paint()
-      ..color = color
+      ..color = base
       ..strokeCap = StrokeCap.square
       ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke
@@ -346,9 +355,6 @@ class InkPainter extends CustomPainter {
       final c = _toDisplay(pts[0].x, pts[0].y);
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(c, displayWidth / 2, paint);
-      if (!covering) {
-        _drawTapeRevealOutline(canvas, pts, displayWidth);
-      }
       return;
     }
 
@@ -365,25 +371,6 @@ class InkPainter extends CustomPainter {
     final last = _toDisplay(pts.last.x, pts.last.y);
     path.lineTo(last.dx, last.dy);
     canvas.drawPath(path, paint);
-
-    if (!covering) {
-      _drawTapeRevealOutline(canvas, pts, displayWidth);
-    }
-  }
-
-  void _drawTapeRevealOutline(
-      Canvas canvas, List<StrokePoint> pts, double displayWidth) {
-    final outline = Paint()
-      ..color = const Color(0xFF8A8F98).withOpacity(0.55)
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    for (var i = 1; i < pts.length; i++) {
-      final a = _toDisplay(pts[i - 1].x, pts[i - 1].y);
-      final b = _toDisplay(pts[i].x, pts[i].y);
-      canvas.drawLine(a, b, outline);
-    }
   }
 
   void _drawStroke(Canvas canvas, Stroke s, {required bool dim}) {

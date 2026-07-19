@@ -2,6 +2,22 @@
 
 All notable changes to Penfold are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.1] — 2026-07-19
+
+User-test fixes from device QA — library organization, fill tool, tape behavior, and color picking.
+
+### Added
+
+- **Library tags** — Tag filter chips at the top of the library; search matches notebook titles and tag names
+- **Fill tool** — Tap inside closed pen/shape strokes or draw a closed loop to flood-fill regions
+- **Tape opacity** — Adjustable cover opacity in tape options; tap tape to remove it
+- **Color picker** — HSV wheel plus RGB sliders and hex input tabs for pen, highlighter, fill, and tape colors
+
+### Fixed
+
+- **Closed-shape fill** — Recognized shapes and nearly-closed loops fill reliably via polygon hit-testing
+- **Tape UX** — Tap-to-remove tape strokes; alpha stored on stroke color for consistent export
+
 ## [0.3.0] — 2026
 
 User milestone **v0.3** — consolidates the 0.2.x polish and feature wave into a single release tag.

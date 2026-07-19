@@ -6,6 +6,7 @@
 
 ## Supervisor notes
 
+- **v0.3.1 user-test fixes (2026-07-19)** — Library tag chips + tag search, fill closed shapes, tape tap-remove with opacity, hex/RGB/HSV color picker. Integration agent: 304 tests, `Penfold-v0.3.1.apk`, device install on R52X909VNGW.
 - **v0.3.0 milestone (2026-07-19)** — User milestone tag consolidating the 0.2.x wave: 13-language i18n, dark mode, page paper themes, settings restructure (language/appearance/preferences), stroke smoothing slider, contextual locale review, Samsung S Pen polish, handwriting OCR, and document zoom UX. Patch releases 0.2.78–0.2.83 remain in CHANGELOG detail; integration agent tags `0.3.0` in pubspec.
 - **v0.2.14 backup** shipped on main at `d31e633` (2026-07-15). A duplicate sub-agent for backup was **abandoned** — no partial backup changes were left uncommitted; `backup_service.dart` on main is canonical.
 - **Current position:** v0.2.41 landscape pinch-zoom patch shipped after v0.2.40 roadmap completion.

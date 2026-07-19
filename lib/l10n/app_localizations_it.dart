@@ -99,6 +99,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get librarySearchHint => 'Cerca quaderni e testo digitato…';
 
   @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
+
+  @override
   String get libraryNoMatches => 'Nessun risultato';
 
   @override
@@ -633,6 +643,30 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get brightnessLabel => 'Luminosità';
+
+  @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
 
   @override
   String get tapeOptionsTitle => 'Nastro coprente';

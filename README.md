@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.3.0&color=blue" alt="Version 0.3.0" /></a>
+  <a href="https://github.com/BlommeJan/penfold"><img src="https://img.shields.io/static/v1?label=version&message=0.3.1&color=blue" alt="Version 0.3.1" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter 3.x" /></a>
   <a href="https://www.android.com"><img src="https://img.shields.io/badge/platform-Android-green.svg" alt="Android" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License" /></a>
@@ -39,7 +39,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Features
 
-| Area | What you get in v0.3.0 |
+| Area | What you get in v0.3.1 |
 |------|-------------------------|
 | **Library** | Colored covers with first-page thumbnails, nested **folders**, **tags** with filter chips, **trash** (30-day retention, restore or delete), full-text search, PDF import, session persistence |
 | **Drawing tools** | Pressure-sensitive pen styles, highlighter, whole-stroke and pixel eraser, shape recognition, flood fill, typed text, lasso with copy/paste and rotate/scale handles, 100-step undo/redo per page |
@@ -102,7 +102,7 @@ Captures live in [`docs/screenshots/`](docs/screenshots/). See [docs/screenshots
 
 | Document | Description |
 |----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.3.0) |
+| [CHANGELOG.md](CHANGELOG.md) | Version history (v0.1.0 – v0.3.1) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code layout, design patterns, SQLite schema |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Feature feasibility and dependency order |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Development setup, tests, PR guidelines |
@@ -116,7 +116,7 @@ Captures live in [`docs/screenshots/`](docs/screenshots/). See [docs/screenshots
 
 ## Roadmap
 
-Penfold is under active development. v0.3.0 shipped handwriting OCR, pixel eraser, i18n, and dark mode — these are no longer open items. Planned or deferred work includes:
+Penfold is under active development. v0.3.1 ships user-test fixes for library tags, fill, tape, and color picking. v0.3.0 shipped handwriting OCR, pixel eraser, i18n, and dark mode — these are no longer open items. Planned or deferred work includes:
 
 - **Gesture ink editing** — scratch-to-erase, underline-to-emphasize (requires reliable OCR bounds)
 - **Audio with stroke sync** — page-level audio exists; per-stroke timestamps and tap-to-seek are not shipped
@@ -137,5 +137,5 @@ Issues and pull requests are welcome. Please read [docs/CONTRIBUTING.md](docs/CO
 ---
 
 <p align="center">
-  <strong>Penfold v0.3.0</strong> — write freely, keep it local.
+  <strong>Penfold v0.3.1</strong> — write freely, keep it local.
 </p>

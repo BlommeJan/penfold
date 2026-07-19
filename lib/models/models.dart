@@ -494,7 +494,7 @@ class Stroke {
   final double width;
   List<StrokePoint> points;
   final int z;
-  /// When false (default), tape covers content; true = revealed (tap toggles).
+  /// When false (default), tape covers content; true = legacy revealed state.
   bool hidden;
 
   Stroke({
@@ -592,8 +592,15 @@ class Tag {
 class SearchResult {
   final Notebook notebook;
   final String snippet;
+  final String? matchedTagName;
+  final String? matchedFolderName;
 
-  SearchResult({required this.notebook, required this.snippet});
+  SearchResult({
+    required this.notebook,
+    required this.snippet,
+    this.matchedTagName,
+    this.matchedFolderName,
+  });
 }
 
 /// OCR indexing status for ink strokes (v0.2.8+).

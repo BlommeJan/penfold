@@ -99,6 +99,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get librarySearchHint => 'Rechercher des carnets et du texte saisi…';
 
   @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
+
+  @override
   String get libraryNoMatches => 'Aucun résultat';
 
   @override
@@ -635,6 +645,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get brightnessLabel => 'Luminosité';
+
+  @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
 
   @override
   String get tapeOptionsTitle => 'Ruban';

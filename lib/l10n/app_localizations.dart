@@ -299,8 +299,20 @@ abstract class AppLocalizations {
   /// No description provided for @librarySearchHint.
   ///
   /// In en, this message translates to:
-  /// **'Search notebooks and typed text…'**
+  /// **'Search notebooks, tags, folders, and typed text…'**
   String get librarySearchHint;
+
+  /// No description provided for @librarySearchMatchTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag: {name}'**
+  String librarySearchMatchTag(String name);
+
+  /// No description provided for @librarySearchMatchFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder: {name}'**
+  String librarySearchMatchFolder(String name);
 
   /// No description provided for @libraryNoMatches.
   ///
@@ -1268,6 +1280,54 @@ abstract class AppLocalizations {
   /// **'Brightness'**
   String get brightnessLabel;
 
+  /// No description provided for @colorPickerModeHsv.
+  ///
+  /// In en, this message translates to:
+  /// **'HSV'**
+  String get colorPickerModeHsv;
+
+  /// No description provided for @colorPickerModeRgb.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB'**
+  String get colorPickerModeRgb;
+
+  /// No description provided for @colorPickerModeHex.
+  ///
+  /// In en, this message translates to:
+  /// **'Hex'**
+  String get colorPickerModeHex;
+
+  /// No description provided for @redLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get redLabel;
+
+  /// No description provided for @greenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get greenLabel;
+
+  /// No description provided for @blueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get blueLabel;
+
+  /// No description provided for @hexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hex'**
+  String get hexLabel;
+
+  /// No description provided for @hexHint.
+  ///
+  /// In en, this message translates to:
+  /// **'#RRGGBB'**
+  String get hexHint;
+
   /// No description provided for @tapeOptionsTitle.
   ///
   /// In en, this message translates to:
@@ -1277,7 +1337,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapeOptionsHint.
   ///
   /// In en, this message translates to:
-  /// **'Draw to cover notes; tap tape to reveal or hide again'**
+  /// **'Draw to cover notes; tap tape to remove it'**
   String get tapeOptionsHint;
 
   /// No description provided for @fillColorTitle.

@@ -780,14 +780,30 @@ class AppDatabase {
     final trimmed = query.trim();
     if (trimmed.isEmpty) return [];
     final database = await db;
+    List<SearchResult> results;
     if (_searchBackend == _SearchBackend.none) {
-      return _searchNotebooksLike(database, trimmed);
+      results = await _searchNotebooksLike(database, trimmed);
+    } else {
+      try {
+        results = await _searchNotebooksFts(database, trimmed);
+      } catch (_) {
+        results = await _searchNotebooksLike(database, trimmed);
+      }
     }
-    try {
-      return await _searchNotebooksFts(database, trimmed);
-    } catch (_) {
-      return _searchNotebooksLike(database, trimmed);
+    final metadataMatches =
+        await _searchNotebooksByTagsAndFolders(database, trimmed);
+    return _mergeSearchResults(results, metadataMatches);
+  }
+
+  List<SearchResult> _mergeSearchResults(
+    List<SearchResult> primary,
+    List<SearchResult> extra,
+  ) {
+    final byId = {for (final r in primary) r.notebook.id: r};
+    for (final r in extra) {
+      byId.putIfAbsent(r.notebook.id, () => r);
     }
+    return byId.values.toList();
   }
 
   /// FTS MATCH query: quote each token so punctuation does not break parsing.
@@ -882,6 +898,69 @@ class AppDatabase {
         snippet: text.length > 48 ? '${text.substring(0, 48)}…' : text,
       );
     }
+    return byId.values.toList();
+  }
+
+  Future<List<SearchResult>> _searchNotebooksByTagsAndFolders(
+    Database database,
+    String query,
+  ) async {
+    final like = '%${query.replaceAll('%', '').replaceAll('_', '')}%';
+    final byId = <String, SearchResult>{};
+
+    final tagRows = await database.rawQuery('''
+      SELECT DISTINCT n.id AS notebook_id, t.name AS tag_name
+      FROM notebooks n
+      JOIN notebook_tags nt ON nt.notebook_id = n.id
+      JOIN tags t ON t.id = nt.tag_id
+      WHERE t.name LIKE ? AND n.deleted_at IS NULL
+      ORDER BY n.updated DESC
+    ''', [like]);
+
+    for (final row in tagRows) {
+      final id = row['notebook_id'] as String;
+      if (byId.containsKey(id)) continue;
+      final nbRows = await database.query(
+        'notebooks',
+        where: 'id = ? AND $_notDeleted',
+        whereArgs: [id],
+      );
+      if (nbRows.isEmpty) continue;
+      byId[id] = SearchResult(
+        notebook: Notebook.fromRow(nbRows.first),
+        snippet: '',
+        matchedTagName: row['tag_name'] as String,
+      );
+    }
+
+    final folderRows = await database.query(
+      'folders',
+      where: 'name LIKE ? AND $_folderNotDeleted',
+      whereArgs: [like],
+    );
+
+    for (final folderRow in folderRows) {
+      final folder = Folder.fromRow(folderRow);
+      final folderIds = await _collectFolderTreeIds(database, folder.id);
+      for (final folderId in folderIds) {
+        final nbRows = await database.query(
+          'notebooks',
+          where: 'folder_id = ? AND $_notDeleted',
+          whereArgs: [folderId],
+          orderBy: 'updated DESC',
+        );
+        for (final nbRow in nbRows) {
+          final nb = Notebook.fromRow(nbRow);
+          if (byId.containsKey(nb.id)) continue;
+          byId[nb.id] = SearchResult(
+            notebook: nb,
+            snippet: '',
+            matchedFolderName: folder.name,
+          );
+        }
+      }
+    }
+
     return byId.values.toList();
   }
 

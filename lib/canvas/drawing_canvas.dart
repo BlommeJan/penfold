@@ -18,6 +18,7 @@ import '../services/spen_button_service.dart';
 import '../services/stroke_eraser.dart';
 import '../services/stroke_smoothing_service.dart';
 import '../services/text_block_measure.dart';
+import 'closed_region.dart';
 import 'gesture_ink_recognizer.dart';
 import 'ink_coalesce.dart';
 import 'page_coords.dart';
@@ -60,6 +61,7 @@ class ToolState extends ChangeNotifier {
   double penWidth = 3.0;
   double highlighterWidth = 18.0;
   double tapeWidth = 24.0;
+  double tapeOpacity = 1.0;
   double eraserRadius = 16.0;
   EraserMode eraserMode = EraserMode.partial;
 
@@ -75,6 +77,7 @@ class ToolState extends ChangeNotifier {
   /// User-added swatches beyond toolbar presets (Agent 11 brush UI).
   final List<Color> customPenColors = [];
   final List<Color> customHighlighterColors = [];
+  final List<Color> customFillColors = [];
 
   void addCustomPenColor(Color color) {
     if (!customPenColors.contains(color)) {
@@ -85,6 +88,12 @@ class ToolState extends ChangeNotifier {
   void addCustomHighlighterColor(Color color) {
     if (!customHighlighterColors.contains(color)) {
       customHighlighterColors.add(color);
+    }
+  }
+
+  void addCustomFillColor(Color color) {
+    if (!customFillColors.contains(color)) {
+      customFillColors.add(color);
     }
   }
 
@@ -105,6 +114,10 @@ class ToolState extends ChangeNotifier {
         ToolType.tape => tapeWidth,
         _ => penWidth,
       };
+
+  /// ARGB for new tape strokes; alpha encodes cover opacity.
+  int get tapeStrokeColor =>
+      tapeColor.withValues(alpha: tapeOpacity).toARGB32();
 }
 
 // ---- Undo/redo actions ----
@@ -121,22 +134,6 @@ class _AddStroke extends _EditAction {
   Future<void> undo(_CanvasController c) => c.removeStrokes([stroke]);
   @override
   Future<void> redo(_CanvasController c) => c.addStroke(stroke);
-}
-
-class _ToggleTapeHidden extends _EditAction {
-  final String strokeId;
-  final bool before;
-  final bool after;
-
-  _ToggleTapeHidden(this.strokeId, this.before, this.after);
-
-  @override
-  Future<void> undo(_CanvasController c) =>
-      c.setTapeHidden(strokeId, before);
-
-  @override
-  Future<void> redo(_CanvasController c) =>
-      c.setTapeHidden(strokeId, after);
 }
 
 class _RemoveStrokes extends _EditAction {
@@ -1498,9 +1495,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         _current = Stroke(
           id: _uuid.v4(),
           pageId: widget.page.id,
-          tool: effectiveTool == ToolType.highlighter
-              ? ToolType.highlighter
-              : ToolType.pen,
+          tool: switch (effectiveTool) {
+            ToolType.highlighter => ToolType.highlighter,
+            ToolType.shape => ToolType.shape,
+            _ => ToolType.pen,
+          },
           brushStyle: widget.toolState.brushStyle,
           color: widget.toolState.activeColor.value,
           width: _toCanonicalLen(widget.toolState.activeWidth),
@@ -1519,7 +1518,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         final hitTape = _hitTapeStrokeAt(tapePos);
         if (hitTape != null) {
           _activePointer = null;
-          unawaited(_toggleTapeHidden(hitTape));
+          unawaited(_removeTapeStroke(hitTape));
           return;
         }
         final tapeCanon = _toCanonical(tapePos);
@@ -1527,7 +1526,7 @@ class DrawingCanvasState extends State<DrawingCanvas> {
           id: _uuid.v4(),
           pageId: widget.page.id,
           tool: ToolType.tape,
-          color: widget.toolState.tapeColor.value,
+          color: widget.toolState.tapeStrokeColor,
           width: _toCanonicalLen(widget.toolState.tapeWidth),
           points: [StrokePoint(tapeCanon.dx, tapeCanon.dy, _pressure(e))],
           z: _controller.nextZ(),
@@ -2042,6 +2041,16 @@ class DrawingCanvasState extends State<DrawingCanvas> {
         }
       }
 
+      if (stroke.tool == ToolType.tape &&
+          _strokeCanonicalLength(stroke) < _toCanonicalLen(6)) {
+        final hit = _hitTapeStrokeAt(_paperLocal(e));
+        if (hit != null) {
+          await _removeTapeStroke(hit);
+        }
+        _bump();
+        return;
+      }
+
       await _controller.addStroke(stroke);
       _controller.commit(_AddStroke(stroke.copy()));
       if (stroke.tool != ToolType.tape) {
@@ -2055,11 +2064,14 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     if (tool == ToolType.fill && _fillPath != null) {
       final path = _fillPath!;
       _fillPath = null;
-      if (path.length >= 2) {
+      const tapSlop = 28.0;
+      if (path.length == 1) {
+        await _fillAtTap(path.first);
+      } else {
         final totalLen = _polylineLength(path);
         final closed =
-            path.length >= 3 && (path.first - path.last).distance < 30;
-        if (totalLen < 24 && path.length <= 3) {
+            path.length >= 3 && (path.first - path.last).distance < tapSlop;
+        if (totalLen < tapSlop) {
           await _fillAtTap(path.first);
         } else if (closed) {
           await _commitFill(path);
@@ -2168,7 +2180,11 @@ class DrawingCanvasState extends State<DrawingCanvas> {
 
   Future<void> _fillAtTap(Offset displayPos) async {
     final cPos = _toCanonical(displayPos);
-    final polygon = _findClosedRegionAt(cPos);
+    final polygon = findClosedRegionAt(
+      cPos,
+      _strokes,
+      closeThresholdCanonical: _toCanonicalLen(30),
+    );
     if (polygon == null) return;
     final pathJson =
         jsonEncode(polygon.map((o) => [o.dx, o.dy]).toList());
@@ -2182,41 +2198,6 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     await _controller.addFill(fill);
     _controller.commit(_AddFill(fill.copy()));
     _bump();
-  }
-
-  /// Finds the innermost closed ink loop containing [canonicalPos].
-  List<Offset>? _findClosedRegionAt(Offset canonicalPos) {
-    for (final s in _strokes.reversed) {
-      if (s.tool != ToolType.pen && s.tool != ToolType.shape) continue;
-      final poly = _closedPolygonFromStroke(s);
-      if (poly == null || poly.length < 3) continue;
-      if (_pointInCanonicalPolygon(canonicalPos, poly)) return poly;
-    }
-    return null;
-  }
-
-  List<Offset>? _closedPolygonFromStroke(Stroke s) {
-    final pts = s.points;
-    if (pts.length < 3) return null;
-    final displayClose = _toCanonicalLen(30);
-    final first = Offset(pts.first.x, pts.first.y);
-    final last = Offset(pts.last.x, pts.last.y);
-    final closed = (first - last).distance <= displayClose;
-    if (!closed && s.tool != ToolType.shape) return null;
-    return pts.map((p) => Offset(p.x, p.y)).toList();
-  }
-
-  bool _pointInCanonicalPolygon(Offset p, List<Offset> poly) {
-    var inside = false;
-    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      final pi = poly[i], pj = poly[j];
-      if ((pi.dy > p.dy) != (pj.dy > p.dy) &&
-          p.dx <
-              (pj.dx - pi.dx) * (p.dy - pi.dy) / (pj.dy - pi.dy) + pi.dx) {
-        inside = !inside;
-      }
-    }
-    return inside;
   }
 
   Future<void> _commitFill(List<Offset> displayPath) async {
@@ -2559,13 +2540,22 @@ class DrawingCanvasState extends State<DrawingCanvas> {
     return null;
   }
 
-  Future<void> _toggleTapeHidden(Stroke stroke) async {
-    final before = stroke.hidden;
-    final after = !before;
-    await _controller.setTapeHidden(stroke.id, after);
-    _controller.commit(_ToggleTapeHidden(stroke.id, before, after));
+  Future<void> _removeTapeStroke(Stroke stroke) async {
+    final copy = stroke.copy();
+    await _controller.removeStrokes([stroke]);
+    _controller.commit(_RemoveStrokes([copy]));
     widget.onHistoryChanged?.call(_controller.canUndo, _controller.canRedo);
+    _notifyStrokeCountChanged();
     _bump();
+  }
+
+  double _strokeCanonicalLength(Stroke stroke) {
+    final pts = stroke.points;
+    var len = 0.0;
+    for (var i = 1; i < pts.length; i++) {
+      len += Offset(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y).distance;
+    }
+    return len;
   }
 
   TextBlock? _hitTextBlock(Offset displayPos) {

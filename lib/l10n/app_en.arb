@@ -29,7 +29,23 @@
   "libraryAll": "All",
   "libraryUncategorized": "Uncategorized",
   "libraryBreadcrumb": "Library",
-  "librarySearchHint": "Search notebooks and typed text…",
+  "librarySearchHint": "Search notebooks, tags, folders, and typed text…",
+  "librarySearchMatchTag": "Tag: {name}",
+  "@librarySearchMatchTag": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "librarySearchMatchFolder": "Folder: {name}",
+  "@librarySearchMatchFolder": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "libraryNoMatches": "No matches",
   "libraryFolderEmpty": "This folder is empty",
   "libraryNoNotebooksWithTag": "No notebooks with this tag",
@@ -302,8 +318,16 @@
   "hueLabel": "Hue",
   "saturationLabel": "Saturation",
   "brightnessLabel": "Brightness",
+  "colorPickerModeHsv": "HSV",
+  "colorPickerModeRgb": "RGB",
+  "colorPickerModeHex": "Hex",
+  "redLabel": "Red",
+  "greenLabel": "Green",
+  "blueLabel": "Blue",
+  "hexLabel": "Hex",
+  "hexHint": "#RRGGBB",
   "tapeOptionsTitle": "Tape",
-  "tapeOptionsHint": "Draw to cover notes; tap tape to reveal or hide again",
+  "tapeOptionsHint": "Draw to cover notes; tap tape to remove it",
   "fillColorTitle": "Fill color",
   "fillOptionsHint": "Draw a closed loop, or tap inside a shape to fill",
   "eraserSizeTitle": "Eraser size",

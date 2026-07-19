@@ -99,6 +99,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get librarySearchHint => '노트 및 입력한 텍스트 검색…';
 
   @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
+
+  @override
   String get libraryNoMatches => '일치하는 항목이 없습니다';
 
   @override
@@ -623,6 +633,30 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get brightnessLabel => '밝기';
+
+  @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
 
   @override
   String get tapeOptionsTitle => '테이프';

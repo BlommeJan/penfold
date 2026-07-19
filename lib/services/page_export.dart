@@ -30,53 +30,46 @@ void paintVectorInkOnPdf(
   List<Stroke> strokes, {
   PageOrientation orientation = PageOrientation.portrait,
 }) {
-  final penStrokes = <Stroke>[];
-  final highlighterStrokes = <Stroke>[];
-  final tapeStrokes = <Stroke>[];
-  for (final s in strokes) {
+  final inkStrokes = strokes
+      .where((s) =>
+          s.tool == ToolType.pen ||
+          s.tool == ToolType.shape ||
+          s.tool == ToolType.highlighter ||
+          (s.tool == ToolType.tape && !s.hidden))
+      .toList()
+    ..sort((a, b) => a.z.compareTo(b.z));
+
+  for (final s in inkStrokes) {
     switch (s.tool) {
       case ToolType.pen:
-        penStrokes.add(s);
+      case ToolType.shape:
+        _paintPdfPenStroke(
+            canvas, s, pdfSize, pageSize, orientation: orientation);
       case ToolType.highlighter:
-        highlighterStrokes.add(s);
+        canvas.saveContext();
+        canvas.setGraphicState(const PdfGraphicState(
+          strokeOpacity: 0.35,
+          blendMode: PdfBlendMode.multiply,
+        ));
+        _paintPdfHighlighterStroke(
+            canvas, s, pdfSize, pageSize, orientation: orientation);
+        canvas.restoreContext();
       case ToolType.tape:
-        tapeStrokes.add(s);
+        final opacity = Color(s.color).a / 255.0;
+        if (opacity <= 0) break;
+        canvas.saveContext();
+        if (opacity < 1.0) {
+          canvas.setGraphicState(PdfGraphicState(strokeOpacity: opacity));
+        }
+        _paintPdfTapeStroke(
+            canvas, s, pdfSize, pageSize, orientation: orientation);
+        canvas.restoreContext();
       case ToolType.eraser:
       case ToolType.lasso:
       case ToolType.selection:
-      case ToolType.shape:
       case ToolType.fill:
       case ToolType.text:
         break;
-    }
-  }
-
-  for (final s in penStrokes) {
-    _paintPdfPenStroke(canvas, s, pdfSize, pageSize, orientation: orientation);
-  }
-
-  if (highlighterStrokes.isNotEmpty) {
-    canvas.saveContext();
-    canvas.setGraphicState(const PdfGraphicState(
-      strokeOpacity: 0.35,
-      blendMode: PdfBlendMode.multiply,
-    ));
-    for (final s in highlighterStrokes) {
-      _paintPdfHighlighterStroke(
-          canvas, s, pdfSize, pageSize, orientation: orientation);
-    }
-    canvas.restoreContext();
-  }
-
-  if (tapeStrokes.isNotEmpty) {
-    for (final s in tapeStrokes) {
-      canvas.saveContext();
-      canvas.setGraphicState(PdfGraphicState(
-        strokeOpacity: s.hidden ? 0.18 : 0.62,
-      ));
-      _paintPdfTapeStroke(
-          canvas, s, pdfSize, pageSize, orientation: orientation);
-      canvas.restoreContext();
     }
   }
 }

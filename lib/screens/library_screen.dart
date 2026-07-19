@@ -1056,7 +1056,34 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _headerRow() {
+  Widget _tagFilterRow() {
+    if (_allTags.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final tag in _allTags)
+              _filterChip(
+                label: tag.name,
+                selected: _selectedTagId == tag.id,
+                onTap: () {
+                  setState(() {
+                    _selectedTagId =
+                        _selectedTagId == tag.id ? null : tag.id;
+                  });
+                  _refresh();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _folderFilterRow() {
     final l10n = context.l10n;
     final folderChips = _currentFolderId == null
         ? _topLevelFolders()
@@ -1097,7 +1124,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                 ),
               ),
-            if (!_searching && folderChips.isNotEmpty) ...[
+            if (folderChips.isNotEmpty) ...[
               const SizedBox(width: 8),
               for (final f in folderChips)
                 _filterChip(
@@ -1106,25 +1133,22 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   onTap: () => _openFolder(f.id),
                 ),
             ],
-            if (!_searching && _allTags.isNotEmpty) ...[
-              const SizedBox(width: 8),
-              for (final tag in _allTags)
-                _filterChip(
-                  label: tag.name,
-                  selected: _selectedTagId == tag.id,
-                  onTap: () {
-                    setState(() {
-                      _selectedTagId =
-                          _selectedTagId == tag.id ? null : tag.id;
-                    });
-                    _refresh();
-                  },
-                ),
-            ],
           ],
         ),
       ),
     );
+  }
+
+  String _searchResultSubtitle(SearchResult result) {
+    final l10n = context.l10n;
+    if (result.matchedTagName != null) {
+      return l10n.librarySearchMatchTag(result.matchedTagName!);
+    }
+    if (result.matchedFolderName != null) {
+      return l10n.librarySearchMatchFolder(result.matchedFolderName!);
+    }
+    if (result.snippet.isEmpty) return '';
+    return result.snippet.replaceAll(RegExp('<[^>]*>'), '');
   }
 
   Widget _breadcrumbBar() {
@@ -1280,8 +1304,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: _searchField(),
           ),
           if (!_searching) ...[
+            _tagFilterRow(),
             _breadcrumbBar(),
-            _headerRow(),
+            _folderFilterRow(),
           ],
           if (_loadError != null)
             Padding(
@@ -1333,13 +1358,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           final nbIndex = i - showFolders.length;
                           if (_searching) {
                             final r = _searchResults[nbIndex];
+                            final subtitle = _searchResultSubtitle(r);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(child: _notebookCard(r.notebook)),
-                                if (r.snippet.isNotEmpty)
+                                if (subtitle.isNotEmpty)
                                   Text(
-                                    r.snippet.replaceAll(RegExp('<[^>]*>'), ''),
+                                    subtitle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style:

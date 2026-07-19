@@ -99,6 +99,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get librarySearchHint => 'Buscar cuadernos y texto tecleado…';
 
   @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
+
+  @override
   String get libraryNoMatches => 'Sin resultados';
 
   @override
@@ -635,6 +645,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get brightnessLabel => 'Brillo';
+
+  @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
 
   @override
   String get tapeOptionsTitle => 'Cinta';

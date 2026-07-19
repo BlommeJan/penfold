@@ -5,38 +5,13 @@ import '../l10n/l10n.dart';
 import '../models/models.dart';
 import '../services/stroke_eraser.dart';
 import '../services/toolbar_order_service.dart';
+import 'color_picker/color_swatch_widgets.dart';
+import 'color_picker/penfold_color_picker_dialog.dart';
+import 'color_picker/tool_color_presets.dart';
 import 'themed_choice_chip.dart';
 
 const _kToolbarIconSize = 22.0;
 const _kToolButtonRadius = 12.0;
-
-const _penColors = [
-  Color(0xFF1A1A1A),
-  Color(0xFF2455C3),
-  Color(0xFFC0392B),
-  Color(0xFF1E8449),
-  Color(0xFF7D3C98),
-  Color(0xFFE67E22),
-  Color(0xFF16A085),
-  Color(0xFF2C3E50),
-  Color(0xFF95A5A6),
-  Color(0xFFE91E63),
-  Color(0xFF795548),
-  Color(0xFFFFFFFF),
-];
-
-const _highlighterColors = [
-  Color(0xFFFFE100),
-  Color(0xFF7CF77C),
-  Color(0xFF7CD6F7),
-  Color(0xFFF77CE0),
-  Color(0xFFFFA94D),
-  Color(0xFFFF6B6B),
-  Color(0xFFB388FF),
-  Color(0xFF80DEEA),
-  Color(0xFFFFF59D),
-  Color(0xFFA5D6A7),
-];
 
 /// Brush styles shown in the pen options popup (marker is a style, not a tool).
 const _penBrushStyles = [
@@ -45,22 +20,6 @@ const _penBrushStyles = [
   BrushStyle.pencil,
   BrushStyle.marker,
   BrushStyle.calligraphy,
-];
-
-const _tapeColors = [
-  Color(0xFFE8E0D0),
-  Color(0xFFD4C4A8),
-  Color(0xFFC8D8E8),
-  Color(0xFFE8C8D0),
-  Color(0xFFD0E0C8),
-];
-
-const _fillColors = [
-  Color(0xFF2455C3),
-  Color(0xFFFFE100),
-  Color(0xFF7CF77C),
-  Color(0xFFF77CE0),
-  Color(0xFFFFA94D),
 ];
 
 /// Top editing toolbar: back (left), drawing tools (center), actions (right).
@@ -401,7 +360,8 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
   void _showPenOptions(BuildContext context, ToolState t,
       {required bool highlighter}) {
     final l10n = context.l10n;
-    final presetColors = highlighter ? _highlighterColors : _penColors;
+    final presetColors =
+        highlighter ? highlighterPresetColors : penPresetColors;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -413,7 +373,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
           builder: (ctx, _) {
             final customColors =
                 highlighter ? t.customHighlighterColors : t.customPenColors;
-            final allColors = [...presetColors, ...customColors];
             final activeColor =
                 highlighter ? t.highlighterColor : t.penColor;
             return Padding(
@@ -458,45 +417,37 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      for (final c in allColors)
-                        _ColorSwatch(
-                          color: c,
-                          selected: _colorsMatch(activeColor, c),
-                          onTap: () {
-                            t.set((s) {
-                              if (highlighter) {
-                                s.highlighterColor = c;
-                              } else {
-                                s.penColor = c;
-                              }
-                            });
-                            Navigator.pop(ctx);
-                          },
-                        ),
-                      _AddColorSwatch(
-                        onTap: () async {
-                          final picked = await _showCustomColorPicker(
-                            ctx,
-                            initial: activeColor,
-                          );
-                          if (picked == null || !ctx.mounted) return;
-                          t.set((s) {
-                            if (highlighter) {
-                              s.highlighterColor = picked;
-                              s.addCustomHighlighterColor(picked);
-                            } else {
-                              s.penColor = picked;
-                              s.addCustomPenColor(picked);
-                            }
-                          });
-                          if (ctx.mounted) Navigator.pop(ctx);
-                        },
-                      ),
-                    ],
+                  ColorSwatchRow(
+                    presetColors: presetColors,
+                    customColors: customColors,
+                    activeColor: activeColor,
+                    onColorSelected: (c) {
+                      t.set((s) {
+                        if (highlighter) {
+                          s.highlighterColor = c;
+                        } else {
+                          s.penColor = c;
+                        }
+                      });
+                      Navigator.pop(ctx);
+                    },
+                    onAddCustomColor: () async {
+                      final picked = await showPenfoldColorPicker(
+                        ctx,
+                        initial: activeColor,
+                      );
+                      if (picked == null || !ctx.mounted) return;
+                      t.set((s) {
+                        if (highlighter) {
+                          s.highlighterColor = picked;
+                          s.addCustomHighlighterColor(picked);
+                        } else {
+                          s.penColor = picked;
+                          s.addCustomPenColor(picked);
+                        }
+                      });
+                      if (ctx.mounted) Navigator.pop(ctx);
+                    },
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -533,16 +484,6 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Future<Color?> _showCustomColorPicker(
-    BuildContext context, {
-    required Color initial,
-  }) {
-    return showDialog<Color>(
-      context: context,
-      builder: (ctx) => _CustomColorPickerDialog(initial: initial),
-    );
-  }
-
   void _showTapeOptions(BuildContext context, ToolState t) {
     final l10n = context.l10n;
     showModalBottomSheet(
@@ -561,7 +502,7 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                for (final c in _tapeColors)
+                for (final c in tapePresetColors)
                   Padding(
                     padding: const EdgeInsets.only(right: 14),
                     child: GestureDetector(
@@ -606,6 +547,24 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
+            StatefulBuilder(
+              builder: (ctx, setSheet) => Row(
+                children: [
+                  const Icon(Icons.opacity_rounded, size: 20),
+                  Expanded(
+                    child: Slider(
+                      value: t.tapeOpacity,
+                      min: 0.25,
+                      max: 1.0,
+                      onChanged: (v) {
+                        setSheet(() {});
+                        t.set((s) => s.tapeOpacity = v);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -617,48 +576,66 @@ class EditorToolbar extends StatelessWidget implements PreferredSizeWidget {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.fillColorTitle, style: Theme.of(ctx).textTheme.titleMedium),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                for (final c in _fillColors)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 14),
-                    child: GestureDetector(
-                      onTap: () {
-                        t.set((s) => s.fillColor = c);
-                        Navigator.pop(ctx);
-                      },
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: c,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 3,
-                            color: t.fillColor == c
-                                ? Theme.of(ctx).colorScheme.primary
-                                : Colors.transparent,
-                          ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (ctx) {
+        final scheme = Theme.of(ctx).colorScheme;
+        return ListenableBuilder(
+          listenable: t,
+          builder: (ctx, _) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.fillColorTitle,
+                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                          color: scheme.onSurface,
                         ),
-                      ),
-                    ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(l10n.fillOptionsHint,
-                style: Theme.of(ctx).textTheme.bodySmall),
-          ],
-        ),
-      ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.colorLabel,
+                    style: Theme.of(ctx).textTheme.labelLarge?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  ColorSwatchRow(
+                    presetColors: fillPresetColors,
+                    customColors: t.customFillColors,
+                    activeColor: t.fillColor,
+                    onColorSelected: (c) {
+                      t.set((s) => s.fillColor = c);
+                      Navigator.pop(ctx);
+                    },
+                    onAddCustomColor: () async {
+                      final picked = await showPenfoldColorPicker(
+                        ctx,
+                        initial: t.fillColor,
+                      );
+                      if (picked == null || !ctx.mounted) return;
+                      t.set((s) {
+                        s.fillColor = picked;
+                        s.addCustomFillColor(picked);
+                      });
+                      if (ctx.mounted) Navigator.pop(ctx);
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.fillOptionsHint,
+                    style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -816,178 +793,6 @@ class _ActionIconButton extends StatelessWidget {
   }
 }
 
-
-bool _colorsMatch(Color a, Color b) => a.value == b.value;
-
-class _ColorSwatch extends StatelessWidget {
-  final Color color;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _ColorSwatch({
-    required this.color,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final needsBorder = color.computeLuminance() > 0.85;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            width: selected ? 3 : 1,
-            color: selected
-                ? primary
-                : needsBorder
-                    ? Theme.of(context).colorScheme.outline
-                    : Colors.transparent,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AddColorSwatch extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _AddColorSwatch({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: scheme.outline.withOpacity(0.5)),
-        ),
-        child: Icon(Icons.add_rounded, size: 20, color: scheme.onSurfaceVariant),
-      ),
-    );
-  }
-}
-
-class _CustomColorPickerDialog extends StatefulWidget {
-  final Color initial;
-
-  const _CustomColorPickerDialog({required this.initial});
-
-  @override
-  State<_CustomColorPickerDialog> createState() =>
-      _CustomColorPickerDialogState();
-}
-
-class _CustomColorPickerDialogState extends State<_CustomColorPickerDialog> {
-  late HSVColor _hsv;
-
-  @override
-  void initState() {
-    super.initState();
-    _hsv = HSVColor.fromColor(widget.initial);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final l10n = context.l10n;
-    final color = _hsv.toColor();
-    return AlertDialog(
-      title: Text(l10n.customColorTitle),
-      content: SizedBox(
-        width: 280,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                border: Border.all(color: scheme.outline),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _SliderRow(
-              label: l10n.hueLabel,
-              value: _hsv.hue,
-              max: 360,
-              onChanged: (v) => setState(() => _hsv = _hsv.withHue(v)),
-            ),
-            _SliderRow(
-              label: l10n.saturationLabel,
-              value: _hsv.saturation,
-              max: 1,
-              onChanged: (v) => setState(() => _hsv = _hsv.withSaturation(v)),
-            ),
-            _SliderRow(
-              label: l10n.brightnessLabel,
-              value: _hsv.value,
-              max: 1,
-              onChanged: (v) => setState(() => _hsv = _hsv.withValue(v)),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.actionCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, color),
-          child: Text(l10n.actionUseColor),
-        ),
-      ],
-    );
-  }
-}
-
-class _SliderRow extends StatelessWidget {
-  final String label;
-  final double value;
-  final double max;
-  final ValueChanged<double> onChanged;
-
-  const _SliderRow({
-    required this.label,
-    required this.value,
-    required this.max,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 88,
-          child: Text(label, style: Theme.of(context).textTheme.bodySmall),
-        ),
-        Expanded(
-          child: Slider(
-            value: value.clamp(0, max),
-            min: 0,
-            max: max,
-            onChanged: onChanged,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class _ToolButton extends StatelessWidget {
   final IconData? icon;

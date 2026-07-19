@@ -138,6 +138,46 @@ void main() {
     expect(byPartial.map((r) => r.notebook.id), contains('nb-search'));
   });
 
+  test('search finds notebook by tag name', () async {
+    final db = AppDatabase.instance;
+    await db.createTag(Tag(id: 'tag-hw', name: 'Homework'));
+    await db.insertNotebook(Notebook(
+      id: 'nb-tagged',
+      title: 'Algebra Notes',
+      coverColor: 0xFF2455C3,
+      template: PageTemplate.lined,
+      createdAt: 1,
+      updatedAt: 1,
+    ));
+    await db.setNotebookTags('nb-tagged', ['tag-hw']);
+
+    final results = await db.searchNotebooks('Homework');
+    expect(results.length, 1);
+    expect(results.first.notebook.id, 'nb-tagged');
+    expect(results.first.matchedTagName, 'Homework');
+  });
+
+  test('search finds notebooks in matching folder', () async {
+    final db = AppDatabase.instance;
+    await db.insertFolder(Folder(id: 'f-school', name: 'School', sortOrder: 0));
+    await db.insertNotebook(Notebook(
+      id: 'nb-in-folder',
+      title: 'Daily Journal',
+      coverColor: 0xFF2455C3,
+      template: PageTemplate.lined,
+      folderId: 'f-school',
+      createdAt: 1,
+      updatedAt: 1,
+    ));
+
+    final results = await db.searchNotebooks('School');
+    expect(results.map((r) => r.notebook.id), contains('nb-in-folder'));
+    expect(
+      results.firstWhere((r) => r.notebook.id == 'nb-in-folder').matchedFolderName,
+      'School',
+    );
+  });
+
   test('nested folders and parent_id migration', () async {
     final db = AppDatabase.instance;
     await db.insertFolder(Folder(id: 'f1', name: 'School', sortOrder: 0));

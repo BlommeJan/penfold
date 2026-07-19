@@ -96,7 +96,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libraryBreadcrumb => 'Library';
 
   @override
-  String get librarySearchHint => 'Search notebooks and typed text…';
+  String get librarySearchHint =>
+      'Search notebooks, tags, folders, and typed text…';
+
+  @override
+  String librarySearchMatchTag(String name) {
+    return 'Tag: $name';
+  }
+
+  @override
+  String librarySearchMatchFolder(String name) {
+    return 'Folder: $name';
+  }
 
   @override
   String get libraryNoMatches => 'No matches';
@@ -632,11 +643,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get brightnessLabel => 'Brightness';
 
   @override
+  String get colorPickerModeHsv => 'HSV';
+
+  @override
+  String get colorPickerModeRgb => 'RGB';
+
+  @override
+  String get colorPickerModeHex => 'Hex';
+
+  @override
+  String get redLabel => 'Red';
+
+  @override
+  String get greenLabel => 'Green';
+
+  @override
+  String get blueLabel => 'Blue';
+
+  @override
+  String get hexLabel => 'Hex';
+
+  @override
+  String get hexHint => '#RRGGBB';
+
+  @override
   String get tapeOptionsTitle => 'Tape';
 
   @override
-  String get tapeOptionsHint =>
-      'Draw to cover notes; tap tape to reveal or hide again';
+  String get tapeOptionsHint => 'Draw to cover notes; tap tape to remove it';
 
   @override
   String get fillColorTitle => 'Fill color';

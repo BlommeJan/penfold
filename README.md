@@ -52,7 +52,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 | Area | What you get in v0.3.4 |
 |------|-------------------------|
-| **Library** | **All | Overview** views, tag filter chips, colored covers with thumbnails, nested **folders**, **trash** (30-day retention), full-text search, PDF import, session persistence |
+| **Library** | Drawer navigation (**All**, **Overview**, **Trash**, **Settings** + **Folders** section), tag filter chips, colored covers with thumbnails, nested folders, trash (30-day retention), full-text search, PDF import, session persistence |
 | **Drawing tools** | Pressure-sensitive pen styles, highlighter, whole-stroke and pixel eraser, shape recognition, flood fill, typed text, lasso with copy/paste and rotate/scale handles, 100-step undo/redo per page |
 | **Document zoom** | Pinch zoom, two-finger pan, double-tap reset, bounds clamping; finger scroll works in stylus-only mode at 1× |
 | **OCR** | On-device handwriting recognition (ML Kit), ink search index, convert selection to text, custom dictionary, table-of-contents heading detection |
@@ -127,7 +127,7 @@ Captures live in [`docs/screenshots/`](docs/screenshots/). See [docs/screenshots
 
 ## Roadmap
 
-Penfold is under active development. v0.3.4 restructures the library with **All | Overview** views and tag-only filters. v0.3.3 fixes shape tool rendering and polishes the color picker layout. v0.3.2 sharpened privacy and local-first messaging across the app and docs. v0.3.1 shipped user-test fixes for library tags, fill, tape, and color picking. v0.3.0 shipped handwriting OCR, pixel eraser, i18n, and dark mode — these are no longer open items. Planned or deferred work includes:
+Penfold is under active development. v0.3.4 moves **All** and **Overview** into the library drawer (alongside Trash, Settings, and Folders) and simplifies filters to tag chips only. v0.3.3 fixes shape tool rendering and polishes the color picker layout. v0.3.2 sharpened privacy and local-first messaging across the app and docs. v0.3.1 shipped user-test fixes for library tags, fill, tape, and color picking. v0.3.0 shipped handwriting OCR, pixel eraser, i18n, and dark mode — these are no longer open items. Planned or deferred work includes:
 
 - **Gesture ink editing** — scratch-to-erase, underline-to-emphasize (requires reliable OCR bounds)
 - **Audio with stroke sync** — page-level audio exists; per-stroke timestamps and tap-to-seek are not shipped
